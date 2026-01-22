@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻平台完整部署指南 - 从零到上线</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .header .subtitle {
+            font-size: 1.5em;
+            margin-top: 15px;
+            opacity: 0.95;
+        }
+        .progress-bar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+        }
+        .progress-item {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+        .progress-item:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 15px;
+            color: #9ca3af;
+            font-size: 1.5em;
+        }
+        .progress-number {
+            background: #e5e7eb;
+            color: #6b7280;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .progress-label {
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            background: #f8fafc;
+            border-left: 5px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 35px;
+            margin-bottom: 35px;
+        }
+        .section-number {
+            background: #0ea5e9;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #1f2937;
+            margin: 20px 0 25px 0;
+            font-size: 2em;
+        }
+        h3 {
+            color: #0ea5e9;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+        h4 {
+            color: #1f2937;
+            margin: 20px 0 10px 0;
+            font-size: 1.2em;
+        }
+        .substep {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .substep-number {
+            background: #3b82f6;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .interface-mockup {
+            background: #1e293b;
+            color: #10b981;
+            border: 3px solid #3b82f6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        .location {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+        .highlight {
+            background: #fef08a;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            color: white;
+            text-align: center;
+            padding: 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin: 25px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        code {
+            background: #1e293b;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ol, ul {
+            margin-left: 35px;
+            line-height: 2.2;
+        }
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+        .checklist li {
+            padding: 12px 12px 12px 45px;
+            position: relative;
+            margin: 12px 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .time-estimate {
+            background: #fef3c7;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            background: #3b82f6;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 3px solid #3b82f6;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 新闻简报平台完整部署指南</h1>
+            <p class="subtitle">从零开始 · 每一步都超详细 · 30分钟完成部署</p>
+            <p style="margin-top: 20px; font-size: 1.1em;">
+                ✅ 不需要信用卡 · ✅ 完全免费 · ✅ 任何地方访问
+            </p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-item">
+                <div class="progress-number">1</div>
+                <div class="progress-label">准备工作</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-number">2</div>
+                <div class="progress-label">Render账号</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-number">3</div>
+                <div class="progress-label">MongoDB</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-number">4</div>
+                <div class="progress-label">创建服务</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-number">5</div>
+                <div class="progress-label">配置变量</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-number">6</div>
+                <div class="progress-label">上线运行</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 总览 -->
+            <div class="summary-box">
+                <h2 style="color: #1f2937; margin-top: 0;">📋 部署总览</h2>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">你将完成以下任务：</p>
+                <ul style="margin-left: 30px; line-height: 2;">
+                    <li><strong>注册2个账号</strong>：Render.com（部署平台）+ MongoDB Atlas（数据库）</li>
+                    <li><strong>创建4个服务</strong>：Backend（后端）+ AI Service（AI处理）+ Frontend（前端）+ Redis（缓存）</li>
+                    <li><strong>配置环境变量</strong>：让各个服务互相连接</li>
+                    <li><strong>获得你的网站</strong>：一个可以分享给任何人的网址</li>
+                </ul>
+                <p style="margin-top: 20px; font-size: 1.1em;"><strong>⏱️ 总耗时：约30-40分钟</strong></p>
+            </div>
+
+            <!-- 第一部分：准备工作 -->
+            <div class="section">
+                <div class="section-number">1</div>
+                <h2>准备工作 <span class="time-estimate">⏱️ 1分钟</span></h2>
+
+                <div class="info">
+                    <h3>✅ 你已经完成的：</h3>
+                    <ul class="checklist">
+                        <li>GitHub账号已创建</li>
+                        <li>代码已上传到GitHub（仓库：news-brief-platform）</li>
+                        <li>所有配置文件已准备好</li>
+                    </ul>
+                </div>
+
+                <div class="warning">
+                    <h3>⚠️ 你需要准备的：</h3>
+                    <ul style="margin: 15px 0 0 20px;">
+                        <li>📧 一个邮箱（用于注册账号）</li>
+                        <li>🔑 OpenAI API密钥（或准备注册获取）
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li>新用户有$5免费额度</li>
+                                <li>或使用DeepSeek（国内，便宜10倍）</li>
+                            </ul>
+                        </li>
+                        <li>⏰ 30-40分钟的时间</li>
+                        <li>☕ 一杯咖啡（可选，但推荐😊）</li>
+                    </ul>
+                </div>
+
+                <div class="success">
+                    <h3>✅ 准备好了？开始吧！</h3>
+                </div>
+            </div>
+
+            <!-- 第二部分：注册Render -->
+            <div class="section">
+                <div class="section-number">2</div>
+                <h2>注册Render账号 <span class="time-estimate">⏱️ 2分钟</span></h2>
+
+                <h3>什么是Render？</h3>
+                <p>Render是一个云平台，可以让你的网站运行在云端，不需要自己的服务器。<strong>关键是：不需要信用卡，完全免费！</strong></p>
+
+                <a href="https://render.com/" target="_blank" class="big-button">
+                    👉 点击这里打开Render官网
+                </a>
+
+                <div class="substep">
+                    <h3><span class="substep-number">1</span> 打开Render网站</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────────────┐
+│  Render                                   [Login]   │ ← 点这里
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│         Render makes it easy to                     │
+│         build and run apps and websites             │
+│                                                     │
+│         [Get Started for Free] ← 或点这个             │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+                    </div>
+                    <div class="location">
+                        📍 <strong>位置</strong>：页面右上角的白色"Login"按钮，或中间的"Get Started"按钮
+                    </div>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">2</span> 选择登录方式</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Sign up for Render                        │
+├─────────────────────────────────────────────┤
+│                                             │
+│  [  Sign up with GitHub  ]  ← 推荐选这个      │
+│                                             │
+│  [  Sign up with GitLab  ]                 │
+│                                             │
+│  ─────────── or ───────────                │
+│                                             │
+│  Email: [                ]                 │
+│  Password: [             ]                 │
+│  [Sign up with Email]                      │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>点击 <strong>"Sign up with GitHub"</strong>（黑色按钮，有GitHub图标）
+                            <div class="location">
+                                📍 <strong>为什么选GitHub登录？</strong><br>
+                                - 最快速（1次点击）<br>
+                                - 自动连接你的代码仓库<br>
+                                - 不需要再填写信息
+                            </div>
+                        </li>
+                        <li>会跳转到GitHub，要求授权</li>
+                        <li>点击绿色的 <strong>"Authorize Render"</strong> 按钮</li>
+                    </ol>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">3</span> 完成注册</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Complete your profile                     │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Name: [你的名字]                            │
+│                                             │
+│  Email: zhangsan@gmail.com  (已自动填写)     │
+│                                             │
+│  [Complete Sign Up]                        │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>填写你的名字（可以用中文）</li>
+                        <li>邮箱已经自动填好（来自GitHub）</li>
+                        <li>点击 <strong>"Complete Sign Up"</strong></li>
+                    </ol>
+                </div>
+
+                <div class="success">
+                    <h3>✅ 注册成功！</h3>
+                    <p>你会看到Render的Dashboard（仪表板），显示 "Get started with Render" 或 "Create your first service"</p>
+                </div>
+            </div>
+
+            <!-- 第三部分：MongoDB -->
+            <div class="section">
+                <div class="section-number">3</div>
+                <h2>创建MongoDB数据库 <span class="time-estimate">⏱️ 5分钟</span></h2>
+
+                <h3>什么是MongoDB？</h3>
+                <p>MongoDB用来存储新闻数据。我们用MongoDB Atlas（云端版），完全免费（512MB存储）。</p>
+
+                <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" class="big-button">
+                    👉 点击这里注册MongoDB Atlas
+                </a>
+
+                <div class="substep">
+                    <h3><span class="substep-number">1</span> 注册MongoDB账号</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Create your MongoDB Account               │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Email: [                    ]             │
+│  First Name: [               ]             │
+│  Last Name: [                ]             │
+│  Password: [                 ]             │
+│                                             │
+│  [✓] I agree to terms...                   │
+│                                             │
+│  [  Create your account  ]                 │
+│                                             │
+│  Or sign up with:                          │
+│  [  Google  ] [  GitHub  ] ← 推荐用这个      │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li><strong>推荐方式：</strong>点击 <strong>"Sign up with Google"</strong> 或 <strong>"Sign up with GitHub"</strong>
+                            <div class="location">
+                                📍 位置：页面底部，"Or sign up with:" 下方
+                            </div>
+                        </li>
+                        <li>授权MongoDB访问基本信息</li>
+                        <li>完成！自动登录</li>
+                    </ol>
+                    <p style="margin-top: 15px;"><strong>或手动注册：</strong></p>
+                    <ol>
+                        <li>填写邮箱、姓名、密码</li>
+                        <li>勾选同意条款</li>
+                        <li>点击"Create your account"</li>
+                        <li>去邮箱验证</li>
+                    </ol>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">2</span> 选择免费集群</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Deploy your database                       │
+├─────────────────────────────────────────────┤
+│                                             │
+│  ┌────────────┐  ┌──────────────┐          │
+│  │ M0 FREE    │  │ Serverless   │          │
+│  │            │  │              │          │
+│  │ Shared     │  │ Pay for what │          │
+│  │ $0/month   │  │ you use      │          │
+│  │            │  │              │          │
+│  │ [Create]   │  │ [Create]     │          │
+│  └────────────┘  └──────────────┘          │
+│      ↑ 选这个                                │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>找到 <strong>"M0"</strong> 或 <strong>"Shared"</strong> 卡片
+                            <div class="location">
+                                📍 <strong>特征</strong>：写着 <strong>"FREE"</strong> 和 <strong>"$0/month"</strong><br>
+                                位置：左边第一个卡片
+                            </div>
+                        </li>
+                        <li>点击这个卡片上的 <strong>"Create"</strong> 按钮（绿色）</li>
+                    </ol>
+                    <div class="warning">
+                        ⚠️ <strong>千万别选错！</strong><br>
+                        ✅ M0 FREE - 免费，选这个<br>
+                        ❌ Serverless - 按使用付费<br>
+                        ❌ Dedicated - 独立服务器，很贵
+                    </div>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">3</span> 配置集群</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Deploy a cloud database                    │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Cloud Provider & Region                   │
+│  [AWS] [Google] [Azure]  ← AWS已选中         │
+│                                             │
+│  Region: [Singapore (ap-southeast-1) ▼]    │
+│          ↑ 点这里选择离你近的                  │
+│                                             │
+│  Cluster Tier                              │
+│  ● M0 Sandbox (Shared RAM)  ← 确认选中这个   │
+│    FREE                                    │
+│    512 MB Storage                          │
+│                                             │
+│  Cluster Name                              │
+│  [news-platform]  ← 改个好记的名字           │
+│                                             │
+│  [Create Deployment] ← 最后点这里            │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li><strong>Cloud Provider</strong>：保持 <code>AWS</code> 默认即可</li>
+                        <li><strong>Region</strong>（区域）：点击下拉菜单
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li>🇸🇬 Singapore - 如果在中国/东南亚</li>
+                                <li>🇯🇵 Tokyo - 如果在日本</li>
+                                <li>🇺🇸 N. Virginia - 如果在美国</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cluster Tier</strong>：确认是 <code>M0 Sandbox</code>（前面有●）</li>
+                        <li><strong>Cluster Name</strong>：改成 <code>news-platform</code>（可选）</li>
+                        <li>点击页面底部的 <strong>"Create Deployment"</strong>（绿色大按钮）</li>
+                    </ol>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">4</span> 创建数据库用户</h3>
+                    <p>集群创建后，会弹出安全设置窗口：</p>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Security Quickstart                        │
+├─────────────────────────────────────────────┤
+│                                             │
+│  How would you like to authenticate?       │
+│  ● Username and Password  ← 保持这个选中      │
+│                                             │
+│  Username: [newsuser]  ← 填这个              │
+│                                             │
+│  Password: [●●●●●●●●]  ← 填密码或自动生成     │
+│  [Autogenerate Secure Password] ← 或点这个   │
+│                                             │
+│  [Create User]  ← 最后点这里                 │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li><strong>Username</strong>：输入 <code>newsuser</code></li>
+                        <li><strong>Password</strong>：两种方式
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li><strong>方式A（推荐）</strong>：点击"Autogenerate Secure Password"自动生成
+                                    <div class="warning" style="margin-top: 10px;">
+                                        🚨 <strong>立即复制生成的密码！</strong>保存到记事本，只显示一次！
+                                    </div>
+                                </li>
+                                <li><strong>方式B</strong>：手动输入密码（至少8个字符），并记住它</li>
+                            </ul>
+                        </li>
+                        <li>点击 <strong>"Create User"</strong></li>
+                    </ol>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">5</span> 配置IP白名单</h3>
+                    <p>接着会要求设置IP访问：</p>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Where would you like to connect from?      │
+├─────────────────────────────────────────────┤
+│                                             │
+│  IP Access List                            │
+│  IP Address: [自动检测的IP]                  │
+│  Description: [My IP]                      │
+│  [Add Entry]                               │
+│                                             │
+│  Or:                                       │
+│  [Allow Access from Anywhere] ← 点这个！     │
+│                                             │
+│  [Finish and Close]  ← 最后点这里            │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>找到 <strong>"Allow Access from Anywhere"</strong> 链接或按钮
+                            <div class="location">
+                                📍 位置：在"Or:"下方，或IP输入框下方
+                            </div>
+                        </li>
+                        <li>点击它，会自动添加 <code>0.0.0.0/0</code></li>
+                        <li>点击 <strong>"Finish and Close"</strong> 或 <strong>"Done"</strong></li>
+                    </ol>
+                    <div class="info">
+                        💡 <strong>为什么允许所有IP？</strong><br>
+                        因为Render的服务器IP是动态的，这样设置才能确保连接。MongoDB有用户名密码保护，很安全。
+                    </div>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">6</span> 获取连接字符串</h3>
+                    <p>回到Database页面，找到你的集群：</p>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Database Deployments                       │
+├─────────────────────────────────────────────┤
+│                                             │
+│  ┌──────────────────────────────┐           │
+│  │  news-platform               │           │
+│  │  ● Running                   │           │
+│  │                              │           │
+│  │  [Browse]  [Connect]  [...]  │           │
+│  └──────────────────────────────┘           │
+│                ↑ 点这个                      │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>点击集群卡片上的 <strong>"Connect"</strong> 按钮
+                            <div class="location">
+                                📍 位置：集群卡片中间的按钮
+                            </div>
+                        </li>
+                        <li>在弹窗中选择 <strong>"Drivers"</strong> 或 <strong>"Connect your application"</strong>
+                            <div class="location">
+                                📍 位置：弹窗中的第一个选项卡片
+                            </div>
+                        </li>
+                        <li>会显示连接字符串，点击右边的 <strong>复制按钮 📋</strong></li>
+                        <li>粘贴到记事本</li>
+                    </ol>
+                    <p><strong>连接字符串格式：</strong></p>
+                    <div class="code-box">
+mongodb+srv://newsuser:<span class="highlight">&lt;password&gt;</span>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+                    </div>
+                    <div class="warning">
+                        <h4>🚨 非常重要：替换密码！</h4>
+                        <p>连接字符串中的 <code>&lt;password&gt;</code> 需要替换成你的<strong>真实密码</strong>！</p>
+                        <p><strong>示例：</strong></p>
+                        <p>如果密码是：<code>Abc123456</code></p>
+                        <p>替换后：</p>
+                        <div class="code-box">
+mongodb+srv://newsuser:<span class="highlight">Abc123456</span>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success">
+                    <h3>✅ MongoDB创建完成！</h3>
+                    <p>保存好以下信息：</p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>✅ 用户名：<code>newsuser</code></li>
+                        <li>✅ 密码：<code>你设置的密码</code></li>
+                        <li>✅ 连接字符串：<code>mongodb+srv://newsuser:密码@...</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第四部分：获取OpenAI密钥 -->
+            <div class="section">
+                <div class="section-number">4</div>
+                <h2>获取OpenAI API密钥 <span class="time-estimate">⏱️ 3-5分钟</span></h2>
+
+                <h3>什么是OpenAI API？</h3>
+                <p>OpenAI提供AI服务，用来把新闻总结成简报。需要API密钥才能使用。</p>
+
+                <div class="warning">
+                    <h4>⚠️ 如果你已经有OpenAI账号和API密钥</h4>
+                    <p>可以跳过这部分，直接使用现有密钥。</p>
+                </div>
+
+                <a href="https://platform.openai.com/api-keys" target="_blank" class="big-button">
+                    👉 点击这里打开OpenAI API密钥页面
+                </a>
+
+                <div class="substep">
+                    <h3><span class="substep-number">1</span> 注册/登录OpenAI</h3>
+                    <ol>
+                        <li>如果没有账号，点击"Sign up"注册
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li>可以用邮箱或Google账号</li>
+                                <li>需要验证手机号（可能需要国外号码）</li>
+                            </ul>
+                        </li>
+                        <li>新用户有$5免费额度（够用一段时间）</li>
+                    </ol>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">2</span> 创建API密钥</h3>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  API keys                                   │
+│  [Create new secret key]  ← 点这里           │
+├─────────────────────────────────────────────┤
+│                                             │
+│  弹窗：                                      │
+│  Name: [news-platform]  ← 填这个             │
+│  [Create secret key]  ← 然后点这里           │
+│                                             │
+│  Your secret key:                          │
+│  sk-xxxxxxxxxxxxxxxxxxxxxxx  [Copy]        │
+│         ↑ 立即复制这个！只显示一次！            │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>点击右上角 <strong>"Create new secret key"</strong>（绿色按钮）</li>
+                        <li>Name填：<code>news-platform</code></li>
+                        <li>点击 <strong>"Create secret key"</strong></li>
+                        <li><strong>🚨 立即复制密钥！</strong>保存到记事本，只显示一次！</li>
+                    </ol>
+                    <p><strong>密钥格式：</strong><code>sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code></p>
+                </div>
+
+                <div class="info">
+                    <h4>💡 替代方案：DeepSeek（国内，更便宜）</h4>
+                    <p>如果OpenAI注册困难，可以用DeepSeek：</p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>✅ 国内手机号可注册</li>
+                        <li>✅ 价格便宜10倍</li>
+                        <li>✅ 中文效果更好</li>
+                        <li>✅ 支持支付宝</li>
+                    </ul>
+                    <p><strong>注册地址：</strong><a href="https://platform.deepseek.com" target="_blank">https://platform.deepseek.com</a></p>
+                    <p><strong>如果用DeepSeek：</strong>获取API密钥后记住，后面配置时会用到不同的设置。</p>
+                </div>
+
+                <div class="success">
+                    <h3>✅ API密钥获取完成！</h3>
+                    <p>保存好你的密钥：<code>sk-xxxxxxxxx...</code></p>
+                </div>
+            </div>
+
+            <!-- 第五部分：创建服务 -->
+            <div class="section">
+                <div class="section-number">5</div>
+                <h2>在Render创建服务 <span class="time-estimate">⏱️ 15-20分钟</span></h2>
+
+                <div class="info">
+                    <h3>📋 我们要创建的服务：</h3>
+                    <table>
+                        <tr>
+                            <th>服务名称</th>
+                            <th>类型</th>
+                            <th>作用</th>
+                        </tr>
+                        <tr>
+                            <td>Backend</td>
+                            <td>Web Service</td>
+                            <td>后端API，处理请求</td>
+                        </tr>
+                        <tr>
+                            <td>AI Service</td>
+                            <td>Web Service</td>
+                            <td>抓取新闻，AI处理</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Static Site</td>
+                            <td>前端网站，用户界面</td>
+                        </tr>
+                        <tr>
+                            <td>Redis</td>
+                            <td>Redis</td>
+                            <td>缓存，实时通信</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Backend服务 -->
+                <div class="substep">
+                    <h3><span class="substep-number">1</span> 创建Backend服务</h3>
+
+                    <h4>① 开始创建</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Render Dashboard                           │
+│                            [New +]  ← 点这里 │
+├─────────────────────────────────────────────┤
+│  弹出菜单：                                  │
+│  [Web Service]  ← 选这个                    │
+│  [Static Site]                             │
+│  [PostgreSQL]                              │
+│  [Redis]                                   │
+│  [...]                                     │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>在Render Dashboard，点击右上角 <strong>"New +"</strong> 按钮
+                            <div class="location">
+                                📍 位置：页面右上角，蓝色加号按钮
+                            </div>
+                        </li>
+                        <li>选择 <strong>"Web Service"</strong></li>
+                    </ol>
+
+                    <h4>② 连接GitHub仓库</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Create a new Web Service                   │
+├─────────────────────────────────────────────┤
+│                                             │
+│  [Build and deploy from Git] ← 点这个         │
+│  [Deploy an existing image]                │
+│                                             │
+│  [Next]  ← 然后点这里                        │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>选择 <strong>"Build and deploy from a Git repository"</strong></li>
+                        <li>点击 <strong>"Next"</strong></li>
+                        <li>找到 <strong>news-brief-platform</strong> 仓库
+                            <div class="location">
+                                📍 如果看不到：点击"Configure account"连接GitHub
+                            </div>
+                        </li>
+                        <li>点击仓库右边的 <strong>"Connect"</strong> 按钮</li>
+                    </ol>
+
+                    <h4>③ 配置Backend</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Configure Web Service                      │
+├─────────────────────────────────────────────┤
+│  Name: [news-backend]  ← 填这个              │
+│  Region: [Singapore ▼]  ← 选离你近的          │
+│  Branch: [main]                            │
+│  <strong>Root Directory: [backend]</strong>  ← 重要！       │
+│  Runtime: [Node]                           │
+│  Build Command: [npm install]             │
+│  Start Command: [npm start]               │
+│                                             │
+│  Plan: [Free ▼]  ← 确认是Free              │
+│                                             │
+│  向下滚动找到环境变量...                      │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <p><strong>填写配置：</strong></p>
+                    <table style="margin: 15px 0;">
+                        <tr>
+                            <th>字段</th>
+                            <th>填写内容</th>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td><code>news-backend</code></td>
+                        </tr>
+                        <tr>
+                            <td>Region</td>
+                            <td>Singapore（或离你最近的）</td>
+                        </tr>
+                        <tr>
+                            <td>Root Directory</td>
+                            <td><code>backend</code> <strong>← 非常重要！</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Environment</td>
+                            <td>Node</td>
+                        </tr>
+                        <tr>
+                            <td>Build Command</td>
+                            <td><code>npm install</code></td>
+                        </tr>
+                        <tr>
+                            <td>Start Command</td>
+                            <td><code>npm start</code></td>
+                        </tr>
+                        <tr>
+                            <td>Plan</td>
+                            <td><strong>Free</strong></td>
+                        </tr>
+                    </table>
+
+                    <h4>④ 添加环境变量</h4>
+                    <p>向下滚动，找到 <strong>"Environment Variables"</strong> 部分：</p>
+                    <div class="location">
+                        📍 位置：配置页面下方，可能需要滚动
+                    </div>
+                    <p>点击 <strong>"Add Environment Variable"</strong>，逐个添加：</p>
+                    <div class="code-box">
+NODE_ENV=production
+PORT=5000
+MONGODB_URI=<span class="highlight">粘贴你的MongoDB连接字符串</span>
+REDIS_URL=<span class="highlight">稍后填写</span>
+FRONTEND_URL=<span class="highlight">稍后填写</span>
+                    </div>
+                    <div class="warning">
+                        ⚠️ <strong>MONGODB_URI</strong> 要填你刚才复制的MongoDB连接字符串（已替换密码的）<br>
+                        <strong>REDIS_URL</strong> 和 <strong>FRONTEND_URL</strong> 先留空，后面会填
+                    </div>
+
+                    <h4>⑤ 创建服务</h4>
+                    <ol>
+                        <li>确认Plan是 <strong>"Free"</strong></li>
+                        <li>点击页面底部的 <strong>"Create Web Service"</strong>（大大的蓝色按钮）</li>
+                        <li>开始部署，需要等待3-5分钟</li>
+                    </ol>
+
+                    <div class="success">
+                        ✅ Backend服务创建成功！等待它变成"Live"状态（绿色）
+                    </div>
+                </div>
+
+                <!-- Redis服务 -->
+                <div class="substep">
+                    <h3><span class="substep-number">2</span> 创建Redis服务</h3>
+
+                    <h4>① 开始创建</h4>
+                    <ol>
+                        <li>再次点击 <strong>"New +"</strong></li>
+                        <li>这次选择 <strong>"Redis"</strong>（不是Web Service）
+                            <div class="location">
+                                📍 位置：菜单中的"Redis"选项，有红色图标
+                            </div>
+                        </li>
+                    </ol>
+
+                    <h4>② 配置Redis</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Create a new Redis                         │
+├─────────────────────────────────────────────┤
+│  Name: [news-redis]  ← 填这个                │
+│  Region: [Singapore ▼]  ← 和Backend相同      │
+│  Plan: [Free ▼]  ← 确认是Free               │
+│                                             │
+│  [Create Redis]  ← 点这里                    │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>Name: <code>news-redis</code></li>
+                        <li>Region: 选择与Backend相同的区域</li>
+                        <li>Plan: <strong>Free</strong></li>
+                        <li>点击 <strong>"Create Redis"</strong></li>
+                    </ol>
+
+                    <h4>③ 获取Redis URL</h4>
+                    <p>Redis创建后，点击进入Redis详情页：</p>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  news-redis                                 │
+├─────────────────────────────────────────────┤
+│  Status: ● Live                            │
+│                                             │
+│  <strong>Internal Redis URL</strong>  ← 找到这个            │
+│  redis://red-xxxxx:6379  [Copy 📋]         │
+│                          ↑ 点这里复制         │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <ol>
+                        <li>在Redis详情页，找到 <strong>"Internal Redis URL"</strong>
+                            <div class="location">
+                                📍 位置：Info部分，Connections下面
+                            </div>
+                        </li>
+                        <li>点击右边的复制按钮 📋</li>
+                        <li>保存到记事本</li>
+                    </ol>
+
+                    <h4>④ 更新Backend的Redis URL</h4>
+                    <ol>
+                        <li>回到 <strong>news-backend</strong> 服务</li>
+                        <li>点击左侧菜单的 <strong>"Environment"</strong> 标签</li>
+                        <li>找到 <code>REDIS_URL</code>，点击右边的编辑图标</li>
+                        <li>粘贴Redis URL</li>
+                        <li>点击 <strong>"Save Changes"</strong></li>
+                    </ol>
+
+                    <div class="success">
+                        ✅ Redis服务创建完成！Backend会自动重新部署
+                    </div>
+                </div>
+
+                <!-- AI Service -->
+                <div class="substep">
+                    <h3><span class="substep-number">3</span> 创建AI Service服务</h3>
+
+                    <h4>① 开始创建</h4>
+                    <ol>
+                        <li>点击 <strong>"New +"</strong> → <strong>"Web Service"</strong></li>
+                        <li>选择 <strong>news-brief-platform</strong> 仓库 → <strong>"Connect"</strong></li>
+                    </ol>
+
+                    <h4>② 配置AI Service</h4>
+                    <p><strong>填写配置：</strong></p>
+                    <table style="margin: 15px 0;">
+                        <tr>
+                            <th>字段</th>
+                            <th>填写内容</th>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td><code>news-ai-service</code></td>
+                        </tr>
+                        <tr>
+                            <td>Root Directory</td>
+                            <td><code>ai-service</code> <strong>← 重要！</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Environment</td>
+                            <td>Python 3</td>
+                        </tr>
+                        <tr>
+                            <td>Build Command</td>
+                            <td><code>pip install -r requirements.txt</code></td>
+                        </tr>
+                        <tr>
+                            <td>Start Command</td>
+                            <td><code>python src/main_cloud.py</code></td>
+                        </tr>
+                    </table>
+
+                    <h4>③ 添加环境变量</h4>
+                    <div class="code-box">
+USE_CLOUD_AI=true
+AI_PROVIDER=openai
+OPENAI_API_KEY=<span class="highlight">你的OpenAI API密钥</span>
+OPENAI_MODEL=gpt-3.5-turbo
+OPENAI_BASE_URL=https://api.openai.com/v1
+MONGODB_URI=<span class="highlight">你的MongoDB连接字符串</span>
+REDIS_URL=<span class="highlight">你的Redis URL</span>
+CRAWL_INTERVAL=300
+                    </div>
+                    <div class="warning">
+                        🚨 <strong>重要：</strong><br>
+                        - <strong>OPENAI_API_KEY</strong>：填你的OpenAI密钥（<code>sk-xxx...</code>）<br>
+                        - <strong>MONGODB_URI</strong>：填MongoDB连接字符串<br>
+                        - <strong>REDIS_URL</strong>：填Redis URL
+                    </div>
+
+                    <div class="info">
+                        <h4>💡 如果使用DeepSeek</h4>
+                        <p>环境变量改成：</p>
+                        <div class="code-box">
+AI_PROVIDER=openai
+OPENAI_API_KEY=<span class="highlight">你的DeepSeek API密钥</span>
+OPENAI_BASE_URL=https://api.deepseek.com/v1
+OPENAI_MODEL=deepseek-chat
+                        </div>
+                    </div>
+
+                    <h4>④ 创建服务</h4>
+                    <ol>
+                        <li>选择 <strong>Free</strong> 计划</li>
+                        <li>点击 <strong>"Create Web Service"</strong></li>
+                        <li>等待部署（3-5分钟）</li>
+                    </ol>
+
+                    <div class="success">
+                        ✅ AI Service服务创建完成！
+                    </div>
+                </div>
+
+                <!-- Frontend服务 -->
+                <div class="substep">
+                    <h3><span class="substep-number">4</span> 创建Frontend服务</h3>
+
+                    <h4>① 先获取Backend URL</h4>
+                    <ol>
+                        <li>进入 <strong>news-backend</strong> 服务</li>
+                        <li>在页面顶部复制URL（类似：<code>https://news-backend-xxx.onrender.com</code>）
+                            <div class="location">
+                                📍 位置：服务名称下方，以https://开头的链接
+                            </div>
+                        </li>
+                        <li>保存到记事本</li>
+                    </ol>
+
+                    <h4>② 开始创建Frontend</h4>
+                    <ol>
+                        <li>点击 <strong>"New +"</strong> → 选择 <strong>"Static Site"</strong>（注意是Static Site，不是Web Service）
+                            <div class="location">
+                                📍 位置：菜单中的"Static Site"选项
+                            </div>
+                        </li>
+                        <li>选择 <strong>news-brief-platform</strong> 仓库 → <strong>"Connect"</strong></li>
+                    </ol>
+
+                    <h4>③ 配置Frontend</h4>
+                    <table style="margin: 15px 0;">
+                        <tr>
+                            <th>字段</th>
+                            <th>填写内容</th>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td><code>news-frontend</code></td>
+                        </tr>
+                        <tr>
+                            <td>Root Directory</td>
+                            <td><code>frontend</code> <strong>← 重要！</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Build Command</td>
+                            <td><code>npm install && npm run build</code></td>
+                        </tr>
+                        <tr>
+                            <td>Publish Directory</td>
+                            <td><code>build</code></td>
+                        </tr>
+                    </table>
+
+                    <h4>④ 添加环境变量</h4>
+                    <div class="code-box">
+REACT_APP_API_URL=<span class="highlight">https://你的backend域名</span>
+REACT_APP_WS_URL=<span class="highlight">wss://你的backend域名</span>
+                    </div>
+                    <div class="warning">
+                        ⚠️ <strong>注意：</strong><br>
+                        - API_URL 用 <code>https://</code><br>
+                        - WS_URL 用 <code>wss://</code>（WebSocket协议）<br>
+                        - 两个都填你的Backend域名，不要斜杠结尾
+                    </div>
+                    <p><strong>示例：</strong></p>
+                    <div class="code-box">
+REACT_APP_API_URL=https://news-backend-abc123.onrender.com
+REACT_APP_WS_URL=wss://news-backend-abc123.onrender.com
+                    </div>
+
+                    <h4>⑤ 创建服务</h4>
+                    <ol>
+                        <li>点击 <strong>"Create Static Site"</strong></li>
+                        <li>等待部署（3-5分钟）</li>
+                    </ol>
+
+                    <h4>⑥ 更新Backend的FRONTEND_URL</h4>
+                    <p>Frontend部署完成后：</p>
+                    <ol>
+                        <li>复制Frontend的URL（类似：<code>https://news-frontend-xxx.onrender.com</code>）</li>
+                        <li>回到 <strong>news-backend</strong> 服务</li>
+                        <li>Environment标签 → 编辑 <code>FRONTEND_URL</code></li>
+                        <li>粘贴Frontend URL</li>
+                        <li>点击 <strong>"Save Changes"</strong></li>
+                    </ol>
+
+                    <div class="success">
+                        ✅ Frontend服务创建完成！所有服务配置完毕！
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第六部分：验证和访问 -->
+            <div class="section">
+                <div class="section-number">6</div>
+                <h2>等待部署并访问网站 <span class="time-estimate">⏱️ 5-10分钟</span></h2>
+
+                <div class="info">
+                    <h3>📊 检查部署状态</h3>
+                    <p>在Render Dashboard，你会看到4个服务：</p>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  news-backend        ● Live  ← 等待变成这样   │
+│  news-ai-service     ● Live                │
+│  news-frontend       ● Live                │
+│  news-redis          ● Live                │
+└─────────────────────────────────────────────┘
+                    </div>
+                    <p><strong>状态说明：</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>🟡 <strong>Building</strong> - 正在构建（需要等待）</li>
+                        <li>🟢 <strong>Live</strong> - 部署成功，运行中</li>
+                        <li>🔴 <strong>Failed</strong> - 失败（需要查看日志修复）</li>
+                    </ul>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">1</span> 等待所有服务变成Live</h3>
+                    <p>这需要5-10分钟。你可以：</p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>点击服务查看实时日志</li>
+                        <li>刷新页面查看状态变化</li>
+                        <li>去喝杯咖啡 ☕</li>
+                    </ul>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">2</span> 访问你的网站</h3>
+                    <ol>
+                        <li>找到 <strong>news-frontend</strong> 服务</li>
+                        <li>点击顶部的URL链接（或复制）
+                            <div class="location">
+                                📍 位置：服务名称下方，以https://开头
+                            </div>
+                        </li>
+                        <li>在浏览器打开</li>
+                    </ol>
+                    <div class="warning">
+                        ⚠️ <strong>首次访问提示：</strong><br>
+                        - Render免费服务休眠后首次访问需要30秒唤醒<br>
+                        - 如果页面加载慢，请耐心等待<br>
+                        - 新闻数据需要5-10分钟才会出现（AI正在抓取处理）
+                    </div>
+                </div>
+
+                <div class="substep">
+                    <h3><span class="substep-number">3</span> 查看AI服务日志</h3>
+                    <p>确认新闻正在抓取：</p>
+                    <ol>
+                        <li>点击 <strong>news-ai-service</strong> 服务</li>
+                        <li>点击 <strong>"Logs"</strong> 标签
+                            <div class="location">
+                                📍 位置：页面顶部标签栏
+                            </div>
+                        </li>
+                        <li>应该能看到类似这样的日志：</li>
+                    </ol>
+                    <div class="code-box">
+开始新一轮新闻采集
+连接MongoDB成功
+连接Redis成功
+爬取到 25 条新闻
+开始AI处理...
+成功保存 20 条简报
+                    </div>
+                    <div class="info">
+                        💡 如果看到这些日志，说明一切正常！等待5-10分钟后刷新前端页面，新闻就会出现。
+                    </div>
+                </div>
+
+                <div class="success">
+                    <h3>🎉 恭喜！你的新闻简报平台上线了！</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        <strong>你的网站地址：</strong><br>
+                        <code style="font-size: 1.1em;">https://news-frontend-xxx.onrender.com</code>
+                    </p>
+                    <p>现在可以分享给任何人访问了！</p>
+                </div>
+            </div>
+
+            <!-- 常见问题 -->
+            <div class="section" style="border-left-color: #ef4444;">
+                <h2 style="color: #ef4444;">❓ 常见问题解决</h2>
+
+                <div class="warning">
+                    <h4>问题1：Build failed（构建失败）</h4>
+                    <p><strong>解决方法：</strong></p>
+                    <ol>
+                        <li>点击服务进入详情</li>
+                        <li>点击"Logs"查看错误信息</li>
+                        <li>常见原因：
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>Root Directory设置错误（检查是否是 backend / ai-service / frontend）</li>
+                                <li>环境变量缺失或错误</li>
+                                <li>依赖安装失败</li>
+                            </ul>
+                        </li>
+                        <li>修改后，点击"Manual Deploy" → "Clear build cache & deploy"</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <h4>问题2：前端页面空白</h4>
+                    <p><strong>解决方法：</strong></p>
+                    <ol>
+                        <li>按F12打开浏览器控制台，查看错误</li>
+                        <li>检查Frontend的环境变量：
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>REACT_APP_API_URL 是否正确（https://）</li>
+                                <li>REACT_APP_WS_URL 是否正确（wss://）</li>
+                            </ul>
+                        </li>
+                        <li>确认Backend状态是Live</li>
+                        <li>检查Backend的FRONTEND_URL是否设置</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <h4>问题3：没有新闻显示</h4>
+                    <p><strong>解决方法：</strong></p>
+                    <ol>
+                        <li>等待5-10分钟（首次抓取需要时间）</li>
+                        <li>查看AI Service的日志，确认是否在工作</li>
+                        <li>检查OpenAI API密钥：
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>密钥是否有效</li>
+                                <li>账户是否有余额</li>
+                                <li>访问：https://platform.openai.com/usage 查看</li>
+                            </ul>
+                        </li>
+                        <li>确认MongoDB和Redis连接成功（查看日志）</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <h4>问题4：服务显示Suspended</h4>
+                    <p><strong>原因：</strong>Render免费服务15分钟不活动会休眠</p>
+                    <p><strong>解决：</strong>访问网站会自动唤醒（等待约30秒）</p>
+                    <p><strong>避免休眠：</strong>可以使用cron-job.org等服务定时访问（每10分钟一次）</p>
+                </div>
+
+                <div class="warning">
+                    <h4>问题5：MongoDB连接失败</h4>
+                    <p><strong>解决方法：</strong></p>
+                    <ol>
+                        <li>检查连接字符串中的密码是否正确替换</li>
+                        <li>确认IP白名单包含 0.0.0.0/0</li>
+                        <li>检查MongoDB集群状态是否Running</li>
+                        <li>特殊字符需要URL编码（@ → %40, $ → %24）</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 费用说明 -->
+            <div class="section" style="border-left-color: #10b981;">
+                <h2 style="color: #10b981;">💰 费用说明</h2>
+
+                <div class="info">
+                    <h3>完全免费的部分：</h3>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>✅ Render Web Services: 750小时/月</li>
+                        <li>✅ Render Static Sites: 100GB带宽/月</li>
+                        <li>✅ Render Redis: 25MB存储</li>
+                        <li>✅ MongoDB Atlas: 512MB存储</li>
+                    </ul>
+
+                    <h3 style="margin-top: 20px;">需要付费的部分：</h3>
+                    <table style="margin-top: 15px;">
+                        <tr>
+                            <th>服务</th>
+                            <th>价格</th>
+                            <th>预估月费用</th>
+                        </tr>
+                        <tr>
+                            <td>OpenAI API</td>
+                            <td>$0.002/1K tokens</td>
+                            <td>$3-5（轻度使用）</td>
+                        </tr>
+                        <tr>
+                            <td>DeepSeek API</td>
+                            <td>便宜10倍</td>
+                            <td>$0.3-0.5（约2-3元）</td>
+                        </tr>
+                    </table>
+
+                    <p style="margin-top: 15px;"><strong>总结：</strong>除了AI费用（$3-5/月或更少），其他完全免费！</p>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="summary-box">
+                <h2 style="color: #1f2937; margin-top: 0;">🎊 完成！你做到了！</h2>
+                <p style="font-size: 1.2em; margin-bottom: 20px;">你成功创建了一个完整的新闻简报平台！</p>
+
+                <h3>📝 记住这些信息：</h3>
+                <table style="margin-top: 15px;">
+                    <tr>
+                        <th>项目</th>
+                        <th>信息</th>
+                    </tr>
+                    <tr>
+                        <td>前端网址</td>
+                        <td><code>https://news-frontend-xxx.onrender.com</code></td>
+                    </tr>
+                    <tr>
+                        <td>Render Dashboard</td>
+                        <td><a href="https://dashboard.render.com/" target="_blank">https://dashboard.render.com/</a></td>
+                    </tr>
+                    <tr>
+                        <td>MongoDB Atlas</td>
+                        <td><a href="https://cloud.mongodb.com/" target="_blank">https://cloud.mongodb.com/</a></td>
+                    </tr>
+                    <tr>
+                        <td>GitHub仓库</td>
+                        <td><code>https://github.com/你的用户名/news-brief-platform</code></td>
+                    </tr>
+                </table>
+
+                <h3 style="margin-top: 30px;">🚀 接下来可以做什么？</h3>
+                <ul style="margin: 15px 0 0 20px; line-height: 2;">
+                    <li>📊 在Render Dashboard监控服务状态</li>
+                    <li>📱 分享网站给朋友体验</li>
+                    <li>🔧 调整AI Service的抓取频率（修改CRAWL_INTERVAL）</li>
+                    <li>🌐 绑定自定义域名（在Render Settings中）</li>
+                    <li>📈 查看OpenAI使用情况和费用</li>
+                </ul>
+
+                <p style="margin-top: 30px; font-size: 1.1em;">
+                    <strong>遇到问题？</strong>查看上面的常见问题部分，或把具体错误信息告诉我！
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
