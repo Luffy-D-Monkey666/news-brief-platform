@@ -14,17 +14,36 @@ REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 # 爬虫配置
 CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 300))  # 5分钟
 
-# 新闻分类
+# 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
-    'finance',      # 财经
-    'technology',   # 科技
-    'health',       # 健康
-    'new_energy',   # 新能源
-    'automotive',   # 汽车
-    'robotics',     # 机器人
-    'ai',          # AI
-    'general'      # 综合
+    # 核心关注领域
+    'ai_robotics',          # AI与机器人
+    'ev_automotive',        # 新能源汽车
+    'finance_investment',   # 投资财经
+
+    # 主流新闻分类
+    'business_tech',        # 商业科技
+    'politics_world',       # 政治国际
+    'economy_policy',       # 经济政策
+    'health_medical',       # 健康医疗
+    'energy_environment',   # 能源环境
+    'entertainment_sports', # 娱乐体育
+    'general'              # 综合
 ]
+
+# 分类中文名称映射
+CATEGORY_NAMES = {
+    'ai_robotics': 'AI与机器人',
+    'ev_automotive': '新能源汽车',
+    'finance_investment': '投资财经',
+    'business_tech': '商业科技',
+    'politics_world': '政治国际',
+    'economy_policy': '经济政策',
+    'health_medical': '健康医疗',
+    'energy_environment': '能源环境',
+    'entertainment_sports': '娱乐体育',
+    'general': '综合'
+}
 
 # 新闻源配置
 NEWS_SOURCES = {
@@ -70,10 +89,23 @@ SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条简�
 """
 
 CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别中。
-可选类别：财经(finance)、科技(technology)、健康(health)、新能源(new_energy)、汽车(automotive)、机器人(robotics)、AI(ai)、综合(general)
+
+【核心关注类别】（优先匹配）
+- ai_robotics: 人工智能、机器人、自动化、AGI、大模型、机器学习相关
+- ev_automotive: 新能源汽车、电动车、特斯拉、比亚迪、汽车产业、自动驾驶
+- finance_investment: 股市、投资、基金、加密货币、并购、IPO、金融市场波动
+
+【主流新闻类别】
+- business_tech: 企业经营、科技公司、创业、产品发布、商业模式
+- politics_world: 政治、国际关系、地缘政治、外交、选举、政策
+- economy_policy: 宏观经济、经济政策、GDP、通胀、央行、贸易
+- health_medical: 医疗健康、疾病、药物、医疗技术、公共卫生
+- energy_environment: 能源（石油、天然气、核能）、气候变化、环保、碳排放
+- entertainment_sports: 娱乐、体育、文化、艺术、影视、游戏
+- general: 其他不属于以上类别的新闻
 
 新闻标题：{title}
 新闻简报：{summary}
 
-只返回类别英文名称，不要其他内容。
+只返回类别英文名称（如 ai_robotics），不要其他内容。
 类别："""

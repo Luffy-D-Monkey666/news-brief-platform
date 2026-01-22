@@ -7,71 +7,127 @@ import {
   FaCar,
   FaRobot,
   FaBrain,
-  FaGlobe
+  FaGlobe,
+  FaChartLine,
+  FaBolt,
+  FaLandmark,
+  FaNewspaper,
+  FaFilm
 } from 'react-icons/fa';
 
 const categoryIcons = {
-  finance: { icon: FaDollarSign, color: 'text-green-600' },
-  technology: { icon: FaMicrochip, color: 'text-blue-600' },
-  health: { icon: FaHeartbeat, color: 'text-red-600' },
-  new_energy: { icon: FaLeaf, color: 'text-yellow-600' },
-  automotive: { icon: FaCar, color: 'text-purple-600' },
-  robotics: { icon: FaRobot, color: 'text-indigo-600' },
-  ai: { icon: FaBrain, color: 'text-pink-600' },
+  // 核心关注领域（突出显示）
+  ai_robotics: { icon: FaBrain, color: 'text-purple-600', highlight: true },
+  ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
+  finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
+
+  // 主流新闻分类
+  business_tech: { icon: FaMicrochip, color: 'text-blue-600' },
+  politics_world: { icon: FaLandmark, color: 'text-indigo-600' },
+  economy_policy: { icon: FaDollarSign, color: 'text-yellow-600' },
+  health_medical: { icon: FaHeartbeat, color: 'text-pink-600' },
+  energy_environment: { icon: FaLeaf, color: 'text-teal-600' },
+  entertainment_sports: { icon: FaFilm, color: 'text-orange-600' },
   general: { icon: FaGlobe, color: 'text-gray-600' }
 };
 
 const categoryNames = {
-  finance: '财经',
-  technology: '科技',
-  health: '健康',
-  new_energy: '新能源',
-  automotive: '汽车',
-  robotics: '机器人',
-  ai: 'AI',
+  // 核心关注领域
+  ai_robotics: 'AI与机器人',
+  ev_automotive: '新能源汽车',
+  finance_investment: '投资财经',
+
+  // 主流新闻分类
+  business_tech: '商业科技',
+  politics_world: '政治国际',
+  economy_policy: '经济政策',
+  health_medical: '健康医疗',
+  energy_environment: '能源环境',
+  entertainment_sports: '娱乐体育',
   general: '综合'
 };
 
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
-  const categories = Object.keys(categoryNames);
+  // 核心关注领域（前3个）
+  const highlightCategories = ['ai_robotics', 'ev_automotive', 'finance_investment'];
+  // 其他分类
+  const otherCategories = Object.keys(categoryNames).filter(
+    cat => !highlightCategories.includes(cat)
+  );
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-      <h3 className="text-lg font-bold mb-4 text-gray-800">新闻分类</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
-        {/* 全部分类 */}
+      {/* 全部分类按钮 */}
+      <div className="mb-4">
         <button
           onClick={() => onCategoryChange(null)}
-          className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all ${
+          className={`flex items-center justify-center px-6 py-3 rounded-lg transition-all font-medium ${
             selectedCategory === null
-              ? 'bg-primary text-white shadow-lg scale-105'
+              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg scale-105'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          <FaGlobe className="text-2xl mb-2" />
-          <span className="text-sm font-medium">全部</span>
+          <FaGlobe className="text-xl mr-2" />
+          <span>全部</span>
         </button>
+      </div>
 
-        {/* 各个分类 */}
-        {categories.map((category) => {
-          const { icon: Icon, color } = categoryIcons[category];
-          const isSelected = selectedCategory === category;
+      {/* 核心关注领域 */}
+      <div className="mb-4">
+        <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+          <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-2 py-1 rounded text-xs mr-2">
+            ★ 重点关注
+          </span>
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {highlightCategories.map((category) => {
+            const { icon: Icon, color } = categoryIcons[category];
+            const isSelected = selectedCategory === category;
 
-          return (
-            <button
-              key={category}
-              onClick={() => onCategoryChange(category)}
-              className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all ${
-                isSelected
-                  ? 'bg-primary text-white shadow-lg scale-105'
-                  : 'bg-gray-100 hover:bg-gray-200'
-              }`}
-            >
-              <Icon className={`text-2xl mb-2 ${isSelected ? 'text-white' : color}`} />
-              <span className="text-sm font-medium">{categoryNames[category]}</span>
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={category}
+                onClick={() => onCategoryChange(category)}
+                className={`flex items-center justify-center p-4 rounded-lg transition-all font-medium ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-xl scale-105 ring-4 ring-purple-200'
+                    : 'bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-lg hover:scale-102 border-2 border-gray-200'
+                }`}
+              >
+                <Icon className={`text-3xl mr-3 ${isSelected ? 'text-white' : color}`} />
+                <span className={`text-base ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                  {categoryNames[category]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 其他分类 */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-500 mb-3">其他分类</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+          {otherCategories.map((category) => {
+            const { icon: Icon, color } = categoryIcons[category];
+            const isSelected = selectedCategory === category;
+
+            return (
+              <button
+                key={category}
+                onClick={() => onCategoryChange(category)}
+                className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all ${
+                  isSelected
+                    ? 'bg-primary text-white shadow-lg scale-105'
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              >
+                <Icon className={`text-2xl mb-1 ${isSelected ? 'text-white' : color}`} />
+                <span className="text-xs font-medium">{categoryNames[category]}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

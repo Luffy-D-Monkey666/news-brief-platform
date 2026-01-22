@@ -12,7 +12,18 @@ const briefSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['finance', 'technology', 'health', 'new_energy', 'automotive', 'robotics', 'ai', 'general']
+    enum: [
+      'ai_robotics',          // AI与机器人
+      'ev_automotive',        // 新能源汽车
+      'finance_investment',   // 投资财经
+      'business_tech',        // 商业科技
+      'politics_world',       // 政治国际
+      'economy_policy',       // 经济政策
+      'health_medical',       // 健康医疗
+      'energy_environment',   // 能源环境
+      'entertainment_sports', // 娱乐体育
+      'general'              // 综合
+    ]
   },
   source: {
     type: String,

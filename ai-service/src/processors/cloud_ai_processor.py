@@ -134,8 +134,10 @@ class CloudAIProcessor:
             # 清理和验证分类结果
             category = category.lower().strip()
             valid_categories = [
-                'finance', 'technology', 'health', 'new_energy',
-                'automotive', 'robotics', 'ai', 'general'
+                'ai_robotics', 'ev_automotive', 'finance_investment',
+                'business_tech', 'politics_world', 'economy_policy',
+                'health_medical', 'energy_environment', 'entertainment_sports',
+                'general'
             ]
 
             for cat in valid_categories:
