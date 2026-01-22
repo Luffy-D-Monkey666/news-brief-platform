@@ -12,7 +12,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.settings import (
     NEWS_SOURCES, OLLAMA_HOST, MODEL_NAME,
     MONGODB_URI, CRAWL_INTERVAL,
-    SUMMARIZE_PROMPT, CLASSIFY_PROMPT
+    SUMMARIZE_PROMPT, CLASSIFY_PROMPT,
+    REDIS_URL
 )
 from crawlers.news_crawler import NewsCrawler
 from processors.ai_processor import NewsProcessor
@@ -34,7 +35,7 @@ class NewsService:
         self.crawler = NewsCrawler(NEWS_SOURCES['rss_feeds'])
         self.processor = NewsProcessor(OLLAMA_HOST, MODEL_NAME)
         self.db = NewsDatabase(MONGODB_URI)
-        self.redis_client = redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
+        self.redis_client = redis.from_url(REDIS_URL)
 
     def run_cycle(self):
         """执行一次完整的新闻采集和处理循环"""
