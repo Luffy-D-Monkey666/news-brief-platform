@@ -19,10 +19,20 @@ const io = new Server(server, {
   }
 });
 
-// 环境变量
+// 环境变量 - 确保正确读取
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/news-brief';
-const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
+const MONGODB_URI = process.env.MONGODB_URI;
+const REDIS_URL = process.env.REDIS_URL;
+
+// 检查必需的环境变量
+if (!MONGODB_URI) {
+  console.error('错误: MONGODB_URI 环境变量未设置');
+  process.exit(1);
+}
+if (!REDIS_URL) {
+  console.error('错误: REDIS_URL 环境变量未设置');
+  process.exit(1);
+}
 
 // 中间件
 app.use(helmet());
