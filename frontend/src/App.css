@@ -22,3 +22,26 @@ code {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Masonry瀑布流布局 */
+.masonry-grid {
+  display: flex;
+  margin-left: -16px; /* gutter size offset */
+  width: auto;
+}
+
+.masonry-grid_column {
+  padding-left: 16px; /* gutter size */
+  background-clip: padding-box;
+}
+
+.masonry-grid_column > div {
+  margin-bottom: 16px;
+}

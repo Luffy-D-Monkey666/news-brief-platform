@@ -195,6 +195,7 @@ class NewsProcessor:
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
                 'link': news_item['link'],
+                'image': news_item.get('image'),
                 'published': news_item['published'],
                 'created_at': news_item.get('created_at')
             }

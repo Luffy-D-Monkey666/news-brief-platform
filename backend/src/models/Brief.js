@@ -38,6 +38,10 @@ const briefSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  image: {
+    type: String,
+    default: null
+  },
   published: {
     type: Date,
     default: Date.now

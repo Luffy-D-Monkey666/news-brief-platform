@@ -58,120 +58,47 @@ const categoryNames = {
 };
 
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
-  // One Piece 个人兴趣（顶部特殊显示）
-  const onePieceCategories = ['op_card_game', 'op_merchandise'];
-  // 核心关注领域
-  const highlightCategories = ['ai_robotics', 'ev_automotive', 'finance_investment'];
-  // 其他分类
-  const otherCategories = Object.keys(categoryNames).filter(
-    cat => !onePieceCategories.includes(cat) && !highlightCategories.includes(cat)
-  );
+  // 所有分类按顺序排列
+  const allCategories = Object.keys(categoryNames);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+    <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-2xl p-6 mb-8">
       {/* 全部分类按钮 */}
-      <div className="mb-4">
+      <div className="mb-6">
         <button
           onClick={() => onCategoryChange(null)}
-          className={`flex items-center justify-center px-6 py-3 rounded-lg transition-all font-medium ${
+          className={`w-full flex items-center justify-center px-6 py-3 rounded-xl transition-all font-medium ${
             selectedCategory === null
-              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg scale-105'
+              ? 'bg-black text-white shadow-lg'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
           <FaGlobe className="text-xl mr-2" />
-          <span>全部</span>
+          <span>全部分类</span>
         </button>
       </div>
 
-      {/* One Piece 个人兴趣 - 顶级优先 */}
-      <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-          <span className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs mr-2 animate-pulse">
-            ⚡ ONE PIECE 专区
-          </span>
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {onePieceCategories.map((category) => {
-            const { icon: Icon, color } = categoryIcons[category];
-            const isSelected = selectedCategory === category;
+      {/* 所有分类统一展示 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {allCategories.map((category) => {
+          const { icon: Icon, color } = categoryIcons[category];
+          const isSelected = selectedCategory === category;
 
-            return (
-              <button
-                key={category}
-                onClick={() => onCategoryChange(category)}
-                className={`flex items-center justify-center p-5 rounded-xl transition-all font-bold text-lg ${
-                  isSelected
-                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl scale-110 ring-4 ring-yellow-300 animate-pulse'
-                    : 'bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl hover:scale-105 border-3 border-yellow-300'
-                }`}
-              >
-                <Icon className={`text-4xl mr-3 ${isSelected ? 'text-white' : color}`} />
-                <span className={`${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                  {categoryNames[category]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 核心关注领域 */}
-      <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-          <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 py-1 rounded text-xs mr-2">
-            ★ 重点关注
-          </span>
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {highlightCategories.map((category) => {
-            const { icon: Icon, color } = categoryIcons[category];
-            const isSelected = selectedCategory === category;
-
-            return (
-              <button
-                key={category}
-                onClick={() => onCategoryChange(category)}
-                className={`flex items-center justify-center p-4 rounded-lg transition-all font-medium ${
-                  isSelected
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-xl scale-105 ring-4 ring-purple-200'
-                    : 'bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-lg hover:scale-102 border-2 border-gray-200'
-                }`}
-              >
-                <Icon className={`text-3xl mr-3 ${isSelected ? 'text-white' : color}`} />
-                <span className={`text-base ${isSelected ? 'text-white' : 'text-gray-800'}`}>
-                  {categoryNames[category]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 其他分类 */}
-      <div>
-        <h3 className="text-sm font-semibold text-gray-500 mb-3">其他分类</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
-          {otherCategories.map((category) => {
-            const { icon: Icon, color } = categoryIcons[category];
-            const isSelected = selectedCategory === category;
-
-            return (
-              <button
-                key={category}
-                onClick={() => onCategoryChange(category)}
-                className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all ${
-                  isSelected
-                    ? 'bg-primary text-white shadow-lg scale-105'
-                    : 'bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                <Icon className={`text-2xl mb-1 ${isSelected ? 'text-white' : color}`} />
-                <span className="text-xs font-medium">{categoryNames[category]}</span>
-              </button>
-            );
-          })}
-        </div>
+          return (
+            <button
+              key={category}
+              onClick={() => onCategoryChange(category)}
+              className={`flex flex-col items-center justify-center p-4 rounded-xl transition-all ${
+                isSelected
+                  ? 'bg-black text-white shadow-lg scale-105'
+                  : 'bg-gray-50 hover:bg-gray-100 hover:shadow-md'
+              }`}
+            >
+              <Icon className={`text-3xl mb-2 ${isSelected ? 'text-white' : color}`} />
+              <span className="text-xs font-medium text-center">{categoryNames[category]}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

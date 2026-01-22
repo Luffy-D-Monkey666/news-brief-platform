@@ -65,75 +65,88 @@ const BriefCard = ({ brief, isNew = false }) => {
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-5 border-l-4 ${
-        isNew ? 'animate-slide-in border-primary' : 'border-gray-200'
+      className={`group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 ${
+        isNew ? 'animate-slide-in ring-2 ring-black' : ''
       }`}
     >
-      {/* 头部 - 分类和时间 */}
-      <div className="flex items-center justify-between mb-3">
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${colorClass}`}>
-          {categoryName}
-        </span>
-        <div className="flex items-center text-gray-500 text-xs">
-          <FaClock className="mr-1" />
-          {formatDate(brief.created_at || brief.published)}
-        </div>
-      </div>
-
-      {/* 标题 */}
-      <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 hover:text-primary transition-colors">
-        <FaNewspaper className="inline mr-2 text-primary" />
-        {brief.title}
-      </h3>
-
-      {/* 摘要 */}
-      <p className="text-gray-700 mb-4 leading-relaxed text-sm">
-        {brief.summary}
-      </p>
-
-      {/* 底部 - 来源信息 */}
-      <div className="border-t pt-3 mt-3">
-        <div className="flex items-start justify-between text-xs text-gray-600">
-          <div className="flex-1">
-            <div className="flex items-center mb-1">
-              <FaLink className="mr-2 text-gray-400" />
-              <span className="font-semibold">来源:</span>
-            </div>
-            <div className="ml-5">
-              <p className="text-gray-700 font-medium">{brief.source}</p>
-              {brief.source_url && (
-                <a
-                  href={brief.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 hover:underline break-all"
-                >
-                  {brief.source_url}
-                </a>
-              )}
-            </div>
+      {/* 图片区域 */}
+      {brief.image && (
+        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+          <img
+            src={brief.image}
+            alt={brief.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+          {/* 分类标签叠加在图片上 */}
+          <div className="absolute top-3 left-3">
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md bg-white/90 ${colorClass}`}>
+              {categoryName}
+            </span>
           </div>
-
-          {brief.link && (
-            <a
-              href={brief.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-3 flex-shrink-0 bg-primary text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
-            >
-              查看原文
-              <FaExternalLinkAlt className="ml-1" />
-            </a>
+          {/* NEW标记 */}
+          {isNew && (
+            <div className="absolute top-3 right-3 bg-black text-white text-xs px-3 py-1 rounded-full font-bold animate-pulse">
+              NEW
+            </div>
           )}
         </div>
-      </div>
-
-      {/* 新消息标记 */}
-      {isNew && (
-        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-          NEW
-        </div>
       )}
+
+      {/* 内容区域 */}
+      <div className="p-5">
+        {/* 没有图片时显示分类和时间 */}
+        {!brief.image && (
+          <div className="flex items-center justify-between mb-3">
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${colorClass}`}>
+              {categoryName}
+            </span>
+            <div className="flex items-center text-gray-500 text-xs">
+              <FaClock className="mr-1" />
+              {formatDate(brief.created_at || brief.published)}
+            </div>
+          </div>
+        )}
+
+        {/* 标题 */}
+        <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors">
+          {brief.title}
+        </h3>
+
+        {/* 摘要 */}
+        <p className="text-gray-600 mb-4 leading-relaxed text-sm line-clamp-3">
+          {brief.summary}
+        </p>
+
+        {/* 底部 - 来源和时间 */}
+        <div className="flex items-center justify-between text-xs border-t pt-3">
+          <div className="flex items-center text-gray-500">
+            <FaLink className="mr-2" />
+            <span className="truncate">{brief.source}</span>
+          </div>
+          {brief.image && (
+            <div className="flex items-center text-gray-500">
+              <FaClock className="mr-1" />
+              {formatDate(brief.created_at || brief.published)}
+            </div>
+          )}
+        </div>
+
+        {/* 查看原文按钮 */}
+        {brief.link && (
+          <a
+            href={brief.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 w-full flex items-center justify-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+          >
+            查看原文
+            <FaExternalLinkAlt className="ml-2 text-xs" />
+          </a>
+        )}
+      </div>
     </div>
   );
 };

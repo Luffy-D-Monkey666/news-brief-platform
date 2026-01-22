@@ -26,6 +26,7 @@ class NewsCrawler:
                     'title': entry.get('title', ''),
                     'content': self._extract_content(entry),
                     'link': entry.get('link', ''),
+                    'image': self._extract_image(entry),
                     'published': self._parse_date(entry),
                     'source': feed.feed.get('title', feed_url),
                     'source_url': feed_url,
@@ -55,6 +56,32 @@ class NewsCrawler:
             content = soup.get_text(strip=True)
 
         return content[:1000]  # 限制长度
+
+    def _extract_image(self, entry) -> str:
+        """提取新闻图片"""
+        # 尝试从media:content提取
+        if hasattr(entry, 'media_content') and entry.media_content:
+            return entry.media_content[0].get('url', '')
+
+        # 尝试从media:thumbnail提取
+        if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
+            return entry.media_thumbnail[0].get('url', '')
+
+        # 尝试从enclosure提取
+        if hasattr(entry, 'enclosures') and entry.enclosures:
+            for enclosure in entry.enclosures:
+                if 'image' in enclosure.get('type', ''):
+                    return enclosure.get('href', '')
+
+        # 尝试从summary/description的HTML中提取第一张图片
+        content = entry.get('summary', '') or entry.get('description', '')
+        if content:
+            soup = BeautifulSoup(content, 'html.parser')
+            img = soup.find('img')
+            if img and img.get('src'):
+                return img.get('src')
+
+        return None
 
     def _parse_date(self, entry) -> datetime:
         """解析发布时间"""
