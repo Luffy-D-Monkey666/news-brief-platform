@@ -87,7 +87,11 @@ console.log('连接字符串:', MONGODB_URI);
 console.log('连接字符串开头:', MONGODB_URI.substring(0, 20));
 console.log('=====================');
 
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+  family: 4  // 强制使用 IPv4，避免 IPv6 DNS 问题
+})
   .then(() => {
     console.log('✅ MongoDB连接成功');
   })
