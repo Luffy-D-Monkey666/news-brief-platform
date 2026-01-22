@@ -111,12 +111,12 @@ const BriefCard = ({ brief, isNew = false }) => {
         )}
 
         {/* 标题 */}
-        <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-black transition-colors">
           {brief.title}
         </h3>
 
-        {/* 摘要 */}
-        <p className="text-gray-600 mb-4 leading-relaxed text-sm line-clamp-3">
+        {/* 摘要 - 完整显示，不截断 */}
+        <p className="text-gray-600 mb-4 leading-relaxed text-sm whitespace-pre-wrap">
           {brief.summary}
         </p>
 
