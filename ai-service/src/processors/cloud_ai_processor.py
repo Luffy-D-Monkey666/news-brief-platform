@@ -105,11 +105,25 @@ class CloudAIProcessor:
         elif self.provider == 'claude':
             return self._call_claude(prompt, max_tokens)
 
-    def summarize_news(self, title: str, content: str, prompt_template: str) -> Optional[str]:
-        """新闻摘要"""
+    def summarize_news(self, title: str, content: str, prompt_template: str) -> tuple[Optional[str], Optional[str]]:
+        """新闻摘要 - 返回(中文标题, 中文简报)"""
         prompt = prompt_template.format(title=title, content=content[:500])
-        summary = self.generate(prompt, max_tokens=150)
-        return summary
+        result = self.generate(prompt, max_tokens=300)
+
+        if result:
+            # 解析返回的中文标题和简报（按行分割）
+            lines = result.strip().split('\n')
+            lines = [line.strip() for line in lines if line.strip()]
+
+            if len(lines) >= 2:
+                chinese_title = lines[0]
+                chinese_summary = '\n'.join(lines[1:])
+                return chinese_title, chinese_summary
+            elif len(lines) == 1:
+                # 如果只有一行，作为简报，标题保持原样
+                return title, lines[0]
+
+        return None, None
 
     def classify_news(self, title: str, summary: str, prompt_template: str) -> str:
         """新闻分类"""
@@ -151,28 +165,29 @@ class NewsProcessor:
     def process_news(self, news_item: Dict, summarize_prompt: str, classify_prompt: str) -> Dict:
         """处理单条新闻"""
         try:
-            # 1. 生成摘要
-            summary = self.ai.summarize_news(
+            # 1. 生成中文标题和摘要
+            chinese_title, chinese_summary = self.ai.summarize_news(
                 news_item['title'],
                 news_item['content'],
                 summarize_prompt
             )
 
-            if not summary:
+            if not chinese_title or not chinese_summary:
                 logger.warning(f"摘要生成失败: {news_item['title']}")
-                summary = news_item['content'][:100] + '...'
+                chinese_title = news_item['title']
+                chinese_summary = news_item['content'][:100] + '...'
 
             # 2. 分类
             category = self.ai.classify_news(
-                news_item['title'],
-                summary,
+                chinese_title,
+                chinese_summary,
                 classify_prompt
             )
 
             # 3. 构建处理后的新闻
             processed_news = {
-                'title': news_item['title'],
-                'summary': summary,
+                'title': chinese_title,  # 使用中文标题
+                'summary': chinese_summary,  # 使用中文简报
                 'category': category,
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
@@ -181,7 +196,7 @@ class NewsProcessor:
                 'created_at': news_item.get('created_at')
             }
 
-            logger.info(f"处理完成: [{category}] {news_item['title'][:30]}...")
+            logger.info(f"处理完成: [{category}] {chinese_title[:30]}...")
             return processed_news
 
         except Exception as e:
