@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超简单云端部署 - 5分钟搞定</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .method-card {
+            background: #f8fafc;
+            border: 3px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+        .method-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+        .method-card.recommended {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%);
+        }
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #1f2937;
+            margin: 25px 0 15px 0;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #3b82f6;
+            margin: 20px 0 10px 0;
+        }
+        .step-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .step-list li {
+            margin: 15px 0;
+            padding-left: 10px;
+            line-height: 1.6;
+        }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: #3b82f6;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .comparison-table tr:hover {
+            background: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☁️ 超简单云端部署</h1>
+            <p class="subtitle">不需要在本地安装任何软件，5分钟上线你的新闻平台！</p>
+        </div>
+
+        <div class="content">
+            <!-- Railway方案 -->
+            <div class="method-card recommended">
+                <span class="badge">🏆 最推荐</span>
+                <h2><span class="emoji">🚂</span>方案1: Railway（最简单，5分钟）</h2>
+                <p><strong>完全免费 · 一键部署 · 自动配置数据库</strong></p>
+
+                <h3>📝 简单3步</h3>
+                <div class="step-list">
+                    <ol>
+                        <li><strong>注册账号</strong>
+                            <a href="https://railway.app/" target="_blank" class="big-button">
+                                👉 点击这里注册 Railway 账号
+                            </a>
+                            <p style="margin-top: 10px;">使用GitHub登录最方便（推荐）</p>
+                        </li>
+
+                        <li><strong>上传代码到GitHub</strong>
+                            <div class="code-box">
+cd /Users/xufan3/news-brief-platform
+git init
+git add .
+git commit -m "Initial commit"
+                            </div>
+                            <p>然后访问 <a href="https://github.com/new" target="_blank" style="color: #3b82f6;">https://github.com/new</a> 创建仓库，再执行：</p>
+                            <div class="code-box">
+git remote add origin https://github.com/你的用户名/news-brief-platform.git
+git branch -M main
+git push -u origin main
+                            </div>
+                        </li>
+
+                        <li><strong>在Railway部署</strong>
+                            <ol style="margin-top: 10px;">
+                                <li>在Railway点击 "New Project"</li>
+                                <li>选择 "Deploy from GitHub repo"</li>
+                                <li>选择你的仓库</li>
+                                <li>点击 "Add MongoDB"</li>
+                                <li>点击 "Add Redis"</li>
+                                <li>等待5分钟，完成！</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+
+                <h3>🔑 配置API密钥</h3>
+                <div class="info">
+                    <p><strong>需要OpenAI API密钥：</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li>访问 <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #1d4ed8;">https://platform.openai.com/api-keys</a></li>
+                        <li>创建新密钥（免费试用$5额度）</li>
+                        <li>在Railway项目设置中添加环境变量：
+                            <div class="code-box" style="margin-top: 10px;">
+USE_CLOUD_AI=true
+AI_PROVIDER=openai
+OPENAI_API_KEY=你复制的密钥
+MONGODB_URI=${{MongoDB.MONGO_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="success">
+                    <strong>✅ 完成！</strong> 访问Railway提供的URL，你的新闻平台已经上线了！
+                </div>
+            </div>
+
+            <!-- Vercel方案 -->
+            <div class="method-card">
+                <h2><span class="emoji">▲</span>方案2: Vercel（100%免费）</h2>
+                <p><strong>永久免费 · 全球加速 · 无需信用卡</strong></p>
+
+                <h3>📝 步骤</h3>
+                <div class="step-list">
+                    <ol>
+                        <li><strong>注册Vercel</strong>
+                            <a href="https://vercel.com/signup" target="_blank" class="big-button">
+                                👉 点击这里注册 Vercel 账号
+                            </a>
+                        </li>
+
+                        <li><strong>部署前端</strong>
+                            <ol style="margin-top: 10px;">
+                                <li>在Vercel点击 "Add New Project"</li>
+                                <li>导入你的GitHub仓库</li>
+                                <li>设置根目录为 <code>frontend</code></li>
+                                <li>点击 "Deploy"</li>
+                            </ol>
+                        </li>
+
+                        <li><strong>部署后端</strong>
+                            <ol style="margin-top: 10px;">
+                                <li>再次点击 "Add New Project"</li>
+                                <li>选择同一个仓库</li>
+                                <li>设置根目录为 <code>backend</code></li>
+                                <li>点击 "Deploy"</li>
+                            </ol>
+                        </li>
+
+                        <li><strong>配置数据库</strong>
+                            <p style="margin-top: 10px;">需要单独注册免费数据库：</p>
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li><strong>MongoDB:</strong> <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" style="color: #3b82f6;">https://www.mongodb.com/cloud/atlas/register</a> （512MB免费）</li>
+                                <li><strong>Redis:</strong> <a href="https://upstash.com/" target="_blank" style="color: #3b82f6;">https://upstash.com/</a> （免费）</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    ⚠️ Vercel免费版有限制：<br>
+                    - 函数执行时间最多10秒<br>
+                    - 不支持WebSocket（实时推送功能受限）
+                </div>
+            </div>
+
+            <!-- 成本对比 -->
+            <h2 style="margin-top: 40px;">💰 成本对比</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>项目</th>
+                    <th>Railway</th>
+                    <th>Vercel</th>
+                    <th>本地运行</th>
+                </tr>
+                <tr>
+                    <td><strong>服务器费用</strong></td>
+                    <td>免费（500h/月）</td>
+                    <td>免费</td>
+                    <td>0元</td>
+                </tr>
+                <tr>
+                    <td><strong>数据库费用</strong></td>
+                    <td>免费（自动配置）</td>
+                    <td>需单独注册</td>
+                    <td>0元</td>
+                </tr>
+                <tr>
+                    <td><strong>AI费用</strong></td>
+                    <td colspan="3">OpenAI API约 $0.002/条新闻（约0.015元）<br>每天1000条约15元</td>
+                </tr>
+                <tr>
+                    <td><strong>总计/月</strong></td>
+                    <td>约450元</td>
+                    <td>约450元</td>
+                    <td>0元（电费忽略）</td>
+                </tr>
+            </table>
+
+            <div class="info">
+                💡 <strong>省钱小贴士：</strong><br>
+                - 使用OpenAI免费$5额度可以处理约2500条新闻<br>
+                - 减少爬取频率（改为每小时一次）可以大幅降低成本<br>
+                - 如果预算有限，建议本地运行（完全免费）
+            </div>
+
+            <!-- 快速链接 -->
+            <h2 style="margin-top: 40px;">🔗 快速链接</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                <a href="https://railway.app/" target="_blank" class="big-button">Railway 官网</a>
+                <a href="https://vercel.com/" target="_blank" class="big-button">Vercel 官网</a>
+                <a href="https://platform.openai.com/" target="_blank" class="big-button">OpenAI 官网</a>
+                <a href="https://github.com/new" target="_blank" class="big-button">创建 GitHub 仓库</a>
+            </div>
+
+            <!-- 帮助 -->
+            <div class="success" style="margin-top: 40px;">
+                <h3>🎉 需要帮助？</h3>
+                <p>如果部署过程中遇到问题：</p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>查看 <a href="file:///Users/xufan3/news-brief-platform/CLOUD_DEPLOY.md" target="_blank" style="color: #065f46;">CLOUD_DEPLOY.md</a> 详细文档</li>
+                    <li>检查环境变量是否配置正确</li>
+                    <li>查看部署日志找出错误</li>
+                    <li>告诉我具体错误信息，我可以帮你解决</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

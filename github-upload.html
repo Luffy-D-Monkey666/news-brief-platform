@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub上传教程 - 零基础也能学会</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .step {
+            background: #f8fafc;
+            border-left: 5px solid #3b82f6;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .step-number {
+            background: #3b82f6;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #1f2937;
+            margin: 20px 0 15px 0;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #3b82f6;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+        .code-box code {
+            display: block;
+            white-space: pre-wrap;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: #2563eb;
+        }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px 10px 10px 40px;
+            position: relative;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+        }
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 12px;
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .qa {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .qa h4 {
+            color: #ef4444;
+            margin-bottom: 10px;
+        }
+        .video-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .video-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        }
+        .highlight {
+            background: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📤 GitHub上传教程</h1>
+            <p style="font-size: 1.3em; margin-top: 10px;">零基础也能学会 · 每一步都有详细说明</p>
+        </div>
+
+        <div class="content">
+            <!-- 概览 -->
+            <div class="info">
+                <h3>📋 你将学会什么</h3>
+                <ul class="checklist">
+                    <li>注册GitHub账号</li>
+                    <li>创建代码仓库</li>
+                    <li>安装和配置Git</li>
+                    <li>上传你的代码</li>
+                    <li>连接到Railway部署</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>预计时间：10-15分钟</strong></p>
+            </div>
+
+            <!-- 步骤1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h2>注册GitHub账号</h2>
+                <p>如果你已经有GitHub账号，可以跳过这一步。</p>
+
+                <a href="https://github.com/signup" target="_blank" class="big-button">
+                    👉 点击这里注册GitHub
+                </a>
+
+                <h3>填写信息：</h3>
+                <ul style="margin: 15px 0 15px 30px;">
+                    <li><strong>Email</strong>：你的邮箱</li>
+                    <li><strong>Password</strong>：设置密码（至少15个字符）</li>
+                    <li><strong>Username</strong>：用户名（只能用字母、数字、连字符）</li>
+                </ul>
+
+                <div class="warning">
+                    ⚠️ <strong>重要</strong>：记住你的用户名，后面会用到！<br>
+                    例如：如果你的用户名是 <span class="highlight">zhangsan</span>，你的仓库地址就是 <code>https://github.com/zhangsan/...</code>
+                </div>
+
+                <div class="success">
+                    ✅ 注册后去邮箱验证邮件，点击验证链接激活账号
+                </div>
+            </div>
+
+            <!-- 步骤2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h2>创建新仓库</h2>
+
+                <a href="https://github.com/new" target="_blank" class="big-button">
+                    👉 点击这里创建仓库
+                </a>
+
+                <h3>填写以下内容：</h3>
+                <div class="code-box">
+<code>Repository name: news-brief-platform
+Description: 实时新闻简报平台</code>
+                </div>
+
+                <h3>重要设置：</h3>
+                <ul style="margin: 15px 0 15px 30px;">
+                    <li>✅ 选择 <strong>Public</strong>（公开）</li>
+                    <li>❌ <strong>不要</strong>勾选 "Add a README file"</li>
+                    <li>❌ <strong>不要</strong>勾选 "Add .gitignore"</li>
+                    <li>❌ <strong>不要</strong>选择 License</li>
+                </ul>
+
+                <p style="margin: 20px 0;">点击绿色的 <strong>"Create repository"</strong> 按钮</p>
+
+                <div class="success">
+                    ✅ 创建成功后，你会看到一个新页面，上面有命令提示。<strong>不要关闭这个页面！</strong>
+                </div>
+            </div>
+
+            <!-- 步骤3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h2>安装Git（Mac用户）</h2>
+
+                <h3>检查是否已安装</h3>
+                <p>打开"终端"应用（在 应用程序 → 实用工具 里），输入：</p>
+                <div class="code-box">
+<code>git --version</code>
+                </div>
+
+                <p>如果显示版本号，说明已安装，跳到步骤4。</p>
+                <p>如果显示找不到命令，继续安装：</p>
+
+                <h3>安装方法：</h3>
+                <div class="code-box">
+<code># 安装Homebrew（如果没有）
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 安装Git
+brew install git</code>
+                </div>
+
+                <div class="info">
+                    💡 <strong>什么是终端？</strong><br>
+                    在Mac上按 <kbd>Command ⌘</kbd> + <kbd>空格</kbd>，输入"终端"或"Terminal"，回车打开
+                </div>
+            </div>
+
+            <!-- 步骤4 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h2>配置Git信息</h2>
+                <p>在终端中输入以下命令（<span class="highlight">替换成你的信息</span>）：</p>
+
+                <div class="code-box">
+<code># 配置用户名（就是你GitHub的用户名）
+git config --global user.name "<span class="highlight">你的GitHub用户名</span>"
+
+# 配置邮箱（就是你注册GitHub的邮箱）
+git config --global user.email "<span class="highlight">你的邮箱@example.com</span>"</code>
+                </div>
+
+                <h3>示例：</h3>
+                <div class="code-box">
+<code>git config --global user.name "zhangsan"
+git config --global user.email "zhangsan@gmail.com"</code>
+                </div>
+
+                <div class="warning">
+                    ⚠️ 记得把<span class="highlight">引号里面的内容</span>改成你自己的！
+                </div>
+            </div>
+
+            <!-- 步骤5 -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h2>上传代码到GitHub</h2>
+
+                <h3>复制以下所有命令，一起粘贴到终端执行：</h3>
+
+                <div class="code-box">
+<code># 1. 进入项目目录
+cd /Users/xufan3/news-brief-platform
+
+# 2. 初始化Git仓库
+git init
+
+# 3. 添加所有文件
+git add .
+
+# 4. 提交代码
+git commit -m "Initial commit - 实时新闻简报平台"
+
+# 5. 连接到GitHub（<span class="highlight">重要：把这里改成你的用户名！</span>）
+git remote add origin https://github.com/<span class="highlight">你的用户名</span>/news-brief-platform.git
+
+# 6. 设置主分支
+git branch -M main
+
+# 7. 推送到GitHub
+git push -u origin main</code>
+                </div>
+
+                <div class="warning">
+                    ⚠️ <strong>重要</strong>：第5步命令中，把 <span class="highlight">你的用户名</span> 改成你实际的GitHub用户名！<br><br>
+                    例如，如果你的用户名是 <code>zhangsan</code>，命令应该是：<br>
+                    <code>git remote add origin https://github.com/zhangsan/news-brief-platform.git</code>
+                </div>
+
+                <h3>第一次推送会要求登录</h3>
+                <div class="info">
+                    <p><strong>如果弹出登录窗口：</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>输入你的GitHub用户名</li>
+                        <li>输入你的GitHub密码</li>
+                    </ul>
+
+                    <p style="margin-top: 15px;"><strong>如果要求Personal Access Token：</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li>访问：<a href="https://github.com/settings/tokens" target="_blank" style="color: #1d4ed8;">https://github.com/settings/tokens</a></li>
+                        <li>点击 "Generate new token (classic)"</li>
+                        <li>Note填写：<code>news-platform</code></li>
+                        <li>勾选 <strong>repo</strong> 权限（全选）</li>
+                        <li>点击底部 "Generate token"</li>
+                        <li><strong>立即复制这个token</strong>（只显示一次！）</li>
+                        <li>在终端密码处粘贴这个token</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 步骤6 -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h2>验证上传成功</h2>
+
+                <p>访问你的仓库地址：</p>
+                <div class="code-box">
+<code>https://github.com/<span class="highlight">你的用户名</span>/news-brief-platform</code>
+                </div>
+
+                <h3>你应该能看到：</h3>
+                <ul class="checklist">
+                    <li>所有项目文件和文件夹</li>
+                    <li>README.md文件</li>
+                    <li>frontend、backend、ai-service文件夹</li>
+                    <li>大约50个文件</li>
+                    <li>绿色的提交信息</li>
+                </ul>
+
+                <div class="success">
+                    🎉 <strong>恭喜！代码上传成功！</strong><br>
+                    现在可以继续部署到Railway了！
+                </div>
+            </div>
+
+            <!-- 常见问题 -->
+            <div style="margin-top: 50px;">
+                <h2>❓ 常见问题解决</h2>
+
+                <div class="qa">
+                    <h4>问题1：command not found: git</h4>
+                    <p><strong>解决</strong>：Git没有安装，重新执行步骤3</p>
+                </div>
+
+                <div class="qa">
+                    <h4>问题2：fatal: remote origin already exists</h4>
+                    <p><strong>解决</strong>：先删除再添加</p>
+                    <div class="code-box">
+<code>git remote remove origin
+git remote add origin https://github.com/你的用户名/news-brief-platform.git</code>
+                    </div>
+                </div>
+
+                <div class="qa">
+                    <h4>问题3：Permission denied</h4>
+                    <p><strong>解决</strong>：需要Personal Access Token，按照步骤5的说明创建</p>
+                </div>
+
+                <div class="qa">
+                    <h4>问题4：! [rejected] main -> main (fetch first)</h4>
+                    <p><strong>解决</strong>：先拉取再推送</p>
+                    <div class="code-box">
+<code>git pull origin main --allow-unrelated-histories
+git push -u origin main</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 下一步 -->
+            <div style="margin-top: 50px;">
+                <h2>🚀 下一步：部署到Railway</h2>
+
+                <div class="success">
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">代码上传成功后，就可以部署了！</p>
+
+                    <a href="https://railway.app/" target="_blank" class="big-button">
+                        👉 点击这里进入Railway开始部署
+                    </a>
+
+                    <p style="margin-top: 20px;">或者查看详细部署教程：</p>
+                    <a href="file:///Users/xufan3/news-brief-platform/cloud-deploy.html" target="_blank" class="big-button" style="font-size: 1em;">
+                        📖 打开云端部署指南
+                    </a>
+                </div>
+            </div>
+
+            <!-- 视频教程 -->
+            <div style="margin-top: 50px;">
+                <h2>🎥 视频教程（如果还不清楚）</h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="video-card">
+                        <h3>Git基础教程（5分钟）</h3>
+                        <a href="https://www.bilibili.com/video/BV1vy4y1s7k6" target="_blank" class="big-button" style="font-size: 0.9em;">
+                            观看视频
+                        </a>
+                    </div>
+
+                    <div class="video-card">
+                        <h3>GitHub使用教程</h3>
+                        <a href="https://www.bilibili.com/video/BV1HM411377j" target="_blank" class="big-button" style="font-size: 0.9em;">
+                            观看视频
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速命令参考 -->
+            <div style="margin-top: 50px; background: #f9fafb; padding: 30px; border-radius: 10px;">
+                <h2>📋 快速命令参考</h2>
+                <p>所有命令一次性复制（记得改用户名）：</p>
+                <div class="code-box">
+<code>cd /Users/xufan3/news-brief-platform
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/<span class="highlight">你的用户名</span>/news-brief-platform.git
+git branch -M main
+git push -u origin main</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 复制功能（可选）
+        document.querySelectorAll('.code-box').forEach(box => {
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.textContent = '复制';
+            btn.onclick = function() {
+                const code = box.querySelector('code').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    btn.textContent = '已复制！';
+                    setTimeout(() => btn.textContent = '复制', 2000);
+                });
+            };
+            box.appendChild(btn);
+        });
+    </script>
+</body>
+</html>

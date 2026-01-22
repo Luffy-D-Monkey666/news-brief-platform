@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # MongoDB数据库
+  mongodb:
+    image: mongo:6
+    container_name: news-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: news-brief
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    container_name: news-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Ollama AI服务
+  ollama:
+    image: ollama/ollama:latest
+    container_name: news-ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Python AI服务
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: news-ai-service
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+      - redis
+      - ollama
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/news-brief
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_HOST=http://ollama:11434
+      - MODEL_NAME=qwen2:7b
+    volumes:
+      - ./ai-service:/app
+
+  # Node.js后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: news-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+      - redis
+      - ai-service
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/news-brief
+      - REDIS_URL=redis://redis:6379
+      - AI_SERVICE_URL=http://ai-service:8000
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app
+
+  # React前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: news-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - REACT_APP_WS_URL=ws://localhost:5000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  mongodb_data:
+  redis_data:
+  ollama_data:
