@@ -208,6 +208,7 @@
                     <li>注册GitHub账号</li>
                     <li>创建代码仓库</li>
                     <li>安装和配置Git</li>
+                    <li>创建Personal Access Token（重要！）</li>
                     <li>上传你的代码</li>
                     <li>连接到Railway部署</li>
                 </ul>
@@ -328,6 +329,49 @@ git config --global user.email "zhangsan@gmail.com"</code>
             <!-- 步骤5 -->
             <div class="step">
                 <div class="step-number">5</div>
+                <h2>创建Personal Access Token</h2>
+
+                <div class="error">
+                    ⚠️ <strong>非常重要</strong>：GitHub已不再支持密码登录！<br>
+                    你必须创建Token才能上传代码
+                </div>
+
+                <h3>什么是Token？</h3>
+                <p>Token就像一个临时密码，专门用于代码上传，比普通密码更安全。</p>
+
+                <a href="https://github.com/settings/tokens" target="_blank" class="big-button">
+                    👉 点击这里创建Token
+                </a>
+
+                <h3>创建步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击上面的按钮，会打开Token设置页面</li>
+                    <li>点击右上角绿色按钮 <strong>"Generate new token"</strong></li>
+                    <li>选择 <strong>"Generate new token (classic)"</strong></li>
+                    <li>填写信息：
+                        <ul style="margin: 10px 0 10px 20px;">
+                            <li><strong>Note（备注）</strong>：填 <code>news-platform-deploy</code></li>
+                            <li><strong>Expiration（过期时间）</strong>：选 <strong>"No expiration"</strong>（不过期）</li>
+                            <li><strong>权限</strong>：找到 <strong>repo</strong>，把前面的方框勾上</li>
+                        </ul>
+                    </li>
+                    <li>滚动到底部，点击绿色 <strong>"Generate token"</strong> 按钮</li>
+                </ol>
+
+                <div class="error">
+                    🚨 <strong>立即复制Token！</strong><br>
+                    Token只显示一次！生成后立即复制保存到记事本<br>
+                    Token看起来像这样：<code>ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+                </div>
+
+                <div class="success">
+                    ✅ 复制好Token后，继续下一步
+                </div>
+            </div>
+
+            <!-- 步骤6 -->
+            <div class="step">
+                <div class="step-number">6</div>
                 <h2>上传代码到GitHub</h2>
 
                 <h3>复制以下所有命令，一起粘贴到终端执行：</h3>
@@ -363,28 +407,23 @@ git push -u origin main</code>
 
                 <h3>第一次推送会要求登录</h3>
                 <div class="info">
-                    <p><strong>如果弹出登录窗口：</strong></p>
-                    <ul style="margin: 10px 0 10px 20px;">
-                        <li>输入你的GitHub用户名</li>
-                        <li>输入你的GitHub密码</li>
-                    </ul>
+                    <p><strong>现在会要求登录：</strong></p>
+                    <div class="code-box" style="margin: 10px 0;">
+<code>Username for 'https://github.com': <span class="highlight">输入你的GitHub用户名</span>
+Password for 'https://xxx@github.com': <span class="highlight">粘贴你刚才复制的Token</span></code>
+                    </div>
 
-                    <p style="margin-top: 15px;"><strong>如果要求Personal Access Token：</strong></p>
-                    <ol style="margin: 10px 0 10px 20px;">
-                        <li>访问：<a href="https://github.com/settings/tokens" target="_blank" style="color: #1d4ed8;">https://github.com/settings/tokens</a></li>
-                        <li>点击 "Generate new token (classic)"</li>
-                        <li>Note填写：<code>news-platform</code></li>
-                        <li>勾选 <strong>repo</strong> 权限（全选）</li>
-                        <li>点击底部 "Generate token"</li>
-                        <li><strong>立即复制这个token</strong>（只显示一次！）</li>
-                        <li>在终端密码处粘贴这个token</li>
-                    </ol>
+                    <p style="margin-top: 15px;"><strong>⚠️ 注意：</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li><strong>Username</strong>: 输入你的GitHub用户名（如 <code>Luffy-D-Monkey666</code>）</li>
+                        <li><strong>Password</strong>: <strong>粘贴Token</strong>（不是GitHub密码！是刚才复制的ghp_xxx...）</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 步骤6 -->
+            <!-- 步骤7 -->
             <div class="step">
-                <div class="step-number">6</div>
+                <div class="step-number">7</div>
                 <h2>验证上传成功</h2>
 
                 <p>访问你的仓库地址：</p>
@@ -411,23 +450,48 @@ git push -u origin main</code>
             <div style="margin-top: 50px;">
                 <h2>❓ 常见问题解决</h2>
 
+                <div class="qa" style="background: #fee2e2; border-color: #ef4444;">
+                    <h4 style="color: #dc2626;">⚠️ 问题1：Authentication failed / Invalid username or token（最常见）</h4>
+                    <p><strong>错误信息：</strong></p>
+                    <div class="code-box">
+<code>remote: Invalid username or token.
+Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/xxx/news-brief-platform.git/'</code>
+                    </div>
+
+                    <p><strong>原因：</strong>GitHub不再支持密码登录，必须使用Token</p>
+
+                    <p><strong>解决方法：</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li>先创建Token（如果还没创建）：<a href="https://github.com/settings/tokens" target="_blank" style="color: #dc2626;">点击这里</a></li>
+                        <li>在终端执行：</li>
+                    </ol>
+                    <div class="code-box">
+<code># 删除旧连接
+cd /Users/xufan3/news-brief-platform
+git remote remove origin
+
+# 重新添加（替换成你的用户名）
+git remote add origin https://github.com/你的用户名/news-brief-platform.git
+
+# 重新推送
+git push -u origin main</code>
+                    </div>
+                    <p style="margin-top: 10px;">当要求输入密码时，<strong>粘贴Token</strong>（不是GitHub密码！）</p>
+                </div>
+
                 <div class="qa">
-                    <h4>问题1：command not found: git</h4>
+                    <h4>问题2：command not found: git</h4>
                     <p><strong>解决</strong>：Git没有安装，重新执行步骤3</p>
                 </div>
 
                 <div class="qa">
-                    <h4>问题2：fatal: remote origin already exists</h4>
+                    <h4>问题3：fatal: remote origin already exists</h4>
                     <p><strong>解决</strong>：先删除再添加</p>
                     <div class="code-box">
 <code>git remote remove origin
 git remote add origin https://github.com/你的用户名/news-brief-platform.git</code>
                     </div>
-                </div>
-
-                <div class="qa">
-                    <h4>问题3：Permission denied</h4>
-                    <p><strong>解决</strong>：需要Personal Access Token，按照步骤5的说明创建</p>
                 </div>
 
                 <div class="qa">

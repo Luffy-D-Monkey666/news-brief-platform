@@ -91,7 +91,33 @@ git config --global user.email "zhangsan@gmail.com"
 
 ---
 
-## 第五部分：上传代码到GitHub
+## 第五部分：创建Personal Access Token（重要！）
+
+**⚠️ GitHub已不再支持密码登录，必须使用Token！**
+
+### 步骤1：创建Token
+
+1. **访问Token设置页面**（直接点击）：
+   https://github.com/settings/tokens
+
+2. 点击右上角绿色按钮 **"Generate new token"**
+   - 选择 **"Generate new token (classic)"**
+
+3. **填写Token信息**：
+   - **Note（备注）**：填写 `news-platform-deploy`（给这个token起个名字）
+   - **Expiration（过期时间）**：选择 **"No expiration"**（不过期）
+   - **权限勾选**：找到 **repo**，把整个repo前面的方框勾上（会自动勾选所有子项）
+
+4. 滚动到页面底部，点击绿色的 **"Generate token"** 按钮
+
+5. **⚠️ 非常重要**：
+   - Token生成后，**立即复制保存**（只显示一次！）
+   - Token看起来像：`ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+   - 保存到记事本或备忘录，后面会用到
+
+---
+
+## 第六部分：上传代码到GitHub
 
 ### 步骤1：进入项目目录
 打开终端，输入：
@@ -138,9 +164,9 @@ git remote add origin https://github.com/你的GitHub用户名/news-brief-platfo
 ```
 
 **示例：**
-如果你的用户名是 `zhangsan`，那么命令是：
+如果你的用户名是 `Luffy-D-Monkey666`，那么命令是：
 ```bash
-git remote add origin https://github.com/zhangsan/news-brief-platform.git
+git remote add origin https://github.com/Luffy-D-Monkey666/news-brief-platform.git
 ```
 
 ### 步骤6：设置主分支名称
@@ -153,18 +179,16 @@ git branch -M main
 git push -u origin main
 ```
 
-**第一次推送会要求登录：**
+**现在会要求登录：**
 
-#### Mac用户：
-会弹出一个登录窗口，输入你的GitHub用户名和密码
+```
+Username for 'https://github.com': 输入你的GitHub用户名
+Password for 'https://你的用户名@github.com': 粘贴你刚才复制的Token
+```
 
-#### 如果要求输入Personal Access Token：
-1. 访问：https://github.com/settings/tokens
-2. 点击 "Generate new token (classic)"
-3. 勾选 "repo" 权限
-4. 点击 "Generate token"
-5. **复制生成的token**（只显示一次！）
-6. 在终端粘贴这个token作为密码
+**⚠️ 注意**：
+- Username: 输入你的GitHub用户名（如 `Luffy-D-Monkey666`）
+- Password: **粘贴Token**（不是GitHub密码！是刚才复制的token）
 
 ### 步骤8：等待上传完成
 
@@ -187,7 +211,7 @@ Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 ---
 
-## 第六部分：验证上传成功
+## 第七部分：验证上传成功
 
 ### 检查清单：
 1. ✅ 访问你的GitHub仓库页面
@@ -199,50 +223,108 @@ Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 ## 常见问题解决
 
-### 问题1：命令找不到（command not found）
+### ⚠️ 问题1：Authentication failed（认证失败）/ Invalid username or token
+
+**错误信息**：
+```
+remote: Invalid username or token.
+Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/xxx/news-brief-platform.git/'
+```
+
+**原因**：GitHub不再支持密码登录，必须使用Personal Access Token
+
+**解决方法**：
+
+#### 方法A：删除重新推送（推荐）
+```bash
+# 1. 进入项目目录
+cd /Users/xufan3/news-brief-platform
+
+# 2. 删除旧的远程连接
+git remote remove origin
+
+# 3. 重新添加（替换成你的用户名）
+git remote add origin https://github.com/你的用户名/news-brief-platform.git
+
+# 4. 重新推送
+git push -u origin main
+```
+
+当要求输入密码时：
+- **Username**: 输入你的GitHub用户名
+- **Password**: **粘贴Token**（不是密码！）
+
+#### 方法B：在URL中包含Token
+```bash
+cd /Users/xufan3/news-brief-platform
+git remote remove origin
+
+# 把YOUR_TOKEN替换成你的token
+git remote add origin https://YOUR_TOKEN@github.com/你的用户名/news-brief-platform.git
+
+git push -u origin main
+```
+
+示例：
+```bash
+# 如果token是 ghp_abc123xyz，用户名是 Luffy-D-Monkey666
+git remote add origin https://ghp_abc123xyz@github.com/Luffy-D-Monkey666/news-brief-platform.git
+```
+
+---
+
+### 问题2：命令找不到（command not found）
 **解决**：说明Git没有安装，重新安装Git
 
-### 问题2：Permission denied（权限拒绝）
-**解决**：需要配置SSH密钥或使用Personal Access Token
+---
+
+### 问题3：Permission denied（权限拒绝）
+**解决**：使用SSH密钥（更安全的方法）
 
 配置SSH密钥：
 ```bash
-# 生成SSH密钥
+# 1. 生成SSH密钥
 ssh-keygen -t ed25519 -C "你的邮箱@example.com"
+# 一路按回车
 
-# 查看公钥
+# 2. 查看公钥
 cat ~/.ssh/id_ed25519.pub
 
-# 复制输出内容，添加到GitHub
-# 访问：https://github.com/settings/ssh/new
+# 3. 复制输出内容
 ```
 
-### 问题3：fatal: remote origin already exists
+然后：
+1. 访问：https://github.com/settings/ssh/new
+2. Title填：`My Mac`
+3. 粘贴公钥
+4. 点击 "Add SSH key"
+
+最后：
+```bash
+cd /Users/xufan3/news-brief-platform
+git remote remove origin
+git remote add origin git@github.com:你的用户名/news-brief-platform.git
+git push -u origin main
+```
+
+---
+
+### 问题4：fatal: remote origin already exists
 **解决**：说明已经添加过远程仓库，先删除再添加
 ```bash
 git remote remove origin
 git remote add origin https://github.com/你的用户名/news-brief-platform.git
 ```
 
-### 问题4：! [rejected] main -> main (fetch first)
+---
+
+### 问题5：! [rejected] main -> main (fetch first)
 **解决**：远程仓库有内容，需要先合并
 ```bash
 git pull origin main --allow-unrelated-histories
 git push -u origin main
 ```
-
-### 问题5：无法推送，要求Personal Access Token
-**解决步骤：**
-
-1. 访问：https://github.com/settings/tokens
-2. 点击 "Generate new token (classic)"
-3. 设置：
-   - Note: `news-platform-deploy`
-   - Expiration: `No expiration`（不过期）
-   - 勾选权限：`repo` (全选)
-4. 点击 "Generate token"
-5. **立即复制token**（只显示一次！）
-6. 在推送时，用户名输入你的GitHub用户名，密码输入这个token
 
 ---
 
