@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Atlas 注册详细图解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #10b981;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: #f8fafc;
+            border-left: 5px solid #10b981;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .step-number {
+            background: #10b981;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #1f2937;
+            margin: 20px 0 15px 0;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #10b981;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+        .screenshot {
+            background: #1e293b;
+            border: 3px solid #10b981;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            color: #10b981;
+            font-family: monospace;
+        }
+        .screenshot h4 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .location {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .interface-mockup {
+            background: white;
+            border: 2px solid #9ca3af;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        code {
+            background: #1e293b;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .highlight {
+            background: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        ol, ul {
+            margin-left: 30px;
+            line-height: 2.5;
+        }
+        .substep {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍃 MongoDB Atlas 详细注册教程</h1>
+        <p style="text-align: center; color: #6b7280; font-size: 1.2em; margin-bottom: 40px;">
+            每个按钮在哪里都告诉你 · 5分钟搞定
+        </p>
+
+        <div class="info">
+            <h3>📋 为什么用MongoDB Atlas？</h3>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>✅ 完全免费（512MB存储）</li>
+                <li>✅ 不需要信用卡</li>
+                <li>✅ 自动备份</li>
+                <li>✅ 比Render的MongoDB免费版好用</li>
+            </ul>
+        </div>
+
+        <!-- 步骤1 -->
+        <div class="step">
+            <div class="step-number">1</div>
+            <h2>访问MongoDB Atlas官网</h2>
+
+            <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" class="big-button">
+                👉 点击这里打开MongoDB Atlas注册页面
+            </a>
+
+            <div class="screenshot">
+                <h4>📍 你会看到什么：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│                                             │
+│           MongoDB                           │
+│                                             │
+│   Create your MongoDB Account              │
+│                                             │
+│   ┌───────────────────────────────┐         │
+│   │ Email Address                 │         │
+│   └───────────────────────────────┘         │
+│   ┌───────────────────────────────┐         │
+│   │ First Name                    │         │
+│   └───────────────────────────────┘         │
+│   ┌───────────────────────────────┐         │
+│   │ Last Name                     │         │
+│   └───────────────────────────────┘         │
+│   ┌───────────────────────────────┐         │
+│   │ Password                      │         │
+│   └───────────────────────────────┘         │
+│                                             │
+│   [✓] I agree to terms...                  │
+│                                             │
+│   [  Create your account  ]  ← 绿色按钮     │
+│                                             │
+│   Or sign up with:                         │
+│   [  Google  ] [  GitHub  ]                │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>注册方式选择：</h3>
+            <div class="substep">
+                <h4><strong>方式A：用Google账号注册（最快，推荐）</strong></h4>
+                <ol>
+                    <li>点击 <strong>"Sign up with Google"</strong>（白色按钮，有Google图标）
+                        <div class="location">
+                            📍 位置：页面下方，"Or sign up with:" 下面的第一个按钮
+                        </div>
+                    </li>
+                    <li>选择你的Google账号</li>
+                    <li>授权MongoDB访问基本信息</li>
+                    <li>完成！自动登录</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>方式B：用GitHub账号注册（推荐）</strong></h4>
+                <ol>
+                    <li>点击 <strong>"Sign up with GitHub"</strong>（黑色按钮，有GitHub图标）
+                        <div class="location">
+                            📍 位置：Google按钮旁边
+                        </div>
+                    </li>
+                    <li>授权MongoDB</li>
+                    <li>完成！</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>方式C：用邮箱注册</strong></h4>
+                <ol>
+                    <li>填写邮箱地址</li>
+                    <li>填写名字（First Name）和姓氏（Last Name）</li>
+                    <li>设置密码（至少8个字符）</li>
+                    <li>勾选 <code>✓ I agree to terms...</code></li>
+                    <li>点击绿色 <strong>"Create your account"</strong> 按钮</li>
+                    <li>去邮箱验证（点击邮件中的验证链接）</li>
+                </ol>
+            </div>
+
+            <div class="success">
+                ✅ 注册成功后，会自动跳转到欢迎页面
+            </div>
+        </div>
+
+        <!-- 步骤2 -->
+        <div class="step">
+            <div class="step-number">2</div>
+            <h2>选择部署类型</h2>
+
+            <div class="screenshot">
+                <h4>📍 注册后的第一个页面：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Deploy your database                       │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Choose your path                           │
+│                                             │
+│  ┌────────────────┐  ┌─────────────────┐   │
+│  │  M0 FREE       │  │  Serverless     │   │
+│  │                │  │                 │   │
+│  │  Shared        │  │  Pay for what   │   │
+│  │  $0/month      │  │  you use        │   │
+│  │                │  │                 │   │
+│  │  [Create] ←选这个 │  │  [Create]       │   │
+│  └────────────────┘  └─────────────────┘   │
+│                                             │
+│  ┌────────────────────────────────────┐     │
+│  │  Dedicated                         │     │
+│  │  Full control, starting at...      │     │
+│  │  [Create]                          │     │
+│  └────────────────────────────────────┘     │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>操作步骤：</h3>
+            <ol>
+                <li>找到 <strong>"M0"</strong> 或 <strong>"Shared"</strong> 卡片
+                    <div class="location">
+                        📍 位置：页面左边第一个卡片<br>
+                        特征：写着 <strong>"FREE"</strong> 和 <strong>"$0/month"</strong>
+                    </div>
+                </li>
+                <li>点击这个卡片上的 <strong>"Create"</strong> 按钮（绿色按钮）</li>
+            </ol>
+
+            <div class="warning">
+                ⚠️ <strong>不要选错</strong>：
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ <strong>M0 FREE</strong> - 免费，选这个！</li>
+                    <li>❌ Serverless - 按使用付费</li>
+                    <li>❌ Dedicated - 独立服务器，贵</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 步骤3 -->
+        <div class="step">
+            <div class="step-number">3</div>
+            <h2>配置免费集群</h2>
+
+            <div class="screenshot">
+                <h4>📍 配置页面布局：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Deploy a cloud database                    │
+├─────────────────────────────────────────────┤
+│                                             │
+│  <strong>Cloud Provider & Region</strong>   ← 第一步       │
+│  ┌─────────────────────────────────┐        │
+│  │ [AWS] [Google] [Azure]          │        │
+│  │                                 │        │
+│  │ Region: Singapore (ap-south...) │ ← 选择 │
+│  └─────────────────────────────────┘        │
+│                                             │
+│  <strong>Cluster Tier</strong>              ← 第二步       │
+│  ┌─────────────────────────────────┐        │
+│  │ ● M0 Sandbox (Shared RAM)       │ ← 默认 │
+│  │   FREE                          │        │
+│  │   512 MB Storage                │        │
+│  │   Shared vCPU                   │        │
+│  └─────────────────────────────────┘        │
+│                                             │
+│  <strong>Cluster Name</strong>              ← 第三步       │
+│  ┌─────────────────────────────────┐        │
+│  │ Cluster0                        │ ← 改名 │
+│  └─────────────────────────────────┘        │
+│                                             │
+│  [Create Deployment] ← 最后点这里            │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>详细配置步骤：</h3>
+
+            <div class="substep">
+                <h4><strong>第1步：选择云服务商和区域</strong></h4>
+                <ol>
+                    <li><strong>Cloud Provider</strong>：保持默认 <code>AWS</code>（Amazon）
+                        <div class="location">
+                            📍 位置：页面顶部，三个选项卡：AWS | Google Cloud | Azure<br>
+                            AWS已经是默认选中的（蓝色）
+                        </div>
+                    </li>
+                    <li><strong>Region</strong>（区域）：点击下拉菜单选择
+                        <div class="location">
+                            📍 位置：Cloud Provider下方的大下拉框
+                        </div>
+                        <strong>推荐选择：</strong>
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>🇸🇬 <strong>Singapore</strong> (ap-southeast-1) - 如果你在中国/东南亚</li>
+                            <li>🇯🇵 <strong>Tokyo</strong> (ap-northeast-1) - 如果你在日本/东亚</li>
+                            <li>🇺🇸 <strong>N. Virginia</strong> (us-east-1) - 如果你在美国</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>第2步：确认集群层级（Cluster Tier）</strong></h4>
+                <div class="location">
+                    📍 位置：Region选择下方，大大的卡片显示区域
+                </div>
+                <p>应该已经自动选中 <strong>M0 Sandbox</strong>（有个圆点●在前面）</p>
+                <p><strong>确认显示：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ <strong>FREE</strong></li>
+                    <li>✅ 512 MB Storage</li>
+                    <li>✅ Shared vCPU</li>
+                </ul>
+                <div class="warning">
+                    ⚠️ 如果显示其他选项（M2、M5等），说明选错了，点击 <strong>M0</strong> 卡片切换
+                </div>
+            </div>
+
+            <div class="substep">
+                <h4><strong>第3步：修改集群名称（可选）</strong></h4>
+                <div class="location">
+                    📍 位置：页面下方，Cluster Name输入框
+                </div>
+                <ol>
+                    <li>默认名称是 <code>Cluster0</code></li>
+                    <li>可以改成：<code>news-platform</code>（更容易识别）</li>
+                    <li>或者保持默认也可以</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>第4步：创建集群</strong></h4>
+                <ol>
+                    <li>滚动到页面底部</li>
+                    <li>找到绿色的 <strong>"Create Deployment"</strong> 按钮
+                        <div class="location">
+                            📍 位置：页面最底部，右下角，大大的绿色按钮
+                        </div>
+                    </li>
+                    <li>点击它</li>
+                </ol>
+            </div>
+
+            <div class="success">
+                ✅ 集群创建中...需要等待1-3分钟
+            </div>
+        </div>
+
+        <!-- 步骤4 -->
+        <div class="step">
+            <div class="step-number">4</div>
+            <h2>创建数据库用户</h2>
+
+            <div class="screenshot">
+                <h4>📍 创建用户的弹窗：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Security Quickstart                        │
+├─────────────────────────────────────────────┤
+│                                             │
+│  <strong>How would you like to authenticate?</strong>       │
+│                                             │
+│  ● Username and Password  ← 选这个           │
+│  ○ Certificate                             │
+│                                             │
+│  ┌─────────────────────────────────┐        │
+│  │ Username: newsuser              │ ← 填写 │
+│  └─────────────────────────────────┘        │
+│  ┌─────────────────────────────────┐        │
+│  │ Password: ●●●●●●●●              │ ← 填写 │
+│  └─────────────────────────────────┘        │
+│  [Autogenerate Secure Password]            │
+│                                             │
+│  Database User Privileges:                 │
+│  ● Read and write to any database          │
+│                                             │
+│  [Create User] ← 点这里                      │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>详细步骤：</h3>
+
+            <div class="substep">
+                <h4><strong>1. 选择认证方式</strong></h4>
+                <div class="location">
+                    📍 位置：弹窗顶部，两个单选按钮
+                </div>
+                <p>选择 <strong>"Username and Password"</strong>（应该已经默认选中）</p>
+            </div>
+
+            <div class="substep">
+                <h4><strong>2. 填写用户名</strong></h4>
+                <div class="location">
+                    📍 位置：第一个输入框，标签是 "Username"
+                </div>
+                <p>输入：<code>newsuser</code>（或者任何你喜欢的名字）</p>
+            </div>
+
+            <div class="substep">
+                <h4><strong>3. 设置密码</strong></h4>
+                <div class="location">
+                    📍 位置：第二个输入框，标签是 "Password"
+                </div>
+                <p><strong>方式A：自动生成（推荐）</strong></p>
+                <ol>
+                    <li>点击 <strong>"Autogenerate Secure Password"</strong> 按钮
+                        <div class="location">
+                            📍 位置：密码输入框下方的小按钮
+                        </div>
+                    </li>
+                    <li>会自动填入一个随机密码</li>
+                    <li><strong>⚠️ 立即复制这个密码！</strong>保存到记事本</li>
+                </ol>
+                <p><strong>方式B：手动设置</strong></p>
+                <ol>
+                    <li>直接在密码框输入你的密码</li>
+                    <li>要求：至少8个字符</li>
+                    <li>记住这个密码！后面会用</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>4. 确认权限</strong></h4>
+                <div class="location">
+                    📍 位置：密码框下方，"Database User Privileges" 部分
+                </div>
+                <p>保持默认：<code>● Read and write to any database</code></p>
+            </div>
+
+            <div class="substep">
+                <h4><strong>5. 创建用户</strong></h4>
+                <ol>
+                    <li>点击绿色的 <strong>"Create User"</strong> 按钮
+                        <div class="location">
+                            📍 位置：弹窗底部，绿色按钮
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                🚨 <strong>非常重要</strong>：把用户名和密码记下来！
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>用户名：<code>newsuser</code></li>
+                    <li>密码：<code>你设置或生成的密码</code></li>
+                </ul>
+            </div>
+
+            <div class="success">
+                ✅ 用户创建成功！弹窗会自动关闭或显示下一步
+            </div>
+        </div>
+
+        <!-- 步骤5 -->
+        <div class="step">
+            <div class="step-number">5</div>
+            <h2>配置IP访问白名单</h2>
+
+            <div class="screenshot">
+                <h4>📍 IP白名单配置页面：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Where would you like to connect from?      │
+├─────────────────────────────────────────────┤
+│                                             │
+│  <strong>Network Access</strong>                            │
+│                                             │
+│  ● My Local Environment  ← 默认选择          │
+│  ○ Cloud Environment                       │
+│                                             │
+│  <strong>IP Access List</strong>                            │
+│  ┌─────────────────────────────────┐        │
+│  │ IP Address: [自动检测你的IP]     │        │
+│  └─────────────────────────────────┘        │
+│  ┌─────────────────────────────────┐        │
+│  │ Description: My IP              │        │
+│  └─────────────────────────────────┘        │
+│                                             │
+│  [Add Entry]                               │
+│                                             │
+│  Or allow access from anywhere:            │
+│  [Allow Access from Anywhere] ← 点这个！     │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>详细步骤：</h3>
+
+            <div class="substep">
+                <h4><strong>方式A：允许任何地方访问（最简单，推荐）</strong></h4>
+                <div class="location">
+                    📍 位置：弹窗下方，"Or allow access from anywhere" 下面
+                </div>
+                <ol>
+                    <li>找到 <strong>"Allow Access from Anywhere"</strong> 按钮（可能是链接形式）</li>
+                    <li>点击它</li>
+                    <li>会自动添加 <code>0.0.0.0/0</code>（表示允许所有IP）</li>
+                </ol>
+                <div class="info">
+                    💡 为什么这样设置？
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>Render的服务器IP是动态的</li>
+                        <li>允许任何IP才能确保连接</li>
+                        <li>MongoDB有用户名密码保护，安全</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="substep">
+                <h4><strong>方式B：手动添加 0.0.0.0/0（如果找不到上面的按钮）</strong></h4>
+                <ol>
+                    <li>在 <strong>"IP Address"</strong> 输入框输入：<code>0.0.0.0/0</code>
+                        <div class="location">
+                            📍 位置：弹窗中间的输入框
+                        </div>
+                    </li>
+                    <li>在 <strong>"Description"</strong> 输入框输入：<code>Allow All</code></li>
+                    <li>点击 <strong>"Add Entry"</strong> 按钮</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>完成设置</strong></h4>
+                <ol>
+                    <li>确认IP列表中有 <code>0.0.0.0/0</code></li>
+                    <li>点击 <strong>"Finish and Close"</strong> 或 <strong>"Done"</strong> 按钮
+                        <div class="location">
+                            📍 位置：弹窗底部，绿色按钮
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="success">
+                ✅ IP白名单配置完成！
+            </div>
+        </div>
+
+        <!-- 步骤6 -->
+        <div class="step">
+            <div class="step-number">6</div>
+            <h2>获取连接字符串</h2>
+
+            <div class="screenshot">
+                <h4>📍 集群主页面：</h4>
+                <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Database Deployments                       │
+├─────────────────────────────────────────────┤
+│                                             │
+│  ┌────────────────────────────────────┐     │
+│  │  Cluster0 (或 news-platform)       │     │
+│  │                                    │     │
+│  │  ● Running                         │     │
+│  │  512 MB Storage                    │     │
+│  │  M0 Sandbox                        │     │
+│  │                                    │     │
+│  │  [Browse Collections]              │     │
+│  │  [Connect] ← 点这个按钮              │     │
+│  │  [...]                             │     │
+│  └────────────────────────────────────┘     │
+│                                             │
+└─────────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <h3>详细步骤：</h3>
+
+            <div class="substep">
+                <h4><strong>1. 找到并点击Connect按钮</strong></h4>
+                <div class="location">
+                    📍 位置：在Database Deployments页面，找到你的集群卡片<br>
+                    集群卡片中有三个按钮：Browse Collections | <strong>Connect</strong> | ...（三个点）
+                </div>
+                <ol>
+                    <li>点击中间的 <strong>"Connect"</strong> 按钮（通常是绿色或蓝色）</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>2. 选择连接方式</strong></h4>
+                <div class="screenshot">
+                    <h4>📍 Connect弹窗：</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────┐
+│  Connect to Cluster0                    │
+├─────────────────────────────────────────┤
+│                                         │
+│  Choose a connection method:           │
+│                                         │
+│  ┌──────────────────────────────┐      │
+│  │  Drivers                     │ ← 选这个
+│  │  Connect your application    │      │
+│  └──────────────────────────────┘      │
+│                                         │
+│  ┌──────────────────────────────┐      │
+│  │  MongoDB Shell               │      │
+│  │  Use mongosh                 │      │
+│  └──────────────────────────────┘      │
+│                                         │
+│  ┌──────────────────────────────┐      │
+│  │  Compass                     │      │
+│  │  Use MongoDB's GUI           │      │
+│  └──────────────────────────────┘      │
+│                                         │
+└─────────────────────────────────────────┘
+                    </div>
+                </div>
+                <div class="location">
+                    📍 选择：<strong>"Drivers"</strong> 或 <strong>"Connect your application"</strong><br>
+                    位置：弹窗中的第一个卡片
+                </div>
+            </div>
+
+            <div class="substep">
+                <h4><strong>3. 选择驱动和版本</strong></h4>
+                <div class="screenshot">
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────┐
+│  Connect                                │
+├─────────────────────────────────────────┤
+│                                         │
+│  1. Select your driver and version     │
+│     Driver: [Node.js ▼]                │
+│     Version: [5.5 or later ▼]         │
+│                                         │
+│  2. Add your connection string         │
+│     mongodb+srv://newsuser:<password>  │
+│     @cluster0.xxxxx.mongodb.net/       │
+│                                         │
+│     [📋 Copy] ← 点这个复制               │
+│                                         │
+└─────────────────────────────────────────┘
+                    </div>
+                </div>
+                <ol>
+                    <li><strong>Driver</strong>：选择 <code>Node.js</code>（保持默认即可）</li>
+                    <li><strong>Version</strong>：保持默认（任何版本都可以）</li>
+                </ol>
+            </div>
+
+            <div class="substep">
+                <h4><strong>4. 复制连接字符串</strong></h4>
+                <div class="location">
+                    📍 位置：在"Add your connection string"部分，大大的灰色文本框
+                </div>
+                <ol>
+                    <li>找到连接字符串（以 <code>mongodb+srv://</code> 开头）</li>
+                    <li>点击右边的 <strong>复制按钮</strong> 📋（或手动选择复制）</li>
+                    <li>粘贴到记事本</li>
+                </ol>
+                <p><strong>连接字符串格式：</strong></p>
+                <div class="code-box">
+mongodb+srv://newsuser:<span class="highlight">&lt;password&gt;</span>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+                </div>
+            </div>
+
+            <div class="substep">
+                <h4><strong>5. 替换密码</strong></h4>
+                <div class="warning">
+                    ⚠️ <strong>非常重要！</strong>
+                </div>
+                <p>连接字符串中有 <code>&lt;password&gt;</code>，需要替换成你的<strong>真实密码</strong>！</p>
+                <p><strong>示例：</strong></p>
+                <p>如果你的密码是：<code>mySecret123</code></p>
+                <p>原始：</p>
+                <div class="code-box">
+mongodb+srv://newsuser:<span class="highlight">&lt;password&gt;</span>@cluster0.abc123.mongodb.net/
+                </div>
+                <p>修改后：</p>
+                <div class="code-box">
+mongodb+srv://newsuser:<span class="highlight">mySecret123</span>@cluster0.abc123.mongodb.net/
+                </div>
+                <p><strong>⚠️ 如果密码包含特殊字符（如@、$、%等），需要URL编码：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>@ → %40</li>
+                    <li>$ → %24</li>
+                    <li>% → %25</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                ✅ 连接字符串获取完成！保存好，马上要用！
+            </div>
+        </div>
+
+        <!-- 步骤7 -->
+        <div class="step">
+            <div class="step-number">7</div>
+            <h2>最终确认</h2>
+
+            <h3>✅ 检查清单：</h3>
+            <div class="substep">
+                <ol>
+                    <li>✅ MongoDB集群状态是 <strong>"Running"</strong>（绿色）</li>
+                    <li>✅ 有数据库用户（用户名：<code>newsuser</code>）</li>
+                    <li>✅ IP白名单包含 <code>0.0.0.0/0</code></li>
+                    <li>✅ 已经复制并保存了连接字符串</li>
+                    <li>✅ 连接字符串中的 <code>&lt;password&gt;</code> 已替换成真实密码</li>
+                </ol>
+            </div>
+
+            <h3>📝 保存以下信息：</h3>
+            <div class="info">
+                <p><strong>MongoDB连接字符串：</strong></p>
+                <code>mongodb+srv://newsuser:你的密码@cluster0.xxxxx.mongodb.net/</code>
+                <p style="margin-top: 15px;"><strong>这个字符串在Render部署时会用到！</strong></p>
+            </div>
+
+            <div class="success">
+                <h3>🎉 MongoDB Atlas配置完成！</h3>
+                <p>现在可以回到Render部署教程，继续创建服务了！</p>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div style="margin-top: 50px;">
+            <h2>❓ 常见问题</h2>
+
+            <div class="warning">
+                <h4>问题1：找不到"Connect"按钮</h4>
+                <p><strong>原因：</strong>集群还在创建中</p>
+                <p><strong>解决：</strong>等待1-3分钟，刷新页面，直到状态变成"Running"</p>
+            </div>
+
+            <div class="warning">
+                <h4>问题2：连接字符串测试失败</h4>
+                <p><strong>检查：</strong></p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>密码是否替换正确（注意特殊字符需要URL编码）</li>
+                    <li>IP白名单是否包含 0.0.0.0/0</li>
+                    <li>用户名是否正确</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <h4>问题3：需要添加多个IP怎么办？</h4>
+                <p><strong>操作：</strong></p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>进入MongoDB Atlas Dashboard</li>
+                    <li>左侧菜单点击 <strong>"Network Access"</strong></li>
+                    <li>点击 <strong>"Add IP Address"</strong></li>
+                    <li>输入IP或选择 "Allow Access from Anywhere"</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <h4>问题4：忘记密码了</h4>
+                <p><strong>解决：</strong></p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>进入MongoDB Atlas Dashboard</li>
+                    <li>左侧菜单点击 <strong>"Database Access"</strong></li>
+                    <li>找到你的用户，点击 <strong>"Edit"</strong></li>
+                    <li>点击 <strong>"Edit Password"</strong></li>
+                    <li>设置新密码并保存</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 快速参考 -->
+        <div class="info" style="margin-top: 40px;">
+            <h3>📋 快速参考：MongoDB Atlas URL格式</h3>
+            <div class="code-box">
+mongodb+srv://<span class="highlight">用户名</span>:<span class="highlight">密码</span>@<span class="highlight">集群地址</span>/<span class="highlight">数据库名</span>?retryWrites=true&w=majority
+            </div>
+            <p style="margin-top: 15px;"><strong>示例：</strong></p>
+            <div class="code-box">
+mongodb+srv://newsuser:mySecret123@cluster0.abc123.mongodb.net/?retryWrites=true&w=majority
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
+            <p style="color: #6b7280;">
+                配置完成后，回到Render部署教程继续！<br>
+                <a href="file:///Users/xufan3/news-brief-platform/render-deploy-guide.html" style="color: #10b981; font-weight: bold;">
+                    👉 返回Render部署教程
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
