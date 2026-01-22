@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway 2024新版界面指南</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #6366f1; text-align: center; font-size: 2.5em; margin-bottom: 30px; }
+        .section {
+            background: #f8fafc;
+            border-left: 5px solid #6366f1;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        h2 { color: #1f2937; margin-bottom: 20px; font-size: 1.8em; }
+        .option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover { border-color: #6366f1; box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2); }
+        .option h3 { color: #6366f1; margin-bottom: 15px; }
+        .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .success { background: #d1fae5; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .info { background: #dbeafe; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .error { background: #fee2e2; border-left: 4px solid #ef4444; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .steps { margin: 20px 0 0 30px; line-height: 2.5; }
+        code { background: #1e293b; color: #10b981; padding: 3px 8px; border-radius: 4px; font-family: monospace; }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚂 Railway 2024新版界面指南</h1>
+        <p style="text-align: center; color: #6b7280; font-size: 1.2em; margin-bottom: 40px;">
+            不需要付费！免费账号就可以用
+        </p>
+
+        <div class="success">
+            <h3>✅ 确认：Railway免费账号包含的功能</h3>
+            <ul style="margin: 10px 0 0 20px; line-height: 2;">
+                <li>✅ 部署GitHub仓库（包括设置Root Directory）</li>
+                <li>✅ 添加MongoDB、Redis等数据库</li>
+                <li>✅ 设置环境变量</li>
+                <li>✅ 每月500小时运行时间</li>
+                <li>✅ 自动域名生成</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>你不需要付费就能完成部署！</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>🎯 根据你看到的界面选择：</h2>
+
+            <div class="option">
+                <h3>选项A：你看到的是"Empty Project"（空项目）</h3>
+                <p><strong>界面特征：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>中间显示 "This project is empty"</li>
+                    <li>有个大按钮 "+ Create" 或 "Deploy"</li>
+                </ul>
+                <div class="info" style="margin-top: 15px;">
+                    <h4>📍 操作步骤（新版界面）：</h4>
+                    <ol class="steps">
+                        <li>点击 <code>+ Create</code> 或 <code>Deploy</code> 按钮</li>
+                        <li>选择 <code>GitHub Repo</code></li>
+                        <li>选择 <code>news-brief-platform</code></li>
+                        <li>会弹出 "Configure Service" 对话框</li>
+                        <li>在对话框中找到 <strong>"Service Name"</strong> 和 <strong>"Root Directory"</strong></li>
+                        <li><strong>Root Directory</strong> 就在那里，输入：
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li><code>backend</code> - 后端服务</li>
+                                <li><code>ai-service</code> - AI服务</li>
+                                <li><code>frontend</code> - 前端服务</li>
+                            </ul>
+                        </li>
+                        <li>点击 <code>Deploy</code></li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="option">
+                <h3>选项B：你已经创建了服务，但部署失败了</h3>
+                <p><strong>界面特征：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>能看到一个或多个服务卡片</li>
+                    <li>服务显示 "Failed" 或 "Build Failed"</li>
+                </ul>
+                <div class="info" style="margin-top: 15px;">
+                    <h4>📍 修改Root Directory步骤：</h4>
+                    <ol class="steps">
+                        <li>点击失败的服务卡片</li>
+                        <li>进入服务详情页</li>
+                        <li>点击顶部的 <strong>"Settings"</strong> 标签</li>
+                        <li>向下滚动，找到 <strong>"Service"</strong> 或 <strong>"Source"</strong> 部分</li>
+                        <li>应该能看到：
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li>Repository: news-brief-platform</li>
+                                <li>Branch: main</li>
+                                <li><strong>Root Directory</strong>（可能显示为空或 "/"）</li>
+                            </ul>
+                        </li>
+                        <li>点击 Root Directory 右边的编辑按钮</li>
+                        <li>输入对应的目录名</li>
+                        <li>保存后会自动重新部署</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="option">
+                <h3>选项C：Railway要求你验证信用卡</h3>
+                <p><strong>界面特征：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>弹出提示要求添加支付方式</li>
+                    <li>显示 "Trial expired" 或需要验证</li>
+                </ul>
+                <div class="warning" style="margin-top: 15px;">
+                    <h4>⚠️ 这是正常的</h4>
+                    <p>Railway需要信用卡验证，但<strong>基础服务是免费的</strong>：</p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>不会立即扣费</li>
+                        <li>每月有500小时免费额度</li>
+                        <li>超出免费额度才会收费</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>如果不想绑卡：</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>可以尝试其他平台：Render.com、Fly.io</li>
+                        <li>或者本地运行（完全免费）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="option">
+                <h3>选项D：完全找不到Root Directory选项</h3>
+                <p><strong>可能的原因：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Railway界面更新，改名了</li>
+                    <li>或者你在错误的位置找</li>
+                </ul>
+                <div class="info" style="margin-top: 15px;">
+                    <h4>🔍 替代方案：使用railway.json配置文件</h4>
+                    <p>我已经为你的项目创建了配置文件，Railway会自动识别。</p>
+                    <p style="margin-top: 10px;"><strong>现在你需要做的：</strong></p>
+                    <ol class="steps">
+                        <li>确保代码已经推送到GitHub（包括我刚创建的railway.json）</li>
+                        <li>在Railway中删除现有的失败服务</li>
+                        <li>重新添加服务，Railway应该会自动识别配置</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔄 推荐的完整操作流程（2024版）</h2>
+
+            <div class="warning">
+                <h3>⚠️ 重要：先确保配置文件已上传</h3>
+                <p>我已经为你的ai-service创建了railway.json配置文件。</p>
+                <p><strong>需要先推送到GitHub：</strong></p>
+            </div>
+
+            <div style="background: #1e293b; color: #10b981; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: monospace;">
+# 1. 进入项目目录
+cd /Users/xufan3/news-brief-platform
+
+# 2. 添加新文件
+git add ai-service/railway.json
+
+# 3. 提交
+git commit -m "Add railway config for ai-service"
+
+# 4. 推送到GitHub
+git push origin main
+            </div>
+
+            <div class="success">
+                <h3>✅ 推送后，Railway新建服务流程：</h3>
+                <ol class="steps">
+                    <li>在Railway项目中，点击 <strong>"+ New"</strong></li>
+                    <li>选择 <strong>"Deploy from GitHub repo"</strong></li>
+                    <li>选择 <strong>"news-brief-platform"</strong></li>
+                    <li><strong>关键步骤</strong>：
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>对于Backend：设置 Root Directory = <code>backend</code></li>
+                            <li>对于AI Service：设置 Root Directory = <code>ai-service</code>（会自动读取railway.json）</li>
+                            <li>对于Frontend：设置 Root Directory = <code>frontend</code></li>
+                        </ul>
+                    </li>
+                    <li>分别为3个服务配置环境变量</li>
+                    <li>等待部署完成</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 如果Railway实在太复杂</h2>
+
+            <div class="info">
+                <h3>备选方案：Render.com（可能更简单）</h3>
+                <p><strong>优点：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ 界面更简单</li>
+                    <li>✅ 不需要信用卡验证（有限制）</li>
+                    <li>✅ 免费额度：750小时/月</li>
+                </ul>
+                <a href="https://render.com/" target="_blank" class="big-button">
+                    访问 Render.com
+                </a>
+                <p style="margin-top: 15px;"><strong>需要的话，我可以为你写Render部署教程。</strong></p>
+            </div>
+
+            <div class="info">
+                <h3>或者：本地运行（完全免费）</h3>
+                <p>如果云端部署太麻烦，可以考虑本地运行：</p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ 完全免费</li>
+                    <li>✅ 不需要信用卡</li>
+                    <li>✅ 数据完全在你的电脑上</li>
+                    <li>❌ 只能在你的电脑上访问</li>
+                </ul>
+                <a href="file:///Users/xufan3/news-brief-platform/index.html" class="big-button">
+                    查看本地运行教程
+                </a>
+            </div>
+        </div>
+
+        <div class="error">
+            <h3>🆘 需要更多帮助？</h3>
+            <p>告诉我：</p>
+            <ol style="margin: 10px 0 0 20px;">
+                <li>你现在在Railway的哪个页面？</li>
+                <li>页面上显示了什么内容？</li>
+                <li>有没有要求你付费或验证信用卡？</li>
+                <li>你能看到"+ New"或"Create"按钮吗？</li>
+            </ol>
+            <p style="margin-top: 15px;">根据你的回答，我会给你最准确的指引！</p>
+        </div>
+    </div>
+</body>
+</html>

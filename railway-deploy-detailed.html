@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway部署教程 - 详细图文指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .step {
+            background: #f8fafc;
+            border-left: 5px solid #6366f1;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .step-number {
+            background: #6366f1;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #1f2937;
+            margin: 20px 0 15px 0;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #6366f1;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+        .big-button {
+            display: block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .screenshot-placeholder {
+            background: #e5e7eb;
+            border: 2px dashed #9ca3af;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            color: #6b7280;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px 10px 10px 40px;
+            position: relative;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+        }
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 12px;
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .highlight {
+            background: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .cost-table th {
+            background: #6366f1;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        .cost-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .step-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .step-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .step-card h4 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚂 Railway 云端部署教程</h1>
+            <p style="font-size: 1.3em; margin-top: 10px;">5分钟上线你的新闻平台 · 详细图文教程</p>
+        </div>
+
+        <div class="content">
+            <!-- 准备工作 -->
+            <div class="success">
+                <h3>✅ 开始前的检查</h3>
+                <ul class="checklist">
+                    <li>已经注册GitHub账号</li>
+                    <li>代码已上传到GitHub（如果你看到这个教程，说明已完成）</li>
+                    <li>有一张信用卡（用于验证，不会扣费）</li>
+                    <li>准备好OpenAI API密钥（或准备注册）</li>
+                </ul>
+            </div>
+
+            <div class="info">
+                <h3>💰 费用说明</h3>
+                <p><strong>Railway免费额度：</strong>每月500小时（够用了）</p>
+                <p><strong>OpenAI费用：</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>新用户有$5免费额度</li>
+                    <li>每1000条新闻约$1（约7元人民币）</li>
+                    <li>轻度使用基本免费</li>
+                </ul>
+            </div>
+
+            <!-- 步骤1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h2>注册Railway账号</h2>
+
+                <a href="https://railway.app/" target="_blank" class="big-button">
+                    👉 点击这里打开Railway官网
+                </a>
+
+                <h3>注册步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击右上角 <strong>"Login"</strong> 按钮</li>
+                    <li>选择 <strong>"Login with GitHub"</strong>（用GitHub登录，最方便）</li>
+                    <li>授权Railway访问你的GitHub账号</li>
+                    <li>完成！自动跳回Railway首页</li>
+                </ol>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 会看到Railway首页，上方有 "Dashboard" 和 "New Project" 按钮</p>
+                </div>
+
+                <div class="success">
+                    ✅ 看到Dashboard页面就说明登录成功了！
+                </div>
+            </div>
+
+            <!-- 步骤2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h2>创建新项目</h2>
+
+                <h3>操作步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>在Railway首页，点击 <strong>"New Project"</strong> 按钮（紫色大按钮）</li>
+                    <li>在弹出的菜单中，选择 <strong>"Deploy from GitHub repo"</strong></li>
+                    <li>如果是第一次使用，会要求授权：
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>点击 <strong>"Configure GitHub App"</strong></li>
+                            <li>选择要授权的仓库（选择 <code>news-brief-platform</code>）</li>
+                            <li>或者选择授权所有仓库</li>
+                            <li>点击 <strong>"Install & Authorize"</strong></li>
+                        </ul>
+                    </li>
+                    <li>返回Railway，会看到你的仓库列表</li>
+                    <li>找到 <strong>news-brief-platform</strong>，点击它</li>
+                </ol>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 会看到一个项目创建成功的页面，显示正在部署...</p>
+                </div>
+
+                <div class="warning">
+                    ⚠️ <strong>注意</strong>：首次部署可能会失败，因为还需要配置数据库和环境变量，继续下一步！
+                </div>
+            </div>
+
+            <!-- 步骤3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h2>添加MongoDB数据库</h2>
+
+                <h3>操作步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>在项目页面，点击右上角 <strong>"+ New"</strong> 按钮</li>
+                    <li>选择 <strong>"Database"</strong></li>
+                    <li>选择 <strong>"Add MongoDB"</strong></li>
+                    <li>等待几秒钟，MongoDB会自动创建</li>
+                    <li>创建完成后，你会看到一个新的MongoDB图标</li>
+                </ol>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 项目中会出现两个服务：你的应用 + MongoDB</p>
+                </div>
+
+                <div class="success">
+                    ✅ MongoDB创建完成！Railway会自动生成连接URL
+                </div>
+            </div>
+
+            <!-- 步骤4 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h2>添加Redis数据库</h2>
+
+                <h3>操作步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>再次点击右上角 <strong>"+ New"</strong> 按钮</li>
+                    <li>选择 <strong>"Database"</strong></li>
+                    <li>选择 <strong>"Add Redis"</strong></li>
+                    <li>等待几秒钟，Redis会自动创建</li>
+                </ol>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 现在项目中有三个服务：应用 + MongoDB + Redis</p>
+                </div>
+
+                <div class="success">
+                    ✅ Redis创建完成！继续配置环境变量
+                </div>
+            </div>
+
+            <!-- 步骤5 -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h2>获取OpenAI API密钥</h2>
+
+                <div class="warning">
+                    ⚠️ 这是最重要的一步！没有API密钥，AI功能无法工作
+                </div>
+
+                <a href="https://platform.openai.com/api-keys" target="_blank" class="big-button">
+                    👉 点击这里打开OpenAI API密钥页面
+                </a>
+
+                <h3>注册和获取API密钥：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>如果没有OpenAI账号：
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>访问：<a href="https://platform.openai.com/signup" target="_blank">https://platform.openai.com/signup</a></li>
+                            <li>使用邮箱或Google账号注册</li>
+                            <li>验证手机号（可能需要国外手机号）</li>
+                        </ul>
+                    </li>
+                    <li>登录后，访问API密钥页面</li>
+                    <li>点击 <strong>"Create new secret key"</strong></li>
+                    <li>Name填：<code>news-platform</code></li>
+                    <li>点击 <strong>"Create secret key"</strong></li>
+                    <li><strong>⚠️ 立即复制密钥！</strong>（只显示一次）</li>
+                    <li>密钥看起来像：<code>sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code></li>
+                </ol>
+
+                <div class="error">
+                    🚨 <strong>非常重要</strong>：<br>
+                    - OpenAI API密钥只显示一次，立即复制保存<br>
+                    - 新用户有$5免费额度<br>
+                    - 如果没有国外手机号，可以考虑使用国内的OpenAI服务商（如DeepSeek、智谱AI等）
+                </div>
+
+                <div class="info">
+                    <h4>💡 其他选择（如果OpenAI注册有困难）：</h4>
+                    <p><strong>DeepSeek</strong>（国内，更便宜）：</p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>网站：<a href="https://platform.deepseek.com" target="_blank">https://platform.deepseek.com</a></li>
+                        <li>价格：比OpenAI便宜10倍</li>
+                        <li>中文效果好</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 步骤6 -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h2>配置后端环境变量</h2>
+
+                <h3>操作步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>在Railway项目中，点击你的应用服务（<strong>backend</strong>）</li>
+                    <li>点击顶部的 <strong>"Variables"</strong> 标签</li>
+                    <li>点击 <strong>"+ New Variable"</strong> 按钮</li>
+                    <li>逐个添加以下环境变量：</li>
+                </ol>
+
+                <h3>需要添加的环境变量：</h3>
+
+                <div class="code-box">
+<code>PORT=5000
+NODE_ENV=production
+
+MONGODB_URI=${{MongoDB.MONGO_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+
+FRONTEND_URL=稍后填写</code>
+                </div>
+
+                <div class="warning">
+                    ⚠️ <strong>重要说明</strong>：<br>
+                    - <code>${{MongoDB.MONGO_URL}}</code> 和 <code>${{Redis.REDIS_URL}}</code> 是Railway的特殊语法，会自动替换为实际的数据库URL<br>
+                    - <code>FRONTEND_URL</code> 先不填或填 <code>*</code>，部署前端后再回来填
+                </div>
+
+                <h3>详细添加步骤：</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <h4>1️⃣ 添加 PORT</h4>
+                        <p>Variable: <code>PORT</code></p>
+                        <p>Value: <code>5000</code></p>
+                    </div>
+                    <div class="step-card">
+                        <h4>2️⃣ 添加 NODE_ENV</h4>
+                        <p>Variable: <code>NODE_ENV</code></p>
+                        <p>Value: <code>production</code></p>
+                    </div>
+                    <div class="step-card">
+                        <h4>3️⃣ 添加 MONGODB_URI</h4>
+                        <p>Variable: <code>MONGODB_URI</code></p>
+                        <p>Value: <code>${{MongoDB.MONGO_URL}}</code></p>
+                    </div>
+                    <div class="step-card">
+                        <h4>4️⃣ 添加 REDIS_URL</h4>
+                        <p>Variable: <code>REDIS_URL</code></p>
+                        <p>Value: <code>${{Redis.REDIS_URL}}</code></p>
+                    </div>
+                </div>
+
+                <div class="success">
+                    ✅ 环境变量配置完成！Railway会自动重新部署
+                </div>
+            </div>
+
+            <!-- 步骤7 -->
+            <div class="step">
+                <div class="step-number">7</div>
+                <h2>配置AI服务环境变量</h2>
+
+                <h3>操作步骤：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击 <strong>ai-service</strong> 服务</li>
+                    <li>点击 <strong>"Variables"</strong> 标签</li>
+                    <li>添加以下环境变量：</li>
+                </ol>
+
+                <div class="code-box">
+<code>USE_CLOUD_AI=true
+AI_PROVIDER=openai
+
+OPENAI_API_KEY=<span class="highlight">你的OpenAI API密钥</span>
+OPENAI_MODEL=gpt-3.5-turbo
+
+MONGODB_URI=${{MongoDB.MONGO_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+
+CRAWL_INTERVAL=300</code>
+                </div>
+
+                <div class="warning">
+                    ⚠️ 把 <span class="highlight">你的OpenAI API密钥</span> 替换成步骤5中复制的密钥！<br>
+                    应该类似：<code>sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+                </div>
+
+                <div class="info">
+                    💡 <strong>参数说明：</strong><br>
+                    - <code>USE_CLOUD_AI=true</code>：使用云端AI（不用本地Ollama）<br>
+                    - <code>AI_PROVIDER=openai</code>：使用OpenAI<br>
+                    - <code>OPENAI_MODEL=gpt-3.5-turbo</code>：使用GPT-3.5（便宜）<br>
+                    - <code>CRAWL_INTERVAL=300</code>：每5分钟爬取一次新闻
+                </div>
+            </div>
+
+            <!-- 步骤8 -->
+            <div class="step">
+                <div class="step-number">8</div>
+                <h2>配置前端环境变量</h2>
+
+                <h3>先获取后端URL：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击 <strong>backend</strong> 服务</li>
+                    <li>点击 <strong>"Settings"</strong> 标签</li>
+                    <li>找到 <strong>"Domains"</strong> 部分</li>
+                    <li>点击 <strong>"Generate Domain"</strong></li>
+                    <li>复制生成的域名（类似：<code>backend-xxx.railway.app</code>）</li>
+                </ol>
+
+                <h3>配置前端：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击 <strong>frontend</strong> 服务</li>
+                    <li>点击 <strong>"Variables"</strong> 标签</li>
+                    <li>添加以下环境变量：</li>
+                </ol>
+
+                <div class="code-box">
+<code>REACT_APP_API_URL=https://<span class="highlight">后端域名</span>
+REACT_APP_WS_URL=https://<span class="highlight">后端域名</span></code>
+                </div>
+
+                <div class="warning">
+                    ⚠️ 把 <span class="highlight">后端域名</span> 替换成刚才复制的域名<br>
+                    例如：<code>https://backend-production-xxx.railway.app</code>
+                </div>
+
+                <h3>生成前端域名：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>在frontend服务的 <strong>"Settings"</strong> 标签</li>
+                    <li>找到 <strong>"Domains"</strong></li>
+                    <li>点击 <strong>"Generate Domain"</strong></li>
+                    <li>复制生成的前端域名</li>
+                </ol>
+
+                <h3>回到后端更新FRONTEND_URL：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>点击 <strong>backend</strong> 服务</li>
+                    <li>点击 <strong>"Variables"</strong></li>
+                    <li>找到 <code>FRONTEND_URL</code></li>
+                    <li>填入前端域名（如：<code>https://frontend-xxx.railway.app</code>）</li>
+                </ol>
+            </div>
+
+            <!-- 步骤9 -->
+            <div class="step">
+                <div class="step-number">9</div>
+                <h2>等待部署完成</h2>
+
+                <div class="info">
+                    <h3>部署需要几分钟，你会看到：</h3>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>各个服务的状态从 "Building" 变成 "Running"</li>
+                        <li>可以点击 "View Logs" 查看部署日志</li>
+                        <li>如果出现错误，会显示红色的 "Failed"</li>
+                    </ul>
+                </div>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 所有服务都显示绿色的 "Running" 就表示部署成功了！</p>
+                </div>
+
+                <div class="success">
+                    <h3>✅ 部署成功的标志：</h3>
+                    <ul class="checklist">
+                        <li>Backend服务显示 "Running"</li>
+                        <li>AI Service服务显示 "Running"</li>
+                        <li>Frontend服务显示 "Running"</li>
+                        <li>MongoDB显示 "Running"</li>
+                        <li>Redis显示 "Running"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 步骤10 -->
+            <div class="step">
+                <div class="step-number">10</div>
+                <h2>访问你的网站</h2>
+
+                <h3>打开你的新闻平台：</h3>
+                <ol style="margin: 15px 0 15px 30px; line-height: 2;">
+                    <li>复制前端域名（frontend的Domain）</li>
+                    <li>在浏览器中打开这个URL</li>
+                    <li>应该能看到你的新闻简报平台！</li>
+                </ol>
+
+                <div class="screenshot-placeholder">
+                    <p>📸 你会看到新闻简报平台的主页，有分类按钮和简报卡片</p>
+                </div>
+
+                <div class="success">
+                    <h3>🎉 恭喜！部署成功！</h3>
+                    <p>你的网站网址：<code>https://frontend-xxx.railway.app</code></p>
+                    <p>现在可以分享给任何人访问了！</p>
+                </div>
+
+                <div class="info">
+                    <h4>⏰ 等待新闻出现</h4>
+                    <p>首次运行需要等待5-10分钟，AI服务会自动开始抓取和处理新闻。</p>
+                    <p>你可以查看AI Service的日志，看到类似这样的输出：</p>
+                    <div class="code-box">
+<code>开始新一轮新闻采集
+爬取到 25 条新闻
+开始AI处理...
+成功保存 20 条简报</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 费用管理 -->
+            <div style="margin-top: 50px;">
+                <h2>💰 费用管理和优化</h2>
+
+                <div class="step">
+                    <h3>Railway费用</h3>
+                    <table class="cost-table">
+                        <tr>
+                            <th>项目</th>
+                            <th>免费额度</th>
+                            <th>超出后</th>
+                        </tr>
+                        <tr>
+                            <td>服务运行时间</td>
+                            <td>500小时/月</td>
+                            <td>$0.000231/分钟</td>
+                        </tr>
+                        <tr>
+                            <td>存储空间</td>
+                            <td>100GB</td>
+                            <td>$0.25/GB</td>
+                        </tr>
+                    </table>
+
+                    <h3>OpenAI费用</h3>
+                    <table class="cost-table">
+                        <tr>
+                            <th>模型</th>
+                            <th>价格</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>GPT-3.5-turbo</td>
+                            <td>$0.002/1K tokens</td>
+                            <td>推荐，便宜</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4</td>
+                            <td>$0.03/1K tokens</td>
+                            <td>贵15倍</td>
+                        </tr>
+                    </table>
+
+                    <h3>预估月费用：</h3>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li><strong>轻度使用</strong>（每天100条新闻）：约 $3-5/月（20-35元）</li>
+                        <li><strong>中度使用</strong>（每天500条新闻）：约 $15-20/月（100-140元）</li>
+                        <li><strong>重度使用</strong>（每天2000条新闻）：约 $60-80/月（420-560元）</li>
+                    </ul>
+
+                    <h3>💡 省钱技巧：</h3>
+                    <ol style="margin: 15px 0 15px 30px;">
+                        <li>使用GPT-3.5而不是GPT-4</li>
+                        <li>减少爬取频率（改为每小时一次）</li>
+                        <li>限制新闻源数量</li>
+                        <li>使用国内AI服务（如DeepSeek，便宜10倍）</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 常见问题 -->
+            <div style="margin-top: 50px;">
+                <h2>❓ 常见问题</h2>
+
+                <div class="error">
+                    <h4>问题1：部署失败，显示 "Build Failed"</h4>
+                    <p><strong>解决</strong>：</p>
+                    <ol style="margin: 10px 0 0 20px;">
+                        <li>点击 "View Logs" 查看错误信息</li>
+                        <li>检查环境变量是否都配置正确</li>
+                        <li>确认OpenAI API密钥有效</li>
+                        <li>尝试重新部署（点击 "Redeploy"）</li>
+                    </ol>
+                </div>
+
+                <div class="error">
+                    <h4>问题2：页面打开是空白或404</h4>
+                    <p><strong>解决</strong>：</p>
+                    <ol style="margin: 10px 0 0 20px;">
+                        <li>确认前端服务状态是 "Running"</li>
+                        <li>检查前端环境变量中的后端URL是否正确</li>
+                        <li>等待1-2分钟让服务完全启动</li>
+                        <li>刷新浏览器（Cmd+Shift+R 强制刷新）</li>
+                    </ol>
+                </div>
+
+                <div class="error">
+                    <h4>问题3：没有新闻显示</h4>
+                    <p><strong>解决</strong>：</p>
+                    <ol style="margin: 10px 0 0 20px;">
+                        <li>等待5-10分钟让AI服务开始工作</li>
+                        <li>查看AI Service的日志，确认是否在爬取新闻</li>
+                        <li>检查OpenAI API密钥是否有余额</li>
+                        <li>确认环境变量 <code>USE_CLOUD_AI=true</code> 已设置</li>
+                    </ol>
+                </div>
+
+                <div class="error">
+                    <h4>问题4：OpenAI API报错</h4>
+                    <p><strong>可能原因：</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>API密钥无效或过期</li>
+                        <li>API余额不足</li>
+                        <li>超过速率限制</li>
+                    </ul>
+                    <p><strong>解决</strong>：访问 <a href="https://platform.openai.com/usage" target="_blank">https://platform.openai.com/usage</a> 查看使用情况</p>
+                </div>
+            </div>
+
+            <!-- 下一步 -->
+            <div style="margin-top: 50px;">
+                <h2>🎯 完成后可以做什么？</h2>
+
+                <div class="step-grid">
+                    <div class="step-card">
+                        <h4>📊 监控使用情况</h4>
+                        <p>在Railway Dashboard查看服务状态和资源使用</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>🔧 调整配置</h4>
+                        <p>修改爬取频率、新闻源、AI模型等</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>📱 分享给朋友</h4>
+                        <p>把你的网站URL发给朋友体验</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>🌐 绑定自定义域名</h4>
+                        <p>在Railway设置中绑定你自己的域名</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="success" style="margin-top: 40px;">
+                <h3>🎉 恭喜你完成云端部署！</h3>
+                <p>你的新闻简报平台现在已经在云端运行了！</p>
+                <p style="margin-top: 15px;"><strong>你的网站：</strong> <code>https://frontend-xxx.railway.app</code></p>
+                <p><strong>管理后台：</strong> <a href="https://railway.app/dashboard" target="_blank">https://railway.app/dashboard</a></p>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #10b981;">
+                    <p><strong>遇到问题？</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>查看Railway日志定位问题</li>
+                        <li>检查环境变量配置</li>
+                        <li>确认API密钥有效</li>
+                        <li>告诉我具体的错误信息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

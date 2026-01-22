@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Directory 设置详细图解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #6366f1;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        .method {
+            background: #f8fafc;
+            border-left: 5px solid #6366f1;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #6366f1;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+        .screenshot-box {
+            background: #1e293b;
+            border: 3px solid #3b82f6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            color: #10b981;
+            font-family: monospace;
+            font-size: 15px;
+        }
+        .screenshot-box h4 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .location {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .step {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .step strong {
+            color: #6366f1;
+        }
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .visual-guide {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 3px solid #3b82f6;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+        .interface-mockup {
+            background: white;
+            border: 2px solid #9ca3af;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        code {
+            background: #1e293b;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📍 Root Directory 设置详细图解</h1>
+        <p style="text-align: center; color: #6b7280; font-size: 1.2em; margin-bottom: 40px;">
+            一步步告诉你按钮在哪里
+        </p>
+
+        <!-- 方法1 -->
+        <div class="method">
+            <h2>方法1：创建服务时设置（最简单）</h2>
+
+            <h3>场景：当你刚点击"Add Service"后</h3>
+
+            <div class="step">
+                <p><strong>第1步：</strong> 点击右上角 <code>+ New</code> 按钮</p>
+                <div class="location">
+                    📍 位置：项目页面右上角，紫色加号按钮
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第2步：</strong> 选择 <code>GitHub Repo</code></p>
+                <div class="location">
+                    📍 在弹出菜单中，第一个选项
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第3步：</strong> 选择你的仓库 <code>news-brief-platform</code></p>
+            </div>
+
+            <div class="step">
+                <p><strong>第4步：</strong> 🎯 <strong>关键来了！</strong></p>
+                <p style="margin-top: 10px;">选择仓库后，会出现一个配置页面，找到：</p>
+
+                <div class="visual-guide">
+                    <h4 style="color: #1f2937; margin-bottom: 15px;">界面布局：</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Deploy news-brief-platform                 │
+├─────────────────────────────────────────────┤
+│                                             │
+│  <strong>Deploy Configuration</strong>                      │
+│                                             │
+│  Branch: main                    [dropdown]│
+│                                             │
+│  <strong style="color: #ef4444;">Root Directory: /</strong>           [🖊️ edit]   │  ← 这里！
+│                                             │
+│  [Cancel]              [Deploy] ──────────→ │
+│                                             │
+└─────────────────────────────────────────────┘
+                    </div>
+                </div>
+
+                <div class="location">
+                    📍 <strong>Root Directory 位置：</strong><br>
+                    - 在Branch选择框的下方<br>
+                    - 显示为 "Root Directory: /"<br>
+                    - 右边有一个小铅笔图标 🖊️ 或 "Edit" 按钮
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第5步：</strong> 点击 <strong>Root Directory</strong> 右边的铅笔图标 🖊️</p>
+                <p style="margin-top: 10px;">会变成一个输入框</p>
+            </div>
+
+            <div class="step">
+                <p><strong>第6步：</strong> 输入对应的目录名：</p>
+                <ul style="margin: 15px 0 0 30px; line-height: 2;">
+                    <li>Backend服务 → 输入：<code>backend</code></li>
+                    <li>AI Service服务 → 输入：<code>ai-service</code></li>
+                    <li>Frontend服务 → 输入：<code>frontend</code></li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <p><strong>第7步：</strong> 点击蓝色的 <strong>Deploy</strong> 按钮</p>
+            </div>
+
+            <div class="success">
+                ✅ 完成！服务会开始部署了
+            </div>
+        </div>
+
+        <!-- 方法2 -->
+        <div class="method">
+            <h2>方法2：服务创建后修改（如果忘记设置）</h2>
+
+            <div class="warning">
+                ⚠️ 如果你创建服务时忘记设置Root Directory，会导致部署失败。没关系，可以这样修改：
+            </div>
+
+            <div class="step">
+                <p><strong>第1步：</strong> 点击服务卡片进入详情页</p>
+                <div class="location">
+                    📍 在项目页面，点击你创建的服务卡片（不是MongoDB/Redis）
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第2步：</strong> 点击顶部的 <strong>Settings</strong> 标签</p>
+                <div class="location">
+                    📍 位置：服务详情页顶部标签栏<br>
+                    顺序：Overview | Variables | <strong>Settings</strong> | Deployments | Metrics
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第3步：</strong> 滚动页面，找到 <strong>Source</strong> 部分</p>
+
+                <div class="visual-guide">
+                    <h4 style="color: #1f2937; margin-bottom: 15px;">Settings页面布局：</h4>
+                    <div class="interface-mockup">
+┌─────────────────────────────────────────────┐
+│  Settings                                   │
+├─────────────────────────────────────────────┤
+│                                             │
+│  General                                    │
+│  ┌──────────────────────────┐              │
+│  │ Service Name             │              │
+│  └──────────────────────────┘              │
+│                                             │
+│  <strong>Source</strong>   ← 找到这个部分！                  │
+│  ┌──────────────────────────┐              │
+│  │ Repository: news-brief-  │              │
+│  │             platform     │              │
+│  ├──────────────────────────┤              │
+│  │ Branch: main        [🖊️] │              │
+│  ├──────────────────────────┤              │
+│  │ <strong style="color: #ef4444;">Root Directory: /  [🖊️]</strong> │  ← 这里！
+│  └──────────────────────────┘              │
+│                                             │
+│  Networking                                 │
+│  ┌──────────────────────────┐              │
+└─────────────────────────────────────────────┘
+                    </div>
+                </div>
+
+                <div class="location">
+                    📍 <strong>Source 部分位置：</strong><br>
+                    - 在Settings页面中间偏上<br>
+                    - "General"部分下方<br>
+                    - "Networking"部分上方
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>第4步：</strong> 在Source部分，找到 <code>Root Directory</code> 行</p>
+                <p style="margin-top: 10px;">点击右边的铅笔图标 🖊️ 或 "Edit" 按钮</p>
+            </div>
+
+            <div class="step">
+                <p><strong>第5步：</strong> 输入框会出现，输入目录名</p>
+                <ul style="margin: 10px 0 0 30px;">
+                    <li><code>backend</code> - 后端服务</li>
+                    <li><code>ai-service</code> - AI服务</li>
+                    <li><code>frontend</code> - 前端服务</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <p><strong>第6步：</strong> 按 <kbd>Enter</kbd> 或点击 ✅ 保存</p>
+            </div>
+
+            <div class="step">
+                <p><strong>第7步：</strong> Railway会自动重新部署服务</p>
+                <div class="location">
+                    📍 返回项目页面，等待服务重新构建
+                </div>
+            </div>
+
+            <div class="success">
+                ✅ 修改完成！服务会用新的Root Directory重新部署
+            </div>
+        </div>
+
+        <!-- 重要提示 -->
+        <div class="method">
+            <h2>⚠️ 重要提示</h2>
+
+            <div class="warning">
+                <h3>常见错误：</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 2;">
+                    <li>❌ 输入了 <code>/backend</code>（多了斜杠）</li>
+                    <li>❌ 输入了 <code>Backend</code>（大小写错误）</li>
+                    <li>❌ 输入了 <code>backend/</code>（末尾多了斜杠）</li>
+                    <li>✅ 正确：<code>backend</code></li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>✅ 正确的Root Directory设置：</h3>
+                <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                    <tr style="background: white;">
+                        <td style="padding: 10px; border: 1px solid #d1d5db;"><strong>服务名</strong></td>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Root Directory</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;">Backend</td>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;"><code>backend</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;">AI Service</td>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;"><code>ai-service</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;">Frontend</td>
+                        <td style="padding: 10px; border: 1px solid #d1d5db;"><code>frontend</code></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 视觉检查 -->
+        <div class="method">
+            <h2>🔍 如何确认设置成功</h2>
+
+            <div class="step">
+                <p><strong>方法1：</strong> 查看服务卡片</p>
+                <div class="screenshot-box">
+                    <h4>在项目主页：</h4>
+                    每个服务卡片上应该显示：<br><br>
+                    <strong>backend</strong><br>
+                    <span style="color: #9ca3af;">news-brief-platform/backend</span><br>
+                    🟢 Deployed
+                </div>
+            </div>
+
+            <div class="step">
+                <p><strong>方法2：</strong> 查看Settings</p>
+                <p style="margin-top: 10px;">进入服务 → Settings → Source部分<br>
+                应该显示：<code>Root Directory: backend</code></p>
+            </div>
+
+            <div class="step">
+                <p><strong>方法3：</strong> 查看部署日志</p>
+                <p style="margin-top: 10px;">进入服务 → Deployments → View Logs<br>
+                应该能看到它在backend目录下执行命令</p>
+            </div>
+        </div>
+
+        <!-- 快速操作流程 -->
+        <div class="success" style="margin-top: 40px;">
+            <h2 style="color: #1f2937;">🚀 快速操作流程（照着做）</h2>
+            <ol style="margin: 20px 0 0 30px; line-height: 2.5;">
+                <li>点击 <code>+ New</code>（右上角紫色按钮）</li>
+                <li>选择 <code>GitHub Repo</code></li>
+                <li>选择 <code>news-brief-platform</code></li>
+                <li>看到配置页面，找到 <code>Root Directory: /</code></li>
+                <li>点击右边的铅笔图标 🖊️</li>
+                <li>输入 <code>backend</code>（或 ai-service / frontend）</li>
+                <li>点击 <code>Deploy</code></li>
+                <li>重复3次，创建3个服务</li>
+            </ol>
+            <p style="margin-top: 20px; font-weight: bold; color: #1f2937;">
+                每个服务都要设置不同的Root Directory！
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
+            <p style="color: #6b7280;">
+                如果还是找不到，把你当前看到的页面描述告诉我，<br>
+                我会告诉你下一步该点哪里！
+            </p>
+        </div>
+    </div>
+</body>
+</html>

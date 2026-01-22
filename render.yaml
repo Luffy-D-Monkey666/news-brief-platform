@@ -1,0 +1,62 @@
+services:
+  # Backend Service
+  - type: web
+    name: news-platform-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+
+  # AI Service
+  - type: web
+    name: news-platform-ai-service
+    env: python
+    rootDir: ai-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/main_cloud.py
+    envVars:
+      - key: USE_CLOUD_AI
+        value: true
+      - key: AI_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-3.5-turbo
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CRAWL_INTERVAL
+        value: 300
+
+  # Frontend Service
+  - type: web
+    name: news-platform-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    envVars:
+      - key: REACT_APP_API_URL
+        sync: false
+      - key: REACT_APP_WS_URL
+        sync: false
+
+databases:
+  - name: news-platform-mongodb
+    databaseName: news_platform
+    user: news_user
