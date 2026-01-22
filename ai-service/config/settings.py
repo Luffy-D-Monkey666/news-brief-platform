@@ -3,10 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Ollama配置
-OLLAMA_HOST = os.getenv('OLLAMA_HOST', 'http://localhost:11434')
-MODEL_NAME = os.getenv('MODEL_NAME', 'qwen2:7b')
-
 # 数据库配置
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')

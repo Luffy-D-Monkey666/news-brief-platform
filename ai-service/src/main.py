@@ -10,13 +10,11 @@ from typing import Dict
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.settings import (
-    NEWS_SOURCES, OLLAMA_HOST, MODEL_NAME,
-    MONGODB_URI, CRAWL_INTERVAL,
-    SUMMARIZE_PROMPT, CLASSIFY_PROMPT,
-    REDIS_URL
+    NEWS_SOURCES, MONGODB_URI, CRAWL_INTERVAL,
+    SUMMARIZE_PROMPT, CLASSIFY_PROMPT, REDIS_URL
 )
 from crawlers.news_crawler import NewsCrawler
-from processors.ai_processor import NewsProcessor
+from processors.cloud_ai_processor import NewsProcessor
 from models.database import NewsDatabase
 import redis
 
@@ -33,7 +31,9 @@ class NewsService:
 
     def __init__(self):
         self.crawler = NewsCrawler(NEWS_SOURCES['rss_feeds'])
-        self.processor = NewsProcessor(OLLAMA_HOST, MODEL_NAME)
+        # 使用云端AI处理器（OpenAI/Claude）
+        ai_provider = os.getenv('AI_PROVIDER', 'openai')
+        self.processor = NewsProcessor(ai_provider)
         self.db = NewsDatabase(MONGODB_URI)
         self.redis_client = redis.from_url(REDIS_URL)
 
@@ -112,8 +112,7 @@ class NewsService:
 def main():
     """主函数"""
     logger.info("新闻简报AI服务启动")
-    logger.info(f"Ollama地址: {OLLAMA_HOST}")
-    logger.info(f"使用模型: {MODEL_NAME}")
+    logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'openai')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
 
     service = NewsService()
