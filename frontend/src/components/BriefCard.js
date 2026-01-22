@@ -9,24 +9,42 @@ import {
 } from 'react-icons/fa';
 
 const categoryColors = {
-  finance: 'bg-green-100 text-green-800 border-green-300',
-  technology: 'bg-blue-100 text-blue-800 border-blue-300',
-  health: 'bg-red-100 text-red-800 border-red-300',
-  new_energy: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  automotive: 'bg-purple-100 text-purple-800 border-purple-300',
-  robotics: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-  ai: 'bg-pink-100 text-pink-800 border-pink-300',
+  // One Piece 专区（特殊金黄色）
+  op_card_game: 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-900 border-yellow-400',
+  op_merchandise: 'bg-gradient-to-r from-orange-100 to-red-100 text-orange-900 border-orange-400',
+
+  // 核心关注
+  ai_robotics: 'bg-purple-100 text-purple-800 border-purple-300',
+  ev_automotive: 'bg-green-100 text-green-800 border-green-300',
+  finance_investment: 'bg-red-100 text-red-800 border-red-300',
+
+  // 主流分类
+  business_tech: 'bg-blue-100 text-blue-800 border-blue-300',
+  politics_world: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+  economy_policy: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  health_medical: 'bg-pink-100 text-pink-800 border-pink-300',
+  energy_environment: 'bg-teal-100 text-teal-800 border-teal-300',
+  entertainment_sports: 'bg-orange-100 text-orange-800 border-orange-300',
   general: 'bg-gray-100 text-gray-800 border-gray-300'
 };
 
 const categoryNames = {
-  finance: '财经',
-  technology: '科技',
-  health: '健康',
-  new_energy: '新能源',
-  automotive: '汽车',
-  robotics: '机器人',
-  ai: 'AI',
+  // One Piece 专区
+  op_card_game: 'OP卡牌游戏',
+  op_merchandise: 'OP周边情报',
+
+  // 核心关注
+  ai_robotics: 'AI与机器人',
+  ev_automotive: '新能源汽车',
+  finance_investment: '投资财经',
+
+  // 主流分类
+  business_tech: '商业科技',
+  politics_world: '政治国际',
+  economy_policy: '经济政策',
+  health_medical: '健康医疗',
+  energy_environment: '能源环境',
+  entertainment_sports: '娱乐体育',
   general: '综合'
 };
 

@@ -106,12 +106,12 @@ class CloudAIProcessor:
             return self._call_claude(prompt, max_tokens)
 
     def summarize_news(self, title: str, content: str, prompt_template: str) -> tuple[Optional[str], Optional[str]]:
-        """新闻摘要 - 返回(中文标题, 中文简报)"""
-        prompt = prompt_template.format(title=title, content=content[:500])
-        result = self.generate(prompt, max_tokens=300)
+        """新闻摘要 - 返回(中文标题, 详细总结)"""
+        prompt = prompt_template.format(title=title, content=content[:1000])  # 增加输入内容长度
+        result = self.generate(prompt, max_tokens=500)  # 增加输出长度以支持详细总结
 
         if result:
-            # 解析返回的中文标题和简报（按行分割）
+            # 解析返回的中文标题和详细总结（按行分割）
             lines = result.strip().split('\n')
             lines = [line.strip() for line in lines if line.strip()]
 
@@ -120,7 +120,7 @@ class CloudAIProcessor:
                 chinese_summary = '\n'.join(lines[1:])
                 return chinese_title, chinese_summary
             elif len(lines) == 1:
-                # 如果只有一行，作为简报，标题保持原样
+                # 如果只有一行，作为总结，标题保持原样
                 return title, lines[0]
 
         return None, None
