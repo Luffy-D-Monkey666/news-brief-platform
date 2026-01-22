@@ -13,6 +13,8 @@ const briefSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
+      'op_card_game',         // One Piece卡牌游戏
+      'op_merchandise',       // One Piece周边IP
       'ai_robotics',          // AI与机器人
       'ev_automotive',        // 新能源汽车
       'finance_investment',   // 投资财经

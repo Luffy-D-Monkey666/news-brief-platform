@@ -134,6 +134,7 @@ class CloudAIProcessor:
             # 清理和验证分类结果
             category = category.lower().strip()
             valid_categories = [
+                'op_card_game', 'op_merchandise',
                 'ai_robotics', 'ev_automotive', 'finance_investment',
                 'business_tech', 'politics_world', 'economy_policy',
                 'health_medical', 'energy_environment', 'entertainment_sports',

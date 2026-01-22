@@ -12,11 +12,17 @@ import {
   FaBolt,
   FaLandmark,
   FaNewspaper,
-  FaFilm
+  FaFilm,
+  FaShip,
+  FaTrophy
 } from 'react-icons/fa';
 
 const categoryIcons = {
-  // 核心关注领域（突出显示）
+  // 个人兴趣（最高优先级）
+  op_card_game: { icon: FaTrophy, color: 'text-yellow-600', highlight: true, special: true },
+  op_merchandise: { icon: FaShip, color: 'text-orange-600', highlight: true, special: true },
+
+  // 核心关注领域
   ai_robotics: { icon: FaBrain, color: 'text-purple-600', highlight: true },
   ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
@@ -32,6 +38,10 @@ const categoryIcons = {
 };
 
 const categoryNames = {
+  // 个人兴趣
+  op_card_game: 'OP卡牌游戏',
+  op_merchandise: 'OP周边情报',
+
   // 核心关注领域
   ai_robotics: 'AI与机器人',
   ev_automotive: '新能源汽车',
@@ -48,11 +58,13 @@ const categoryNames = {
 };
 
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
-  // 核心关注领域（前3个）
+  // One Piece 个人兴趣（顶部特殊显示）
+  const onePieceCategories = ['op_card_game', 'op_merchandise'];
+  // 核心关注领域
   const highlightCategories = ['ai_robotics', 'ev_automotive', 'finance_investment'];
   // 其他分类
   const otherCategories = Object.keys(categoryNames).filter(
-    cat => !highlightCategories.includes(cat)
+    cat => !onePieceCategories.includes(cat) && !highlightCategories.includes(cat)
   );
 
   return (
@@ -72,10 +84,42 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
         </button>
       </div>
 
+      {/* One Piece 个人兴趣 - 顶级优先 */}
+      <div className="mb-4">
+        <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+          <span className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs mr-2 animate-pulse">
+            ⚡ ONE PIECE 专区
+          </span>
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {onePieceCategories.map((category) => {
+            const { icon: Icon, color } = categoryIcons[category];
+            const isSelected = selectedCategory === category;
+
+            return (
+              <button
+                key={category}
+                onClick={() => onCategoryChange(category)}
+                className={`flex items-center justify-center p-5 rounded-xl transition-all font-bold text-lg ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl scale-110 ring-4 ring-yellow-300 animate-pulse'
+                    : 'bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl hover:scale-105 border-3 border-yellow-300'
+                }`}
+              >
+                <Icon className={`text-4xl mr-3 ${isSelected ? 'text-white' : color}`} />
+                <span className={`${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                  {categoryNames[category]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 核心关注领域 */}
       <div className="mb-4">
         <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-          <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-2 py-1 rounded text-xs mr-2">
+          <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 py-1 rounded text-xs mr-2">
             ★ 重点关注
           </span>
         </h3>
