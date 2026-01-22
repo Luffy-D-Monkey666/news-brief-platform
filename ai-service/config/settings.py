@@ -55,33 +55,63 @@ CATEGORY_NAMES = {
 # 新闻源配置
 NEWS_SOURCES = {
     'rss_feeds': [
-        # One Piece 相关（顶级优先）
+        # === One Piece 专区（顶级优先）===
         'https://rsshub.app/reddit/r/OnePieceTCG',  # One Piece TCG Reddit
         'https://rsshub.app/reddit/r/OnePiece',     # One Piece Reddit
         'https://rsshub.app/twitter/user/OP_CARD_GLOBAL',  # OP TCG官方推特
 
-        # 科技类
+        # === 国际主流媒体 ===
+        'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC英国
+        'https://www.theguardian.com/world/rss',  # Guardian英国
+        'https://rss.cnn.com/rss/edition_world.rss',  # CNN美国
+        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台-中东
+        'https://www.reuters.com/rssFeed/worldNews',  # 路透社
+
+        # === 科技类 ===
         'https://www.wired.com/feed/rss',
         'https://techcrunch.com/feed/',
         'https://www.theverge.com/rss/index.xml',
+        'https://www.technologyreview.com/feed/',  # MIT科技评论
+        'https://venturebeat.com/category/ai/feed/',  # VentureBeat AI
 
-        # 财经类
+        # === 财经类 ===
         'https://feeds.bloomberg.com/markets/news.rss',
         'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+        'https://www.ft.com/rss/home',  # 金融时报
 
-        # AI类
+        # === AI与机器人 ===
         'https://www.artificialintelligence-news.com/feed/',
 
-        # 汽车类
+        # === 新能源汽车 ===
         'https://www.motortrend.com/feed/',
+        'https://insideevs.com/rss/',  # InsideEVs电动车
+        'https://electrek.co/feed/',  # Electrek电动车
+        'https://cleantechnica.com/feed/',  # CleanTechnica清洁技术
 
-        # 中文源
+        # === 中文源（增强）===
         'https://rsshub.app/36kr/newsflashes',
         'https://rsshub.app/sina/finance',
+        'https://rsshub.app/thepaper/featured',  # 澎湃新闻
+        'https://rsshub.app/wallstreetcn/news/global',  # 华尔街见闻
+        'https://rsshub.app/caixin/latest',  # 财新网
+
+        # === 亚洲 ===
+        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本
+        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报
+        'https://rsshub.app/zaobao/znews/china',  # 联合早报-新加坡
+
+        # === 欧洲 ===
+        'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
+        'https://www.spiegel.de/schlagzeilen/index.rss',  # 德国明镜周刊
+
+        # === 健康医疗 ===
+        'https://www.who.int/rss-feeds/news-english.xml',  # 世界卫生组织
+
+        # === 娱乐体育 ===
+        'https://www.espn.com/espn/rss/news',  # ESPN体育
+        'https://variety.com/feed/',  # Variety娱乐
     ],
-    'api_endpoints': [
-        # 可以添加NewsAPI等
-    ]
+    'api_endpoints': []
 }
 
 # AI提示词模板
