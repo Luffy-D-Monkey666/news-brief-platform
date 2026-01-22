@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.settings import (
     NEWS_SOURCES, MONGODB_URI, CRAWL_INTERVAL,
-    SUMMARIZE_PROMPT, CLASSIFY_PROMPT
+    SUMMARIZE_PROMPT, CLASSIFY_PROMPT, REDIS_URL
 )
 from crawlers.news_crawler import NewsCrawler
 from models.database import NewsDatabase
@@ -30,7 +30,7 @@ class NewsService:
     def __init__(self):
         self.crawler = NewsCrawler(NEWS_SOURCES['rss_feeds'])
         self.db = NewsDatabase(MONGODB_URI)
-        self.redis_client = redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
+        self.redis_client = redis.from_url(REDIS_URL)
 
         # 根据环境变量选择AI处理器
         use_cloud_ai = os.getenv('USE_CLOUD_AI', 'false').lower() == 'true'
