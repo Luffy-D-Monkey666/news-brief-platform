@@ -22,11 +22,14 @@ class CloudAIProcessor:
             self.api_url = 'https://api.anthropic.com/v1/messages'
             self.model = os.getenv('CLAUDE_MODEL', 'claude-3-haiku-20240307')
         elif self.provider == 'huggingface':
-            # Hugging Face免费推理API（无需API Key，使用公共模型）
-            self.api_key = os.getenv('HUGGINGFACE_API_KEY', 'hf_free')  # 免费版使用公共访问
-            self.api_url = 'https://api-inference.huggingface.co/models/google/flan-t5-large'
-            self.model = 'google/flan-t5-large'
-            logger.info("使用Hugging Face免费API（无需API Key）")
+            # Hugging Face免费推理API（需要注册免费API Key）
+            self.api_key = os.getenv('HUGGINGFACE_API_KEY', '')
+            if not self.api_key:
+                logger.warning("未设置HUGGINGFACE_API_KEY，将使用基础文本处理")
+                self.api_key = 'no_api'  # 标记为无API模式
+            self.api_url = 'https://api-inference.huggingface.co/models/google/flan-t5-xxl'
+            self.model = 'google/flan-t5-xxl'
+            logger.info("使用Hugging Face API")
             return  # 跳过API key验证
         else:
             raise ValueError(f"Unsupported provider: {provider}")
@@ -108,11 +111,15 @@ class CloudAIProcessor:
     def _call_huggingface(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
         """调用Hugging Face免费推理API"""
         try:
-            headers = {'Content-Type': 'application/json'}
+            # 如果没有API Key，使用简单的文本处理作为后备
+            if self.api_key == 'no_api':
+                logger.warning("无Hugging Face API Key，返回原文")
+                return None
 
-            # 如果有API Key则使用（可选）
-            if self.api_key and self.api_key != 'hf_free':
-                headers['Authorization'] = f'Bearer {self.api_key}'
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {self.api_key}'
+            }
 
             data = {
                 'inputs': prompt,
