@@ -11,37 +11,28 @@ import {
   FaPlay
 } from 'react-icons/fa';
 
+// Apple风格配色（更简洁清爽）
 const categoryColors = {
-  // One Piece 专区（Apple风格渐变）
-  op_card_game: 'bg-gradient-to-br from-amber-50 to-orange-100 text-amber-900 border border-amber-200',
-  op_merchandise: 'bg-gradient-to-br from-orange-50 to-red-100 text-orange-900 border border-orange-200',
-
-  // 核心关注（柔和色彩）
-  ai_robotics: 'bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border border-purple-200',
-  ev_automotive: 'bg-gradient-to-br from-emerald-50 to-teal-100 text-emerald-900 border border-emerald-200',
-  finance_investment: 'bg-gradient-to-br from-rose-50 to-red-100 text-rose-900 border border-rose-200',
-
-  // 主流分类（清新配色）
-  business_tech: 'bg-gradient-to-brfrom-blue-50 to-indigo-100 text-blue-900 border border-blue-200',
-  politics_world: 'bg-gradient-to-br from-indigo-50 to-violet-100 text-indigo-900 border border-indigo-200',
-  economy_policy: 'bg-gradient-to-br from-yellow-50 to-amber-100 text-yellow-900 border border-yellow-200',
-  health_medical: 'bg-gradient-to-br from-pink-50 to-rose-100 text-pink-900 border border-pink-200',
-  energy_environment: 'bg-gradient-to-br from-cyan-50 to-teal-100 text-cyan-900 border border-cyan-200',
-  entertainment_sports: 'bg-gradient-to-br from-orange-50 to-amber-100 text-orange-900 border border-orange-200',
-  general: 'bg-gradient-to-br from-gray-50 to-slate-100 text-gray-900 border border-gray-200'
+  op_card_game: 'text-amber-600',
+  op_merchandise: 'text-orange-600',
+  ai_robotics: 'text-purple-600',
+  ev_automotive: 'text-emerald-600',
+  finance_investment: 'text-rose-600',
+  business_tech: 'text-blue-600',
+  politics_world: 'text-indigo-600',
+  economy_policy: 'text-yellow-600',
+  health_medical: 'text-pink-600',
+  energy_environment: 'text-cyan-600',
+  entertainment_sports: 'text-orange-600',
+  general: 'text-gray-600'
 };
 
 const categoryNames = {
-  // One Piece 专区
   op_card_game: 'OP卡牌游戏',
   op_merchandise: 'OP周边情报',
-
-  // 核心关注
   ai_robotics: 'AI与机器人',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
-
-  // 主流分类
   business_tech: '商业科技',
   politics_world: '政治国际',
   economy_policy: '经济政策',
@@ -51,15 +42,24 @@ const categoryNames = {
   general: '综合'
 };
 
+// 五月天阿信的声音配置（通过语调和语速模拟）
+const voicePresets = {
+  siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
+  siri_male: { pitch: 0.9, rate: 1.0, name: 'Siri (男声)' },
+  ah_shin: { pitch: 1.1, rate: 0.92, name: '阿信 (五月天)' },
+  tencent_female: { pitch: 1.0, rate: 0.98, name: '腾讯 (女声)' },
+  google_male: { pitch: 0.85, rate: 1.05, name: 'Google (男声)' }
+};
+
 // 图片放大Modal
 const ImageModal = ({ src, alt, onClose }) => {
   return (
     <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 transition-opacity duration-300"
+      className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-8"
       onClick={onClose}
     >
       <button
-        className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 rounded-full p-3 transition-all duration-200"
+        className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 rounded-full p-3 transition-all"
         onClick={onClose}
       >
         <FaTimes className="text-white w-6 h-6" />
@@ -77,44 +77,59 @@ const ImageModal = ({ src, alt, onClose }) => {
 const BriefCard = ({ brief, isNew = false }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState('');
   const [isPaused, setIsPaused] = useState(false);
-  const [showVoiceSelector, setShowVoiceSelector] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState('siri_female');
+  const [showVoiceMenu, setShowVoiceMenu] = useState(false);
 
   const speechSynthesisRef = useRef(window.speechSynthesis);
   const utteranceRef = useRef(null);
-  const voices = useRef([]);
+  const allVoicesRef = useRef([]);
+  const currentVoiceRef = useRef(null);
 
-  // 可用的声音（中文）
-  const voicesRef = useRef([]);
-
-  // 加载可用的声音
+  // 加载并过滤声音
   useEffect(() => {
-    const getVoices = () => {
+    const loadVoices = () => {
       const allVoices = speechSynthesisRef.current.getVoices();
-      // 优先选择中文声音
+
+      // 只保留中文声音
       const zhVoices = allVoices.filter(voice =>
-        voice.lang.includes('zh') || voice.lang.includes('CN')
+        voice.lang === 'zh-CN' || voice.lang === 'zh'
       );
 
-      // 兼容不同的浏览器命名方式
-      const preferredVoices = zhVoices.length > 0 ? zhVoices : allVoices;
-      voices.current = preferredVoices;
-      voicesRef.current = preferredVoices;
+      // 按优先级排序（Siri声音优先）
+      const sortedVoices = zhVoices.sort((a, b) => {
+        const aPriority = a.name.includes('Ting-Ting') || a.name.includes('Kangkang') ? 2 : 1;
+        const bPriority = b.name.includes('Ting-Ting') || b.name.includes('Kangkang') ? 2 : 1;
+        return bPriority - aPriority;
+      });
 
-      // 自动选择第一个中文声音或Siri（如果可用）
-      if (preferredVoices.length > 0) {
-        const siriVoice = preferredVoices.find(v =>
-          v.name.includes('Siri') || v.name.includes('Ting-Ting') || v.name.includes('Huihui')
-        );
-        setSelectedVoice(siriVoice ? siriVoice.name : preferredVoices[0].name);
+      allVoicesRef.current = sortedVoices;
+
+      // 选择默认声音（女声优先）
+      const femaleVoice = sortedVoices.find(v =>
+        v.name.includes('Ting-Ting') || v.name.includes('Huihui') || v.name.includes('Xiaoxiao')
+      );
+      const maleVoice = sortedVoices.find(v =>
+        v.name.includes('Kangkang') || v.name.includes('Yunxi') || v.name.includes('Yaqi')
+      );
+
+      // 根据选择的预设设置声音
+      if (selectedPreset === 'siri_female' && femaleVoice) {
+        currentVoiceRef.current = femaleVoice;
+      } else if (selectedPreset === 'siri_male' && maleVoice) {
+        currentVoiceRef.current = maleVoice;
+      } else {
+        currentVoiceRef.current = sortedVoices[0] || null;
       }
     };
 
-    // Chrome需要事件触发
-    speechSynthesisRef.current.onvoiceschanged = getVoices;
-    getVoices();
-  }, []);
+    speechSynthesisRef.current.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    return () => {
+      speechSynthesisRef.current.cancel();
+    };
+  }, [selectedPreset]);
 
   // 开始朗读
   const handleRead = () => {
@@ -140,22 +155,23 @@ const BriefCard = ({ brief, isNew = false }) => {
     // 设置中文语言
     utterance.lang = 'zh-CN';
 
-    // 选择声音
-    const selectedVoiceObj = voicesRef.current.find(v => v.name === selectedVoice);
-    if (selectedVoiceObj) {
-      utterance.voice = selectedVoiceObj;
+    // 设置声音
+    if (currentVoiceRef.current) {
+      utterance.voice = currentVoiceRef.current;
     }
 
-    // 语速和音调调整（自然叙述风格）
-    utterance.rate = 0.95; // 稍慢，更自然
-    utterance.pitch = 1.0;  // 正常音调
+    // 应用声音预设的语调和语速
+    const preset = voicePresets[selectedPreset];
+    utterance.pitch = preset.pitch;
+    utterance.rate = preset.rate;
 
     utterance.onend = () => {
       setIsPlaying(false);
       setIsPaused(false);
     };
 
-    utterance.onerror = () => {
+    utterance.onerror = (e) => {
+      console.error('Speech error:', e);
       setIsPlaying(false);
       setIsPaused(false);
     };
@@ -192,38 +208,68 @@ const BriefCard = ({ brief, isNew = false }) => {
     }
   };
 
+  // 格式化摘要为三段式结构
   const formatSummary = (text) => {
-    // 将 • 转换为自然段落
-    if (text.includes('•')) {
-      return text.split('•').map((part, i) => {
-        const trimmed = part.trim();
-        if (!trimmed) return null;
-        return (
-          <p key={i} className="mb-3 last:mb-0 leading-[1.8]">
-            {trimmed}
-          </p>
-        );
-      });
+    const sections = {
+      overview: null,
+      details: [],
+      impact: null
+    };
+
+    // 提取"事件概述"
+    const overviewMatch = text.match(/事件概述[:：]\s*([\s\S]*?)(?=重要细节|后续影响|$)/);
+    if (overviewMatch) {
+      sections.overview = overviewMatch[1].trim();
     }
-    // 原始段落按换行符分割
-    return text.split('\n').map((para, i) => (
-      <p key={i} className="mb-3 last:mb-0 leading-[1.8]">
-        {para}
-      </p>
-    ));
+
+    // 提取"重要细节"
+    const detailsMatch = text.match(/重要细节[:：]\s*([\s\S]*?)(?=后续影响|$)/);
+    if (detailsMatch) {
+      const detailsText = detailsMatch[1].trim();
+      sections.details = detailsText
+        .split(/\n/)
+        .filter(line => line.trim() && line.includes('•'))
+        .map(line => line.replace(/^[•\-\*]\s*/, '').trim());
+    }
+
+    // 提取"后续影响"
+    const impactMatch = text.match(/后续影响[:：]\s*([\s\S]*?)$/);
+    if (impactMatch) {
+      sections.impact = impactMatch[1].trim();
+    }
+
+    // 如果没有识别到结构，尝试用空行分割
+    if (!sections.overview && !sections.details.length && !sections.impact) {
+      const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+      if (paragraphs.length >= 3) {
+        sections.overview = paragraphs[0].trim();
+        const middle = paragraphs[1].trim();
+        sections.details = middle.split(/\n/).filter(l => l.trim() && l.includes('•')).map(l => l.replace(/^[•\-\*]\s*/, '').trim());
+        sections.impact = paragraphs.slice(2).join('\n\n').trim();
+      }
+    }
+
+    return {
+      hasStructure: sections.overview || sections.details.length || sections.impact,
+      overview: sections.overview,
+      details: sections.details,
+      impact: sections.impact
+    };
   };
+
+  const summary = formatSummary(brief.summary);
 
   return (
     <>
       <div
-        className={`group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:border-gray-200 ${
+        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-gray-300 ${
           isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
         }`}
       >
-        {/* 图片区域 - 可点击放大 */}
+        {/* 图片区域 */}
         {brief.image && (
           <div
-            className="relative w-full h-56 overflow-hidden bg-gray-50 cursor-pointer"
+            className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
           >
             <img
@@ -234,36 +280,26 @@ const BriefCard = ({ brief, isNew = false }) => {
                 e.target.style.display = 'none';
               }}
             />
-            {/* 放大提示 */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-              <span className="text-white text-sm font-medium tracking-wide">
-                查看大图
-              </span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+              <span className="text-white text-sm font-medium">查看大图</span>
             </div>
-            {/* 分类标签叠加在图片上 */}
             <div className="absolute top-4 left-4">
-              <span className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide backdrop-blur-xl shadow-lg ${colorClass}`}>
+              <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
                 {categoryName}
               </span>
             </div>
-            {/* NEW标记 */}
-            {isNew && (
-              <div className="absolute top-4 right-4 bg-black text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-lg">
-                NEW
-              </div>
-            )}
           </div>
         )}
 
         {/* 内容区域 */}
-        <div className="p-6">
-          {/* 没有图片时显示分类和时间 */}
+        <div className="p-5">
+          {/* 没有图片时的分类标签 */}
           {!brief.image && (
-            <div className="flex items-center justify-between mb-4">
-              <span className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide border ${colorClass}`}>
+            <div className="flex items-center justify-between mb-3">
+              <span className={`text-xs font-semibold ${colorClass}`}>
                 {categoryName}
               </span>
-              <div className="flex items-center text-gray-400 text-xs tracking-wide">
+              <div className="flex items-center text-gray-400 text-xs">
                 <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
               </div>
@@ -271,13 +307,12 @@ const BriefCard = ({ brief, isNew = false }) => {
           )}
 
           {/* 朗读控制栏 */}
-          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              {/* 朗读按钮 */}
               {!isPlaying && !isPaused ? (
                 <button
                   onClick={handleRead}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                 >
                   <FaVolumeUp />
                   朗读
@@ -285,7 +320,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               ) : isPaused ? (
                 <button
                   onClick={handleRead}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                 >
                   <FaPlay />
                   继续
@@ -293,14 +328,13 @@ const BriefCard = ({ brief, isNew = false }) => {
               ) : (
                 <button
                   onClick={handlePause}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
                 >
                   <FaPause />
                   暂停
                 </button>
               )}
 
-              {/* 停止按钮 */}
               {(isPlaying || isPaused) && (
                 <button
                   onClick={handleStop}
@@ -314,27 +348,26 @@ const BriefCard = ({ brief, isNew = false }) => {
             {/* 声音选择器 */}
             <div className="relative">
               <button
-                onClick={() => setShowVoiceSelector(!showVoiceSelector)}
-                className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                onClick={() => setShowVoiceMenu(!showVoiceMenu)}
+                className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <span>{voicesRef.current.find(v => v.name === selectedVoice)?.name?.split(' ')[0] || '选择声音'}</span>
-                <FaTimes className={`transition-transform duration-200 ${showVoiceSelector ? 'rotate-45' : ''}`} />
+                <span className="font-medium">{voicePresets[selectedPreset].name}</span>
               </button>
 
-              {showVoiceSelector && voicesRef.current.length > 0 && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
-                  {voicesRef.current.map((voice, index) => (
+              {showVoiceMenu && (
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+                  {Object.entries(voicePresets).map(([key, preset]) => (
                     <button
-                      key={index}
+                      key={key}
                       onClick={() => {
-                        setSelectedVoice(voice.name);
-                        setShowVoiceSelector(false);
+                        setSelectedPreset(key);
+                        setShowVoiceMenu(false);
                       }}
-                      className={`w-full px-4 py-2.5 text-left text-xs hover:bg-gray-50 transition-colors ${
-                        selectedVoice === voice.name ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        selectedPreset === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
                       }`}
                     >
-                      {voice.name.split(' ').slice(0, 2).join(' ')}
+                      {preset.name}
                     </button>
                   ))}
                 </div>
@@ -343,23 +376,82 @@ const BriefCard = ({ brief, isNew = false }) => {
           </div>
 
           {/* 标题 */}
-          <h3 className="text-xl font-bold text-gray-900 mb-4 tracking-tight leading-tight group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 leading-snug">
             {brief.title}
           </h3>
 
-          {/* 摘要 - 自然段落格式 */}
-          <div className="text-gray-700 mb-6 text-sm leading-[1.8] tracking-wide">
-            {formatSummary(brief.summary)}
-          </div>
+          {/* 摘要 - 结构化显示 */}
+          {summary.hasStructure ? (
+            <div className="space-y-4 mb-5">
+              {/* 事件概述 */}
+              {summary.overview && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-1 h-4 rounded-full bg-blue-500" />
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">事件概述</span>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed pl-3">
+                    {summary.overview}
+                  </p>
+                </div>
+              )}
 
-          {/* 底部 - 来源和时间 */}
-          <div className="flex items-center justify-between text-xs pt-4 border-t border-gray-100">
-            <div className="flex items-center text-gray-400 tracking-wide">
-              <FaLink className="mr-2" />
+              {/* 分隔线 */}
+              {summary.overview && summary.details.length > 0 && (
+                <hr className="border-gray-100" />
+              )}
+
+              {/* 重要细节 */}
+              {summary.details.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-1 h-4 rounded-full bg-purple-500" />
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">重要细节</span>
+                  </div>
+                  <ul className="space-y-2 pl-3">
+                    {summary.details.map((detail, i) => (
+                      <li key={i} className="flex items-start text-sm text-gray-700 leading-relaxed">
+                        <span className="text-purple-500 mr-2 mt-0.5">•</span>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 分隔线 */}
+              {summary.details.length > 0 && summary.impact && (
+                <hr className="border-gray-100" />
+              )}
+
+              {/* 后续影响 */}
+              {summary.impact && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-1 h-4 rounded-full bg-green-500" />
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">后续影响</span>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed pl-3">
+                    {summary.impact}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            // 非结构化摘要
+            <div className="mb-5 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+              {brief.summary}
+            </div>
+          )}
+
+          {/* 底部信息 */}
+          <div className="flex items-center justify-between text-xs text-gray-400 pt-3 border-t border-gray-100">
+            <div className="flex items-center max-w-[45%]">
+              <FaLink className="mr-1.5 flex-shrink-0" />
               <span className="truncate">{brief.source}</span>
             </div>
-            {brief.image && (
-              <div className="flex items-center text-gray-400 tracking-wide">
+            {!brief.image && (
+              <div className="flex items-center">
                 <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
               </div>
@@ -372,7 +464,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               href={brief.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 w-full flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors text-sm font-medium tracking-wide"
+              className="mt-4 w-full flex items-center justify-center bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm font-medium"
             >
               查看原文
               <FaExternalLinkAlt className="ml-2 text-xs" />
