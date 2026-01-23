@@ -35,7 +35,18 @@ class NewsService:
         ai_provider = os.getenv('AI_PROVIDER', 'openai')
         self.processor = NewsProcessor(ai_provider)
         self.db = NewsDatabase(MONGODB_URI)
-        self.redis_client = redis.from_url(REDIS_URL)
+
+        # Redis连接（可选，用于实时通知）
+        try:
+            self.redis_client = redis.from_url(REDIS_URL)
+            # 测试连接
+            self.redis_client.ping()
+            self.redis_enabled = True
+            logger.info("Redis连接成功")
+        except Exception as e:
+            logger.warning(f"Redis连接失败，将禁用实时通知功能: {str(e)}")
+            self.redis_enabled = False
+            self.redis_client = None
 
     def run_cycle(self):
         """执行一次完整的新闻采集和处理循环"""
@@ -127,7 +138,10 @@ class NewsService:
             logger.error(f"采集循环出错（耗时 {elapsed:.1f} 秒）: {str(e)}", exc_info=True)
 
     def publish_brief(self, brief: Dict):
-        """发布简报到Redis"""
+        """发布简报到Redis（可选功能）"""
+        if not self.redis_enabled or not self.redis_client:
+            return  # Redis不可用，跳过发布
+
         try:
             # 将ObjectId转换为字符串
             if '_id' in brief:
@@ -142,6 +156,9 @@ class NewsService:
             logger.debug(f"发布简报到Redis: [{brief['category']}] {brief['title'][:30]}")
         except Exception as e:
             logger.error(f"发布到Redis失败: {str(e)}")
+            # 连接失败时禁用Redis，避免重复报错
+            logger.warning("禁用Redis实时通知功能")
+            self.redis_enabled = False
 
 
 def main():
