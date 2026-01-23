@@ -52,88 +52,28 @@ CATEGORY_NAMES = {
     'general': '综合'
 }
 
-# 新闻源配置
+# 新闻源配置（临时减少到最可靠的源用于测试）
 NEWS_SOURCES = {
     'rss_feeds': [
-        # === One Piece 专区（顶级优先）===
-        'https://rsshub.app/reddit/r/OnePieceTCG',  # One Piece TCG Reddit
-        'https://rsshub.app/reddit/r/OnePiece',     # One Piece Reddit
-        'https://rsshub.app/twitter/user/OP_CARD_GLOBAL',  # OP TCG官方推特
-
-        # === 国际主流媒体（更新频繁）===
+        # === 最可靠的国际主流媒体 ===
         'https://feeds.bbci.co.uk/news/rss.xml',  # BBC Top Stories
         'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC World
         'https://www.theguardian.com/world/rss',  # Guardian World
-        'https://rss.cnn.com/rss/edition.rss',  # CNN Top
-        'https://rss.cnn.com/rss/edition_world.rss',  # CNN World
-        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台全覆盖
-        'https://www.reuters.com/rssFeed/worldNews',  # 路透社世界新闻
-        'https://www.reuters.com/rssFeed/technologyNews',  # 路透社科技
-        'https://www.washingtonpost.com/world/rss.xml',  # 华盛顿邮报
-        'https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/world/europe/rss.xml',  # 纽约时报欧洲
+        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台
 
-        # === 科技类（实时更新）===
+        # === 最可靠的科技类 ===
         'https://www.wired.com/feed/rss',
         'https://techcrunch.com/feed/',
         'https://www.theverge.com/rss/index.xml',
-        'https://www.technologyreview.com/feed/',  # MIT科技评论
-        'https://venturebeat.com/feed/',  # VentureBeat
-        'https://arstechnica.com/feed/',  # Ars Technica
-        'https://www.engadget.com/feed.xml',  # Engadget
 
-        # === 财经类（实时更新）===
+        # === 最可靠的财经类 ===
         'https://feeds.bloomberg.com/markets/news.rss',
-        'https://feeds.bloomberg.com/technology/news.rss',
         'https://www.cnbc.com/id/100003114/device/rss/rss.html',
-        'https://www.ft.com/rss/home',  # 金融时报
-        'https://www.wsj.com/rss/world',  # 华尔街日报
-        'https://seekingalpha.com/market_currents.xml',  # Seeking Alpha
 
-        # === AI与机器人 ===
-        'https://www.artificialintelligence-news.com/feed/',
-        'https://venturebeat.com/category/ai/feed/',  # VentureBeat AI
-
-        # === 新能源汽车 ===
-        'https://www.motortrend.com/feed/',
-        'https://insideevs.com/rss/',  # InsideEVs电动车
-        'https://electrek.co/feed/',  # Electrek电动车
-        'https://cleantechnica.com/feed/',  # CleanTechnica清洁技术
-
-        # === 中文源（实时更新）===
-        'https://rsshub.app/36kr/newsflashes',  # 36Kr快讯（分钟级更新）
-        'https://rsshub.app/sina/finance',  # 新浪财经
-        'https://rsshub.app/thepaper/featured',  # 澎湃新闻
-        'https://rsshub.app/wallstreetcn/news/global',  # 华尔街见闻
-        'https://rsshub.app/caixin/latest',  # 财新网
-        'https://rsshub.app/ifanr/rss',  # 爱范儿
-        'https://rsshub.app/sspai/posts',  # 少数派
-
-        # === 亚洲媒体 ===
-        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本主要新闻
-        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报头版
-        'https://rsshub.app/zaobao/znews/china',  # 联合早报-新加坡
-
-        # === 欧洲媒体 ===
-        'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
-        'https://www.spiegel.de/schlagzeilen/index.rss',  # 德国明镜周刊
-        'https://elpais.com/rss/elpais/portada.xml',  # 西班牙国家报
-
-        # === 澳大利亚 ===
-        'https://www.abc.net.au/news/feed/51120/rss.xml',  # ABC News
-
-        # === 健康医疗 ===
-        'https://www.who.int/rss-feeds/news-english.xml',  # 世界卫生组织
-        'https://www.nature.com/nm.rss',  # Nature Medicine
-
-        # === 娱乐体育 ===
-        'https://www.espn.com/espn/rss/news',  # ESPN体育
-        'https://variety.com/feed/',  # Variety娱乐
-        'https://deadline.com/feed/',  # Deadline娱乐
-
-        # === 加拿大 ===
-        'https://www.cbc.ca/web/rss/rss-canada',  # CBC Canada
-    ],
-    'api_endpoints': []
+        # === 最可靠的AI/科技 ===
+        'https://venturebeat.com/feed/',
+        'https://arstechnica.com/feed/',
+    ]
 }
 
 # AI提示词模板

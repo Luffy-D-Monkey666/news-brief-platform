@@ -18,6 +18,10 @@ class NewsCrawler:
     def crawl_rss(self, feed_url: str) -> List[Dict]:
         """爬取RSS订阅源"""
         try:
+            # 添加超时保护
+            import socket
+            socket.setdefaulttimeout(10)  # 10秒超时
+
             feed = feedparser.parse(feed_url)
             news_items = []
 
@@ -34,12 +38,21 @@ class NewsCrawler:
                 }
                 news_items.append(news_item)
 
-            logger.info(f"从 {feed_url} 爬取到 {len(news_items)} 条新闻")
+            logger.info(f"从 {self._get_short_url(feed_url)} 爬取到 {len(news_items)} 条新闻")
+            # 添加超时重置
+            socket.setdefaulttimeout(None)
             return news_items
 
         except Exception as e:
-            logger.error(f"爬取RSS失败 {feed_url}: {str(e)}")
+            logger.error(f"爬取RSS失败 {self._get_short_url(feed_url)}: {str(e)}")
+            socket.setdefaulttimeout(None)
             return []
+
+    def _get_short_url(self, url: str) -> str:
+        """获取简短的URL用于日志"""
+        if len(url) > 60:
+            return url[:57] + "..."
+        return url
 
     def _extract_content(self, entry) -> str:
         """提取新闻内容"""
@@ -97,9 +110,18 @@ class NewsCrawler:
     def crawl_all(self) -> List[Dict]:
         """爬取所有新闻源"""
         all_news = []
-        for feed_url in self.rss_feeds:
-            news = self.crawl_rss(feed_url)
-            all_news.extend(news)
+        total_feeds = len(self.rss_feeds)
+
+        for idx, feed_url in enumerate(self.rss_feeds, 1):
+            try:
+                # 每批10个源显示一次进度
+                if idx % 10 == 1:
+                    logger.info(f"正在爬取第 {idx}-{min(idx+9, total_feeds)}/{total_feeds} 个新闻源...")
+                news = self.crawl_rss(feed_url)
+                all_news.extend(news)
+            except Exception as e:
+                logger.error(f"爬取新闻源 {idx} 失败: {str(e)}")
+                continue
 
         logger.info(f"总共爬取到 {len(all_news)} 条新闻")
         return all_news
