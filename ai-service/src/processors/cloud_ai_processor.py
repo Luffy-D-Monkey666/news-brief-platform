@@ -17,6 +17,12 @@ class CloudAIProcessor:
             self.api_key = os.getenv('OPENAI_API_KEY')
             self.api_url = 'https://api.openai.com/v1/chat/completions'
             self.model = os.getenv('OPENAI_MODEL', 'gpt-3.5-turbo')
+        elif self.provider == 'deepseek':
+            # DeepSeek中国AI（超便宜，兼容OpenAI格式）
+            self.api_key = os.getenv('DEEPSEEK_API_KEY')
+            self.api_url = 'https://api.deepseek.com/v1/chat/completions'
+            self.model = os.getenv('DEEPSEEK_MODEL', 'deepseek-chat')
+            logger.info("使用DeepSeek AI（中国）")
         elif self.provider == 'claude':
             self.api_key = os.getenv('CLAUDE_API_KEY')
             self.api_url = 'https://api.anthropic.com/v1/messages'
@@ -166,7 +172,8 @@ class CloudAIProcessor:
 
     def generate(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
         """生成文本"""
-        if self.provider == 'openai':
+        if self.provider == 'openai' or self.provider == 'deepseek':
+            # DeepSeek使用OpenAI兼容格式
             return self._call_openai(prompt, max_tokens)
         elif self.provider == 'claude':
             return self._call_claude(prompt, max_tokens)
