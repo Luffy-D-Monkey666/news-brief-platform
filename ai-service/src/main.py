@@ -39,43 +39,52 @@ class NewsService:
 
     def run_cycle(self):
         """执行一次完整的新闻采集和处理循环"""
+        start_time = datetime.now()
         try:
             logger.info("=" * 50)
             logger.info("开始新一轮新闻采集")
 
             # 1. 爬取新闻
+            logger.info("步骤 1/5: 开始爬取 RSS 订阅源...")
             raw_news = self.crawler.crawl_all()
-            logger.info(f"爬取到 {len(raw_news)} 条新闻")
+            logger.info(f"步骤 1/5 完成: 爬取到 {len(raw_news)} 条新闻")
 
             if not raw_news:
                 logger.warning("没有爬取到新闻")
                 return
 
             # 2. 过滤已存在的新闻
+            logger.info("步骤 2/5: 过滤重复新闻...")
             new_news = []
             for news in raw_news:
                 if not self.db.check_news_exists(news['link']):
                     new_news.append(news)
 
-            logger.info(f"过滤后剩余 {len(new_news)} 条新新闻")
+            logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
 
             if not new_news:
                 logger.info("没有新新闻需要处理")
                 return
 
             # 3. 保存原始新闻
+            logger.info("步骤 3/5: 保存原始新闻到数据库...")
             for news in new_news:
                 self.db.save_raw_news(news)
+            logger.info(f"步骤 3/5 完成: 已保存 {len(new_news)} 条原始新闻")
 
             # 4. AI处理（摘要和分类）
-            logger.info("开始AI处理...")
+            logger.info(f"步骤 4/5: 开始 AI 处理 ({len(new_news)} 条新闻)...")
+            logger.info(f"当前 AI Provider: {os.getenv('AI_PROVIDER', 'openai')}")
+
             processed_news = self.processor.batch_process(
                 new_news,
                 SUMMARIZE_PROMPT,
                 CLASSIFY_PROMPT
             )
+            logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
 
             # 5. 保存简报
+            logger.info("步骤 5/5: 保存简报到数据库...")
             saved_count = 0
             for brief in processed_news:
                 brief_id = self.db.save_brief(brief)
@@ -84,12 +93,15 @@ class NewsService:
                     # 发布到Redis，通知后端服务
                     self.publish_brief(brief)
 
-            logger.info(f"成功保存 {saved_count} 条简报")
-            logger.info("本轮采集完成")
+            logger.info(f"步骤 5/5 完成: 成功保存 {saved_count}/{len(processed_news)} 条简报")
+
+            elapsed = (datetime.now() - start_time).total_seconds()
+            logger.info(f"本轮采集完成，耗时 {elapsed:.1f} 秒")
             logger.info("=" * 50)
 
         except Exception as e:
-            logger.error(f"采集循环出错: {str(e)}", exc_info=True)
+            elapsed = (datetime.now() - start_time).total_seconds()
+            logger.error(f"采集循环出错（耗时 {elapsed:.1f} 秒）: {str(e)}", exc_info=True)
 
     def publish_brief(self, brief: Dict):
         """发布简报到Redis"""

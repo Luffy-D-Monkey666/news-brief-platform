@@ -46,6 +46,10 @@ class CloudAIProcessor:
     def _call_openai(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
         """调用OpenAI API"""
         try:
+            if not self.api_key:
+                logger.error(f"{self.provider.upper()} API Key 未设置")
+                return None
+
             headers = {
                 'Authorization': f'Bearer {self.api_key}',
                 'Content-Type': 'application/json'
@@ -60,6 +64,7 @@ class CloudAIProcessor:
                 'temperature': 0.3
             }
 
+            logger.info(f"正在调用 {self.provider} API (model: {self.model})...")
             response = requests.post(
                 self.api_url,
                 headers=headers,
@@ -69,13 +74,18 @@ class CloudAIProcessor:
 
             if response.status_code == 200:
                 result = response.json()
-                return result['choices'][0]['message']['content'].strip()
+                content = result['choices'][0]['message']['content'].strip()
+                logger.info(f"{self.provider} API 调用成功，返回 {len(content)} 字符")
+                return content
             else:
-                logger.error(f"OpenAI API错误: {response.status_code} - {response.text}")
+                logger.error(f"{self.provider} API错误: {response.status_code} - {response.text}")
                 return None
 
+        except requests.exceptions.Timeout:
+            logger.error(f"{self.provider} API 调用超时（30秒）")
+            return None
         except Exception as e:
-            logger.error(f"OpenAI调用失败: {str(e)}")
+            logger.error(f"{self.provider} 调用失败: {str(e)}")
             return None
 
     def _call_claude(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
