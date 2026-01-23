@@ -46,8 +46,10 @@ const categoryNames = {
 const voicePresets = {
   siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
   siri_male: { pitch: 0.9, rate: 1.0, name: 'Siri (男声)' },
-  tencent_female: { pitch: 1.0, rate: 0.98, name: '腾讯 (女声)' },
-  google_male: { pitch: 0.85, rate: 1.05, name: 'Google (男声)' }
+  // AI语音模拟
+  xiao_ai: { pitch: 1.05, rate: 1.02, name: '小爱同学 (小米)' },  // 活泼、阳光、友好，年轻女声
+  ideal_assistant: { pitch: 0.95, rate: 0.98, name: '理想同学 (理想汽车)' },  // 温暖、有亲和力、稍成熟女声
+  nomi: { pitch: 0.92, rate: 1.0, name: 'NOMI (蔚来)' }  // 温柔、有温度、自然感
 };
 
 // 图片放大Modal
@@ -106,22 +108,28 @@ const BriefCard = ({ brief, isNew = false }) => {
         v.name.includes('Kangkang') || v.name.includes('Yunxi') || v.name.includes('Yaqi')
       );
 
-      // 腾讯女声 - 选择其他女声
-      const tencentFemale = zhVoices.find(v =>
-        v.name.includes('Xiaoxiao') || v.name.includes('Lili')
+      // 小爱同学（小米）- 活泼、阳光、友好的年轻女声
+      const xiaoAiVoice = zhVoices.find(v =>
+        v.name.includes('Xiaoxiao') || v.name.includes('Yaoyao')
       ) || siriFemale;
 
-      // Google男声 - 选择其他男声
-      const googleMale = zhVoices.find(v =>
-        v.name.includes('Yaqi') || v.name.includes('Zhiwei')
-      ) || siriMale;
+      // 理想同学（理想汽车）- 温暖、有亲和力、稍成熟的女声
+      const idealVoice = zhVoices.find(v =>
+        v.name.includes('Huihui') || v.name.includes('Xiaoyi') || v.name.includes('Lili')
+      ) || siriFemale;
+
+      // NOMI（蔚来）- 温柔、有温度、自然感的语音
+      const nomiVoice = zhVoices.find(v =>
+        v.name.includes('Xiaoyi') || v.name.includes('Yaoyao') || v.name.includes('Xiaoxiao')
+      ) || siriFemale;
 
       // 声音预设映射
       const voiceMap = {
         siri_female: siriFemale || zhVoices[0],
         siri_male: siriMale || zhVoices[1] || zhVoices[0],
-        tencent_female: tencentFemale || zhVoices[2] || siriFemale,
-        google_male: googleMale || zhVoices[3] || siriMale
+        xiao_ai: xiaoAiVoice || zhVoices[2] || siriFemale,
+        ideal_assistant: idealVoice || zhVoices[3] || siriFemale,
+        nomi: nomiVoice || zhVoices[4] || siriFemale
       };
 
       currentVoiceRef.current = voiceMap[selectedPreset];
