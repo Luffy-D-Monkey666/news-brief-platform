@@ -86,7 +86,7 @@ const BriefCard = ({ brief, isNew = false }) => {
   const allVoicesRef = useRef([]);
   const currentVoiceRef = useRef(null);
 
-  // 加载并过滤声音
+  // 只保留5种中文声音预设
   useEffect(() => {
     const loadVoices = () => {
       const allVoices = speechSynthesisRef.current.getVoices();
@@ -96,31 +96,43 @@ const BriefCard = ({ brief, isNew = false }) => {
         voice.lang === 'zh-CN' || voice.lang === 'zh'
       );
 
-      // 按优先级排序（Siri声音优先）
-      const sortedVoices = zhVoices.sort((a, b) => {
-        const aPriority = a.name.includes('Ting-Ting') || a.name.includes('Kangkang') ? 2 : 1;
-        const bPriority = b.name.includes('Ting-Ting') || b.name.includes('Kangkang') ? 2 : 1;
-        return bPriority - aPriority;
-      });
-
-      allVoicesRef.current = sortedVoices;
-
-      // 选择默认声音（女声优先）
-      const femaleVoice = sortedVoices.find(v =>
+      // 为每个预设分配不同的声音
+      // Siri女声 - 优先Ting-Ting
+      const siriFemale = zhVoices.find(v =>
         v.name.includes('Ting-Ting') || v.name.includes('Huihui') || v.name.includes('Xiaoxiao')
       );
-      const maleVoice = sortedVoices.find(v =>
+
+      // Siri男声 - 优先Kangkang
+      const siriMale = zhVoices.find(v =>
         v.name.includes('Kangkang') || v.name.includes('Yunxi') || v.name.includes('Yaqi')
       );
 
-      // 根据选择的预设设置声音
-      if (selectedPreset === 'siri_female' && femaleVoice) {
-        currentVoiceRef.current = femaleVoice;
-      } else if (selectedPreset === 'siri_male' && maleVoice) {
-        currentVoiceRef.current = maleVoice;
-      } else {
-        currentVoiceRef.current = sortedVoices[0] || null;
-      }
+      // 阿信（五月天）- 选择稍微高音调的声音（通常是女声但调高音）
+      const ahShinVoice = zhVoices.find(v =>
+        v.name.includes('Xiaoyi') || v.name.includes('Yaoyao')
+      ) || siriFemale;
+
+      // 腾讯女声 - 选择其他女声
+      const tencentFemale = zhVoices.find(v =>
+        v.name.includes('Xiaoxiao') || v.name.includes('Lili')
+      ) || siriFemale;
+
+      // Google男声 - 选择其他男声
+      const googleMale = zhVoices.find(v =>
+        v.name.includes('Yaqi') || v.name.includes('Zhiwei')
+      ) || siriMale;
+
+      // 声音预设映射
+      const voiceMap = {
+        siri_female: siriFemale || zhVoices[0],
+        siri_male: siriMale || zhVoices[1] || zhVoices[0],
+        ah_shin: ahShinVoice || zhVoices[2] || siriFemale,
+        tencent_female: tencentFemale || zhVoices[3] || siriFemale,
+        google_male: googleMale || zhVoices[4] || siriMale
+      };
+
+      currentVoiceRef.current = voiceMap[selectedPreset];
+      allVoicesRef.current = voiceMap;
     };
 
     speechSynthesisRef.current.onvoiceschanged = loadVoices;
@@ -380,58 +392,48 @@ const BriefCard = ({ brief, isNew = false }) => {
             {brief.title}
           </h3>
 
-          {/* 摘要 - 结构化显示 */}
+          {/* 摘要 - 结构化显示（增加间距和虚线） */}
           {summary.hasStructure ? (
-            <div className="space-y-4 mb-5">
+            <div className="space-y-6 mb-5">
               {/* 事件概述 */}
               {summary.overview && (
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1 h-4 rounded-full bg-blue-500" />
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">事件概述</span>
+                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                    <div className="w-2 h-5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600" />
+                    <span className="text-sm font-bold text-gray-700 tracking-wide">事件概述</span>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed pl-3">
+                  <p className="text-sm text-gray-800 leading-relaxed pl-5">
                     {summary.overview}
                   </p>
                 </div>
               )}
 
-              {/* 分隔线 */}
-              {summary.overview && summary.details.length > 0 && (
-                <hr className="border-gray-100" />
-              )}
-
               {/* 重要细节 */}
               {summary.details.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1 h-4 rounded-full bg-purple-500" />
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">重要细节</span>
+                <div className={summary.overview ? "" : "mt-2"}>
+                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                    <div className="w-2 h-5 rounded-full bg-gradient-to-b from-purple-400 to-purple-600" />
+                    <span className="text-sm font-bold text-gray-700 tracking-wide">重要细节</span>
                   </div>
-                  <ul className="space-y-2 pl-3">
+                  <ul className="space-y-3 pl-5">
                     {summary.details.map((detail, i) => (
-                      <li key={i} className="flex items-start text-sm text-gray-700 leading-relaxed">
-                        <span className="text-purple-500 mr-2 mt-0.5">•</span>
-                        <span>{detail}</span>
+                      <li key={i} className="flex items-start text-sm text-gray-800 leading-relaxed">
+                        <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 mr-3 flex-shrink-0" />
+                        <span className="flex-1">{detail}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
 
-              {/* 分隔线 */}
-              {summary.details.length > 0 && summary.impact && (
-                <hr className="border-gray-100" />
-              )}
-
               {/* 后续影响 */}
               {summary.impact && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1 h-4 rounded-full bg-green-500" />
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">后续影响</span>
+                <div className="mt-6">
+                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                    <div className="w-2 h-5 rounded-full bg-gradient-to-b from-green-400 to-green-600" />
+                    <span className="text-sm font-bold text-gray-700 tracking-wide">后续影响</span>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed pl-3">
+                  <p className="text-sm text-gray-800 leading-relaxed pl-5">
                     {summary.impact}
                   </p>
                 </div>
@@ -439,7 +441,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           ) : (
             // 非结构化摘要
-            <div className="mb-5 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+            <div className="mb-5 p-4 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed whitespace-pre-line">
               {brief.summary}
             </div>
           )}
