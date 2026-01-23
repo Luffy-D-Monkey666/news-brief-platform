@@ -55,9 +55,31 @@ class NewsService:
 
             # 2. 过滤已存在的新闻
             logger.info("步骤 2/5: 批量过滤重复新闻...")
+            step2_start = datetime.now()
+
             # 使用批量查询优化性能
             all_links = [news['link'] for news in raw_news]
-            existing_links = self.db.check_news_exists_batch(all_links[:1000])  # 限制最多检查1000条
+            logger.info(f"准备检查 {len(all_links)} 个新闻链接...")
+
+            # 如果链接过多，分批处理
+            existing_links = set()
+            BATCH_SIZE = 500
+
+            if len(all_links) <= BATCH_SIZE:
+                # 一次性查询
+                existing_links = self.db.check_news_exists_batch(all_links)
+            else:
+                # 分批查询
+                logger.info(f"链接数量较多，采用分批查询模式（每批{BATCH_SIZE}个）...")
+                batch_count = (len(all_links) + BATCH_SIZE - 1) // BATCH_SIZE
+                for i in range(0, len(all_links), BATCH_SIZE):
+                    batch = all_links[i:i + BATCH_SIZE]
+                    batch_num = i // BATCH_SIZE + 1
+                    logger.info(f"  处理第 {batch_num}/{batch_count} 批...")
+                    existing_links.update(self.db.check_news_exists_batch(batch))
+
+            step2_elapsed = (datetime.now() - step2_start).total_seconds()
+            logger.info(f"批量查询总计耗时: {step2_elapsed:.1f} 秒")
 
             new_news = [news for news in raw_news if news['link'] not in existing_links]
 

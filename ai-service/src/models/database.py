@@ -76,12 +76,16 @@ class NewsDatabase:
     def check_news_exists_batch(self, links: List[str]) -> set:
         """批量检查新闻是否存在（优化性能）"""
         try:
+            logger.info(f"批量查询: 检查 {len(links)} 个链接...")
             existing = self.news_collection.find(
                 {'link': {'$in': links}},
                 {'link': 1, '_id': 0}
             )
+            # 立即转换为列表并关闭cursor
+            existing_list = list(existing)
+            logger.info(f"批量查询结果: 找到 {len(existing_list)} 个已存在的链接")
             # 返回已存在的链接集合
-            return {doc['link'] for doc in existing}
+            return {doc['link'] for doc in existing_list}
         except Exception as e:
-            logger.error(f"批量检查新闻失败: {str(e)}")
+            logger.error(f"批量检查新闻失败: {str(e)}", exc_info=True)
             return set()
