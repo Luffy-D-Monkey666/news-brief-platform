@@ -115,35 +115,41 @@ NEWS_SOURCES = {
 }
 
 # AI提示词模板
-# 为免费AI优化的简化Prompt（适配Hugging Face等免费模型）
-SUMMARIZE_PROMPT = """Translate this news to Chinese and summarize it in 100-150 words.
+# DeepSeek优化Prompt（高级AI模型，支持详细中文摘要）
+SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条详细的新闻总结。
 
-Title: {title}
-Content: {content}
+要求：
+1. 将标题翻译成中文（保留专有名词的英文，如"OpenAI"、"Tesla"）
+2. 用中文详细总结核心内容（150-200字）
+3. 包含：事件背景、关键信息、影响分析、相关数据
+4. 语言简洁专业，适合快速阅读
 
-Output format (Chinese only):
-[Chinese Title]
-[Chinese Summary 100-150 words]
+新闻标题: {title}
+新闻内容: {content}
+
+请按以下格式输出：
+第一行：中文标题
+第二行开始：详细总结（150-200字）
 """
 
-CLASSIFY_PROMPT = """Classify this news into one category:
+CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。
 
-Categories:
-- op_card_game: One Piece TCG cards
-- op_merchandise: One Piece merchandise
-- ai_robotics: AI, robots, machine learning
-- ev_automotive: Electric vehicles, Tesla, BYD
-- finance_investment: Stock, investment, crypto
-- business_tech: Business, tech companies
-- politics_world: Politics, international
-- economy_policy: Economy, GDP, policy
-- health_medical: Health, medicine
-- energy_environment: Energy, environment
-- entertainment_sports: Entertainment, sports
-- general: Other news
+分类规则：
+- op_card_game: One Piece卡牌游戏（TCG、集换式卡牌）
+- op_merchandise: One Piece周边（手办、服装、IP商品）
+- ai_robotics: AI与机器人（人工智能、机器学习、自动化）
+- ev_automotive: 新能源汽车（电动车、Tesla、BYD、充电桩）
+- finance_investment: 投资财经（股票、加密货币、投资、金融市场）
+- business_tech: 商业科技（科技公司、创业、商业新闻）
+- politics_world: 政治国际（国际关系、政府、选举）
+- economy_policy: 经济政策（GDP、通胀、经济政策、贸易）
+- health_medical: 健康医疗（医疗、健康、疾病、药品）
+- energy_environment: 能源环境（能源、气候、环保）
+- entertainment_sports: 娱乐体育（体育赛事、电影、音乐）
+- general: 综合（其他不属于以上分类的新闻）
 
-Title: {title}
-Summary: {summary}
+新闻标题: {title}
+新闻摘要: {summary}
 
-Return only the category name in English (like: ai_robotics)
-Category:"""
+请只返回英文分类名称（如: ai_robotics），不要有其他内容。
+分类:"""
