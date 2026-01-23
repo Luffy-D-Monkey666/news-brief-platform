@@ -8,7 +8,7 @@ MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # 爬虫配置
-CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 180))  # 3分钟（更频繁更新）
+CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟（更频繁更新，确保实时性）
 
 # 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
@@ -52,27 +52,84 @@ CATEGORY_NAMES = {
     'general': '综合'
 }
 
-# 新闻源配置（临时减少到最可靠的源用于测试）
+# 新闻源配置（覆盖全球，100+新闻源）
 NEWS_SOURCES = {
     'rss_feeds': [
-        # === 最可靠的国际主流媒体 ===
-        'https://feeds.bbci.co.uk/news/rss.xml',  # BBC Top Stories
-        'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC World
-        'https://www.theguardian.com/world/rss',  # Guardian World
-        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台
+        # ==================== 中国（中文源）====================
+        'https://rsshub.app/36kr/newsflashes',  # 36Kr快讯（分钟级更新）
+        'https://rsshub.app/sina/finance',  # 新浪财经
+        'https://rsshub.app/thepaper/featured',  # 澎湃新闻
+        'https://rsshub.app/zaobao/znews/china',  # 联合早报（新加坡中文）
+        'https://rsshub.app/ifanr/rss',  # 爱范儿科技
+        'https://rsshub.app/sspai/posts',  # 少数派
 
-        # === 最可靠的科技类 ===
-        'https://www.wired.com/feed/rss',
-        'https://techcrunch.com/feed/',
-        'https://www.theverge.com/rss/index.xml',
+        # ==================== 美国主流媒体 ====================
+        # 顶级综合
+        'https://feeds.bbci.co.uk/news/rss.xml',  # BBC Top Stories（英国）
+        'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC World（英国）
+        'https://www.theguardian.com/world/rss',  # Guardian World（英国）
+        'https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/world/europe/rss.xml',  # NY Times 欧洲版
+        'https://www.washingtonpost.com/world/rss.xml',  # 华盛顿邮报
+        'https://rss.cnn.com/rss/edition.rss',  # CNN Edition
+        'https://rss.cnn.com/rss/edition_world.rss',  # CNN World
+        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台全覆盖（中东视角）
 
-        # === 最可靠的财经类 ===
-        'https://feeds.bloomberg.com/markets/news.rss',
-        'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+        # 国际新闻
+        'https://www.reuters.com/rssFeed/worldNews',  # 路透社世界新闻
+        'https://www.reuters.com/rssFeed/technologyNews',  # 路透社科技
+        'https://www.reuters.com/rssFeed/businessNews',  # 路透社商业
 
-        # === 最可靠的AI/科技 ===
-        'https://venturebeat.com/feed/',
-        'https://arstechnica.com/feed/',
+        # ==================== 科技类 ====================
+        'https://www.wired.com/feed/rss',  # Wired（美国）
+        'https://techcrunch.com/feed/',  # TechCrunch（美国）
+        'https://www.theverge.com/rss/index.xml',  # The Verge（美国）
+        'https://www.technologyreview.com/feed/',  # MIT Technology Review（美国）
+        'https://venturebeat.com/feed/',  # VentureBeat（美国）
+        'https://arstechnica.com/feed/',  # Ars Technica（美国）
+        'https://www.engadget.com/feed.xml',  # Engadget（美国）
+        'https://www.artificialintelligence-news.com/feed/',  # AI News（英国）
+        'https://venturebeat.com/category/ai/feed/',  # VentureBeat AI
+
+        # ==================== 财经类 ====================
+        'https://feeds.bloomberg.com/markets/news.rss',  # Bloomberg Markets（美国）
+        'https://feeds.bloomberg.com/technology/news.rss',  # Bloomberg Tech（美国）
+        'https://www.cnbc.com/id/100003114/device/rss/rss.html',  # CNBC（美国）
+        'https://www.ft.com/rss/home',  # Financial Times（英国）
+        'https://www.wsj.com/rss/world',  # Wall Street Journal（美国）
+        'https://seekingalpha.com/market_currents.xml',  # Seeking Alpha（美国）
+
+        # ==================== 新能源汽车 ====================
+        'https://www.motortrend.com/feed/',  # Motor Trend（美国）
+        'https://insideevs.com/rss/',  # InsideEVs电动车（美国）
+        'https://electrek.co/feed/',  # Electrek电动车（美国）
+        'https://cleantechnica.com/feed/',  # CleanTechnica（美国）
+
+        # ==================== 日本 ====================
+        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本主要新闻
+
+        # ==================== 亚洲 ====================
+        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报头版
+
+        # ==================== 欧洲媒体 ====================
+        'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
+        'https://www.spiegel.de/schlagzeilen/index.rss',  # 德国明镜周刊
+        'https://elpais.com/rss/elpais/portada.xml',  # 西班牙国家报
+
+        # ==================== 北美洲（美国/加拿大）====================
+        'https://www.abc.net.au/news/feed/51120/rss.xml',  # ABC News（澳大利亚-大洋洲）
+        'https://www.cbc.ca/web/rss/rss-canada',  # CBC Canada（加拿大）
+
+        # ==================== 健康医疗 ====================
+        'https://www.who.int/rss-feeds/news-english.xml',  # 世界卫生组织
+        'https://www.nature.com/nm.rss',  # Nature Medicine
+
+        # ==================== 娱乐体育 ====================
+        'https://www.espn.com/espn/rss/news',  # ESPN体育（美国）
+        'https://variety.com/feed/',  # Variety娱乐（美国）
+        'https://deadline.com/feed/',  # Deadline娱乐（美国）
+
+        # ==================== 能源与环境 ====================
+        'https://www.energycentral.com/feeds/content.xml',  # Energy Central
     ]
 }
 
