@@ -18,13 +18,13 @@ services:
       - key: FRONTEND_URL
         sync: false
 
-  # AI Service
-  - type: web
+  # AI Service (Background Worker)
+  - type: worker
     name: news-platform-ai-service
     env: python
     rootDir: ai-service
     buildCommand: pip install -r requirements.txt
-    startCommand: python src/main_cloud.py
+    startCommand: python src/main.py
     envVars:
       - key: USE_CLOUD_AI
         value: true
