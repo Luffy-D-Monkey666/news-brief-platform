@@ -8,7 +8,7 @@ MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # 爬虫配置
-CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 300))  # 5分钟
+CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 180))  # 3分钟（更频繁更新）
 
 # 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
@@ -60,27 +60,38 @@ NEWS_SOURCES = {
         'https://rsshub.app/reddit/r/OnePiece',     # One Piece Reddit
         'https://rsshub.app/twitter/user/OP_CARD_GLOBAL',  # OP TCG官方推特
 
-        # === 国际主流媒体 ===
-        'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC英国
-        'https://www.theguardian.com/world/rss',  # Guardian英国
-        'https://rss.cnn.com/rss/edition_world.rss',  # CNN美国
-        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台-中东
-        'https://www.reuters.com/rssFeed/worldNews',  # 路透社
+        # === 国际主流媒体（更新频繁）===
+        'https://feeds.bbci.co.uk/news/rss.xml',  # BBC Top Stories
+        'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC World
+        'https://www.theguardian.com/world/rss',  # Guardian World
+        'https://rss.cnn.com/rss/edition.rss',  # CNN Top
+        'https://rss.cnn.com/rss/edition_world.rss',  # CNN World
+        'https://www.aljazeera.com/xml/rss/all.xml',  # 半岛电视台全覆盖
+        'https://www.reuters.com/rssFeed/worldNews',  # 路透社世界新闻
+        'https://www.reuters.com/rssFeed/technologyNews',  # 路透社科技
+        'https://www.washingtonpost.com/world/rss.xml',  # 华盛顿邮报
+        'https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/world/europe/rss.xml',  # 纽约时报欧洲
 
-        # === 科技类 ===
+        # === 科技类（实时更新）===
         'https://www.wired.com/feed/rss',
         'https://techcrunch.com/feed/',
         'https://www.theverge.com/rss/index.xml',
         'https://www.technologyreview.com/feed/',  # MIT科技评论
-        'https://venturebeat.com/category/ai/feed/',  # VentureBeat AI
+        'https://venturebeat.com/feed/',  # VentureBeat
+        'https://arstechnica.com/feed/',  # Ars Technica
+        'https://www.engadget.com/feed.xml',  # Engadget
 
-        # === 财经类 ===
+        # === 财经类（实时更新）===
         'https://feeds.bloomberg.com/markets/news.rss',
+        'https://feeds.bloomberg.com/technology/news.rss',
         'https://www.cnbc.com/id/100003114/device/rss/rss.html',
         'https://www.ft.com/rss/home',  # 金融时报
+        'https://www.wsj.com/rss/world',  # 华尔街日报
+        'https://seekingalpha.com/market_currents.xml',  # Seeking Alpha
 
         # === AI与机器人 ===
         'https://www.artificialintelligence-news.com/feed/',
+        'https://venturebeat.com/category/ai/feed/',  # VentureBeat AI
 
         # === 新能源汽车 ===
         'https://www.motortrend.com/feed/',
@@ -88,68 +99,77 @@ NEWS_SOURCES = {
         'https://electrek.co/feed/',  # Electrek电动车
         'https://cleantechnica.com/feed/',  # CleanTechnica清洁技术
 
-        # === 中文源（增强）===
-        'https://rsshub.app/36kr/newsflashes',
-        'https://rsshub.app/sina/finance',
+        # === 中文源（实时更新）===
+        'https://rsshub.app/36kr/newsflashes',  # 36Kr快讯（分钟级更新）
+        'https://rsshub.app/sina/finance',  # 新浪财经
         'https://rsshub.app/thepaper/featured',  # 澎湃新闻
         'https://rsshub.app/wallstreetcn/news/global',  # 华尔街见闻
         'https://rsshub.app/caixin/latest',  # 财新网
+        'https://rsshub.app/ifanr/rss',  # 爱范儿
+        'https://rsshub.app/sspai/posts',  # 少数派
 
-        # === 亚洲 ===
-        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本
-        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报
+        # === 亚洲媒体 ===
+        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本主要新闻
+        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报头版
         'https://rsshub.app/zaobao/znews/china',  # 联合早报-新加坡
 
-        # === 欧洲 ===
+        # === 欧洲媒体 ===
         'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
         'https://www.spiegel.de/schlagzeilen/index.rss',  # 德国明镜周刊
+        'https://elpais.com/rss/elpais/portada.xml',  # 西班牙国家报
+
+        # === 澳大利亚 ===
+        'https://www.abc.net.au/news/feed/51120/rss.xml',  # ABC News
 
         # === 健康医疗 ===
         'https://www.who.int/rss-feeds/news-english.xml',  # 世界卫生组织
+        'https://www.nature.com/nm.rss',  # Nature Medicine
 
         # === 娱乐体育 ===
         'https://www.espn.com/espn/rss/news',  # ESPN体育
         'https://variety.com/feed/',  # Variety娱乐
+        'https://deadline.com/feed/',  # Deadline娱乐
+
+        # === 加拿大 ===
+        'https://www.cbc.ca/web/rss/rss-canada',  # CBC Canada
     ],
     'api_endpoints': []
 }
 
 # AI提示词模板
-# DeepSeek优化Prompt（高级AI模型，支持详细中文摘要）
-SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条详细的新闻总结。
+# DeepSeek优化Prompt（高级AI模型，支持灵活中文摘要）
+SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条新闻总结。
 
-要求：
-1. 将标题翻译成中文（保留专有名词的英文，如"OpenAI"、"Tesla"、人名地名等）
-2. 用中文详细总结核心内容（150-200字）
-3. 总结必须包含以下结构化信息：
-   - 【事件背景】简要说明事件的背景和起因
-   - 【关键信息】列出核心要点（可使用多行列表）
-   - 【影响分析】分析事件的影响和意义
-   - 【相关数据】如有重要数据或数字，单独列出
+核心要求：
+1. 将标题翻译成中文（保留专有名词如"OpenAI"、"Tesla"、人名地名等）
+2. 根据新闻的复杂度和重要性，灵活调整摘要长度：
+   - 简单新闻：80-120字
+   - 一般新闻：120-180字
+   - 复杂/重要新闻：180-250字
+3. 根据新闻类型选择合适的叙述方式：
+   - 政治/经济：强调背景、数据、影响
+   - 科技/商业：突出创新点、市场意义
+   - 娱乐/体育：简洁生动，突出亮点
+   - 突发事件：时间线、关键信息、最新进展
+4. 自然流畅的叙述，不要机械地分成固定模块
+5. 重要信息可以用"•"列表呈现，但要适度使用
 
 新闻标题: {title}
 新闻内容: {content}
 
-输出格式（严格按照以下格式，不要添加任何前缀词如"中文标题"、"第一行"等）：
+输出格式：
+第1行：简洁的中文标题（不超过30字，不加任何前缀）
 
-第1行：简洁的中文标题（不超过30字）
-
-第2行开始：详细总结，必须包含以下结构：
-
-【事件背景】
-（背景描述文字）
-
-【关键信息】
+第2行开始：
+用自然、流畅的语言总结新闻，适当使用段落分隔。
+如需强调要点，可用：
 • 要点1
 • 要点2
-• 要点3
 
-【影响分析】
-（影响分析文字）
-
-【相关数据】（如有）
-• 数据1
-• 数据2
+避免：
+❌ 使用【事件背景】【关键信息】等生硬标签
+❌ 机械地分成四个固定模块
+✅ 像专业记者一样，用自然语言讲述新闻
 """
 
 CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。

@@ -1,32 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import {
-  FaNewspaper,
   FaExternalLinkAlt,
   FaClock,
   FaLink,
-  FaTimes
+  FaTimes,
+  FaVolumeUp,
+  FaPause,
+  FaPlay
 } from 'react-icons/fa';
 
 const categoryColors = {
-  // One Piece 专区（特殊金黄色）
-  op_card_game: 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-900 border-yellow-400',
-  op_merchandise: 'bg-gradient-to-r from-orange-100 to-red-100 text-orange-900 border-orange-400',
+  // One Piece 专区（Apple风格渐变）
+  op_card_game: 'bg-gradient-to-br from-amber-50 to-orange-100 text-amber-900 border border-amber-200',
+  op_merchandise: 'bg-gradient-to-br from-orange-50 to-red-100 text-orange-900 border border-orange-200',
 
-  // 核心关注
-  ai_robotics: 'bg-purple-100 text-purple-800 border-purple-300',
-  ev_automotive: 'bg-green-100 text-green-800 border-green-300',
-  finance_investment: 'bg-red-100 text-red-800 border-red-300',
+  // 核心关注（柔和色彩）
+  ai_robotics: 'bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border border-purple-200',
+  ev_automotive: 'bg-gradient-to-br from-emerald-50 to-teal-100 text-emerald-900 border border-emerald-200',
+  finance_investment: 'bg-gradient-to-br from-rose-50 to-red-100 text-rose-900 border border-rose-200',
 
-  // 主流分类
-  business_tech: 'bg-blue-100 text-blue-800 border-blue-300',
-  politics_world: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-  economy_policy: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  health_medical: 'bg-pink-100 text-pink-800 border-pink-300',
-  energy_environment: 'bg-teal-100 text-teal-800 border-teal-300',
-  entertainment_sports: 'bg-orange-100 text-orange-800 border-orange-300',
-  general: 'bg-gray-100 text-gray-800 border-gray-300'
+  // 主流分类（清新配色）
+  business_tech: 'bg-gradient-to-brfrom-blue-50 to-indigo-100 text-blue-900 border border-blue-200',
+  politics_world: 'bg-gradient-to-br from-indigo-50 to-violet-100 text-indigo-900 border border-indigo-200',
+  economy_policy: 'bg-gradient-to-br from-yellow-50 to-amber-100 text-yellow-900 border border-yellow-200',
+  health_medical: 'bg-gradient-to-br from-pink-50 to-rose-100 text-pink-900 border border-pink-200',
+  energy_environment: 'bg-gradient-to-br from-cyan-50 to-teal-100 text-cyan-900 border border-cyan-200',
+  entertainment_sports: 'bg-gradient-to-br from-orange-50 to-amber-100 text-orange-900 border border-orange-200',
+  general: 'bg-gradient-to-br from-gray-50 to-slate-100 text-gray-900 border border-gray-200'
 };
 
 const categoryNames = {
@@ -49,161 +51,23 @@ const categoryNames = {
   general: '综合'
 };
 
-// 关键词高亮和链接组件
-const HighlightedText = ({ text }) => {
-  // 匹配专有名词、人名、地名、公司名、产品名等（大写字母开头的英文词或中文专有名词）
-  const keywordPattern = /([A-Z][a-zA-Z0-9]+(?:\s+[A-Z][a-zA-Z0-9]+)*|特朗普|拜登|OpenAI|Tesla|DeepSeek|ChatGPT|GPT-\d+|Daniel\s+Naroditsky|Modi|DMK)/g;
-
-  const parts = text.split(keywordPattern);
-
-  return (
-    <>
-      {parts.map((part, index) => {
-        if (part.match(keywordPattern)) {
-          return (
-            <a
-              key={index}
-              href={`https://gemini.google.com/app?q=${encodeURIComponent(part)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="keyword-link text-blue-600 hover:text-blue-800 border-b border-blue-300 border-dotted transition-all duration-200 hover:border-solid hover:animate-bounce-subtle"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {part}
-            </a>
-          );
-        }
-        return <span key={index}>{part}</span>;
-      })}
-    </>
-  );
-};
-
-// 格式化摘要内容，添加结构化显示
-const FormattedSummary = ({ summary }) => {
-  // 解析不同部分
-  const sections = {
-    background: null,
-    keyInfo: [],
-    impact: null,
-    data: []
-  };
-
-  // 提取【事件背景】
-  const backgroundMatch = summary.match(/【事件背景】\s*([\s\S]*?)(?=【|$)/);
-  if (backgroundMatch) {
-    sections.background = backgroundMatch[1].trim();
-  }
-
-  // 提取【关键信息】
-  const keyInfoMatch = summary.match(/【关键信息】\s*([\s\S]*?)(?=【|$)/);
-  if (keyInfoMatch) {
-    const infoText = keyInfoMatch[1].trim();
-    sections.keyInfo = infoText
-      .split(/\n/)
-      .filter(line => line.trim() && line.includes('•'))
-      .map(line => line.replace(/^[•\-\*]\s*/, '').trim());
-  }
-
-  // 提取【影响分析】
-  const impactMatch = summary.match(/【影响分析】\s*([\s\S]*?)(?=【|$)/);
-  if (impactMatch) {
-    sections.impact = impactMatch[1].trim();
-  }
-
-  // 提取【相关数据】
-  const dataMatch = summary.match(/【相关数据】\s*([\s\S]*?)$/);
-  if (dataMatch) {
-    const dataText = dataMatch[1].trim();
-    sections.data = dataText
-      .split(/\n/)
-      .filter(line => line.trim() && line.includes('•'))
-      .map(line => line.replace(/^[•\-\*]\s*/, '').trim());
-  }
-
-  return (
-    <div className="space-y-4">
-      {/* 事件背景 */}
-      {sections.background && (
-        <div className="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-          <h4 className="text-xs font-bold text-blue-700 mb-2">📋 事件背景</h4>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            <HighlightedText text={sections.background} />
-          </p>
-        </div>
-      )}
-
-      {/* 关键信息 */}
-      {sections.keyInfo.length > 0 && (
-        <div className="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400">
-          <h4 className="text-xs font-bold text-purple-700 mb-2">💡 关键信息</h4>
-          <ul className="space-y-1.5">
-            {sections.keyInfo.map((info, i) => (
-              <li key={i} className="flex items-start text-sm text-gray-700">
-                <span className="text-purple-500 mr-2 mt-0.5">▪</span>
-                <span className="flex-1">
-                  <HighlightedText text={info} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* 影响分析 */}
-      {sections.impact && (
-        <div className="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
-          <h4 className="text-xs font-bold text-green-700 mb-2">📊 影响分析</h4>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            <HighlightedText text={sections.impact} />
-          </p>
-        </div>
-      )}
-
-      {/* 相关数据 */}
-      {sections.data.length > 0 && (
-        <div className="bg-orange-50 p-3 rounded-lg border-l-4 border-orange-400">
-          <h4 className="text-xs font-bold text-orange-700 mb-2">📈 相关数据</h4>
-          <ul className="space-y-1.5">
-            {sections.data.map((datum, i) => (
-              <li key={i} className="flex items-start text-sm text-gray-700">
-                <span className="text-orange-500 mr-2 mt-0.5">▪</span>
-                <span className="flex-1">
-                  <HighlightedText text={datum} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* 如果没有结构化内容，显示原文 */}
-      {!sections.background && !sections.keyInfo.length && !sections.impact && !sections.data.length && (
-        <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
-          <HighlightedText text={summary} />
-        </p>
-      )}
-    </div>
-  );
-};
-
 // 图片放大Modal
 const ImageModal = ({ src, alt, onClose }) => {
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 transition-opacity duration-300"
       onClick={onClose}
     >
       <button
-        className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl"
+        className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 rounded-full p-3 transition-all duration-200"
         onClick={onClose}
       >
-        <FaTimes />
+        <FaTimes className="text-white w-6 h-6" />
       </button>
       <img
         src={src}
         alt={alt}
-        className="max-w-full max-h-full object-contain"
+        className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
     </div>
@@ -212,6 +76,108 @@ const ImageModal = ({ src, alt, onClose }) => {
 
 const BriefCard = ({ brief, isNew = false }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState('');
+  const [isPaused, setIsPaused] = useState(false);
+  const [showVoiceSelector, setShowVoiceSelector] = useState(false);
+
+  const speechSynthesisRef = useRef(window.speechSynthesis);
+  const utteranceRef = useRef(null);
+  const voices = useRef([]);
+
+  // 可用的声音（中文）
+  const voicesRef = useRef([]);
+
+  // 加载可用的声音
+  useEffect(() => {
+    const getVoices = () => {
+      const allVoices = speechSynthesisRef.current.getVoices();
+      // 优先选择中文声音
+      const zhVoices = allVoices.filter(voice =>
+        voice.lang.includes('zh') || voice.lang.includes('CN')
+      );
+
+      // 兼容不同的浏览器命名方式
+      const preferredVoices = zhVoices.length > 0 ? zhVoices : allVoices;
+      voices.current = preferredVoices;
+      voicesRef.current = preferredVoices;
+
+      // 自动选择第一个中文声音或Siri（如果可用）
+      if (preferredVoices.length > 0) {
+        const siriVoice = preferredVoices.find(v =>
+          v.name.includes('Siri') || v.name.includes('Ting-Ting') || v.name.includes('Huihui')
+        );
+        setSelectedVoice(siriVoice ? siriVoice.name : preferredVoices[0].name);
+      }
+    };
+
+    // Chrome需要事件触发
+    speechSynthesisRef.current.onvoiceschanged = getVoices;
+    getVoices();
+  }, []);
+
+  // 开始朗读
+  const handleRead = () => {
+    if (isPaused) {
+      speechSynthesisRef.current.resume();
+      setIsPaused(false);
+      setIsPlaying(true);
+      return;
+    }
+
+    if (isPlaying) {
+      handlePause();
+      return;
+    }
+
+    // 取消之前的朗读
+    speechSynthesisRef.current.cancel();
+
+    const text = `${brief.title}。${brief.summary}`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utteranceRef.current = utterance;
+
+    // 设置中文语言
+    utterance.lang = 'zh-CN';
+
+    // 选择声音
+    const selectedVoiceObj = voicesRef.current.find(v => v.name === selectedVoice);
+    if (selectedVoiceObj) {
+      utterance.voice = selectedVoiceObj;
+    }
+
+    // 语速和音调调整（自然叙述风格）
+    utterance.rate = 0.95; // 稍慢，更自然
+    utterance.pitch = 1.0;  // 正常音调
+
+    utterance.onend = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
+
+    utterance.onerror = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
+
+    speechSynthesisRef.current.speak(utterance);
+    setIsPlaying(true);
+  };
+
+  // 暂停朗读
+  const handlePause = () => {
+    speechSynthesisRef.current.pause();
+    setIsPaused(true);
+    setIsPlaying(false);
+  };
+
+  // 停止朗读
+  const handleStop = () => {
+    speechSynthesisRef.current.cancel();
+    setIsPlaying(false);
+    setIsPaused(false);
+  };
+
   const colorClass = categoryColors[brief.category] || categoryColors.general;
   const categoryName = categoryNames[brief.category] || '未分类';
 
@@ -226,42 +192,63 @@ const BriefCard = ({ brief, isNew = false }) => {
     }
   };
 
+  const formatSummary = (text) => {
+    // 将 • 转换为自然段落
+    if (text.includes('•')) {
+      return text.split('•').map((part, i) => {
+        const trimmed = part.trim();
+        if (!trimmed) return null;
+        return (
+          <p key={i} className="mb-3 last:mb-0 leading-[1.8]">
+            {trimmed}
+          </p>
+        );
+      });
+    }
+    // 原始段落按换行符分割
+    return text.split('\n').map((para, i) => (
+      <p key={i} className="mb-3 last:mb-0 leading-[1.8]">
+        {para}
+      </p>
+    ));
+  };
+
   return (
     <>
       <div
-        className={`group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 ${
-          isNew ? 'animate-slide-in ring-2 ring-black' : ''
+        className={`group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:border-gray-200 ${
+          isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
         }`}
       >
         {/* 图片区域 - 可点击放大 */}
         {brief.image && (
           <div
-            className="relative w-full h-48 overflow-hidden bg-gray-100 cursor-pointer"
+            className="relative w-full h-56 overflow-hidden bg-gray-50 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
           >
             <img
               src={brief.image}
               alt={brief.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               onError={(e) => {
                 e.target.style.display = 'none';
               }}
             />
             {/* 放大提示 */}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm font-medium">
-                点击查看大图
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+              <span className="text-white text-sm font-medium tracking-wide">
+                查看大图
               </span>
             </div>
             {/* 分类标签叠加在图片上 */}
-            <div className="absolute top-3 left-3">
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md bg-white/90 ${colorClass}`}>
+            <div className="absolute top-4 left-4">
+              <span className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide backdrop-blur-xl shadow-lg ${colorClass}`}>
                 {categoryName}
               </span>
             </div>
             {/* NEW标记 */}
             {isNew && (
-              <div className="absolute top-3 right-3 bg-black text-white text-xs px-3 py-1 rounded-full font-bold animate-pulse">
+              <div className="absolute top-4 right-4 bg-black text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-lg">
                 NEW
               </div>
             )}
@@ -269,37 +256,111 @@ const BriefCard = ({ brief, isNew = false }) => {
         )}
 
         {/* 内容区域 */}
-        <div className="p-5">
+        <div className="p-6">
           {/* 没有图片时显示分类和时间 */}
           {!brief.image && (
-            <div className="flex items-center justify-between mb-3">
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${colorClass}`}>
+            <div className="flex items-center justify-between mb-4">
+              <span className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide border ${colorClass}`}>
                 {categoryName}
               </span>
-              <div className="flex items-center text-gray-500 text-xs">
-                <FaClock className="mr-1" />
+              <div className="flex items-center text-gray-400 text-xs tracking-wide">
+                <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
               </div>
             </div>
           )}
 
-          {/* 标题 - 使用关键词高亮 */}
-          <h3 className="text-lg font-bold text-gray-900 mb-4 group-hover:text-black transition-colors">
-            <HighlightedText text={brief.title} />
+          {/* 朗读控制栏 */}
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              {/* 朗读按钮 */}
+              {!isPlaying && !isPaused ? (
+                <button
+                  onClick={handleRead}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                >
+                  <FaVolumeUp />
+                  朗读
+                </button>
+              ) : isPaused ? (
+                <button
+                  onClick={handleRead}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                >
+                  <FaPlay />
+                  继续
+                </button>
+              ) : (
+                <button
+                  onClick={handlePause}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  <FaPause />
+                  暂停
+                </button>
+              )}
+
+              {/* 停止按钮 */}
+              {(isPlaying || isPaused) && (
+                <button
+                  onClick={handleStop}
+                  className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                >
+                  停止
+                </button>
+              )}
+            </div>
+
+            {/* 声音选择器 */}
+            <div className="relative">
+              <button
+                onClick={() => setShowVoiceSelector(!showVoiceSelector)}
+                className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                <span>{voicesRef.current.find(v => v.name === selectedVoice)?.name?.split(' ')[0] || '选择声音'}</span>
+                <FaTimes className={`transition-transform duration-200 ${showVoiceSelector ? 'rotate-45' : ''}`} />
+              </button>
+
+              {showVoiceSelector && voicesRef.current.length > 0 && (
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
+                  {voicesRef.current.map((voice, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setSelectedVoice(voice.name);
+                        setShowVoiceSelector(false);
+                      }}
+                      className={`w-full px-4 py-2.5 text-left text-xs hover:bg-gray-50 transition-colors ${
+                        selectedVoice === voice.name ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                      }`}
+                    >
+                      {voice.name.split(' ').slice(0, 2).join(' ')}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 标题 */}
+          <h3 className="text-xl font-bold text-gray-900 mb-4 tracking-tight leading-tight group-hover:text-blue-600 transition-colors">
+            {brief.title}
           </h3>
 
-          {/* 摘要 - 结构化显示 */}
-          <FormattedSummary summary={brief.summary} />
+          {/* 摘要 - 自然段落格式 */}
+          <div className="text-gray-700 mb-6 text-sm leading-[1.8] tracking-wide">
+            {formatSummary(brief.summary)}
+          </div>
 
           {/* 底部 - 来源和时间 */}
-          <div className="flex items-center justify-between text-xs border-t pt-3 mt-4">
-            <div className="flex items-center text-gray-500">
+          <div className="flex items-center justify-between text-xs pt-4 border-t border-gray-100">
+            <div className="flex items-center text-gray-400 tracking-wide">
               <FaLink className="mr-2" />
               <span className="truncate">{brief.source}</span>
             </div>
             {brief.image && (
-              <div className="flex items-center text-gray-500">
-                <FaClock className="mr-1" />
+              <div className="flex items-center text-gray-400 tracking-wide">
+                <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
               </div>
             )}
@@ -311,7 +372,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               href={brief.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 w-full flex items-center justify-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+              className="mt-4 w-full flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors text-sm font-medium tracking-wide"
             >
               查看原文
               <FaExternalLinkAlt className="ml-2 text-xs" />
