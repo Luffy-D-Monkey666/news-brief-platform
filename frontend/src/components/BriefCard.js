@@ -42,12 +42,10 @@ const categoryNames = {
   general: '综合'
 };
 
-// 五月天阿信的声音配置（通过语调和语速模拟）
-// 阿信（陈信宏）- 台湾男歌手，特点是温暖、有磁性、稍带亲和力
+// 声音预设配置
 const voicePresets = {
   siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
   siri_male: { pitch: 0.9, rate: 1.0, name: 'Siri (男声)' },
-  ah_shin: { pitch: 0.85, rate: 0.95, name: '阿信 (五月天)' },  // 男声，稍低音调，温暖语速
   tencent_female: { pitch: 1.0, rate: 0.98, name: '腾讯 (女声)' },
   google_male: { pitch: 0.85, rate: 1.05, name: 'Google (男声)' }
 };
@@ -108,12 +106,6 @@ const BriefCard = ({ brief, isNew = false }) => {
         v.name.includes('Kangkang') || v.name.includes('Yunxi') || v.name.includes('Yaqi')
       );
 
-      // 阿信（五月天陈信宏）- 台湾男歌手，选择男性声音并调低音调
-      const ahShinVoice = zhVoices.find(v =>
-        v.name.includes('Kangkang') || v.name.includes('Yunxi') ||
-        v.name.includes('Yaqi') || v.name.includes('Zhiwei')
-      ) || siriMale;  // 优先使用男声
-
       // 腾讯女声 - 选择其他女声
       const tencentFemale = zhVoices.find(v =>
         v.name.includes('Xiaoxiao') || v.name.includes('Lili')
@@ -128,9 +120,8 @@ const BriefCard = ({ brief, isNew = false }) => {
       const voiceMap = {
         siri_female: siriFemale || zhVoices[0],
         siri_male: siriMale || zhVoices[1] || zhVoices[0],
-        ah_shin: ahShinVoice || siriMale || zhVoices[2],  // 确保使用男声
-        tencent_female: tencentFemale || zhVoices[3] || siriFemale,
-        google_male: googleMale || zhVoices[4] || siriMale
+        tencent_female: tencentFemale || zhVoices[2] || siriFemale,
+        google_male: googleMale || zhVoices[3] || siriMale
       };
 
       currentVoiceRef.current = voiceMap[selectedPreset];

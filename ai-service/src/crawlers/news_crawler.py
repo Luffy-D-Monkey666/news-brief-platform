@@ -72,44 +72,70 @@ class NewsCrawler:
 
     def _extract_image(self, entry) -> str:
         """提取新闻图片"""
+        image_url = None
+
         # 尝试从media:content提取
         if hasattr(entry, 'media_content') and entry.media_content:
             for media in entry.media_content:
                 if media.get('url'):
                     # 检查是否是图片类型
                     media_type = media.get('type', '').lower()
-                    if 'image' in media_type or 'jpg' in media.get('url', '').lower() or 'png' in media.get('url', '').lower():
-                        return media.get('url', '')
+                    url_lower = media.get('url', '').lower()
+                    if 'image' in media_type or 'jpg' in url_lower or 'png' in url_lower or 'jpeg' in url_lower or 'webp' in url_lower:
+                        logger.info(f"  从 media:content 找到图片: {media.get('url', '')}")
+                        image_url = media.get('url', '')
+                        break
 
         # 尝试从media:thumbnail提取
-        if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
+        if not image_url and hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
             for thumbnail in entry.media_thumbnail:
                 if thumbnail.get('url'):
-                    return thumbnail.get('url', '')
+                    logger.info(f"  从 media:thumbnail 找到图片: {thumbnail.get('url', '')}")
+                    image_url = thumbnail.get('url', '')
+                    break
 
         # 尝试从enclosure提取
-        if hasattr(entry, 'enclosures') and entry.enclosures:
+        if not image_url and hasattr(entry, 'enclosures') and entry.enclosures:
             for enclosure in entry.enclosures:
                 enclosure_type = enclosure.get('type', '').lower()
                 if 'image' in enclosure_type:
-                    return enclosure.get('href', '')
+                    logger.info(f"  从 enclosure 找到图片: {enclosure.get('href', '')}")
+                    image_url = enclosure.get('href', '')
+                    break
 
         # 尝试从summary/description的HTML中提取第一张图片
-        content = entry.get('summary', '') or entry.get('description', '')
-        if content:
-            soup = BeautifulSoup(content, 'html.parser')
-            img = soup.find('img')
-            if img and img.get('src'):
-                return img.get('src')
+        if not image_url:
+            content = entry.get('summary', '') or entry.get('description', '')
+            if content:
+                soup = BeautifulSoup(content, 'html.parser')
+                img = soup.find('img')
+                if img and img.get('src'):
+                    logger.info(f"  从HTML img标签找到图片: {img.get('src', '')}")
+                    image_url = img.get('src', '')
 
-            # 尝试从media标签提取
-            media_tags = soup.find_all('media:thumbnail')
-            for media_tag in media_tags:
-                url = media_tag.get('url', '')
-                if url:
-                    return url
+                # 尝试从media标签提取
+                if not image_url:
+                    media_tags = soup.find_all('media:thumbnail')
+                    for media_tag in media_tags:
+                        url = media_tag.get('url', '')
+                        if url:
+                            logger.info(f"  从 media:thumbnail标签找到图片: {url}")
+                            image_url = url
+                            break
 
-        return None
+                # 尝试从og:image元标签提取
+                if not image_url:
+                    og_image = soup.find('meta', property='og:image')
+                    if og_image and og_image.get('content'):
+                        logger.info(f"  从 og:image 找到图片: {og_image.get('content', '')}")
+                        image_url = og_image.get('content', '')
+
+        if image_url:
+            logger.debug(f"  最终图片URL: {image_url}")
+        else:
+            logger.debug(f"  未找到图片")
+
+        return image_url
 
     def _parse_date(self, entry) -> datetime:
         """解析发布时间"""
