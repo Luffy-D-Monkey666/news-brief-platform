@@ -54,11 +54,12 @@ class NewsService:
                 return
 
             # 2. 过滤已存在的新闻
-            logger.info("步骤 2/5: 过滤重复新闻...")
-            new_news = []
-            for news in raw_news:
-                if not self.db.check_news_exists(news['link']):
-                    new_news.append(news)
+            logger.info("步骤 2/5: 批量过滤重复新闻...")
+            # 使用批量查询优化性能
+            all_links = [news['link'] for news in raw_news]
+            existing_links = self.db.check_news_exists_batch(all_links[:1000])  # 限制最多检查1000条
+
+            new_news = [news for news in raw_news if news['link'] not in existing_links]
 
             logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
 

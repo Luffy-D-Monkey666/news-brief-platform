@@ -72,3 +72,16 @@ class NewsDatabase:
     def check_news_exists(self, link: str) -> bool:
         """检查新闻是否存在"""
         return self.news_collection.find_one({'link': link}) is not None
+
+    def check_news_exists_batch(self, links: List[str]) -> set:
+        """批量检查新闻是否存在（优化性能）"""
+        try:
+            existing = self.news_collection.find(
+                {'link': {'$in': links}},
+                {'link': 1, '_id': 0}
+            )
+            # 返回已存在的链接集合
+            return {doc['link'] for doc in existing}
+        except Exception as e:
+            logger.error(f"批量检查新闻失败: {str(e)}")
+            return set()
