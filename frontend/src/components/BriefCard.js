@@ -81,6 +81,7 @@ const BriefCard = ({ brief, isNew = false }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('siri_female');
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   const speechSynthesisRef = useRef(window.speechSynthesis);
   const utteranceRef = useRef(null);
@@ -289,8 +290,28 @@ const BriefCard = ({ brief, isNew = false }) => {
           isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
         }`}
       >
-        {/* 图片区域 */}
-        {brief.image && (
+        {/* 视频/图片区域 */}
+        {(brief.video && !videoError) ? (
+          <div
+            className="relative w-full h-52 overflow-hidden bg-gray-50"
+          >
+            <video
+              src={brief.video}
+              className="w-full h-full object-cover"
+              controls
+              controlsList="nodownload"
+              onError={(e) => {
+                console.log('视频加载失败，切换到图片:', e);
+                setVideoError(true);
+              }}
+            />
+            <div className="absolute top-4 left-4">
+              <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
+                {categoryName}
+              </span>
+            </div>
+          </div>
+        ) : brief.image && (
           <div
             className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
@@ -316,8 +337,8 @@ const BriefCard = ({ brief, isNew = false }) => {
 
         {/* 内容区域 */}
         <div className="p-5">
-          {/* 没有图片时的分类标签 */}
-          {!brief.image && (
+          {/* 没有视频和图片时的分类标签 */}
+          {!brief.video && !brief.image && (
             <div className="flex items-center justify-between mb-3">
               <span className={`text-xs font-semibold ${colorClass}`}>
                 {categoryName}
@@ -463,7 +484,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               <FaLink className="mr-1.5 flex-shrink-0" />
               <span className="truncate">{brief.source}</span>
             </div>
-            {!brief.image && (
+            {!brief.video && !brief.image && (
               <div className="flex items-center">
                 <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
