@@ -92,10 +92,17 @@ const BriefCard = ({ brief, isNew = false }) => {
     const loadVoices = () => {
       const allVoices = speechSynthesisRef.current.getVoices();
 
+      // 打印所有语音到控制台（便于调试）
+      console.log('=== 所有可用语音 ===');
+      allVoices.forEach(v => console.log(`${v.name} (${v.lang})`));
+
       // 只保留中文声音
       const zhVoices = allVoices.filter(voice =>
         voice.lang === 'zh-CN' || voice.lang === 'zh'
       );
+
+      console.log('=== 可用的中文语音 ===');
+      zhVoices.forEach(v => console.log(`- ${v.name}`));
 
       // 为每个预设分配不同的声音
       // Siri女声 - 优先Ting-Ting
@@ -134,6 +141,9 @@ const BriefCard = ({ brief, isNew = false }) => {
 
       currentVoiceRef.current = voiceMap[selectedPreset];
       allVoicesRef.current = voiceMap;
+
+      // 将可用语音保存到全局，供调试使用
+      window.availableZhVoices = zhVoices;
     };
 
     speechSynthesisRef.current.onvoiceschanged = loadVoices;
