@@ -31,6 +31,7 @@ class NewsCrawler:
                     'content': self._extract_content(entry),
                     'link': entry.get('link', ''),
                     'image': self._extract_image(entry),
+                    'video': self._extract_video(entry),  # 添加视频提取（可选）
                     'published': self._parse_date(entry),
                     'source': feed.feed.get('title', feed_url),
                     'source_url': feed_url,
@@ -136,6 +137,43 @@ class NewsCrawler:
             logger.debug(f"  未找到图片")
 
         return image_url
+
+    def _extract_video(self, entry) -> str:
+        """提取新闻视频（可选，保守实现）"""
+        video_url = None
+
+        try:
+            # 从media:content提取视频
+            if hasattr(entry, 'media_content') and entry.media_content:
+                for media in entry.media_content:
+                    if media.get('url'):
+                        media_type = media.get('type', '').lower()
+                        url_lower = media.get('url', '').lower()
+                        # 检查是否是视频类型
+                        if 'video' in media_type or '.mp4' in url_lower or '.webm' in url_lower or '.mov' in url_lower:
+                            logger.info(f"  从 media:content 找到视频: {media.get('url', '')}")
+                            video_url = media.get('url', '')
+                            break
+
+            # 从enclosure提取视频
+            if not video_url and hasattr(entry, 'enclosures') and entry.enclosures:
+                for enclosure in entry.enclosures:
+                    enclosure_type = enclosure.get('type', '').lower()
+                    enclosure_url = enclosure.get('href', '').lower()
+                    if 'video' in enclosure_type or '.mp4' in enclosure_url or '.webm' in enclosure_url:
+                        logger.info(f"  从 enclosure 找到视频: {enclosure.get('href', '')}")
+                        video_url = enclosure.get('href', '')
+                        break
+
+            if video_url:
+                logger.debug(f"  最终视频URL: {video_url}")
+
+        except Exception as e:
+            # 视频提取失败不影响整体流程
+            logger.debug(f"  视频提取失败（不影响功能）: {str(e)}")
+            pass
+
+        return video_url
 
     def _parse_date(self, entry) -> datetime:
         """解析发布时间"""
