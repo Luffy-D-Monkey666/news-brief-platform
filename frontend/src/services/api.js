@@ -4,7 +4,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
-  timeout: 10000,
+  timeout: 30000, // 增加到30秒，避免Render休眠唤醒时超时
   headers: {
     'Content-Type': 'application/json'
   }

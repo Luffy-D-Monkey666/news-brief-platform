@@ -38,13 +38,21 @@ const HomePage = () => {
     }
   }, [latestBrief, selectedCategory]);
 
-  const loadBriefs = async () => {
+  const loadBriefs = async (retryCount = 0) => {
     try {
       setLoading(true);
       const response = await getLatestBriefs(selectedCategory, 50);
       setBriefs(response.data || []);
     } catch (error) {
       console.error('加载简报失败:', error);
+      // 如果是超时错误（通常是后端正在从休眠中唤醒），自动重试
+      if (error.code === 'ECONNABORTED' && retryCount < 3) {
+        console.log(`后端正在唤醒，第 ${retryCount + 1} 次重试中...`);
+        setTimeout(() => loadBriefs(retryCount + 1), 3000); // 3秒后重试
+      } else {
+        // 其他错误或重试次数耗尽，显示空数据
+        setBriefs([]);
+      }
     } finally {
       setLoading(false);
     }
