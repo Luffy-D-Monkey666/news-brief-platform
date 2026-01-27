@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLatestBriefs } from '../services/api';
+import { getLatestBriefs, getHistoryBriefs } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import BriefCard from '../components/BriefCard';
 import CategoryFilter from '../components/CategoryFilter';
@@ -11,6 +11,9 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [newBriefId, setNewBriefId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const { isConnected, latestBrief } = useWebSocket();
 
@@ -41,8 +44,10 @@ const HomePage = () => {
   const loadBriefs = async (retryCount = 0) => {
     try {
       setLoading(true);
+      setCurrentPage(1);  // 重置页码
       const response = await getLatestBriefs(selectedCategory, 50);
       setBriefs(response.data || []);
+      setHasMore(response.data && response.data.length === 50);  // 判断是否有更多
     } catch (error) {
       console.error('加载简报失败:', error);
       // 如果是超时错误（通常是后端正在从休眠中唤醒），自动重试
@@ -52,9 +57,39 @@ const HomePage = () => {
       } else {
         // 其他错误或重试次数耗尽，显示空数据
         setBriefs([]);
+        setHasMore(false);
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMoreBriefs = async () => {
+    if (loadingMore || !hasMore) return;
+
+    try {
+      setLoadingMore(true);
+      const nextPage = currentPage + 1;
+      const response = await getHistoryBriefs(selectedCategory, nextPage, 20);
+
+      if (response.data && response.data.length > 0) {
+        setBriefs((prev) => [...prev, ...response.data]);
+        setCurrentPage(nextPage);
+
+        if (response.data.length < 20) {
+          setHasMore(false);
+        }
+
+        if (response.pagination) {
+          setHasMore(nextPage < response.pagination.pages);
+        }
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('加载更多失败:', error);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -144,6 +179,35 @@ const HomePage = () => {
               />
             ))}
           </Masonry>
+        )}
+
+        {/* 加载更多按钮 */}
+        {!loading && briefs.length > 0 && (
+          <div className="mt-8 flex justify-center">
+            {hasMore ? (
+              <button
+                onClick={loadMoreBriefs}
+                disabled={loadingMore}
+                className={`
+                  px-8 py-3 rounded-xl font-medium text-sm
+                  transition-all duration-200 shadow-sm hover:shadow-md
+                  ${loadingMore
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-200'
+                  }
+                `}
+              >
+                {loadingMore ? '加载中...' : '加载更多'}
+              </button>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-gray-400 text-sm">已经到底了</p>
+                <p className="text-gray-300 text-xs mt-1">
+                  共 {briefs.length} 条新闻简报
+                </p>
+              </div>
+            )}
+          </div>
         )}
       </main>
 
