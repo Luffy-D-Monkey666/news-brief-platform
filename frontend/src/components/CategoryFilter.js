@@ -14,13 +14,15 @@ import {
   FaNewspaper,
   FaFilm,
   FaShip,
-  FaTrophy
+  FaTrophy,
+  FaPalette
 } from 'react-icons/fa';
 
 const categoryIcons = {
   // 个人兴趣（最高优先级）
-  op_card_game: { icon: FaTrophy, color: 'text-yellow-600', highlight: true, special: true },
-  op_merchandise: { icon: FaShip, color: 'text-orange-600', highlight: true, special: true },
+  tcg_card_game: { icon: FaTrophy, color: 'text-amber-600', highlight: true, special: true },
+  one_piece: { icon: FaShip, color: 'text-orange-600', highlight: true, special: true },
+  anime_manga: { icon: FaPalette, color: 'text-pink-600', highlight: true, special: true },
 
   // 核心关注领域
   ai_robotics: { icon: FaBrain, color: 'text-purple-600', highlight: true },
@@ -39,8 +41,9 @@ const categoryIcons = {
 
 const categoryNames = {
   // 个人兴趣
-  op_card_game: 'OP卡牌游戏',
-  op_merchandise: 'OP周边情报',
+  tcg_card_game: 'TCG信息',
+  one_piece: '海贼王',
+  anime_manga: '动画漫画',
 
   // 核心关注领域
   ai_robotics: 'AI与机器人',

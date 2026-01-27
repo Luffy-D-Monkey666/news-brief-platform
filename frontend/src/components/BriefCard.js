@@ -13,23 +13,25 @@ import {
 
 // Apple风格配色（更简洁清爽）
 const categoryColors = {
-  op_card_game: 'text-amber-600',
-  op_merchandise: 'text-orange-600',
+  tcg_card_game: 'text-amber-600',
+  one_piece: 'text-orange-600',
+  anime_manga: 'text-pink-600',
   ai_robotics: 'text-purple-600',
   ev_automotive: 'text-emerald-600',
   finance_investment: 'text-rose-600',
   business_tech: 'text-blue-600',
   politics_world: 'text-indigo-600',
   economy_policy: 'text-yellow-600',
-  health_medical: 'text-pink-600',
+  health_medical: 'text-teal-600',
   energy_environment: 'text-cyan-600',
   entertainment_sports: 'text-orange-600',
   general: 'text-gray-600'
 };
 
 const categoryNames = {
-  op_card_game: 'OP卡牌游戏',
-  op_merchandise: 'OP周边情报',
+  tcg_card_game: 'TCG信息',
+  one_piece: '海贼王',
+  anime_manga: '动画漫画',
   ai_robotics: 'AI与机器人',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
