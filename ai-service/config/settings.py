@@ -8,13 +8,14 @@ MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # 爬虫配置
-CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟（更频繁更新，确保实时性）
+CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 180))  # 3分钟（阶段2：配合20条抓取）
 
 # 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
     # 个人兴趣（最高优先级）
-    'op_card_game',         # One Piece卡牌游戏
-    'op_merchandise',       # One Piece周边IP
+    'tcg_card_game',        # TCG卡牌游戏（宝可梦PTCG、海贼王OPCG、龙珠DBTCG等）
+    'one_piece',            # 海贼王相关（One Piece所有内容）
+    'anime_manga',          # 日本动画漫画
 
     # 核心关注领域
     'ai_robotics',          # AI与机器人
@@ -34,8 +35,9 @@ CATEGORIES = [
 # 分类中文名称映射
 CATEGORY_NAMES = {
     # 个人兴趣
-    'op_card_game': 'OP卡牌游戏',
-    'op_merchandise': 'OP周边情报',
+    'tcg_card_game': 'TCG信息',
+    'one_piece': '海贼王',
+    'anime_manga': '动画漫画',
 
     # 核心关注领域
     'ai_robotics': 'AI与机器人',
@@ -106,9 +108,6 @@ NEWS_SOURCES = {
 
         # ==================== 日本 ====================
         'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本主要新闻
-
-        # ==================== 亚洲 ====================
-        'https://timesofindia.indiatimes.com/rssfeedstopstories.cms',  # 印度时报头版
 
         # ==================== 欧洲媒体 ====================
         'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
@@ -181,8 +180,9 @@ SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条新�
 CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。
 
 分类规则：
-- op_card_game: One Piece卡牌游戏（TCG、集换式卡牌）
-- op_merchandise: One Piece周边（手办、服装、IP商品）
+- tcg_card_game: TCG卡牌游戏（宝可梦PTCG、海贼王OPCG、龙珠DBTCG、游戏王、万智牌等所有TCG）
+- one_piece: 海贼王相关（海贼王动画、漫画、真人剧、手办、周边、卡牌、所有One Piece内容）
+- anime_manga: 日本动画漫画（动画、漫画、轻小说、声优、日本ACG文化，不包括海贼王）
 - ai_robotics: AI与机器人（人工智能、机器学习、自动化）
 - ev_automotive: 新能源汽车（电动车、Tesla、BYD、充电桩）
 - finance_investment: 投资财经（股票、加密货币、投资、金融市场）
@@ -191,11 +191,11 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。
 - economy_policy: 经济政策（GDP、通胀、经济政策、贸易）
 - health_medical: 健康医疗（医疗、健康、疾病、药品）
 - energy_environment: 能源环境（能源、气候、环保）
-- entertainment_sports: 娱乐体育（体育赛事、电影、音乐）
+- entertainment_sports: 娱乐体育（体育赛事、电影、音乐，不包括动漫）
 - general: 综合（其他不属于以上分类的新闻）
 
 新闻标题: {title}
 新闻摘要: {summary}
 
-请只返回英文分类名称（如: ai_robotics），不要有其他内容。
+请只返回英文分类名称（如: tcg_card_game），不要有其他内容。
 分类:"""
