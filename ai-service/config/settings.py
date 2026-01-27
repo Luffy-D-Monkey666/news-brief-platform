@@ -129,6 +129,78 @@ NEWS_SOURCES = {
 
         # ==================== 能源与环境 ====================
         'https://www.energycentral.com/feeds/content.xml',  # Energy Central
+
+        # ==================== TCG卡牌游戏 ====================
+        # 宝可梦TCG
+        'https://www.pokemon.com/us/pokemon-news/rss',  # Pokemon Official News
+        'https://www.pokebeach.com/feed',  # PokeBeach TCG News
+        'https://www.pokeguardian.com/feed',  # PokeGuardian
+
+        # 海贼王卡牌OPCG
+        'https://rsshub.app/bandai/onepiece-cardgame',  # Bandai OPCG Official
+        'https://onepiece-cardgame.com/news/rss',  # One Piece Card Game Official
+
+        # 龙珠卡牌DBTCG
+        'https://www.dbs-cardgame.com/us-en/news/rss',  # Dragon Ball Super Card Game
+
+        # 游戏王
+        'https://www.yugioh-card.com/en/news/rss.xml',  # Yu-Gi-Oh Official
+        'https://ygoprodeck.com/feed/',  # YGOProDeck
+
+        # 万智牌MTG
+        'https://magic.wizards.com/en/rss/articles.xml',  # Magic: The Gathering Official
+        'https://www.channelfireball.com/feed/',  # ChannelFireball MTG
+
+        # TCG综合资讯
+        'https://www.tcgplayer.com/feed',  # TCGPlayer
+        'https://infinite.tcgplayer.com/feed',  # TCGPlayer Infinite
+
+        # ==================== 海贼王（One Piece）====================
+        # 官方与主流媒体
+        'https://rsshub.app/onepiece/news',  # One Piece Official News
+        'https://rsshub.app/shonenjump/series/one-piece',  # Shonen Jump One Piece
+        'https://rsshub.app/animenewsnetwork/news/one-piece',  # ANN One Piece
+        'https://www.crunchyroll.com/rss/anime?lang=enUS&tagged=one-piece',  # Crunchyroll OP
+        'https://onepiecepodcast.com/feed/',  # One Piece Podcast
+        'https://rsshub.app/bangumi/subject/1000',  # Bangumi One Piece
+
+        # 商品与周边
+        'https://rsshub.app/toei-anim/onepiece',  # Toei Animation One Piece
+
+        # 漫画更新
+        'https://rsshub.app/manga/onepiece',  # One Piece Manga Updates
+        'https://ww8.readonepiece.com/feed/',  # Read One Piece (fan site)
+
+        # ==================== 动画漫画（Anime & Manga）====================
+        # 主流动漫新闻
+        'https://www.animenewsnetwork.com/rss.xml',  # Anime News Network
+        'https://www.crunchyroll.com/rss/news',  # Crunchyroll News
+        'https://www.funimation.com/blog/feed/',  # Funimation Blog
+        'https://myanimelist.net/rss/news.xml',  # MyAnimeList News
+        'https://www.animenewsnetwork.com/all/rss.xml',  # ANN All Updates
+
+        # 日本动画制作公司
+        'https://rsshub.app/toei-anim',  # Toei Animation（东映）
+        'https://rsshub.app/mappa',  # MAPPA Studio
+        'https://rsshub.app/bones',  # Bones Studio
+        'https://rsshub.app/kyotoanimation',  # Kyoto Animation
+
+        # 漫画出版社
+        'https://rsshub.app/shonenjump',  # Shonen Jump Weekly
+        'https://rsshub.app/shueisha',  # 集英社（Shueisha）
+        'https://rsshub.app/kodansha',  # 讲谈社（Kodansha）
+
+        # 轻小说
+        'https://rsshub.app/dengekionline',  # 电击文库（Dengeki）
+
+        # 声优与ACG文化
+        'https://rsshub.app/seiyuu',  # 声优情报
+        'https://rsshub.app/bangumi/calendar',  # Bangumi放送日历
+        'https://www.animatetimes.com/feed',  # Animate Times
+
+        # 欧美动漫社区
+        'https://kotaku.com/rss',  # Kotaku Anime
+        'https://comicbook.com/anime/rss.xml',  # ComicBook Anime
     ]
 }
 
