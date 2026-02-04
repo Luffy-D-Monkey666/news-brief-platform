@@ -256,48 +256,56 @@ SUMMARIZE_PROMPT = """请分析以下新闻内容，用中文提炼成一条新�
 
 CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严格按照优先级和关键词进行分类。
 
-🎯 核心分类（最高优先级，必须优先匹配）：
+🎯 核心分类（最高优先级）：
 
-1. tcg_card_game - TCG卡牌游戏
-   关键词：Pokemon TCG, PTCG, 宝可梦卡牌, One Piece Card Game, OPCG, 海贼王卡牌, 
-           Dragon Ball TCG, DBTCG, 龙珠卡牌, Yu-Gi-Oh, 游戏王, Magic The Gathering, MTG, 万智牌,
-           卡包, booster pack, 稀有卡, rare card, meta deck, tournament, 锦标赛,
-           trading card game, TCG, 集换式卡牌
-   判断：只要提到任何TCG卡牌游戏的比赛、发售、新卡、赛事，必须分为此类
+1. ai_technology - AI技术
+   关键词：ChatGPT, GPT-4, Claude, OpenAI, Anthropic, DeepMind, 大语言模型, LLM,
+           机器学习, Machine Learning, 深度学习, Deep Learning, 神经网络,
+           AI应用, AI模型, Transformer, 提示工程, prompt engineering,
+           AI安全, AI对齐, AGI, 人工智能, artificial intelligence
+   判断：任何与AI算法、模型、应用相关的纯软件/算法层面内容
 
-2. one_piece - 海贼王（One Piece）
-   关键词：One Piece, 海贼王, Luffy, 路飞, Straw Hat, 草帽, Eiichiro Oda, 尾田荣一郎,
-           Jump, 周刊少年, Wano, 和之国, Netflix live action, 真人剧, 
-           海贼王剧场版, One Piece film, OP手办, OP周边
-   判断：任何与海贼王相关的内容（动画/漫画/真人剧/商品），但如果专门讲海贼王卡牌则归tcg_card_game
+2. embodied_intelligence - 具身智能
+   关键词：机器人, robot, 人形机器人, humanoid, 波士顿动力, Boston Dynamics,
+           Tesla Bot, Optimus, Figure AI, 1X Technologies,
+           自动驾驶, autonomous driving, FSD, 激光雷达, LiDAR,
+           工业机器人, 服务机器人, 无人机, drone, 物理AI, embodied AI,
+           机械臂, 传感器融合, sensor fusion, SLAM
+   判断：AI在物理世界的应用，涉及硬件、传感器、执行器的智能系统
 
-3. anime_manga - 日本动画漫画  
-   关键词：anime, manga, 动画, 漫画, 新番, 声优, seiyuu, light novel, 轻小说,
-           Studio Ghibli, 吉卜力, Crunchyroll, 京都动画, KyoAni, MAPPA, Toei Animation,
-           Shonen Jump, 少年Jump, 漫画连载, anime adaptation, 动画化
-   判断：日本动漫相关，但海贼王专门归one_piece类
+3. coding_development - Coding开发
+   关键词：编程, programming, 代码, code, GitHub, GitLab, 开源, open source,
+           Python, JavaScript, Rust, Go, TypeScript, React, Vue, Node.js,
+           VSCode, IDE, 编辑器, compiler, 编译器, API, SDK,
+           开发工具, developer tools, 版本控制, CI/CD, DevOps,
+           框架, framework, 库, library, package, npm, pip,
+           算法竞赛, LeetCode, 编程语言, programming language
+   判断：编程语言、开发工具、开源项目、编程社区相关内容
 
 📌 其他分类：
-- ai_robotics: AI与机器人（ChatGPT, OpenAI, 机器学习, 人工智能, 自动驾驶AI）
-- ev_automotive: 新能源汽车（Tesla, 特斯拉, BYD, 比亚迪, 电动车, EV, 充电桩）
+- ev_automotive: 新能源汽车（Tesla车辆, 比亚迪, 电动车, 充电桩, 电池技术 - 不含自动驾驶AI）
 - finance_investment: 投资财经（股票, 加密货币, Bitcoin, 投资, 金融市场）
 - business_tech: 商业科技（科技公司, startup, 融资, IPO, 商业新闻）
 - politics_world: 政治国际（国际关系, 政府, 选举, 外交）
 - economy_policy: 经济政策（GDP, 通胀, 经济政策, 贸易战）
 - health_medical: 健康医疗（医疗, 健康, 疾病, 药品, 疫苗）
 - energy_environment: 能源环境（能源, 气候变化, 环保, 可再生能源）
-- entertainment_sports: 娱乐体育（体育赛事, 电影, 音乐, 明星，不包括动漫）
+- entertainment_sports: 娱乐体育（体育赛事, 电影, 音乐, 明星）
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（tcg_card_game, one_piece, anime_manga）
-2. 如果新闻同时涉及多个类别，选择最主要的
-3. 海贼王卡牌游戏 → tcg_card_game（因为重点是卡牌）
-4. 海贼王动画/漫画 → one_piece
-5. 其他动漫 → anime_manga
+1. 优先匹配核心分类（ai_technology, embodied_intelligence, coding_development）
+2. AI类新闻判断标准：
+   - 纯算法/模型/软件应用 → ai_technology
+   - 涉及机器人/物理世界/硬件 → embodied_intelligence
+   - 自动驾驶系统（包含感知/决策/控制） → embodied_intelligence
+   - Tesla/电动车的自动驾驶功能 → embodied_intelligence
+   - Tesla/电动车的电池/续航/销量 → ev_automotive
+3. 编程相关内容必须归入coding_development
+4. 如果无法确定，优先选择更具体的分类
+5. 只返回分类代码，不要解释
 
 新闻标题: {title}
 新闻摘要: {summary}
 
-请只返回英文分类名称（如: tcg_card_game），不要有其他内容。
-分类:"""
+请返回最合适的分类代码："""
