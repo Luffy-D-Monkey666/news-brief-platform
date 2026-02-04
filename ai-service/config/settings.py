@@ -16,8 +16,12 @@ CATEGORIES = [
     'ai_technology',         # AI技术
     'robotics',              # 机器人（原embodied_intelligence）
     'ai_programming',        # AI编程（原coding_development）
-    'opcg_tcg',              # OPCG卡牌游戏
+    'semiconductors',        # 芯片半导体
+    'opcg',                  # OPCG卡牌游戏（原opcg_tcg）
     'automotive',            # 汽车（原ev_automotive，现包含所有类型汽车）
+    'consumer_electronics',  # 消费电子（手机、手表、眼镜、相机等）
+    'one_piece',             # ONE PIECE（海贼王动漫周边）
+    'podcasts',              # 播客节目
     'finance_investment',    # 投资财经
 
     # 主流新闻分类
@@ -36,8 +40,12 @@ CATEGORY_NAMES = {
     'ai_technology': 'AI技术',
     'robotics': '机器人',
     'ai_programming': 'AI编程',
-    'opcg_tcg': 'OPCG卡牌',
+    'semiconductors': '芯片',
+    'opcg': 'OPCG',
     'automotive': '汽车',
+    'consumer_electronics': '消费电子',
+    'one_piece': 'OP',
+    'podcasts': '播客',
     'finance_investment': '投资财经',
 
     # 主流新闻分类
@@ -76,6 +84,18 @@ NEWS_SOURCES = {
         'https://csail.mit.edu/news/rss.xml',  # MIT CSAIL（具身AI研究前沿）
         'https://www.cs.cmu.edu/news/rss.xml',  # CMU计算机（机器人与AI研究）
         'https://ai.stanford.edu/news/rss.xml',  # Stanford AI Lab（人形机器人）
+
+        # ==================== 芯片半导体（10个核心源）====================
+        'https://rsshub.app/eet-china/news',  # 电子工程专辑（中国芯片产业）
+        'https://rsshub.app/anandtech',  # AnandTech（最深度硬件测评）
+        'https://rsshub.app/tomshardware',  # Tom's Hardware（硬件新闻）
+        'https://www.eetimes.com/feed/',  # EE Times（全球半导体行业）
+        'https://www.semiwiki.com/feed/',  # SemiWiki（芯片设计分析）
+        'https://www.semiconductor-today.com/rss.xml',  # Semiconductor Today
+        'https://semiengineering.com/feed/',  # Semiconductor Engineering
+        'https://www.eetimes.eu/feed/',  # EE Times Europe（欧洲半导体）
+        'https://www.electronicsweekly.com/feed/',  # Electronics Weekly
+        'https://www.ednasia.com/feed/',  # EDN Asia（亚洲电子设计）
 
         # ==================== OPCG卡牌游戏（4个核心源）====================
         'https://rsshub.app/reddit/r/OnePieceTCG',  # Reddit OPCG社区（玩家讨论、Meta分析）
@@ -361,7 +381,67 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    判断：所有类型的机器人（工业/服务/人形/移动/无人机等）及相关技术、公司、应用
    核心特征：涉及物理世界交互、传感器、执行器、控制系统的智能硬件
 
-3. ai_programming - AI编程
+3. semiconductors - 芯片半导体
+   关键词：芯片, 半导体, semiconductor, chip,
+
+           # 芯片制造与代工
+           芯片制造, chip manufacturing, wafer, 晶圆, 晶圆厂, fab, foundry,
+           台积电, TSMC, 三星, Samsung Foundry, 英特尔, Intel Foundry,
+           中芯国际, SMIC, 联电, UMC, 格芯, GlobalFoundries,
+           光刻, lithography, EUV, 极紫外光刻, 光刻机, ASML,
+           蚀刻, etching, 薄膜沉积, deposition, CMP, 化学机械抛光,
+           先进制程, advanced node, 3nm, 5nm, 7nm, 10nm, 14nm,
+
+           # 芯片设计
+           芯片设计, chip design, IC设计, integrated circuit,
+           EDA, 电子设计自动化, electronic design automation,
+           Synopsys, 新思科技, Cadence, 楷登电子, Siemens EDA,
+           IP核, IP core, ARM, RISC-V, Arm架构,
+           SoC, system on chip, 系统级芯片,
+           ASIC, application-specific integrated circuit,
+           FPGA, field-programmable gate array,
+
+           # 处理器与GPU
+           CPU, 中央处理器, processor, 处理器,
+           GPU, 图形处理器, graphics processing unit,
+           NVIDIA, 英伟达, AMD, 超威, Intel, 英特尔,
+           高通, Qualcomm, 骁龙, Snapdragon, 联发科, MediaTek,
+           海思, HiSilicon, 麒麟, Kirin, 展锐, UNISOC,
+           苹果芯片, Apple Silicon, M1, M2, M3, A系列芯片,
+           AI芯片, AI accelerator, NPU, neural processing unit,
+           TPU, tensor processing unit, 昇腾, Ascend,
+
+           # 存储芯片
+           存储芯片, memory chip, DRAM, DDR, DDR5,
+           闪存, flash memory, NAND, SSD, 固态硬盘,
+           三星存储, SK海力士, SK Hynix, 美光, Micron,
+           长江存储, YMTC, 长鑫存储, CXMT,
+
+           # 模拟与功率芯片
+           模拟芯片, analog chip, 功率芯片, power chip,
+           德州仪器, TI, Texas Instruments, ADI, Analog Devices,
+           英飞凌, Infineon, 意法半导体, STMicroelectronics,
+           电源管理, power management, PMIC,
+           功率半导体, power semiconductor, IGBT, GaN, 氮化镓,
+           SiC, 碳化硅, silicon carbide,
+
+           # 半导体设备与材料
+           半导体设备, semiconductor equipment, 半导体材料,
+           ASML, 应用材料, Applied Materials, 科磊, KLA,
+           泛林集团, Lam Research, 东京电子, Tokyo Electron,
+           硅片, silicon wafer, 光刻胶, photoresist,
+
+           # 产业与市场
+           半导体产业, semiconductor industry, 芯片产业链,
+           芯片短缺, chip shortage, 芯片法案, CHIPS Act,
+           去美化, decoupling, 芯片自主, chip independence,
+           先进封装, advanced packaging, chiplet, 小芯片,
+           2.5D封装, 3D封装, CoWoS, HBM, high bandwidth memory,
+
+   判断：所有与芯片、半导体相关的新闻，包括设计、制造、设备、材料、市场动态
+   核心特征：涉及芯片硬件、制造工艺、半导体产业链
+
+4. ai_programming - AI编程
    关键词：AI编程助手, AI coding, AI代码助手, AI开发工具, AI programming,
            Claude Code, Cursor, GitHub Copilot, Copilot, Copilot Chat,
            Kimi Code, OpenClaw, Windsurf, Aider, Cody, Sourcegraph Cody,
@@ -386,7 +466,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            代码编辑器, code editor, 集成开发环境
    判断：AI编程工具、代码助手、传统开发工具、开源项目、编程社区、软件开发相关内容
 
-4. opcg_tcg - OPCG卡牌游戏
+5. opcg - OPCG卡牌游戏
    关键词：OPCG, One Piece Card Game, 海贼王卡牌, OP TCG, OP卡牌,
            One Piece TCG, ワンピースカードゲーム,
 
@@ -445,7 +525,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, robotics, ai_programming, opcg_tcg）
+1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg）
 2. AI类新闻判断标准（重要：按以下顺序匹配）：
    a) **AI编程工具优先规则**：
       - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming

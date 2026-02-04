@@ -13,8 +13,11 @@ import {
   FaLandmark,
   FaNewspaper,
   FaFilm,
-  FaCode,        // 新增：Coding图标
-  FaGamepad      // 新增：OPCG游戏图标
+  FaCode,        // AI编程图标
+  FaAddressCard, // OPCG卡牌图标
+  FaMobileAlt,   // 消费电子图标
+  FaShip,        // ONE PIECE图标
+  FaPodcast      // 播客图标
 } from 'react-icons/fa';
 
 const categoryIcons = {
@@ -22,12 +25,16 @@ const categoryIcons = {
   ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
   robotics: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
   ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
-  opcg_tcg: { icon: FaGamepad, color: 'text-orange-600', highlight: true, special: true },
+  semiconductors: { icon: FaMicrochip, color: 'text-gray-700', highlight: true, special: true },
+  opcg: { icon: FaAddressCard, color: 'text-orange-600', highlight: true, special: true },
   automotive: { icon: FaCar, color: 'text-green-600', highlight: true },
+  consumer_electronics: { icon: FaMobileAlt, color: 'text-cyan-600', highlight: true },
+  one_piece: { icon: FaShip, color: 'text-red-600', highlight: true },
+  podcasts: { icon: FaPodcast, color: 'text-pink-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
 
   // 主流新闻分类
-  business_tech: { icon: FaMicrochip, color: 'text-blue-600' },
+  business_tech: { icon: FaBolt, color: 'text-blue-600' },
   politics_world: { icon: FaLandmark, color: 'text-indigo-600' },
   economy_policy: { icon: FaDollarSign, color: 'text-yellow-600' },
   health_medical: { icon: FaHeartbeat, color: 'text-pink-600' },
@@ -41,8 +48,12 @@ const categoryNames = {
   ai_technology: 'AI技术',
   robotics: '机器人',
   ai_programming: 'AI编程',
-  opcg_tcg: 'OPCG卡牌',
+  semiconductors: '芯片',
+  opcg: 'OPCG',
   automotive: '汽车',
+  consumer_electronics: '消费电子',
+  one_piece: 'OP',
+  podcasts: '播客',
   finance_investment: '投资财经',
 
   // 主流新闻分类
