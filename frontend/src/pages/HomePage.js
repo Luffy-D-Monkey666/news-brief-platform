@@ -4,7 +4,7 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import BriefCard from '../components/BriefCard';
 import CategoryFilter from '../components/CategoryFilter';
 import Masonry from 'react-masonry-css';
-import { FaWifi, FaCircle, FaSpinner } from 'react-icons/fa';
+import { FaSpinner } from 'react-icons/fa';
 
 const HomePage = () => {
   const [briefs, setBriefs] = useState([]);
@@ -15,7 +15,7 @@ const HomePage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const { isConnected, latestBrief } = useWebSocket();
+  const { latestBrief } = useWebSocket();
 
   // 加载初始数据
   useEffect(() => {
@@ -106,21 +106,6 @@ const HomePage = () => {
               <p className="text-gray-400 text-sm mt-1">
                 AI驱动的全球新闻聚合平台
               </p>
-            </div>
-
-            {/* 连接状态 */}
-            <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-              <FaWifi className={isConnected ? 'text-green-400' : 'text-gray-500'} />
-              <div className="flex items-center">
-                <FaCircle
-                  className={`text-xs mr-2 ${
-                    isConnected ? 'text-green-400 animate-pulse' : 'text-gray-500'
-                  }`}
-                />
-                <span className="text-sm font-medium text-white">
-                  {isConnected ? '实时连接' : '连接断开'}
-                </span>
-              </div>
             </div>
           </div>
         </div>
