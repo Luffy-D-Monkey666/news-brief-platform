@@ -14,10 +14,10 @@ const briefSchema = new mongoose.Schema({
     required: true,
     enum: [
       'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
-      'robotics',              // 机器人（工业/服务/人形/移动机器人、自动驾驶）
+      'robotics',              // 机器人（工业/服务/人形/移动机器人、自动驾驶、DMS、智能座舱）
       'ai_programming',        // AI编程（AI编程助手、传统开发工具、开源项目）
       'opcg_tcg',              // OPCG卡牌游戏（One Piece Card Game）
-      'ev_automotive',         // 新能源汽车
+      'automotive',            // 汽车（电动车/燃油车/混动车、充电桩、电池、新车、销量）
       'finance_investment',    // 投资财经
       'business_tech',         // 商业科技
       'politics_world',        // 政治国际

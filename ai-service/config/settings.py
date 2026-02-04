@@ -17,7 +17,7 @@ CATEGORIES = [
     'robotics',              # 机器人（原embodied_intelligence）
     'ai_programming',        # AI编程（原coding_development）
     'opcg_tcg',              # OPCG卡牌游戏
-    'ev_automotive',         # 新能源汽车
+    'automotive',            # 汽车（原ev_automotive，现包含所有类型汽车）
     'finance_investment',    # 投资财经
 
     # 主流新闻分类
@@ -37,7 +37,7 @@ CATEGORY_NAMES = {
     'robotics': '机器人',
     'ai_programming': 'AI编程',
     'opcg_tcg': 'OPCG卡牌',
-    'ev_automotive': '新能源汽车',
+    'automotive': '汽车',
     'finance_investment': '投资财经',
 
     # 主流新闻分类
@@ -106,17 +106,17 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
-        # ==================== 新能源汽车（10个核心源）====================
+        # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
-        'https://rsshub.app/autobit',  # 汽车之心（中国自动驾驶）
-        'https://rsshub.app/dongchedi/news',  # 懂车帝科技（国产EV实测）
+        'https://rsshub.app/autobit',  # 汽车之心（中国自动驾驶与智能汽车）
+        'https://rsshub.app/dongchedi/news',  # 懂车帝科技（国产汽车实测）
         'https://rsshub.app/elbil',  # Elbil挪威（最高电动化率国家）
         'https://electrek.co/feed/',  # Electrek（全球电动车新闻）
-        'https://cleantechnica.com/feed/',  # CleanTechnica（清洁能源科技）
+        'https://cleantechnica.com/feed/',  # CleanTechnica（清洁能源汽车科技）
         'https://insideevs.com/rss/',  # InsideEVs电动车（美国）
         'https://www.greencarreports.com/feed/latest/rss.xml',  # Green Car Reports（美国权威）
-        'https://www.caranddriver.com/research/news/rss.xml',  # Car and Driver（主流汽车）
-        'https://feeds.bloomberg.com/markets/autos.rss',  # Bloomberg Autos（行业分析）
+        'https://www.caranddriver.com/research/news/rss.xml',  # Car and Driver（主流汽车全类型）
+        'https://feeds.bloomberg.com/markets/autos.rss',  # Bloomberg Autos（汽车行业分析）
 
         # ==================== 投资财经（10个核心源）====================
         'https://rsshub.app/nikkei/index',  # Nikkei日经（亚洲商业最高裁判）
@@ -334,6 +334,15 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            传感器融合, sensor fusion, SLAM, 同步定位与建图,
            Waymo, Cruise, 小马智行, Pony.ai, 文远知行, WeRide,
 
+           # 智能座舱与驾驶员监控
+           DMS, 驾驶员监控系统, driver monitoring system, 驾驶员监控,
+           智能座舱, smart cabin, in-cabin monitoring, 车内监控,
+           车内传感器, in-cabin sensor, 生命体征监测, vital signs monitoring,
+           疲劳检测, fatigue detection, 分心检测, distraction detection,
+           注意力监测, attention monitoring, 生物识别, biometric,
+           Smart Eye, Seeing Machines, Affectiva, Mobileye,
+           车内摄像头, in-cabin camera, 驾驶员状态, driver state,
+
            # 技术与组件
            机器人操作系统, ROS, Robot Operating System, ROS2,
            机器视觉, machine vision, computer vision for robotics,
@@ -425,7 +434,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    排除：单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
 
 📌 其他分类：
-- ev_automotive: 新能源汽车（Tesla车辆, 比亚迪, 电动车, 充电桩, 电池技术 - 不含自动驾驶AI）
+- automotive: 汽车（电动车/燃油车/混动车, Tesla, 比亚迪, 丰田, 奔驰, 宝马, 充电桩, 电池技术, 新车发布, 汽车销量, 汽车行业 - 不含自动驾驶AI技术本身）
 - finance_investment: 投资财经（股票, 加密货币, Bitcoin, 投资, 金融市场）
 - business_tech: 商业科技（科技公司, startup, 融资, IPO, 商业新闻）
 - politics_world: 政治国际（国际关系, 政府, 选举, 外交）
@@ -445,14 +454,20 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    b) 纯AI算法/模型/理论（不涉及编程工具） → ai_technology
    c) AI在物理世界（机器人/硬件/传感器） → robotics
    d) 自动驾驶系统（包含感知/决策/控制） → robotics
-   e) Tesla/电动车的自动驾驶功能 → robotics
-   f) Tesla/电动车的电池/续航/销量 → ev_automotive
-3. OPCG卡牌判断标准：
+   e) DMS/智能座舱/驾驶员监控系统 → robotics
+   f) Tesla/汽车的自动驾驶技术 → robotics
+   g) Tesla/汽车的电池/续航/销量/新车发布 → automotive
+3. 汽车类新闻判断标准：
+   - 电动车/燃油车/混动车的产品、销量、评测 → automotive
+   - 充电桩、电池技术、续航 → automotive
+   - 汽车行业动态、车企财报、新车发布 → automotive
+   - 自动驾驶技术本身（非车辆产品） → robotics
+4. OPCG卡牌判断标准：
    - 必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card"相关词汇
    - 单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
-4. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
-5. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
-6. 只返回分类代码，不要解释
+5. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
+6. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
+7. 只返回分类代码，不要解释
 
 新闻标题: {title}
 新闻摘要: {summary}

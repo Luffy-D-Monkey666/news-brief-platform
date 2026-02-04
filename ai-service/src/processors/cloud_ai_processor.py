@@ -222,7 +222,7 @@ class CloudAIProcessor:
             category = category.lower().strip()
             valid_categories = [
                 'ai_technology', 'robotics', 'ai_programming', 'opcg_tcg',
-                'ev_automotive', 'finance_investment',
+                'automotive', 'finance_investment',
                 'business_tech', 'politics_world', 'economy_policy',
                 'health_medical', 'energy_environment', 'entertainment_sports',
                 'general'

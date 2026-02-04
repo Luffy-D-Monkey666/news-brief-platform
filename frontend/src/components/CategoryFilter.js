@@ -23,7 +23,7 @@ const categoryIcons = {
   robotics: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
   ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
   opcg_tcg: { icon: FaGamepad, color: 'text-orange-600', highlight: true, special: true },
-  ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
+  automotive: { icon: FaCar, color: 'text-green-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
 
   // 主流新闻分类
@@ -42,7 +42,7 @@ const categoryNames = {
   robotics: '机器人',
   ai_programming: 'AI编程',
   opcg_tcg: 'OPCG卡牌',
-  ev_automotive: '新能源汽车',
+  automotive: '汽车',
   finance_investment: '投资财经',
 
   // 主流新闻分类
