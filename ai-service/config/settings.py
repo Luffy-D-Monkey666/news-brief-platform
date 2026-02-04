@@ -48,86 +48,140 @@ CATEGORY_NAMES = {
     'general': '综合'
 }
 
-# 新闻源配置（全球专业信源，70+新闻源）
+# 新闻源配置（全球专业信源，100+新闻源）
 NEWS_SOURCES = {
     'rss_feeds': [
-        # ==================== AI技术（6个核心源）====================
+        # ==================== AI技术（12个核心源）====================
         'https://rsshub.app/jiqizhixin/ai',  # 机器之心（中国最深度AI论文解读）
         'https://rsshub.app/qbitai',  # 量子位（AI产业动态与大模型落地）
         'https://rsshub.app/mistral/news',  # Mistral AI（欧洲最强开源模型）
         'https://rsshub.app/thenextweb/ai',  # TNW（欧洲AI监管与创新生态）
         'https://rsshub.app/ledge/news',  # Ledge.ai（日本AI商业应用）
         'https://rsshub.app/arxiv/cs.AI',  # arXiv AI论文（趋势预测）
+        'https://openai.com/blog/rss/',  # OpenAI官方博客（最前沿AI研究与产品）
+        'https://blog.research.google/rss/',  # Google AI Research（谷歌AI研究）
+        'https://www.deepmind.com/blog/rss.xml',  # DeepMind官方（强化学习AlphaGo）
+        'https://huggingface.co/blog/rss.xml',  # Hugging Face（开源模型社区）
+        'https://www.unite.ai/feed/',  # Unite.AI（企业AI应用案例）
+        'https://www.infoq.com/ai/rss',  # InfoQ AI（AI工程化最佳实践）
 
-        # ==================== 具身智能（4个核心源）====================
+        # ==================== 具身智能（8个核心源）====================
         'https://rsshub.app/irobotnews',  # Robot News韩国（三星/现代机器人）
         'https://rsshub.app/robotstart',  # Robot Start日本（全球机器人密度最高国）
         'https://robohub.org/feed/',  # Robohub瑞士（顶尖学术背景物理AI）
         'https://rsshub.app/sps-magazin',  # SPS德国（工业4.0核心资讯）
+        'https://www.ieee.org/about/news/rss.xml',  # IEEE官方新闻（机器人标准）
+        'https://csail.mit.edu/news/rss.xml',  # MIT CSAIL（具身AI研究前沿）
+        'https://www.cs.cmu.edu/news/rss.xml',  # CMU计算机（机器人与AI研究）
+        'https://ai.stanford.edu/news/rss.xml',  # Stanford AI Lab（人形机器人）
 
-        # ==================== Coding开发（3个核心源）====================
+        # ==================== Coding开发（8个核心源）====================
         'https://rsshub.app/infoq/topic/AI',  # InfoQ中国（架构师技术演进）
         'https://rsshub.app/hackernews/best',  # Hacker News（全球开发者社区）
-        'https://rsshub.app/qiita/popular',  # Qiita日本（日本技术分享社区）
+        'https://rsshub.app/qiita/popular',  # Qiita日本（日本技术分享）
+        'https://github.blog/feed/',  # GitHub官方博客（开源项目更新）
+        'https://dev.to/feed',  # Dev.to（开发者社区热文）
+        'https://engineering.fb.com/feed/',  # Meta Engineering（Facebook工程）
+        'https://stackoverflow.com/feeds/tag?tagnames=trending&sort=newest',  # Stack Overflow热门
+        'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp（编程教程）
 
-        # ==================== 新能源汽车（7个核心源）====================
+        # ==================== 新能源汽车（10个核心源）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
-        'https://rsshub.app/autobit',  # 汽车之心（中国自动驾驶与智能座舱）
-        'https://rsshub.app/dongchedi/news',  # 懂车帝科技（国产EV实测数据）
-        'https://rsshub.app/elbil',  # Elbil挪威（全球最高电动化率国家）
+        'https://rsshub.app/autobit',  # 汽车之心（中国自动驾驶）
+        'https://rsshub.app/dongchedi/news',  # 懂车帝科技（国产EV实测）
+        'https://rsshub.app/elbil',  # Elbil挪威（最高电动化率国家）
         'https://electrek.co/feed/',  # Electrek（全球电动车新闻）
         'https://cleantechnica.com/feed/',  # CleanTechnica（清洁能源科技）
         'https://insideevs.com/rss/',  # InsideEVs电动车（美国）
+        'https://www.greencarreports.com/feed/latest/rss.xml',  # Green Car Reports（美国权威）
+        'https://www.caranddriver.com/research/news/rss.xml',  # Car and Driver（主流汽车）
+        'https://feeds.bloomberg.com/markets/autos.rss',  # Bloomberg Autos（行业分析）
 
-        # ==================== 投资财经（6个核心源）====================
+        # ==================== 投资财经（10个核心源）====================
         'https://rsshub.app/nikkei/index',  # Nikkei日经（亚洲商业最高裁判）
-        'https://www.ft.com/rss/home',  # Financial Times（全球金融政策权威）
-        'https://rsshub.app/businesstimes',  # Business Times新加坡（东南亚金融）
-        'https://rsshub.app/caixin/finance',  # 财新网（中国经济政策深度）
+        'https://www.ft.com/rss/home',  # Financial Times（全球金融政策）
+        'https://rsshub.app/businesstimes',  # Business Times新加坡（东南亚）
+        'https://rsshub.app/caixin/finance',  # 财新网（中国经济政策）
         'https://feeds.bloomberg.com/markets/news.rss',  # Bloomberg Markets
-        'https://seekingalpha.com/market_currents.xml',  # Seeking Alpha投资分析
+        'https://seekingalpha.com/market_currents.xml',  # Seeking Alpha投资
+        'https://www.economist.com/feeds/print-edition.rss',  # The Economist（全球经济）
+        'https://www.forbes.com/feed2/?&topic=technology',  # Forbes Tech（创业融资）
+        'https://feeds.fortune.com/fortune/latest',  # Fortune（财富500强）
+        'https://feeds.marketwatch.com/marketwatch/topstories/',  # MarketWatch（美股实时）
 
-        # ==================== 商业科技（6个核心源）====================
-        'https://rsshub.app/heise/news',  # Heise德国（欧洲最严谨IT分析）
-        'https://rsshub.app/36kr/newsflashes',  # 36氪（中国创业融资动态）
-        'https://rsshub.app/techinasia',  # Tech in Asia（东南亚科技商业）
+        # ==================== 商业科技（10个核心源）====================
+        'https://rsshub.app/heise/news',  # Heise德国（欧洲最严谨IT）
+        'https://rsshub.app/36kr/newsflashes',  # 36氪（中国创业融资）
+        'https://rsshub.app/techinasia',  # Tech in Asia（东南亚科技）
         'https://techcrunch.com/feed/',  # TechCrunch（美国科技新闻）
-        'https://www.theverge.com/rss/index.xml',  # The Verge（科技产品评测）
+        'https://www.theverge.com/rss/index.xml',  # The Verge（科技产品）
         'https://venturebeat.com/feed/',  # VentureBeat（企业科技）
+        'https://www.businessinsider.com/tech-feed',  # Business Insider Tech
+        'https://feeds.cnbc.com/cnbc/news',  # CNBC Tech（商业科技）
+        'https://www.fastcompany.com/feeds/rss',  # Fast Company（商业创新）
+        'https://www.mediapost.com/publications/rss/feed.xml?pub=93',  # MediaPost（数字营销）
 
-        # ==================== 政治国际（5个核心源）====================
-        'https://rsshub.app/france24/latest',  # France 24（非美视角地缘政治）
-        'https://rsshub.app/channelnewsasia/world',  # CNA新加坡（亚洲地缘政治）
-        'https://rsshub.app/euractiv/news',  # Euractiv（欧盟政策与AI法案）
-        'https://www.aljazeera.com/xml/rss/all.xml',  # Al Jazeera（中东视角）
+        # ==================== 政治国际（8个核心源）====================
+        'https://rsshub.app/france24/latest',  # France 24（非美视角）
+        'https://rsshub.app/channelnewsasia/world',  # CNA新加坡（亚洲地缘）
+        'https://rsshub.app/euractiv/news',  # Euractiv（欧盟政策）
+        'https://www.aljazeera.com/xml/rss/all.xml',  # Al Jazeera（中东）
         'https://www.theguardian.com/world/rss',  # Guardian World（英国）
+        'https://thediplomat.com/rss/',  # The Diplomat（亚太地缘）
+        'https://www.foreignaffairs.com/rss.xml',  # Foreign Affairs（国际关系）
+        'https://foreignpolicy.com/feed/',  # Foreign Policy（全球政治）
 
-        # ==================== 经济政策（3个核心源）====================
-        'https://rsshub.app/imf/news',  # IMF国际货币基金（全球宏观经济）
-        'https://rsshub.app/ecb/press',  # ECB欧洲央行（欧洲货币政策）
+        # ==================== 经济政策（6个核心源）====================
+        'https://rsshub.app/imf/news',  # IMF（全球宏观经济）
+        'https://rsshub.app/ecb/press',  # ECB欧洲央行（货币政策）
         'https://rsshub.app/miit/news',  # 工信部（中国工业政策）
+        'https://www.worldbank.org/en/feeds/rss/all',  # World Bank（发展政策）
+        'https://www.oecd.org/rss/all-en.xml',  # OECD（经合组织）
+        'https://www.bis.org/about/rss_en.xml',  # BIS（国际清算银行）
 
-        # ==================== 健康医疗（4个核心源）====================
-        'https://rsshub.app/thelancet/current',  # The Lancet（顶尖医学期刊）
-        'https://rsshub.app/statnews',  # Stat News（制药生物技术）
-        'https://rsshub.app/vcbeat',  # 动脉网（中国医疗健康投融资）
-        'https://www.who.int/rss-feeds/news-english.xml',  # WHO世界卫生组织
+        # ==================== 健康医疗（8个核心源）====================
+        'https://rsshub.app/thelancet/current',  # The Lancet（顶尖医学）
+        'https://rsshub.app/statnews',  # Stat News（制药生物）
+        'https://rsshub.app/vcbeat',  # 动脉网（中国医疗投资）
+        'https://www.who.int/rss-feeds/news-english.xml',  # WHO（世界卫生组织）
+        'https://www.nejm.org/action/showFeed?type=etoc&format=rss',  # NEJM（新英格兰）
+        'https://www.bmj.com/rss/current.xml',  # BMJ（英国医学）
+        'https://jama.jamanetwork.com/collection.rss?collectionCode=medical&format=rss',  # JAMA
+        'https://www.science.org/doi/10.1126/science.rss',  # Science Magazine
 
-        # ==================== 能源环境（2个核心源）====================
-        'https://rsshub.app/upstreamonline',  # Upstream挪威（海洋能源转型）
-        'https://rsshub.app/iea/news',  # IEA国际能源署（全球能源平衡）
+        # ==================== 能源环境（6个核心源）====================
+        'https://rsshub.app/upstreamonline',  # Upstream挪威（海洋能源）
+        'https://rsshub.app/iea/news',  # IEA（国际能源署）
+        'https://www.energynewstoday.com/feed/',  # Energy News Today
+        'https://www.renewableenergyworld.com/rss/',  # Renewable Energy World
+        'https://www.greenbiz.com/rss.xml',  # GreenBiz（绿色商业）
+        'https://www.carbon-brief.org/feed',  # Carbon Brief（气候科学）
 
-        # ==================== 娱乐体育（2个核心源）====================
+        # ==================== 娱乐体育（6个核心源）====================
         'https://variety.com/feed/',  # Variety（全球娱乐工业）
-        'https://rsshub.app/sportspro',  # SportsPro（体育科技与版权）
+        'https://rsshub.app/sportspro',  # SportsPro（体育科技）
+        'https://www.hollywoodreporter.com/feed/rss.xml',  # The Hollywood Reporter
+        'https://www.billboard.com/feed',  # Billboard（音乐产业）
+        'https://www.sportsillustrated.com/feeds/rss/latest.xml',  # Sports Illustrated
+        'https://www.espn.com/espn/rss.xml',  # ESPN（体育赛事）
 
-        # ==================== 中国主流媒体（4个补充源）====================
+        # ==================== 综合新闻（8个核心源）====================
+        'https://feeds.apnews.com/apnews/TopNews',  # Associated Press（美联社）
+        'https://feeds.washingtonpost.com/rss/world',  # Washington Post World
+        'https://feeds.nytimes.com/services/xml/rss/nyt/HomePage.xml',  # New York Times
+        'https://www.bbc.com/news/rss.xml',  # BBC News（英国广播）
+        'https://feeds.reuters.com/reuters/businessNews',  # Reuters Business
+        'https://feeds.theguardian.com/theguardian/international/rss',  # Guardian International
+        'https://www.dw.com/en/latest/rss.xml',  # DW News（德国之声）
+        'https://news.ycombinator.com/rss',  # Hacker News（科技热点）
+
+        # ==================== 中国主流媒体（补充源）====================
         'https://rsshub.app/sina/finance',  # 新浪财经
         'https://rsshub.app/thepaper/featured',  # 澎湃新闻
         'https://rsshub.app/zaobao/znews/china',  # 联合早报
         'https://rsshub.app/ifanr/rss',  # 爱范儿科技
 
-        # ==================== 国际主流媒体（8个补充源）====================
+        # ==================== 国际顶级媒体（补充源）====================
         'https://feeds.bbci.co.uk/news/rss.xml',  # BBC Top Stories
         'https://feeds.bbci.co.uk/news/world/rss.xml',  # BBC World
         'https://rss.cnn.com/rss/edition.rss',  # CNN Edition
@@ -137,10 +191,8 @@ NEWS_SOURCES = {
         'https://www.technologyreview.com/feed/',  # MIT Tech Review
         'https://arstechnica.com/feed/',  # Ars Technica
 
-        # ==================== 日本媒体（1个补充源）====================
-        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本主要新闻
-
-        # ==================== 欧洲媒体（2个补充源）====================
+        # ==================== 日本/欧洲媒体（补充源）====================
+        'https://www3.nhk.or.jp/rss/news/cat0.xml',  # NHK日本新闻
         'https://www.lemonde.fr/rss/une.xml',  # 法国世界报
         'https://www.spiegel.de/schlagzeilen/index.rss',  # 德国明镜周刊
     ]
