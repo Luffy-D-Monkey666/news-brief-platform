@@ -75,15 +75,28 @@ NEWS_SOURCES = {
         'https://www.cs.cmu.edu/news/rss.xml',  # CMU计算机（机器人与AI研究）
         'https://ai.stanford.edu/news/rss.xml',  # Stanford AI Lab（人形机器人）
 
-        # ==================== Coding开发（8个核心源）====================
-        'https://rsshub.app/infoq/topic/AI',  # InfoQ中国（架构师技术演进）
-        'https://rsshub.app/hackernews/best',  # Hacker News（全球开发者社区）
-        'https://rsshub.app/qiita/popular',  # Qiita日本（日本技术分享）
-        'https://github.blog/feed/',  # GitHub官方博客（开源项目更新）
-        'https://dev.to/feed',  # Dev.to（开发者社区热文）
-        'https://engineering.fb.com/feed/',  # Meta Engineering（Facebook工程）
-        'https://stackoverflow.com/feeds/tag?tagnames=trending&sort=newest',  # Stack Overflow热门
-        'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp（编程教程）
+        # ==================== Coding开发（15个核心源 - 重点覆盖AI编程工具）====================
+        # AI编程工具官方源
+        'https://github.blog/feed/',  # GitHub官方博客（Copilot更新）
+        'https://code.visualstudio.com/feed.xml',  # VSCode官方（Copilot集成）
+        'https://cursor.sh/blog/rss.xml',  # Cursor官方博客（如果有RSS）
+
+        # 开发者社区（AI编程讨论热点）
+        'https://rsshub.app/hackernews/best',  # Hacker News（AI工具讨论）
+        'https://dev.to/feed',  # Dev.to（AI编程教程）
+        'https://rsshub.app/reddit/topic/artificial',  # Reddit AI话题
+        'https://rsshub.app/reddit/topic/programming',  # Reddit编程话题
+
+        # 科技媒体（AI工具报道）
+        'https://rsshub.app/infoq/topic/AI',  # InfoQ中国（AI技术栏目）
+        'https://www.technologyreview.com/feed/',  # MIT Tech Review（AI工具评测）
+        'https://arstechnica.com/gadgets/feed/',  # Ars Technica（开发工具）
+
+        # 传统开发资讯
+        'https://engineering.fb.com/feed/',  # Meta Engineering
+        'https://stackoverflow.com/feeds/tag?tagnames=artificial-intelligence',  # Stack Overflow AI
+        'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
+        'https://rsshub.app/qiita/popular',  # Qiita日本
 
         # ==================== 新能源汽车（10个核心源）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
@@ -248,11 +261,19 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 🎯 核心分类（最高优先级）：
 
 1. ai_technology - AI技术
-   关键词：ChatGPT, GPT-4, Claude, OpenAI, Anthropic, DeepMind, 大语言模型, LLM,
-           机器学习, Machine Learning, 深度学习, Deep Learning, 神经网络,
-           AI应用, AI模型, Transformer, 提示工程, prompt engineering,
-           AI安全, AI对齐, AGI, 人工智能, artificial intelligence
-   判断：任何与AI算法、模型、应用相关的纯软件/算法层面内容
+   关键词：ChatGPT, GPT-4, GPT-5, Claude AI, Gemini, LLaMA, Mistral,
+           OpenAI, Anthropic, DeepMind, Google AI, Meta AI,
+           大语言模型, LLM, large language model, foundation model,
+           机器学习, Machine Learning, 深度学习, Deep Learning,
+           神经网络, neural network, 卷积神经网络, CNN, RNN, GAN,
+           AI应用, AI模型, AI model, Transformer, attention mechanism,
+           提示工程, prompt engineering, 微调, fine-tuning, RAG,
+           AI安全, AI safety, AI对齐, alignment, AGI, 通用人工智能,
+           人工智能, artificial intelligence, 自然语言处理, NLP,
+           计算机视觉, computer vision, 图像识别, image recognition,
+           语音识别, speech recognition, 文本生成, text generation
+   判断：任何与AI算法、模型、应用相关的纯软件/算法层面内容（不包括AI编程工具）
+   排除：如果新闻主题是"AI用于编程"或"AI编程助手"，应归入ai_programming而非此类
 
 2. embodied_intelligence - 具身智能
    关键词：机器人, robot, 人形机器人, humanoid, 波士顿动力, Boston Dynamics,
@@ -263,16 +284,29 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    判断：AI在物理世界的应用，涉及硬件、传感器、执行器的智能系统
 
 3. ai_programming - AI编程
-   关键词：AI编程助手, AI coding, Claude Code, Cursor, GitHub Copilot, Copilot,
-           Kimi Code, OpenClaw, Windsurf, Aider, Replit AI, Tabnine, Codeium,
-           AI Agent, Code Agent, 代码助手, 智能编程, AI代码生成, code generation,
-           AI辅助编程, pair programming, 代码补全, code completion,
-           编程, programming, 代码, code, GitHub, GitLab, 开源, open source,
-           Python, JavaScript, Rust, Go, TypeScript, React, Vue, Node.js,
-           VSCode, IDE, 编辑器, compiler, 编译器, API, SDK,
-           开发工具, developer tools, 版本控制, CI/CD, DevOps,
-           框架, framework, 库, library, package, npm, pip
-   判断：AI编程工具、代码助手、传统开发工具、开源项目、编程社区相关内容
+   关键词：AI编程助手, AI coding, AI代码助手, AI开发工具, AI programming,
+           Claude Code, Cursor, GitHub Copilot, Copilot, Copilot Chat,
+           Kimi Code, OpenClaw, Windsurf, Aider, Cody, Sourcegraph Cody,
+           Replit AI, Ghostwriter, Tabnine, Codeium, Amazon CodeWhisperer,
+           AI Agent, Code Agent, Coding Agent, 代码助手, coding assistant,
+           智能编程, intelligent coding, AI代码生成, code generation,
+           AI辅助编程, AI-assisted programming, pair programming,
+           代码补全, code completion, autocomplete, IntelliSense,
+           代码审查, code review, 代码分析, code analysis,
+           自动化编程, automated coding, 代码优化, code optimization,
+           编程, programming, 代码, code, coding, developer,
+           GitHub, GitLab, 开源, open source, repository,
+           Python, JavaScript, Rust, Go, TypeScript, Java, C++,
+           React, Vue, Angular, Node.js, Django, Flask,
+           VSCode, Visual Studio Code, IDE, JetBrains, WebStorm,
+           编辑器, editor, compiler, 编译器, debugger, 调试器,
+           API, SDK, framework, 框架, library, 库,
+           开发工具, developer tools, dev tools,
+           版本控制, version control, Git, CI/CD, DevOps,
+           package, npm, pip, Maven, Gradle,
+           软件开发, software development, 编程语言, programming language,
+           代码编辑器, code editor, 集成开发环境
+   判断：AI编程工具、代码助手、传统开发工具、开源项目、编程社区、软件开发相关内容
 
 📌 其他分类：
 - ev_automotive: 新能源汽车（Tesla车辆, 比亚迪, 电动车, 充电桩, 电池技术 - 不含自动驾驶AI）
@@ -286,15 +320,19 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, embodied_intelligence, coding_development）
-2. AI类新闻判断标准：
-   - 纯算法/模型/软件应用 → ai_technology
-   - 涉及机器人/物理世界/硬件 → embodied_intelligence
-   - 自动驾驶系统（包含感知/决策/控制） → embodied_intelligence
-   - Tesla/电动车的自动驾驶功能 → embodied_intelligence
-   - Tesla/电动车的电池/续航/销量 → ev_automotive
-3. 编程相关内容必须归入coding_development
-4. 如果无法确定，优先选择更具体的分类
+1. 优先匹配核心分类（ai_technology, embodied_intelligence, ai_programming）
+2. AI类新闻判断标准（重要：按以下顺序匹配）：
+   a) **AI编程工具优先规则**：
+      - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming
+      - 如果新闻主题是"AI用于编程"、"AI代码生成" → ai_programming
+      - 如果新闻涉及GitHub、VSCode、IDE的AI功能 → ai_programming
+   b) 纯AI算法/模型/理论（不涉及编程工具） → ai_technology
+   c) AI在物理世界（机器人/硬件/传感器） → embodied_intelligence
+   d) 自动驾驶系统（包含感知/决策/控制） → embodied_intelligence
+   e) Tesla/电动车的自动驾驶功能 → embodied_intelligence
+   f) Tesla/电动车的电池/续航/销量 → ev_automotive
+3. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
+4. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
 5. 只返回分类代码，不要解释
 
 新闻标题: {title}
