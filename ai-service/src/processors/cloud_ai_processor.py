@@ -1,8 +1,10 @@
 import requests
 import json
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -298,18 +300,52 @@ class NewsProcessor:
             return None
 
     def batch_process(self, news_list: list, summarize_prompt: str, classify_prompt: str) -> list:
-        """批量处理新闻"""
+        """批量处理新闻（使用并发加速）"""
+        start_time = datetime.now()
+
+        # 获取并发线程数（从环境变量或使用默认值5）
+        max_workers = int(os.getenv('AI_CONCURRENT_WORKERS', 5))
+
+        logger.info(f"开始并发处理 {len(news_list)} 条新闻（{max_workers}个线程）...")
+
         processed = []
         failed = []
-        for news in news_list:
-            result = self.process_news(news, summarize_prompt, classify_prompt)
-            if result:
-                processed.append(result)
-            else:
-                failed.append(news['title'][:50])
 
+        # 使用线程池并发处理
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # 提交所有任务
+            future_to_news = {
+                executor.submit(self.process_news, news, summarize_prompt, classify_prompt): news
+                for news in news_list
+            }
+
+            # 处理完成的任务
+            completed_count = 0
+            for future in as_completed(future_to_news):
+                news = future_to_news[future]
+                completed_count += 1
+
+                try:
+                    result = future.result(timeout=60)  # 单条新闻最多60秒
+                    if result:
+                        processed.append(result)
+                        # 每10条报告一次进度
+                        if completed_count % 10 == 0:
+                            logger.info(f"进度: {completed_count}/{len(news_list)} 条已处理")
+                    else:
+                        failed.append(news['title'][:50])
+                        logger.warning(f"处理失败: {news['title'][:50]}")
+                except Exception as e:
+                    failed.append(news['title'][:50])
+                    logger.error(f"处理异常: {news['title'][:50]} - {str(e)}")
+
+        # 计算统计信息
+        elapsed = (datetime.now() - start_time).total_seconds()
         success_rate = len(processed) / len(news_list) * 100 if news_list else 0
+        avg_time_per_news = elapsed / len(news_list) if news_list else 0
+
         logger.info(f"批量处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
+        logger.info(f"总耗时: {elapsed:.1f}秒, 平均: {avg_time_per_news:.2f}秒/条")
 
         # 如果失败率超过10%，记录警告
         if success_rate < 90 and len(news_list) > 0:
