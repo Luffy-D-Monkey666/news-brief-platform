@@ -17,6 +17,7 @@ from config.settings import (
 from crawlers.news_crawler import NewsCrawler
 from processors.cloud_ai_processor import NewsProcessor
 from models.database import NewsDatabase
+from filters.quality_filter import ContentQualityFilter
 import redis
 
 # 配置日志
@@ -36,6 +37,10 @@ class NewsService:
         ai_provider = os.getenv('AI_PROVIDER', 'openai')
         self.processor = NewsProcessor(ai_provider)
         self.db = NewsDatabase(MONGODB_URI)
+
+        # 内容质量过滤器（新增）
+        self.quality_filter = ContentQualityFilter()
+        logger.info("内容质量过滤器已启用")
 
         # 添加锁，防止并发执行
         self._lock = Lock()
@@ -111,6 +116,33 @@ class NewsService:
             if not new_news:
                 logger.info("没有新新闻需要处理")
                 return
+
+            # 2.5. 内容质量过滤（新增）
+            logger.info("步骤 2.5/5: 内容质量过滤...")
+            before_filter = len(new_news)
+
+            # 初步过滤：基于标题判断是否为低质量内容
+            quality_filtered_news = []
+            for news in new_news:
+                title = news.get('title', '')
+                # 暂时无法提前知道分类，所以使用'general'作为默认值
+                # 真正的分类过滤在AI分类后进行
+                if self.quality_filter.should_process(title, 'general', threshold=3):
+                    quality_filtered_news.append(news)
+
+            after_filter = len(quality_filtered_news)
+            filtered_count = before_filter - after_filter
+
+            if filtered_count > 0:
+                logger.info(f"步骤 2.5/5 完成: 质量过滤移除 {filtered_count} 条低质量内容，剩余 {after_filter} 条")
+            else:
+                logger.info(f"步骤 2.5/5 完成: 所有内容通过质量检查")
+
+            if not quality_filtered_news:
+                logger.info("质量过滤后没有剩余新闻")
+                return
+
+            new_news = quality_filtered_news
 
             # 3. 保存原始新闻
             logger.info("步骤 3/5: 保存原始新闻到数据库...")

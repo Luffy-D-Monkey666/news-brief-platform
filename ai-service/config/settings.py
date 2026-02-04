@@ -115,15 +115,11 @@ NEWS_SOURCES = {
         'https://www.dronedj.com/feed/',  # DroneDJ（无人机新闻）
         'https://www.phonearena.com/rss/news',  # PhoneArena（手机行业）
 
-        # ==================== ONE PIECE动漫周边（8个核心源）====================
-        'https://rsshub.app/reddit/r/OnePiece',  # Reddit海贼王社区
-        'https://rsshub.app/onepiece/news',  # 海贼王官方新闻（如果有）
-        'https://rsshub.app/bilibili/user/video/488779',  # B站海贼王官方号
-        'https://rsshub.app/youtube/user/@ChibiReviews',  # Chibi Reviews（OP周边测评）
+        # ==================== ONE PIECE动漫周边（3个核心源 - 已清理低质量源）====================
+        'https://rsshub.app/reddit/r/OnePiece',  # Reddit海贼王社区（社区讨论）
         'https://rsshub.app/youtube/user/@TheLibraryofOhara',  # Library of Ohara（OP深度解析）
-        'https://onepiece.fandom.com/wiki/Special:RecentChanges?feed=rss',  # OP Wiki最新动态
-        'https://www.crunchyroll.com/rss/anime',  # Crunchyroll动漫新闻
-        'https://www.animenewsnetwork.com/all/rss.xml',  # Anime News Network
+        'https://www.animenewsnetwork.com/all/rss.xml',  # Anime News Network（动漫行业新闻）
+        # 已移除：B站视频源（非新闻）、Wiki更新（非新闻）、Crunchyroll全动漫（OP占比低）、周边测评（非新闻）
 
         # ==================== Coding开发（15个核心源 - 重点覆盖AI编程工具）====================
         # AI编程工具官方源
@@ -131,11 +127,9 @@ NEWS_SOURCES = {
         'https://code.visualstudio.com/feed.xml',  # VSCode官方（Copilot集成）
         'https://cursor.sh/blog/rss.xml',  # Cursor官方博客（如果有RSS）
 
-        # 开发者社区（AI编程讨论热点）
-        'https://rsshub.app/hackernews/best',  # Hacker News（AI工具讨论）
-        'https://dev.to/feed',  # Dev.to（AI编程教程）
-        'https://rsshub.app/reddit/topic/artificial',  # Reddit AI话题
-        'https://rsshub.app/reddit/topic/programming',  # Reddit编程话题
+        # 开发者社区（AI编程讨论热点 - 已降权）
+        'https://rsshub.app/hackernews/best',  # Hacker News（AI工具讨论） - 仅采集前5条
+        # 已移除：Dev.to（教程居多）、Reddit编程话题（UGC质量不稳定）
 
         # 科技媒体（AI工具报道）
         'https://rsshub.app/infoq/topic/AI',  # InfoQ中国（AI技术栏目）
@@ -148,26 +142,26 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
-        # ==================== 播客节目（12个核心源 - 中英文优质播客）====================
-        # 中文播客平台
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩（如果有）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜的世界
-        'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺商业访谈录
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101（如果有）
-        'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选播客
-
-        # AI相关英文播客
-        'https://lexfridman.com/feed/podcast/',  # Lex Fridman Podcast（AI大神访谈）
-        'https://twimlai.com/feed/',  # TWIML AI Podcast（机器学习深度讨论）
-        'https://feeds.pacific-content.com/a16z',  # a16z Podcast（硅谷创投）
-
-        # 汽车科技播客
-        'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning（特斯拉播客）
-        'https://insideevs.com/podcast/feed/',  # InsideEVs Podcast（电动车行业）
-
-        # 综合科技播客
-        'https://feeds.twit.tv/twit.xml',  # This Week in Tech
-        'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast（科技新闻）
+        # ==================== 播客节目（暂时禁用 - 需要重新设计）====================
+        # 问题：当前RSS源返回的是播客单集内容，不是播客行业新闻
+        # 用户想看：播客行业动态、新节目发布、主播签约等新闻
+        # 实际返回：单集描述、嘉宾介绍、节目内容（非新闻）
+        #
+        # 下一步：寻找真正的播客行业新闻源，或改名为"播客推荐"分类
+        # 临时方案：注释掉所有播客RSS源，避免低质量内容混入
+        #
+        # 'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩
+        # 'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜
+        # 'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺
+        # 'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101
+        # 'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选
+        # 'https://lexfridman.com/feed/podcast/',  # Lex Fridman
+        # 'https://twimlai.com/feed/',  # TWIML AI
+        # 'https://feeds.pacific-content.com/a16z',  # a16z
+        # 'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning
+        # 'https://insideevs.com/podcast/feed/',  # InsideEVs
+        # 'https://feeds.twit.tv/twit.xml',  # This Week in Tech
+        # 'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast
 
         # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
