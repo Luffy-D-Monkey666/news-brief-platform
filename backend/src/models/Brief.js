@@ -13,19 +13,18 @@ const briefSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
-      'tcg_card_game',        // TCG卡牌游戏（PTCG宝可梦、OPCG海贼王、DBTCG龙珠等）
-      'one_piece',            // 海贼王相关（One Piece所有内容）
-      'anime_manga',          // 日本动画漫画
-      'ai_robotics',          // AI与机器人
-      'ev_automotive',        // 新能源汽车
-      'finance_investment',   // 投资财经
-      'business_tech',        // 商业科技
-      'politics_world',       // 政治国际
-      'economy_policy',       // 经济政策
-      'health_medical',       // 健康医疗
-      'energy_environment',   // 能源环境
-      'entertainment_sports', // 娱乐体育
-      'general'              // 综合
+      'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
+      'embodied_intelligence', // 具身智能（机器人、自动驾驶、物理世界AI）
+      'coding_development',    // Coding开发（编程语言、开发工具、开源项目）
+      'ev_automotive',         // 新能源汽车
+      'finance_investment',    // 投资财经
+      'business_tech',         // 商业科技
+      'politics_world',        // 政治国际
+      'economy_policy',        // 经济政策
+      'health_medical',        // 健康医疗
+      'energy_environment',    // 能源环境
+      'entertainment_sports',  // 娱乐体育
+      'general'               // 综合
     ]
   },
   source: {
