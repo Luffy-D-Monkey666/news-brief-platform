@@ -13,19 +13,14 @@ import {
   FaLandmark,
   FaNewspaper,
   FaFilm,
-  FaShip,
-  FaTrophy,
-  FaPalette
+  FaCode        // 新增：Coding图标
 } from 'react-icons/fa';
 
 const categoryIcons = {
-  // 个人兴趣（最高优先级）
-  tcg_card_game: { icon: FaTrophy, color: 'text-amber-600', highlight: true, special: true },
-  one_piece: { icon: FaShip, color: 'text-orange-600', highlight: true, special: true },
-  anime_manga: { icon: FaPalette, color: 'text-pink-600', highlight: true, special: true },
-
-  // 核心关注领域
-  ai_robotics: { icon: FaBrain, color: 'text-purple-600', highlight: true },
+  // 核心关注领域（最高优先级）
+  ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
+  embodied_intelligence: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
+  coding_development: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
   ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
 
@@ -40,13 +35,10 @@ const categoryIcons = {
 };
 
 const categoryNames = {
-  // 个人兴趣
-  tcg_card_game: 'TCG信息',
-  one_piece: '海贼王',
-  anime_manga: '动画漫画',
-
   // 核心关注领域
-  ai_robotics: 'AI与机器人',
+  ai_technology: 'AI技术',
+  embodied_intelligence: '具身智能',
+  coding_development: 'Coding',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
 
