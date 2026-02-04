@@ -5,6 +5,7 @@ import schedule
 import logging
 from datetime import datetime
 from typing import Dict
+from threading import Lock
 
 # 添加父目录到路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -36,6 +37,10 @@ class NewsService:
         self.processor = NewsProcessor(ai_provider)
         self.db = NewsDatabase(MONGODB_URI)
 
+        # 添加锁，防止并发执行
+        self._lock = Lock()
+        self._is_running = False
+
         # Redis连接（可选，用于实时通知）
         try:
             self.redis_client = redis.from_url(REDIS_URL)
@@ -50,8 +55,15 @@ class NewsService:
 
     def run_cycle(self):
         """执行一次完整的新闻采集和处理循环"""
-        start_time = datetime.now()
+        # 检查是否已有任务在运行
+        if not self._lock.acquire(blocking=False):
+            logger.warning("⚠️  上一轮采集仍在进行中，跳过本次调度")
+            return
+
         try:
+            self._is_running = True
+            start_time = datetime.now()
+
             logger.info("=" * 50)
             logger.info("开始新一轮新闻采集")
 
@@ -136,6 +148,12 @@ class NewsService:
         except Exception as e:
             elapsed = (datetime.now() - start_time).total_seconds()
             logger.error(f"采集循环出错（耗时 {elapsed:.1f} 秒）: {str(e)}", exc_info=True)
+
+        finally:
+            # 释放锁
+            self._is_running = False
+            self._lock.release()
+            logger.debug("采集锁已释放")
 
     def publish_brief(self, brief: Dict):
         """发布简报到Redis（可选功能）"""
