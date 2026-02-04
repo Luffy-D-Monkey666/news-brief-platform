@@ -53,7 +53,7 @@ const categoryNames = {
   automotive: '汽车',
   consumer_electronics: '消费电子',
   one_piece: 'OP',
-  podcasts: '播客',
+  podcasts: '播客推荐',
   finance_investment: '投资财经',
 
   // 主流新闻分类

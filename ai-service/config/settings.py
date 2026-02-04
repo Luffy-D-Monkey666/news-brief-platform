@@ -45,7 +45,7 @@ CATEGORY_NAMES = {
     'automotive': '汽车',
     'consumer_electronics': '消费电子',
     'one_piece': 'OP',
-    'podcasts': '播客',
+    'podcasts': '播客推荐',
     'finance_investment': '投资财经',
 
     # 主流新闻分类
@@ -142,26 +142,30 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
-        # ==================== 播客节目（暂时禁用 - 需要重新设计）====================
-        # 问题：当前RSS源返回的是播客单集内容，不是播客行业新闻
-        # 用户想看：播客行业动态、新节目发布、主播签约等新闻
-        # 实际返回：单集描述、嘉宾介绍、节目内容（非新闻）
-        #
-        # 下一步：寻找真正的播客行业新闻源，或改名为"播客推荐"分类
-        # 临时方案：注释掉所有播客RSS源，避免低质量内容混入
-        #
-        # 'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩
-        # 'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜
-        # 'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺
-        # 'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101
-        # 'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选
-        # 'https://lexfridman.com/feed/podcast/',  # Lex Fridman
-        # 'https://twimlai.com/feed/',  # TWIML AI
-        # 'https://feeds.pacific-content.com/a16z',  # a16z
-        # 'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning
-        # 'https://insideevs.com/podcast/feed/',  # InsideEVs
-        # 'https://feeds.twit.tv/twit.xml',  # This Week in Tech
-        # 'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast
+        # ==================== 播客推荐（12个核心源 - 中英文优质播客节目）====================
+        # 说明：此分类推荐优质播客节目单集，而非播客行业新闻
+        # 内容：播客单集更新、嘉宾介绍、节目内容摘要
+        # 目标用户：播客爱好者，想发现和订阅优质节目
+
+        # 中文播客平台
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩（商业、科技）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜的世界（社会观察）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺商业访谈录
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101（科技创业）
+        'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选播客
+
+        # AI相关英文播客
+        'https://lexfridman.com/feed/podcast/',  # Lex Fridman Podcast（AI大神访谈）
+        'https://twimlai.com/feed/',  # TWIML AI Podcast（机器学习深度讨论）
+        'https://feeds.pacific-content.com/a16z',  # a16z Podcast（硅谷创投）
+
+        # 汽车科技播客
+        'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning（特斯拉播客）
+        'https://insideevs.com/podcast/feed/',  # InsideEVs Podcast（电动车行业）
+
+        # 综合科技播客
+        'https://feeds.twit.tv/twit.xml',  # This Week in Tech
+        'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast（科技新闻）
 
         # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
@@ -668,7 +672,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    核心特征：海贼王IP相关的任何非卡牌内容
    排除：One Piece Card Game相关 → opcg
 
-8. podcasts - 播客节目
+8. podcasts - 播客推荐（节目内容推荐）
    关键词：播客, podcast, 音频节目, audio show,
 
            # 播客平台
@@ -725,8 +729,9 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            音频, audio, 订阅, subscribe, 收听, listen,
            播客节目, podcast show, 播客更新, new episode,
 
-   判断：所有与播客节目相关的内容，包括新节目发布、热门播客推荐、播客主持人、播客平台
-   核心特征：音频节目形式的内容创作
+   判断：优质播客节目推荐，包括播客单集更新、嘉宾介绍、节目内容
+   核心特征：音频节目形式的内容推荐（非播客行业新闻）
+   说明：此分类展示播客节目本身的内容，而非播客行业动态
    排除：纯音乐、广播电台（非播客形式） → entertainment_sports
 
 📌 其他分类：

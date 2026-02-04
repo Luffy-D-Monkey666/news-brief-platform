@@ -77,8 +77,9 @@ class ContentQualityFilter:
                 'new chapter', 'movie', 'official', 'oda', 'release'
             ],
             'podcasts': [
-                '签约', '宣布', '推出', '新节目',
-                'announce', 'launch', 'new show', 'partnership'
+                '新节目', '新播客', '新系列', '首播',
+                'new show', 'new podcast', 'premiere', 'launch',
+                '嘉宾', 'guest', '访谈', 'interview'
             ]
         }
 
@@ -169,14 +170,17 @@ class ContentQualityFilter:
         return filtered
 
 
-# 播客分类特殊处理：暂时将播客内容标记为低优先级
+# 播客内容识别辅助函数（用于未来可能的优化）
 def is_podcast_content(title: str, content: str) -> bool:
     """
-    判断是否为播客单集内容（非新闻）
+    识别是否为播客单集内容
 
     播客内容特征：
     - 标题包含"EP"、"第X期"、"嘉宾"
-    - 内容是节目描述而非新闻
+    - 内容是节目描述
+
+    注：当前"播客推荐"分类就是用于展示播客内容，
+         此函数保留用于未来可能的过滤优化。
     """
     podcast_indicators = [
         'ep ', 'ep.', 'episode', '第', '期',

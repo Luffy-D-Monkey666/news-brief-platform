@@ -21,7 +21,7 @@ const briefSchema = new mongoose.Schema({
       'automotive',            // 汽车（电动车/燃油车/混动车、充电桩、电池、新车、销量）
       'consumer_electronics',  // 消费电子（手机、手表、眼镜、相机、无人机等）
       'one_piece',             // ONE PIECE（海贼王动漫周边）
-      'podcasts',              // 播客节目
+      'podcasts',              // 播客推荐（优质播客节目内容推荐）
       'finance_investment',    // 投资财经
       'business_tech',         // 商业科技
       'politics_world',        // 政治国际
