@@ -14,7 +14,7 @@ import {
 // Apple风格配色（更简洁清爽）
 const categoryColors = {
   ai_technology: 'text-purple-600',
-  embodied_intelligence: 'text-indigo-600',
+  robotics: 'text-indigo-600',
   ai_programming: 'text-blue-600',
   ev_automotive: 'text-emerald-600',
   finance_investment: 'text-rose-600',
@@ -29,7 +29,7 @@ const categoryColors = {
 
 const categoryNames = {
   ai_technology: 'AI技术',
-  embodied_intelligence: '具身智能',
+  robotics: '机器人',
   ai_programming: 'AI编程',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',

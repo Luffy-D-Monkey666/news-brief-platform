@@ -14,7 +14,7 @@ CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟（优化后：
 CATEGORIES = [
     # 核心关注领域（最高优先级）
     'ai_technology',         # AI技术
-    'embodied_intelligence', # 具身智能
+    'robotics',              # 机器人（原embodied_intelligence）
     'ai_programming',        # AI编程（原coding_development）
     'ev_automotive',         # 新能源汽车
     'finance_investment',    # 投资财经
@@ -33,7 +33,7 @@ CATEGORIES = [
 CATEGORY_NAMES = {
     # 核心关注领域
     'ai_technology': 'AI技术',
-    'embodied_intelligence': '具身智能',
+    'robotics': '机器人',
     'ai_programming': 'AI编程',
     'ev_automotive': '新能源汽车',
     'finance_investment': '投资财经',
@@ -65,7 +65,7 @@ NEWS_SOURCES = {
         'https://www.unite.ai/feed/',  # Unite.AI（企业AI应用案例）
         'https://www.infoq.com/ai/rss',  # InfoQ AI（AI工程化最佳实践）
 
-        # ==================== 具身智能（8个核心源）====================
+        # ==================== 机器人（8个核心源）====================
         'https://rsshub.app/irobotnews',  # Robot News韩国（三星/现代机器人）
         'https://rsshub.app/robotstart',  # Robot Start日本（全球机器人密度最高国）
         'https://robohub.org/feed/',  # Robohub瑞士（顶尖学术背景物理AI）
@@ -275,13 +275,74 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    判断：任何与AI算法、模型、应用相关的纯软件/算法层面内容（不包括AI编程工具）
    排除：如果新闻主题是"AI用于编程"或"AI编程助手"，应归入ai_programming而非此类
 
-2. embodied_intelligence - 具身智能
-   关键词：机器人, robot, 人形机器人, humanoid, 波士顿动力, Boston Dynamics,
-           Tesla Bot, Optimus, Figure AI, 1X Technologies,
-           自动驾驶, autonomous driving, FSD, 激光雷达, LiDAR,
-           工业机器人, 服务机器人, 无人机, drone, 物理AI, embodied AI,
-           机械臂, 传感器融合, sensor fusion, SLAM
-   判断：AI在物理世界的应用，涉及硬件、传感器、执行器的智能系统
+2. robotics - 机器人
+   关键词：机器人, robot, robots, robotics, 机器人技术,
+
+           # 具身智能与人形机器人
+           具身智能, embodied intelligence, embodied AI, physical AI,
+           人形机器人, humanoid robot, humanoid, 双足机器人, biped robot,
+           Tesla Bot, Optimus, Figure AI, 1X Technologies, Figure 01, Figure 02,
+           波士顿动力, Boston Dynamics, Atlas, Spot, Handle,
+           优必选, UBTECH, Walker, 小鹏机器人, XPeng Robot,
+
+           # 工业机器人
+           工业机器人, industrial robot, 制造机器人, manufacturing robot,
+           协作机器人, collaborative robot, cobot, 协作臂,
+           机械臂, robotic arm, robot arm, manipulator, 机械手,
+           焊接机器人, welding robot, 喷涂机器人, painting robot,
+           搬运机器人, material handling robot, 码垛机器人, palletizing robot,
+           装配机器人, assembly robot, 拧紧机器人, fastening robot,
+           ABB机器人, KUKA, FANUC, Yaskawa, 安川, Universal Robots,
+           工业4.0, Industry 4.0, 智能制造, smart manufacturing,
+
+           # 服务机器人
+           服务机器人, service robot, 家用机器人, domestic robot,
+           扫地机器人, robotic vacuum, sweeping robot, 石头科技, Roborock,
+           科沃斯, Ecovacs, iRobot, Roomba, 追觅, Dreame,
+           送餐机器人, delivery robot, food delivery robot, 配送机器人,
+           接待机器人, reception robot, 迎宾机器人, greeting robot,
+           清洁机器人, cleaning robot, 医疗机器人, medical robot,
+           手术机器人, surgical robot, da Vinci, 达芬奇手术机器人,
+           康复机器人, rehabilitation robot, 护理机器人, care robot,
+
+           # 移动机器人
+           移动机器人, mobile robot, 自主移动, autonomous mobile robot, AMR,
+           AGV, 自动导引车, automated guided vehicle,
+           仓储机器人, warehouse robot, 物流机器人, logistics robot,
+           亚马逊机器人, Amazon Robotics, Kiva, 快仓, Quicktron,
+           海康机器人, Hikrobot, 极智嘉, Geek+,
+
+           # 无人机
+           无人机, drone, UAV, unmanned aerial vehicle, 飞行器,
+           四旋翼, quadcopter, 多旋翼, multirotor,
+           大疆, DJI, Mavic, Phantom, 亿航, EHang,
+           配送无人机, delivery drone, 农业无人机, agricultural drone,
+
+           # 自动驾驶（机器人视角）
+           自动驾驶, autonomous driving, self-driving, 无人驾驶,
+           自动驾驶汽车, autonomous vehicle, robotaxi, robo-taxi,
+           FSD, Full Self-Driving, Autopilot, 自动泊车, auto parking,
+           激光雷达, LiDAR, 毫米波雷达, millimeter wave radar,
+           传感器融合, sensor fusion, SLAM, 同步定位与建图,
+           Waymo, Cruise, 小马智行, Pony.ai, 文远知行, WeRide,
+
+           # 技术与组件
+           机器人操作系统, ROS, Robot Operating System, ROS2,
+           机器视觉, machine vision, computer vision for robotics,
+           力控, force control, 力传感器, force sensor,
+           抓取, grasping, manipulation, 路径规划, path planning,
+           运动控制, motion control, 伺服, servo, 步进电机, stepper motor,
+           电机驱动, motor driver, 减速器, reducer, 谐波减速器, harmonic drive,
+           末端执行器, end effector, gripper, 夹爪,
+
+           # 公司与研究
+           波士顿动力, Boston Dynamics, 新松机器人, Siasun,
+           库卡, KUKA, 发那科, FANUC, ABB Robotics,
+           MIT CSAIL, CMU Robotics, Stanford Robotics,
+           IEEE Robotics, ICRA, IROS, 机器人大会,
+
+   判断：所有类型的机器人（工业/服务/人形/移动/无人机等）及相关技术、公司、应用
+   核心特征：涉及物理世界交互、传感器、执行器、控制系统的智能硬件
 
 3. ai_programming - AI编程
    关键词：AI编程助手, AI coding, AI代码助手, AI开发工具, AI programming,
