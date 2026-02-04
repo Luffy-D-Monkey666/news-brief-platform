@@ -12,35 +12,29 @@ CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟（优化后：
 
 # 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
-    # 个人兴趣（最高优先级）
-    'tcg_card_game',        # TCG卡牌游戏（宝可梦PTCG、海贼王OPCG、龙珠DBTCG等）
-    'one_piece',            # 海贼王相关（One Piece所有内容）
-    'anime_manga',          # 日本动画漫画
-
-    # 核心关注领域
-    'ai_robotics',          # AI与机器人
-    'ev_automotive',        # 新能源汽车
-    'finance_investment',   # 投资财经
+    # 核心关注领域（最高优先级）
+    'ai_technology',         # AI技术
+    'embodied_intelligence', # 具身智能
+    'coding_development',    # Coding开发
+    'ev_automotive',         # 新能源汽车
+    'finance_investment',    # 投资财经
 
     # 主流新闻分类
-    'business_tech',        # 商业科技
-    'politics_world',       # 政治国际
-    'economy_policy',       # 经济政策
-    'health_medical',       # 健康医疗
-    'energy_environment',   # 能源环境
-    'entertainment_sports', # 娱乐体育
-    'general'              # 综合
+    'business_tech',         # 商业科技
+    'politics_world',        # 政治国际
+    'economy_policy',        # 经济政策
+    'health_medical',        # 健康医疗
+    'energy_environment',    # 能源环境
+    'entertainment_sports',  # 娱乐体育
+    'general'               # 综合
 ]
 
 # 分类中文名称映射
 CATEGORY_NAMES = {
-    # 个人兴趣
-    'tcg_card_game': 'TCG信息',
-    'one_piece': '海贼王',
-    'anime_manga': '动画漫画',
-
     # 核心关注领域
-    'ai_robotics': 'AI与机器人',
+    'ai_technology': 'AI技术',
+    'embodied_intelligence': '具身智能',
+    'coding_development': 'Coding',
     'ev_automotive': '新能源汽车',
     'finance_investment': '投资财经',
 
