@@ -15,7 +15,7 @@ const briefSchema = new mongoose.Schema({
     enum: [
       'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
       'embodied_intelligence', // 具身智能（机器人、自动驾驶、物理世界AI）
-      'coding_development',    // Coding开发（编程语言、开发工具、开源项目）
+      'ai_programming',        // AI编程（AI编程助手、传统开发工具、开源项目）
       'ev_automotive',         // 新能源汽车
       'finance_investment',    // 投资财经
       'business_tech',         // 商业科技

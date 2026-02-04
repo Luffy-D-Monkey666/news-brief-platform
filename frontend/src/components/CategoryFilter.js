@@ -20,7 +20,7 @@ const categoryIcons = {
   // 核心关注领域（最高优先级）
   ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
   embodied_intelligence: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
-  coding_development: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
+  ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
   ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
 
@@ -38,7 +38,7 @@ const categoryNames = {
   // 核心关注领域
   ai_technology: 'AI技术',
   embodied_intelligence: '具身智能',
-  coding_development: 'Coding',
+  ai_programming: 'AI编程',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
 

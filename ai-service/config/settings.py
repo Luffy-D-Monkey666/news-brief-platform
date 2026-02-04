@@ -15,7 +15,7 @@ CATEGORIES = [
     # 核心关注领域（最高优先级）
     'ai_technology',         # AI技术
     'embodied_intelligence', # 具身智能
-    'coding_development',    # Coding开发
+    'ai_programming',        # AI编程（原coding_development）
     'ev_automotive',         # 新能源汽车
     'finance_investment',    # 投资财经
 
@@ -34,7 +34,7 @@ CATEGORY_NAMES = {
     # 核心关注领域
     'ai_technology': 'AI技术',
     'embodied_intelligence': '具身智能',
-    'coding_development': 'Coding',
+    'ai_programming': 'AI编程',
     'ev_automotive': '新能源汽车',
     'finance_investment': '投资财经',
 
@@ -262,14 +262,17 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            机械臂, 传感器融合, sensor fusion, SLAM
    判断：AI在物理世界的应用，涉及硬件、传感器、执行器的智能系统
 
-3. coding_development - Coding开发
-   关键词：编程, programming, 代码, code, GitHub, GitLab, 开源, open source,
+3. ai_programming - AI编程
+   关键词：AI编程助手, AI coding, Claude Code, Cursor, GitHub Copilot, Copilot,
+           Kimi Code, OpenClaw, Windsurf, Aider, Replit AI, Tabnine, Codeium,
+           AI Agent, Code Agent, 代码助手, 智能编程, AI代码生成, code generation,
+           AI辅助编程, pair programming, 代码补全, code completion,
+           编程, programming, 代码, code, GitHub, GitLab, 开源, open source,
            Python, JavaScript, Rust, Go, TypeScript, React, Vue, Node.js,
            VSCode, IDE, 编辑器, compiler, 编译器, API, SDK,
            开发工具, developer tools, 版本控制, CI/CD, DevOps,
-           框架, framework, 库, library, package, npm, pip,
-           算法竞赛, LeetCode, 编程语言, programming language
-   判断：编程语言、开发工具、开源项目、编程社区相关内容
+           框架, framework, 库, library, package, npm, pip
+   判断：AI编程工具、代码助手、传统开发工具、开源项目、编程社区相关内容
 
 📌 其他分类：
 - ev_automotive: 新能源汽车（Tesla车辆, 比亚迪, 电动车, 充电桩, 电池技术 - 不含自动驾驶AI）
