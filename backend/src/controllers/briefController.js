@@ -12,7 +12,7 @@ exports.getLatestBriefs = async (req, res) => {
 
     const briefs = await Brief.find(query)
       .sort({ created_at: -1 })
-      .limit(parseInt(limit));
+      .limit(parseInt(limit, 10));
 
     res.json({
       success: true,
@@ -32,7 +32,7 @@ exports.getLatestBriefs = async (req, res) => {
 exports.getHistoryBriefs = async (req, res) => {
   try {
     const { category, page = 1, limit = 20 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
     const query = {};
     if (category) {
@@ -42,7 +42,7 @@ exports.getHistoryBriefs = async (req, res) => {
     const briefs = await Brief.find(query)
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit));
+      .limit(parseInt(limit, 10));
 
     const total = await Brief.countDocuments(query);
 
@@ -50,10 +50,10 @@ exports.getHistoryBriefs = async (req, res) => {
       success: true,
       data: briefs,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10),
         total,
-        pages: Math.ceil(total / parseInt(limit))
+        pages: Math.ceil(total / parseInt(limit, 10))
       }
     });
   } catch (error) {
