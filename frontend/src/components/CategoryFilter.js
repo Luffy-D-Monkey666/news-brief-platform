@@ -13,7 +13,8 @@ import {
   FaLandmark,
   FaNewspaper,
   FaFilm,
-  FaCode        // 新增：Coding图标
+  FaCode,        // 新增：Coding图标
+  FaGamepad      // 新增：OPCG游戏图标
 } from 'react-icons/fa';
 
 const categoryIcons = {
@@ -21,6 +22,7 @@ const categoryIcons = {
   ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
   robotics: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
   ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
+  opcg_tcg: { icon: FaGamepad, color: 'text-orange-600', highlight: true, special: true },
   ev_automotive: { icon: FaBolt, color: 'text-green-600', highlight: true },
   finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
 
@@ -39,6 +41,7 @@ const categoryNames = {
   ai_technology: 'AI技术',
   robotics: '机器人',
   ai_programming: 'AI编程',
+  opcg_tcg: 'OPCG卡牌',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
 

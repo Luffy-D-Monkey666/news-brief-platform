@@ -16,6 +16,7 @@ const briefSchema = new mongoose.Schema({
       'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
       'robotics',              // 机器人（工业/服务/人形/移动机器人、自动驾驶）
       'ai_programming',        // AI编程（AI编程助手、传统开发工具、开源项目）
+      'opcg_tcg',              // OPCG卡牌游戏（One Piece Card Game）
       'ev_automotive',         // 新能源汽车
       'finance_investment',    // 投资财经
       'business_tech',         // 商业科技

@@ -16,6 +16,7 @@ CATEGORIES = [
     'ai_technology',         # AI技术
     'robotics',              # 机器人（原embodied_intelligence）
     'ai_programming',        # AI编程（原coding_development）
+    'opcg_tcg',              # OPCG卡牌游戏
     'ev_automotive',         # 新能源汽车
     'finance_investment',    # 投资财经
 
@@ -35,6 +36,7 @@ CATEGORY_NAMES = {
     'ai_technology': 'AI技术',
     'robotics': '机器人',
     'ai_programming': 'AI编程',
+    'opcg_tcg': 'OPCG卡牌',
     'ev_automotive': '新能源汽车',
     'finance_investment': '投资财经',
 
@@ -74,6 +76,12 @@ NEWS_SOURCES = {
         'https://csail.mit.edu/news/rss.xml',  # MIT CSAIL（具身AI研究前沿）
         'https://www.cs.cmu.edu/news/rss.xml',  # CMU计算机（机器人与AI研究）
         'https://ai.stanford.edu/news/rss.xml',  # Stanford AI Lab（人形机器人）
+
+        # ==================== OPCG卡牌游戏（4个核心源）====================
+        'https://rsshub.app/reddit/r/OnePieceTCG',  # Reddit OPCG社区（玩家讨论、Meta分析）
+        'https://rsshub.app/youtube/user/@WossyPlays',  # Wossy Plays（最勤快的OPCG新闻博主）
+        'https://rsshub.app/youtube/user/@TheEgman',  # The Egman（赛事数据分析）
+        'https://rsshub.app/youtube/user/@VvTheory',  # VvTheory（深度对局复盘）
 
         # ==================== Coding开发（15个核心源 - 重点覆盖AI编程工具）====================
         # AI编程工具官方源
@@ -369,6 +377,53 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            代码编辑器, code editor, 集成开发环境
    判断：AI编程工具、代码助手、传统开发工具、开源项目、编程社区、软件开发相关内容
 
+4. opcg_tcg - OPCG卡牌游戏
+   关键词：OPCG, One Piece Card Game, 海贼王卡牌, OP TCG, OP卡牌,
+           One Piece TCG, ワンピースカードゲーム,
+
+           # 游戏机制与环境
+           卡组, deck, Meta, 环境, 上位卡组, top deck,
+           禁限表, Ban List, Restricted, Banned, Errata, 规则更新,
+           锦标赛, tournament, championship, 旗舰赛, 比赛, 赛事,
+           胜率, win rate, 对局, match, 复盘, deck building,
+
+           # 卡片相关
+           单卡, 卡面, card reveal, 新卡, 卡包, booster pack,
+           异画, alternate art, AA卡, 平行卡, parallel,
+           编号卡, 稀有度, rarity, SR, SEC, L卡, leader card,
+           角色卡, character card, 事件卡, event card,
+           场地卡, stage card, 船长卡, crew,
+
+           # 市场与价格
+           价格, price, 行情, market, 交易, trade,
+           TCGPlayer, Cardmarket, Yu-Yu-Tei, 单卡价格,
+           投资, collection, 收藏, 保值, value,
+
+           # 官方与品牌
+           万代, Bandai, 官方, official, 发售, release,
+           中文版, 日版, 英文版, 亚洲版,
+           onepiece-cardgame.com, onepiece-cardgame.cn,
+
+           # 数据库与工具
+           One Piece Top Decks, Ohara TCG, OP TCG Dex,
+           OneCollector, 卡组数据库, deck database,
+
+           # 玩家与社区
+           Reddit OnePieceTCG, Wossy Plays, The Egman, VvTheory,
+           玩家, player, 玩法, strategy, 攻略, guide,
+           开箱, unboxing, 抽卡, pull, box break,
+
+           # 相关角色和内容（需结合卡牌关键词）
+           路飞, Luffy, 索隆, Zoro, 娜美, Nami,
+           香吉士, Sanji, 乔巴, Chopper, 罗宾, Robin,
+           布鲁克, Brook, 佛朗基, Franky, 乌索普, Usopp,
+           艾斯, Ace, 白胡子, Whitebeard, 黑胡子, Blackbeard,
+           凯多, Kaido, 大妈, Big Mom, 红发, Shanks,
+
+   判断：所有与One Piece Card Game相关的内容，包括官方公告、赛事、卡片发售、价格行情、玩法攻略
+   核心特征：必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card Game"相关词汇
+   排除：单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
+
 📌 其他分类：
 - ev_automotive: 新能源汽车（Tesla车辆, 比亚迪, 电动车, 充电桩, 电池技术 - 不含自动驾驶AI）
 - finance_investment: 投资财经（股票, 加密货币, Bitcoin, 投资, 金融市场）
@@ -381,20 +436,23 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, embodied_intelligence, ai_programming）
+1. 优先匹配核心分类（ai_technology, robotics, ai_programming, opcg_tcg）
 2. AI类新闻判断标准（重要：按以下顺序匹配）：
    a) **AI编程工具优先规则**：
       - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming
       - 如果新闻主题是"AI用于编程"、"AI代码生成" → ai_programming
       - 如果新闻涉及GitHub、VSCode、IDE的AI功能 → ai_programming
    b) 纯AI算法/模型/理论（不涉及编程工具） → ai_technology
-   c) AI在物理世界（机器人/硬件/传感器） → embodied_intelligence
-   d) 自动驾驶系统（包含感知/决策/控制） → embodied_intelligence
-   e) Tesla/电动车的自动驾驶功能 → embodied_intelligence
+   c) AI在物理世界（机器人/硬件/传感器） → robotics
+   d) 自动驾驶系统（包含感知/决策/控制） → robotics
+   e) Tesla/电动车的自动驾驶功能 → robotics
    f) Tesla/电动车的电池/续航/销量 → ev_automotive
-3. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
-4. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
-5. 只返回分类代码，不要解释
+3. OPCG卡牌判断标准：
+   - 必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card"相关词汇
+   - 单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
+4. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
+5. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
+6. 只返回分类代码，不要解释
 
 新闻标题: {title}
 新闻摘要: {summary}
