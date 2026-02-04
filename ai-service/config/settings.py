@@ -148,6 +148,27 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
+        # ==================== 播客节目（12个核心源 - 中英文优质播客）====================
+        # 中文播客平台
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩（如果有）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜的世界
+        'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺商业访谈录
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101（如果有）
+        'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选播客
+
+        # AI相关英文播客
+        'https://lexfridman.com/feed/podcast/',  # Lex Fridman Podcast（AI大神访谈）
+        'https://twimlai.com/feed/',  # TWIML AI Podcast（机器学习深度讨论）
+        'https://feeds.pacific-content.com/a16z',  # a16z Podcast（硅谷创投）
+
+        # 汽车科技播客
+        'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning（特斯拉播客）
+        'https://insideevs.com/podcast/feed/',  # InsideEVs Podcast（电动车行业）
+
+        # 综合科技播客
+        'https://feeds.twit.tv/twit.xml',  # This Week in Tech
+        'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast（科技新闻）
+
         # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
         'https://rsshub.app/autobit',  # 汽车之心（中国自动驾驶与智能汽车）
@@ -653,6 +674,67 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    核心特征：海贼王IP相关的任何非卡牌内容
    排除：One Piece Card Game相关 → opcg
 
+8. podcasts - 播客节目
+   关键词：播客, podcast, 音频节目, audio show,
+
+           # 播客平台
+           小宇宙, 小宇宙FM, xiaoyuzhou, xyzFM,
+           Apple Podcasts, iTunes Podcasts, Spotify Podcasts,
+           喜马拉雅, Himalaya, 荔枝FM, lizhi, 蜻蜓FM,
+           网易云音乐, NetEase Music, QQ音乐播客,
+
+           # 中文热门播客
+           罗永浩, 罗翔, 老罗, Luo Yonghao,
+           叭叭呜, 叭叭呜的世界,
+           张小珺, 商业访谈录, 商业就是这样,
+           硅谷101, 硅谷早知道, 声动活泼,
+           随机波动, 不合时宜, 忽左忽右,
+           文化土豆, 东亚观察局, 贝望录,
+           创业内幕, 疯投圈, 科技早知道,
+
+           # 英文热门播客
+           Lex Fridman, Lex Fridman Podcast,
+           Joe Rogan, Joe Rogan Experience, JRE,
+           Tim Ferriss, The Tim Ferriss Show,
+           a16z Podcast, Andreessen Horowitz,
+           The Vergecast, Verge播客,
+           This Week in Tech, TWiT,
+           Acquired, acquired.fm,
+           All-In Podcast, 硅谷四人帮,
+           My First Million, MFM,
+           The Changelog, changelog.com,
+
+           # AI相关播客
+           TWIML, This Week in Machine Learning,
+           Practical AI, AI播客,
+           AI Breakdown, AI解析,
+           The Robot Brains, 机器人大脑,
+           The AI Podcast, NVIDIA AI播客,
+
+           # 汽车科技播客
+           Ride the Lightning, 特斯拉播客,
+           InsideEVs Podcast, 电动车播客,
+           Autoline, 汽车产业播客,
+           The Smoking Tire, 汽车测评,
+
+           # 播客内容类型
+           访谈, interview, 对话, conversation,
+           深度讨论, deep dive, 分析, analysis,
+           新闻解读, news breakdown, 商业分析,
+           创业故事, startup story, 创始人访谈,
+           技术讨论, tech discussion, 行业洞察,
+           脱口秀, talk show, 闲聊, casual chat,
+
+           # 播客相关词汇
+           播客主持人, podcast host, podcaster,
+           嘉宾, guest, 单集, episode, 系列, series,
+           音频, audio, 订阅, subscribe, 收听, listen,
+           播客节目, podcast show, 播客更新, new episode,
+
+   判断：所有与播客节目相关的内容，包括新节目发布、热门播客推荐、播客主持人、播客平台
+   核心特征：音频节目形式的内容创作
+   排除：纯音乐、广播电台（非播客形式） → entertainment_sports
+
 📌 其他分类：
 - automotive: 汽车（电动车/燃油车/混动车, Tesla, 比亚迪, 丰田, 奔驰, 宝马, 充电桩, 电池技术, 新车发布, 汽车销量, 汽车行业 - 不含自动驾驶AI技术本身）
 - finance_investment: 投资财经（股票, 加密货币, Bitcoin, 投资, 金融市场）
@@ -665,7 +747,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg, consumer_electronics, one_piece）
+1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg, consumer_electronics, one_piece, podcasts）
 2. AI类新闻判断标准（重要：按以下顺序匹配）：
    a) **AI编程工具优先规则**：
       - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming
