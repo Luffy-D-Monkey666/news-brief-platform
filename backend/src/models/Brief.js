@@ -42,6 +42,10 @@ const briefSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  video: {
+    type: String,
+    default: null
+  },
   published: {
     type: Date,
     default: Date.now

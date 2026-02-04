@@ -219,7 +219,7 @@ class CloudAIProcessor:
             # 清理和验证分类结果
             category = category.lower().strip()
             valid_categories = [
-                'ai_technology', 'embodied_intelligence', 'coding_development',
+                'ai_technology', 'embodied_intelligence', 'ai_programming',
                 'ev_automotive', 'finance_investment',
                 'business_tech', 'politics_world', 'economy_policy',
                 'health_medical', 'energy_environment', 'entertainment_sports',
@@ -261,9 +261,13 @@ class NewsProcessor:
             )
 
             if not chinese_title or not chinese_summary:
-                logger.warning(f"摘要生成失败: {news_item['title']}")
-                chinese_title = news_item['title']
-                chinese_summary = news_item['content'][:100] + '...'
+                logger.warning(f"摘要生成失败，使用fallback: {news_item['title']}")
+                chinese_title = news_item['title'][:100]  # 限制长度
+                # 使用更好的fallback: 提取前200字符而不是100
+                content = news_item['content']
+                chinese_summary = content[:200] + '...' if len(content) > 200 else content
+                if not chinese_summary:
+                    chinese_summary = '暂无摘要'
 
             # 2. 分类
             category = self.ai.classify_news(
@@ -281,6 +285,7 @@ class NewsProcessor:
                 'source_url': news_item['source_url'],
                 'link': news_item['link'],
                 'image': news_item.get('image'),
+                'video': news_item.get('video'),  # 添加video字段
                 'published': news_item['published'],
                 'created_at': news_item.get('created_at')
             }
@@ -295,10 +300,20 @@ class NewsProcessor:
     def batch_process(self, news_list: list, summarize_prompt: str, classify_prompt: str) -> list:
         """批量处理新闻"""
         processed = []
+        failed = []
         for news in news_list:
             result = self.process_news(news, summarize_prompt, classify_prompt)
             if result:
                 processed.append(result)
+            else:
+                failed.append(news['title'][:50])
 
-        logger.info(f"批量处理完成: {len(processed)}/{len(news_list)}")
+        success_rate = len(processed) / len(news_list) * 100 if news_list else 0
+        logger.info(f"批量处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
+
+        # 如果失败率超过10%，记录警告
+        if success_rate < 90 and len(news_list) > 0:
+            logger.warning(f"⚠️  高失败率检测: {100-success_rate:.1f}% 的新闻处理失败")
+            logger.warning(f"失败的新闻示例: {failed[:3]}")
+
         return processed

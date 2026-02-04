@@ -15,9 +15,9 @@ class NewsDatabase:
         # 从连接字符串中提取数据库名
         # 如果URI包含数据库名，使用它；否则使用默认值
         if '/' in mongodb_uri.rsplit('/', 1)[-1]:
-            db_name = mongodb_uri.rsplit('/', 1)[-1]
+            db_name = mongodb_uri.rsplit('/', 1)[-1].split('?')[0]  # 移除查询参数
         else:
-            db_name = 'news_platform'  # 默认值
+            db_name = 'news-brief'  # 统一默认值与settings.py一致
 
         logger.info(f"使用数据库: {db_name}")
         self.db = self.client[db_name]
