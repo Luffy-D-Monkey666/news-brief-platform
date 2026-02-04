@@ -103,6 +103,28 @@ NEWS_SOURCES = {
         'https://rsshub.app/youtube/user/@TheEgman',  # The Egman（赛事数据分析）
         'https://rsshub.app/youtube/user/@VvTheory',  # VvTheory（深度对局复盘）
 
+        # ==================== 消费电子（10个核心源）====================
+        'https://www.theverge.com/tech/rss/index.xml',  # The Verge科技（消费电子测评）
+        'https://www.engadget.com/rss.xml',  # Engadget（全球消费电子）
+        'https://www.gsmarena.com/rss-news.php3',  # GSMArena（手机专业评测）
+        'https://rsshub.app/ithome/it',  # IT之家（中国消费电子）
+        'https://www.anandtech.com/rss/',  # AnandTech（硬件深度测评）
+        'https://www.androidpolice.com/feed/',  # Android Police（安卓设备）
+        'https://9to5mac.com/feed/',  # 9to5Mac（苹果产品）
+        'https://www.dpreview.com/feeds/news.xml',  # DPReview（相机评测）
+        'https://www.dronedj.com/feed/',  # DroneDJ（无人机新闻）
+        'https://www.phonearena.com/rss/news',  # PhoneArena（手机行业）
+
+        # ==================== ONE PIECE动漫周边（8个核心源）====================
+        'https://rsshub.app/reddit/r/OnePiece',  # Reddit海贼王社区
+        'https://rsshub.app/onepiece/news',  # 海贼王官方新闻（如果有）
+        'https://rsshub.app/bilibili/user/video/488779',  # B站海贼王官方号
+        'https://rsshub.app/youtube/user/@ChibiReviews',  # Chibi Reviews（OP周边测评）
+        'https://rsshub.app/youtube/user/@TheLibraryofOhara',  # Library of Ohara（OP深度解析）
+        'https://onepiece.fandom.com/wiki/Special:RecentChanges?feed=rss',  # OP Wiki最新动态
+        'https://www.crunchyroll.com/rss/anime',  # Crunchyroll动漫新闻
+        'https://www.animenewsnetwork.com/all/rss.xml',  # Anime News Network
+
         # ==================== Coding开发（15个核心源 - 重点覆盖AI编程工具）====================
         # AI编程工具官方源
         'https://github.blog/feed/',  # GitHub官方博客（Copilot更新）
@@ -511,7 +533,125 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 
    判断：所有与One Piece Card Game相关的内容，包括官方公告、赛事、卡片发售、价格行情、玩法攻略
    核心特征：必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card Game"相关词汇
-   排除：单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
+   排除：单纯的海贼王动漫/漫画新闻（无卡牌元素） → one_piece
+
+6. consumer_electronics - 消费电子
+   关键词：消费电子, consumer electronics, 电子产品,
+
+           # 智能眼镜与AR/VR
+           智能眼镜, smart glasses, AR眼镜, augmented reality glasses,
+           VR眼镜, virtual reality headset, VR头显, MR眼镜, mixed reality,
+           Meta Quest, Vision Pro, 苹果Vision Pro, Apple Vision Pro,
+           雷鸟, Rokid, XREAL, Nreal, Meta Ray-Ban,
+           Google Glass, HoloLens, Magic Leap,
+
+           # 手机与平板
+           手机, smartphone, 智能手机, mobile phone, phone,
+           iPhone, 苹果手机, 三星手机, Samsung Galaxy,
+           小米手机, Xiaomi, 华为手机, Huawei, OPPO, vivo,
+           一加, OnePlus, realme, 荣耀, Honor, Nothing Phone,
+           平板, tablet, iPad, 安卓平板, Android tablet,
+           折叠屏, foldable, 翻盖手机, flip phone,
+           屏幕, display, OLED, AMOLED, 高刷, 120Hz,
+           手机芯片, 手机处理器, 骁龙, 天玑, Dimensity,
+           手机摄像头, camera, 影像, 长焦, 微距,
+
+           # 智能手表与可穿戴
+           智能手表, smartwatch, 智能穿戴, wearable,
+           Apple Watch, 苹果手表, Galaxy Watch, 华为手表,
+           小米手环, Xiaomi Band, Fitbit, Garmin,
+           运动手表, sports watch, 健康监测, health monitoring,
+           心率监测, heart rate, 血氧, SpO2, ECG, 心电图,
+
+           # 耳机与音频
+           耳机, headphones, earphones, earbuds, TWS,
+           AirPods, 苹果耳机, 降噪耳机, noise cancelling,
+           Sony耳机, Bose, Sennheiser, 森海塞尔,
+           小米耳机, 华为耳机, OPPO耳机, Nothing Ear,
+           骨传导, bone conduction, 开放式耳机,
+           蓝牙音箱, Bluetooth speaker, 智能音箱, smart speaker,
+
+           # 充电宝与电源
+           充电宝, power bank, 移动电源, portable charger,
+           快充, fast charging, 无线充电, wireless charging,
+           氮化镓, GaN charger, 充电器, charger, 充电头,
+           Anker, 小米充电宝, 紫米, ZMI,
+
+           # 相机与摄影
+           相机, camera, 数码相机, digital camera,
+           微单, mirrorless, 单反, DSLR,
+           索尼相机, Sony Alpha, 佳能, Canon, 尼康, Nikon,
+           富士, Fujifilm, 松下, Panasonic, 徕卡, Leica,
+           镜头, lens, 传感器, sensor, 全画幅, full frame,
+           运动相机, action camera, 云台, gimbal,
+
+           # 无人机
+           无人机, drone, 航拍, aerial photography,
+           大疆, DJI, Mavic, Mini, Air, FPV,
+           穿越机, FPV drone, 亿航, EHang,
+
+           # 电子产品配件
+           保护壳, case, 贴膜, screen protector,
+           支架, stand, 数据线, cable, Type-C,
+           移动硬盘, external drive, U盘, USB drive,
+           键盘, keyboard, 鼠标, mouse, 触控板, trackpad,
+
+   判断：所有消费类电子产品，包括手机、手表、眼镜、相机、无人机、充电宝、耳机等
+   核心特征：面向个人消费者的电子设备和配件
+   排除：芯片制造本身 → semiconductors
+
+7. one_piece - ONE PIECE动漫周边
+   关键词：海贼王, One Piece, ワンピース, ONE PIECE, OP,
+
+           # 动漫内容
+           动画, anime, 漫画, manga, 集英社, Shueisha,
+           尾田荣一郎, Eiichiro Oda, 尾田, Oda,
+           章节, chapter, 话数, episode, 剧情, story,
+           新篇章, new arc, 新剧情, 和之国, Wano,
+           最终章, final saga, 剧场版, movie, film,
+           东映, Toei Animation, Netflix,
+
+           # 角色与内容（非卡牌）
+           路飞, Luffy, 草帽团, Straw Hat Pirates,
+           索隆, Zoro, 娜美, Nami, 山治, Sanji,
+           乔巴, Chopper, 罗宾, Robin, 弗兰奇, Franky,
+           布鲁克, Brook, 乌索普, Usopp, 甚平, Jinbe,
+           四皇, Yonko, 七武海, Shichibukai,
+           海军, Marines, 世界政府, World Government,
+           恶魔果实, Devil Fruit, 霸气, Haki,
+
+           # 周边产品
+           手办, figure, 模型, model, 玩具, toy,
+           万代, Bandai, 景品, prize figure,
+           Figure, Figuarts, Pop, Funko Pop,
+           盲盒, blind box, 扭蛋, gashapon,
+           海报, poster, 画集, artbook,
+           服装, clothing, T恤, t-shirt, 卫衣, hoodie,
+           包包, bag, 背包, backpack, 钱包, wallet,
+           抱枕, pillow, 挂件, keychain, 徽章, badge,
+           杯子, mug, cup, 水杯, bottle,
+
+           # 商品与发售
+           预售, pre-order, 发售, release, 上架, launch,
+           限定, limited edition, 独家, exclusive,
+           价格, price, 代购, resale, 转卖,
+           周边店, merchandise store, 官方商店, official store,
+           淘宝, taobao, 闲鱼, xianyu, 京东, JD,
+
+           # 活动与社区
+           展会, exhibition, 漫展, comic con, 活动, event,
+           联动, collaboration, 联名, co-branded,
+           cosplay, 同人, doujin, 二创, fan art,
+           Reddit OnePiece, B站, Bilibili, 海贼王吧,
+
+           # 游戏（非卡牌）
+           海贼王游戏, One Piece game, 航海王,
+           手游, mobile game, Steam游戏,
+           PS游戏, PlayStation, 格斗游戏, fighting game,
+
+   判断：所有与ONE PIECE相关的内容（除了OPCG卡牌游戏），包括动画、漫画、周边、手办、服装、活动、游戏
+   核心特征：海贼王IP相关的任何非卡牌内容
+   排除：One Piece Card Game相关 → opcg
 
 📌 其他分类：
 - automotive: 汽车（电动车/燃油车/混动车, Tesla, 比亚迪, 丰田, 奔驰, 宝马, 充电桩, 电池技术, 新车发布, 汽车销量, 汽车行业 - 不含自动驾驶AI技术本身）
@@ -525,7 +665,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg）
+1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg, consumer_electronics, one_piece）
 2. AI类新闻判断标准（重要：按以下顺序匹配）：
    a) **AI编程工具优先规则**：
       - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming
@@ -544,10 +684,20 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    - 自动驾驶技术本身（非车辆产品） → robotics
 4. OPCG卡牌判断标准：
    - 必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card"相关词汇
-   - 单纯的海贼王动漫/漫画新闻（无卡牌元素） → entertainment_sports
-5. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
-6. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
-7. 只返回分类代码，不要解释
+   - 单纯的海贼王动漫/漫画新闻（无卡牌元素） → one_piece
+5. ONE PIECE动漫判断标准：
+   - 海贼王相关的动画、漫画、周边、手办、服装、活动、游戏（非卡牌） → one_piece
+   - 如果同时涉及卡牌游戏 → opcg
+6. 消费电子判断标准：
+   - 手机、平板、手表、眼镜、耳机、相机、无人机、充电宝等个人电子产品 → consumer_electronics
+   - 芯片制造、半导体产业链 → semiconductors
+   - 智能汽车产品本身 → automotive
+7. 芯片分类判断标准：
+   - 芯片设计、制造、设备、材料、产业链 → semiconductors
+   - 芯片应用在消费电子产品中（如手机芯片评测） → consumer_electronics
+8. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
+9. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
+10. 只返回分类代码，不要解释
 
 新闻标题: {title}
 新闻摘要: {summary}
