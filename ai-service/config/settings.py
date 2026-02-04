@@ -142,9 +142,10 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
-        # ==================== 播客推荐（12个核心源 - 中英文优质播客节目）====================
+        # ==================== 播客推荐（28个核心源 - 多元主题优质播客）====================
         # 说明：此分类推荐优质播客节目单集，而非播客行业新闻
         # 内容：播客单集更新、嘉宾介绍、节目内容摘要
+        # 主题覆盖：科技、历史、人文、商业、心理学、故事叙事
         # 目标用户：播客爱好者，想发现和订阅优质节目
 
         # 中文播客平台
@@ -166,6 +167,29 @@ NEWS_SOURCES = {
         # 综合科技播客
         'https://feeds.twit.tv/twit.xml',  # This Week in Tech
         'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast（科技新闻）
+
+        # 历史人文播客
+        'https://feeds.feedburner.com/dancarlin/history',  # Dan Carlin's Hardcore History（深度历史）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f94ba789fca4eff4497a',  # 东亚观察局（历史政治）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44933',  # 忽左忽右（文化社会）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/60791551f9cd9b3b8d7e2964',  # 文化有限（艺术文化）
+
+        # 商业经济播客
+        'https://feeds.npr.org/510289/podcast.xml',  # Planet Money（经济故事）
+        'https://feeds.megaphone.fm/how-i-built-this',  # How I Built This（创业故事）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/60c2c908f58fc5806da89fcc',  # 疯投圈（投资理财）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4491f',  # 声东击西（商业访谈）
+
+        # 心理学与自我提升
+        'https://feeds.simplecast.com/kwWc0lhf',  # Hidden Brain（心理学科普）
+        'https://feeds.megaphone.fm/WWO3519750118',  # The Happiness Lab（幸福心理学）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44949',  # 随机波动（女性主义）
+
+        # 故事叙事类播客
+        'https://feeds.thisamericanlife.org/talpodcast',  # This American Life（美国生活故事）
+        'https://feeds.wnyc.org/radiolab',  # Radiolab（科学故事叙事）
+        'https://feeds.serialpodcast.com/serialpodcast',  # Serial（深度调查故事）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44934',  # 故事FM（中文故事）
 
         # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）

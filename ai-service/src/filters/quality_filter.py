@@ -79,7 +79,10 @@ class ContentQualityFilter:
             'podcasts': [
                 '新节目', '新播客', '新系列', '首播',
                 'new show', 'new podcast', 'premiere', 'launch',
-                '嘉宾', 'guest', '访谈', 'interview'
+                '嘉宾', 'guest', '访谈', 'interview',
+                'episode', 'ep', '第', '期',
+                '故事', 'story', '历史', 'history',
+                '商业', 'business', '心理', 'psychology'
             ]
         }
 
