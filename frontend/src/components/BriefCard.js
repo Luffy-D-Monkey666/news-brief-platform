@@ -13,10 +13,9 @@ import {
 
 // Apple风格配色（更简洁清爽）
 const categoryColors = {
-  tcg_card_game: 'text-amber-600',
-  one_piece: 'text-orange-600',
-  anime_manga: 'text-pink-600',
-  ai_robotics: 'text-purple-600',
+  ai_technology: 'text-purple-600',
+  embodied_intelligence: 'text-indigo-600',
+  coding_development: 'text-blue-600',
   ev_automotive: 'text-emerald-600',
   finance_investment: 'text-rose-600',
   business_tech: 'text-blue-600',
@@ -29,10 +28,9 @@ const categoryColors = {
 };
 
 const categoryNames = {
-  tcg_card_game: 'TCG信息',
-  one_piece: '海贼王',
-  anime_manga: '动画漫画',
-  ai_robotics: 'AI与机器人',
+  ai_technology: 'AI技术',
+  embodied_intelligence: '具身智能',
+  coding_development: 'Coding',
   ev_automotive: '新能源汽车',
   finance_investment: '投资财经',
   business_tech: '商业科技',
