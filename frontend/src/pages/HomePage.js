@@ -3,6 +3,7 @@ import { getLatestBriefs, getHistoryBriefs } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import BriefCard from '../components/BriefCard';
 import CategoryFilter from '../components/CategoryFilter';
+import DonateButton from '../components/DonateButton';
 import Masonry from 'react-masonry-css';
 import { FaSpinner } from 'react-icons/fa';
 
@@ -107,6 +108,8 @@ const HomePage = () => {
                 AI驱动的全球新闻聚合平台
               </p>
             </div>
+            {/* 打赏按钮 */}
+            <DonateButton />
           </div>
         </div>
       </header>
