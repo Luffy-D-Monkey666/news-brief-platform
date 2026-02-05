@@ -13,3 +13,4 @@ aiohttp==3.9.1
 fastapi==0.109.0
 uvicorn==0.25.0
 pydantic==2.5.3
+flask==3.0.0

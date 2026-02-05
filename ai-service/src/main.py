@@ -5,7 +5,8 @@ import schedule
 import logging
 from datetime import datetime
 from typing import Dict
-from threading import Lock
+from threading import Lock, Thread
+from flask import Flask, jsonify
 
 # 添加父目录到路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -211,11 +212,47 @@ class NewsService:
             self.redis_enabled = False
 
 
+# Flask应用（用于健康检查，保持服务活跃）
+app = Flask(__name__)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """健康检查端点，防止服务休眠"""
+    return jsonify({
+        "status": "running",
+        "service": "news-ai-service",
+        "timestamp": datetime.now().isoformat()
+    })
+
+@app.route('/', methods=['GET'])
+def root():
+    """根路径"""
+    return jsonify({
+        "service": "NewsHub AI Service",
+        "status": "running",
+        "endpoints": {
+            "/health": "Health check endpoint"
+        }
+    })
+
+
+def run_flask():
+    """在后台线程运行Flask，用于健康检查"""
+    port = int(os.getenv('PORT', 10000))
+    logger.info(f"启动Flask健康检查服务在端口 {port}")
+    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+
+
 def main():
     """主函数"""
     logger.info("新闻简报AI服务启动")
     logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'openai')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
+
+    # 启动Flask健康检查服务（后台线程）
+    flask_thread = Thread(target=run_flask, daemon=True)
+    flask_thread.start()
+    logger.info("Flask健康检查服务已启动")
 
     service = NewsService()
 

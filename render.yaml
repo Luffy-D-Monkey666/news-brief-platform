@@ -2,6 +2,7 @@ services:
   # Backend Service
   - type: web
     name: news-platform-backend
+    plan: free
     env: node
     rootDir: backend
     buildCommand: npm install
@@ -18,9 +19,10 @@ services:
       - key: FRONTEND_URL
         sync: false
 
-  # AI Service (Background Worker)
-  - type: worker
+  # AI Service (Changed to Web Service with Free Plan)
+  - type: web
     name: news-platform-ai-service
+    plan: free
     env: python
     rootDir: ai-service
     buildCommand: pip install -r requirements.txt
@@ -40,6 +42,8 @@ services:
         sync: false
       - key: CRAWL_INTERVAL
         value: 120
+      - key: PORT
+        value: 10000
 
   # Frontend Service
   - type: web
