@@ -98,6 +98,15 @@ const BriefCard = ({ brief, isNew = false }) => {
   const allVoicesRef = useRef([]);
   const currentVoiceRef = useRef(null);
 
+  // 组件卸载时停止所有语音播放
+  useEffect(() => {
+    return () => {
+      if (speechSynthesisRef.current) {
+        speechSynthesisRef.current.cancel();
+      }
+    };
+  }, []);
+
   // 只保留5种中文声音预设
   useEffect(() => {
     const loadVoices = () => {
@@ -321,7 +330,49 @@ const BriefCard = ({ brief, isNew = false }) => {
               </span>
             </div>
           </div>
-        ) : brief.image && (
+        ) : (brief.video && videoError && brief.image) ? (
+          // 视频加载失败，降级显示图片
+          <div
+            className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
+            onClick={() => setIsImageModalOpen(true)}
+          >
+            <img
+              src={brief.image}
+              alt={brief.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+              <span className="text-white text-sm font-medium">查看大图</span>
+            </div>
+            <div className="absolute top-4 left-4 flex flex-col gap-2">
+              <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
+                {categoryName}
+              </span>
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 backdrop-blur-md">
+                视频加载失败
+              </span>
+            </div>
+          </div>
+        ) : (brief.video && videoError && !brief.image) ? (
+          // 视频和图片都不可用，显示占位符
+          <div className="relative w-full h-52 overflow-hidden bg-gray-100 flex items-center justify-center">
+            <div className="text-center">
+              <svg className="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <p className="text-sm text-gray-500">媒体内容无法加载</p>
+            </div>
+            <div className="absolute top-4 left-4">
+              <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
+                {categoryName}
+              </span>
+            </div>
+          </div>
+        ) : brief.image ? (
+          // 只有图片
           <div
             className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
@@ -343,7 +394,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               </span>
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* 内容区域 */}
         <div className="p-5">

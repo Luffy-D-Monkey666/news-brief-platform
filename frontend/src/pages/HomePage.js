@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getLatestBriefs, getHistoryBriefs } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import BriefCard from '../components/BriefCard';
@@ -18,31 +18,7 @@ const HomePage = () => {
 
   const { latestBrief } = useWebSocket();
 
-  // 加载初始数据
-  useEffect(() => {
-    loadBriefs();
-  }, [selectedCategory]);
-
-  // 监听新简报
-  useEffect(() => {
-    if (latestBrief) {
-      // 如果没有选择分类，或者新简报匹配当前分类
-      if (!selectedCategory || latestBrief.category === selectedCategory) {
-        setBriefs((prev) => {
-          // 检查是否已存在
-          const exists = prev.some((b) => b._id === latestBrief._id);
-          if (!exists) {
-            setNewBriefId(latestBrief._id);
-            setTimeout(() => setNewBriefId(null), 5000); // 5秒后移除新标记
-            return [latestBrief, ...prev];
-          }
-          return prev;
-        });
-      }
-    }
-  }, [latestBrief, selectedCategory]);
-
-  const loadBriefs = async (retryCount = 0) => {
+  const loadBriefs = useCallback(async (retryCount = 0) => {
     try {
       setLoading(true);
       setCurrentPage(1);  // 重置页码
@@ -63,7 +39,41 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory]); // 依赖 selectedCategory
+
+  // 加载初始数据
+  useEffect(() => {
+    loadBriefs();
+  }, [loadBriefs]); // 添加 loadBriefs 依赖
+
+  // 监听新简报
+  useEffect(() => {
+    let timer = null;
+
+    if (latestBrief) {
+      // 如果没有选择分类，或者新简报匹配当前分类
+      if (!selectedCategory || latestBrief.category === selectedCategory) {
+        setBriefs((prev) => {
+          // 检查是否已存在
+          const exists = prev.some((b) => b._id === latestBrief._id);
+          if (!exists) {
+            setNewBriefId(latestBrief._id);
+            // 5秒后移除新标记，并保存timer以便清理
+            timer = setTimeout(() => setNewBriefId(null), 5000);
+            return [latestBrief, ...prev];
+          }
+          return prev;
+        });
+      }
+    }
+
+    // 清理函数：组件卸载或依赖变化时清除timer
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [latestBrief, selectedCategory]);
 
   const loadMoreBriefs = async () => {
     if (loadingMore || !hasMore) return;
@@ -77,12 +87,12 @@ const HomePage = () => {
         setBriefs((prev) => [...prev, ...response.data]);
         setCurrentPage(nextPage);
 
-        if (response.data.length < 20) {
-          setHasMore(false);
-        }
-
+        // 优先使用后端返回的分页信息
         if (response.pagination) {
           setHasMore(nextPage < response.pagination.pages);
+        } else if (response.data.length < 20) {
+          // 如果没有分页信息，根据返回数据量判断
+          setHasMore(false);
         }
       } else {
         setHasMore(false);
