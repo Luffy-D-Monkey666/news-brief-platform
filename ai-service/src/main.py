@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.settings import (
     NEWS_SOURCES, MONGODB_URI, CRAWL_INTERVAL,
-    SUMMARIZE_PROMPT, CLASSIFY_PROMPT, REDIS_URL
+    SUMMARIZE_PROMPT, CLASSIFY_PROMPT, COMBINED_PROMPT, REDIS_URL
 )
 from crawlers.news_crawler import NewsCrawler
 from processors.cloud_ai_processor import NewsProcessor
@@ -151,14 +151,14 @@ class NewsService:
                 self.db.save_raw_news(news)
             logger.info(f"步骤 3/5 完成: 已保存 {len(new_news)} 条原始新闻")
 
-            # 4. AI处理（摘要和分类）
+            # 4. AI处理（摘要和分类 - 使用合并提示词优化Token消耗）
             logger.info(f"步骤 4/5: 开始 AI 处理 ({len(new_news)} 条新闻)...")
             logger.info(f"当前 AI Provider: {os.getenv('AI_PROVIDER', 'openai')}")
+            logger.info(f"Token优化: 使用合并提示词，一次调用完成摘要+分类")
 
-            processed_news = self.processor.batch_process(
+            processed_news = self.processor.batch_process_combined(
                 new_news,
-                SUMMARIZE_PROMPT,
-                CLASSIFY_PROMPT
+                COMBINED_PROMPT
             )
             logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
 

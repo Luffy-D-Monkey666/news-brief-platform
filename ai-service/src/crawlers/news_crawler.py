@@ -25,7 +25,7 @@ class NewsCrawler:
             feed = feedparser.parse(feed_url)
             news_items = []
 
-            for entry in feed.entries[:20]:  # 每个源取最新20条（阶段2：完整方案）
+            for entry in feed.entries[:10]:  # 每个源取最新10条（Token优化：减少50%抓取量）
                 news_item = {
                     'title': entry.get('title', ''),
                     'content': self._extract_content(entry),

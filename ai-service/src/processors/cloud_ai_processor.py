@@ -234,6 +234,62 @@ class CloudAIProcessor:
 
         return 'general'  # 默认分类
 
+    def process_combined(self, title: str, content: str, prompt_template: str) -> tuple[Optional[str], Optional[str], str]:
+        """
+        合并处理：一次调用完成摘要+分类 (Token优化: 节省50%)
+        返回: (中文标题, 摘要, 分类)
+        """
+        prompt = prompt_template.format(title=title, content=content[:1000])
+        result = self.generate(prompt, max_tokens=600)
+
+        if result:
+            try:
+                # 尝试解析JSON
+                import json
+                # 清理可能的markdown代码块标记
+                cleaned = result.strip()
+                if cleaned.startswith('```'):
+                    # 移除开头的```json或```
+                    cleaned = '\n'.join(cleaned.split('\n')[1:])
+                if cleaned.endswith('```'):
+                    # 移除结尾的```
+                    cleaned = '\n'.join(cleaned.split('\n')[:-1])
+
+                data = json.loads(cleaned.strip())
+                chinese_title = data.get('title', title)
+                chinese_summary = data.get('summary', '')
+                category = data.get('category', 'general')
+
+                # 验证分类
+                valid_categories = [
+                    'ai_technology', 'robotics', 'ai_programming', 'semiconductors', 'opcg',
+                    'automotive', 'consumer_electronics', 'one_piece', 'podcasts',
+                    'finance_investment', 'business_tech', 'politics_world', 'economy_policy',
+                    'health_medical', 'energy_environment', 'entertainment_sports',
+                    'general'
+                ]
+
+                if category not in valid_categories:
+                    # 尝试从分类字符串中提取
+                    for cat in valid_categories:
+                        if cat in category.lower():
+                            category = cat
+                            break
+                    else:
+                        category = 'general'
+
+                return chinese_title, chinese_summary, category
+
+            except json.JSONDecodeError as e:
+                logger.warning(f"JSON解析失败: {e}, 尝试使用fallback")
+                # Fallback: 尝试分行解析
+                lines = result.strip().split('\n')
+                lines = [line.strip() for line in lines if line.strip()]
+                if len(lines) >= 2:
+                    return lines[0], '\n'.join(lines[1:-1]), lines[-1] if len(lines) > 2 else 'general'
+
+        return None, None, 'general'
+
 
 class NewsProcessor:
     """新闻处理器（云端版本）"""
@@ -299,6 +355,48 @@ class NewsProcessor:
             logger.error(f"新闻处理失败: {str(e)}")
             return None
 
+    def process_news_combined(self, news_item: Dict, combined_prompt: str) -> Dict:
+        """
+        使用合并提示词处理单条新闻 (Token优化: 一次调用完成摘要+分类)
+        """
+        try:
+            # 使用合并提示词一次性完成摘要和分类
+            chinese_title, chinese_summary, category = self.ai.process_combined(
+                news_item['title'],
+                news_item['content'],
+                combined_prompt
+            )
+
+            if not chinese_title or not chinese_summary:
+                logger.warning(f"合并处理失败，使用fallback: {news_item['title']}")
+                chinese_title = news_item['title'][:100]
+                content = news_item['content']
+                chinese_summary = content[:200] + '...' if len(content) > 200 else content
+                if not chinese_summary:
+                    chinese_summary = '暂无摘要'
+                category = 'general'
+
+            # 构建处理后的新闻
+            processed_news = {
+                'title': chinese_title,
+                'summary': chinese_summary,
+                'category': category,
+                'source': news_item['source'],
+                'source_url': news_item['source_url'],
+                'link': news_item['link'],
+                'image': news_item.get('image'),
+                'video': news_item.get('video'),
+                'published': news_item['published'],
+                'created_at': news_item.get('created_at')
+            }
+
+            logger.info(f"合并处理完成: [{category}] {chinese_title[:30]}...")
+            return processed_news
+
+        except Exception as e:
+            logger.error(f"合并处理失败: {str(e)}")
+            return None
+
     def batch_process(self, news_list: list, summarize_prompt: str, classify_prompt: str) -> list:
         """批量处理新闻（使用并发加速）"""
         start_time = datetime.now()
@@ -348,6 +446,62 @@ class NewsProcessor:
         logger.info(f"总耗时: {elapsed:.1f}秒, 平均: {avg_time_per_news:.2f}秒/条")
 
         # 如果失败率超过10%，记录警告
+        if success_rate < 90 and len(news_list) > 0:
+            logger.warning(f"⚠️  高失败率检测: {100-success_rate:.1f}% 的新闻处理失败")
+            logger.warning(f"失败的新闻示例: {failed[:3]}")
+
+        return processed
+
+    def batch_process_combined(self, news_list: list, combined_prompt: str) -> list:
+        """
+        批量处理新闻（使用合并提示词，Token优化: 一次调用完成摘要+分类）
+        """
+        start_time = datetime.now()
+
+        # 获取并发线程数
+        max_workers = int(os.getenv('AI_CONCURRENT_WORKERS', 5))
+
+        logger.info(f"开始合并批量处理 {len(news_list)} 条新闻（{max_workers}个线程，Token优化模式）...")
+
+        processed = []
+        failed = []
+
+        # 使用线程池并发处理
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # 提交所有任务
+            future_to_news = {
+                executor.submit(self.process_news_combined, news, combined_prompt): news
+                for news in news_list
+            }
+
+            # 处理完成的任务
+            completed_count = 0
+            for future in as_completed(future_to_news):
+                news = future_to_news[future]
+                completed_count += 1
+
+                try:
+                    result = future.result(timeout=60)
+                    if result:
+                        processed.append(result)
+                        if completed_count % 10 == 0:
+                            logger.info(f"进度: {completed_count}/{len(news_list)} 条已处理")
+                    else:
+                        failed.append(news['title'][:50])
+                        logger.warning(f"处理失败: {news['title'][:50]}")
+                except Exception as e:
+                    failed.append(news['title'][:50])
+                    logger.error(f"处理异常: {news['title'][:50]} - {str(e)}")
+
+        # 计算统计信息
+        elapsed = (datetime.now() - start_time).total_seconds()
+        success_rate = len(processed) / len(news_list) * 100 if news_list else 0
+        avg_time_per_news = elapsed / len(news_list) if news_list else 0
+
+        logger.info(f"合并批量处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
+        logger.info(f"总耗时: {elapsed:.1f}秒, 平均: {avg_time_per_news:.2f}秒/条")
+        logger.info(f"Token优化: 相比传统方式节省约50% Token消耗")
+
         if success_rate < 90 and len(news_list) > 0:
             logger.warning(f"⚠️  高失败率检测: {100-success_rate:.1f}% 的新闻处理失败")
             logger.warning(f"失败的新闻示例: {failed[:3]}")

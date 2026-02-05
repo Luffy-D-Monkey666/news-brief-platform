@@ -8,7 +8,7 @@ MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # 爬虫配置
-CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟（优化后：配合47个高质量源）
+CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 300))  # 5分钟（优化Token消耗：降低60%调用频率）
 
 # 新闻分类（基于国际新闻标准，突出用户关注领域）
 CATEGORIES = [
@@ -796,3 +796,33 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 新闻摘要: {summary}
 
 请返回最合适的分类代码："""
+
+# 合并提示词（一次性完成摘要+分类，节省50% Token）
+COMBINED_PROMPT = """分析新闻，生成中文摘要并分类。
+
+新闻标题: {title}
+新闻内容: {content}
+
+输出JSON格式:
+{{
+  "title": "简洁的中文标题（30字内）",
+  "summary": "事件概述：...\\n\\n重要细节：\\n• 细节1\\n• 细节2\\n• 细节3\\n\\n后续影响：...",
+  "category": "分类代码"
+}}
+
+分类必须从以下选择:
+ai_technology(AI技术), robotics(机器人), ai_programming(AI编程),
+semiconductors(芯片), opcg(OPCG卡牌), automotive(汽车),
+consumer_electronics(消费电子), one_piece(海贼王), podcasts(播客),
+finance_investment(投资), business_tech(商业), politics_world(政治),
+economy_policy(经济), health_medical(健康), energy_environment(能源),
+entertainment_sports(娱乐), general(综合)
+
+规则:
+- 标题翻译成中文，保留专有名词
+- 摘要50-150字，结构化三段式
+- 根据关键词精确分类
+- AI编程工具→ai_programming，不是ai_technology
+- 机器人相关→robotics
+- 只返回JSON，不要其他内容
+"""
