@@ -142,54 +142,42 @@ NEWS_SOURCES = {
         'https://www.freecodecamp.org/feed.xml',  # freeCodeCamp
         'https://rsshub.app/qiita/popular',  # Qiita日本
 
-        # ==================== 播客推荐（28个核心源 - 多元主题优质播客）====================
-        # 说明：此分类推荐优质播客节目单集，而非播客行业新闻
+        # ==================== 播客推荐（20个核心源 - 中文优质播客）====================
+        # 说明：此分类推荐优质中文播客节目单集，而非播客行业新闻
         # 内容：播客单集更新、嘉宾介绍、节目内容摘要
-        # 主题覆盖：科技、历史、人文、商业、心理学、故事叙事
-        # 目标用户：播客爱好者，想发现和订阅优质节目
+        # 主题覆盖：科技、商业、历史、人文、心理学、故事叙事
+        # 平台来源：小宇宙、Apple Podcast
+        # 目标用户：中文播客爱好者，想发现和订阅优质节目
 
-        # 中文播客平台
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩（商业、科技）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜的世界（社会观察）
+        # 小宇宙精选
+        'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选播客（算法推荐优质内容）
+
+        # 商业科技类
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4492c',  # 罗永浩（商业、科技、创业）
         'https://rsshub.app/xiaoyuzhoufm/podcast/624ab95de2f18fa1a1fe5d0e',  # 张小珺商业访谈录
         'https://rsshub.app/xiaoyuzhoufm/podcast/6021f950a789fca4eff44930',  # 硅谷101（科技创业）
-        'https://rsshub.app/xiaoyuzhoufm/explore',  # 小宇宙精选播客
-
-        # AI相关英文播客
-        'https://lexfridman.com/feed/podcast/',  # Lex Fridman Podcast（AI大神访谈）
-        'https://twimlai.com/feed/',  # TWIML AI Podcast（机器学习深度讨论）
-        'https://feeds.pacific-content.com/a16z',  # a16z Podcast（硅谷创投）
-
-        # 汽车科技播客
-        'https://www.ridetheligtning.net/feed/podcast',  # Ride the Lightning（特斯拉播客）
-        'https://insideevs.com/podcast/feed/',  # InsideEVs Podcast（电动车行业）
-
-        # 综合科技播客
-        'https://feeds.twit.tv/twit.xml',  # This Week in Tech
-        'https://www.theverge.com/rss/the-vergecast/index.xml',  # The Vergecast（科技新闻）
-
-        # 历史人文播客
-        'https://feeds.feedburner.com/dancarlin/history',  # Dan Carlin's Hardcore History（深度历史）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f94ba789fca4eff4497a',  # 东亚观察局（历史政治）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44933',  # 忽左忽右（文化社会）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/60791551f9cd9b3b8d7e2964',  # 文化有限（艺术文化）
-
-        # 商业经济播客
-        'https://feeds.npr.org/510289/podcast.xml',  # Planet Money（经济故事）
-        'https://feeds.megaphone.fm/how-i-built-this',  # How I Built This（创业故事）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/60c2c908f58fc5806da89fcc',  # 疯投圈（投资理财）
         'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff4491f',  # 声东击西（商业访谈）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/60c2c908f58fc5806da89fcc',  # 疯投圈（投资理财）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6048f6fbe0f8e7a63d54e67a',  # 商业就是这样（商业分析）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44928',  # 科技早知道（科技趋势）
 
-        # 心理学与自我提升
-        'https://feeds.simplecast.com/kwWc0lhf',  # Hidden Brain（心理学科普）
-        'https://feeds.megaphone.fm/WWO3519750118',  # The Happiness Lab（幸福心理学）
+        # 社会观察类
+        'https://rsshub.app/xiaoyuzhoufm/podcast/619aea7ef8f6e3ba4e23f9ac',  # 叭叭呜的世界（社会观察）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44933',  # 忽左忽右（文化社会）
         'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44949',  # 随机波动（女性主义）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/60791551f9cd9b3b8d7e2964',  # 文化有限（艺术文化）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44946',  # 不合时宜（年轻人生活）
 
-        # 故事叙事类播客
-        'https://feeds.thisamericanlife.org/talpodcast',  # This American Life（美国生活故事）
-        'https://feeds.wnyc.org/radiolab',  # Radiolab（科学故事叙事）
-        'https://feeds.serialpodcast.com/serialpodcast',  # Serial（深度调查故事）
-        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44934',  # 故事FM（中文故事）
+        # 历史人文类
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f94ba789fca4eff4497a',  # 东亚观察局（历史政治）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44948',  # 文化土豆（文化历史）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44943',  # 贝望录（历史人物）
+
+        # 故事叙事类
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44934',  # 故事FM（真实故事）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44938',  # 日谈公园（生活故事）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f94ba789fca4eff4497c',  # 创业内幕（创业故事）
+        'https://rsshub.app/xiaoyuzhoufm/podcast/6021f949a789fca4eff44947',  # 无聊斋（人物访谈）
 
         # ==================== 汽车（10个核心源 - 覆盖电动车、燃油车、行业）====================
         'https://rsshub.app/electrive',  # Electrive德国（欧洲电动车行业）
