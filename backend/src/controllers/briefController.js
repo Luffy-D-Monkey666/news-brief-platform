@@ -10,9 +10,11 @@ exports.getLatestBriefs = async (req, res) => {
       query.category = category;
     }
 
+    // 性能优化：使用lean()返回纯JS对象，比Mongoose文档快~30%
     const briefs = await Brief.find(query)
       .sort({ created_at: -1 })
-      .limit(parseInt(limit, 10));
+      .limit(parseInt(limit, 10))
+      .lean();
 
     res.json({
       success: true,
@@ -39,10 +41,12 @@ exports.getHistoryBriefs = async (req, res) => {
       query.category = category;
     }
 
+    // 性能优化：使用lean()返回纯JS对象
     const briefs = await Brief.find(query)
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit, 10));
+      .limit(parseInt(limit, 10))
+      .lean();
 
     const total = await Brief.countDocuments(query);
 
@@ -98,7 +102,8 @@ exports.getCategoryStats = async (req, res) => {
 exports.getBriefById = async (req, res) => {
   try {
     const { id } = req.params;
-    const brief = await Brief.findById(id);
+    // 详情页返回完整数据（包含summary）
+    const brief = await Brief.findById(id).lean();
 
     if (!brief) {
       return res.status(404).json({

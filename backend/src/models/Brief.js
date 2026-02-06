@@ -68,9 +68,9 @@ const briefSchema = new mongoose.Schema({
   }
 });
 
-// 创建索引
-briefSchema.index({ created_at: -1 });
-briefSchema.index({ category: 1 });
+// 创建索引（优化查询性能）
+briefSchema.index({ created_at: -1 });  // 时间倒序查询
+briefSchema.index({ category: 1, created_at: -1 });  // 复合索引：按分类+时间查询（最常用）
 briefSchema.index({ is_pushed: 1 });
 
 module.exports = mongoose.model('Brief', briefSchema);
