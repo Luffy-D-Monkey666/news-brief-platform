@@ -392,10 +392,9 @@ RSS_SOURCES_V2 = {
     ],
     
     'ai_programming': [
-        'https://github.blog/feed/',
-        'https://code.visualstudio.com/feed.xml',
-        'https://engineering.fb.com/feed/',
-        'https://rsshub.app/hackernews/best',   # Hacker News 热门
+        'https://github.blog/feed/',            # GitHub 官方博客
+        'https://code.visualstudio.com/feed.xml',  # VSCode 官方
+        'https://engineering.fb.com/feed/',     # Meta Engineering
     ],
     
     'semiconductors': [
@@ -406,10 +405,8 @@ RSS_SOURCES_V2 = {
     ],
     
     'opcg': [
-        # Reddit 社区（保留）
-        'https://rsshub.app/reddit/r/OnePieceTCG',
         # 日本官方
-        'https://one-piece-cardgame.com/news/rss.xml',  # 日版官网（如有）
+        'https://one-piece-cardgame.com/news/rss.xml',  # 日版官网
     ],
     
     'automotive': [
@@ -427,8 +424,7 @@ RSS_SOURCES_V2 = {
     ],
     
     'one_piece': [
-        'https://rsshub.app/reddit/r/OnePiece',
-        'https://www.animenewsnetwork.com/all/rss.xml',
+        'https://www.animenewsnetwork.com/all/rss.xml',  # 动漫新闻网
     ],
     
     # 播客推荐（减少数量，保留精品）
