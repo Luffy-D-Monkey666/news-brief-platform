@@ -40,8 +40,8 @@ class NewsServiceV2:
     """新闻服务主类 V2"""
 
     def __init__(self):
-        # 使用多源爬虫（24小时时间窗口，并发采集）
-        self.crawler = MultiSourceCrawler(NEWS_SOURCES_V2, time_window_hours=24)
+        # 使用多源爬虫（48小时时间窗口，并发采集，保留更多内容）
+        self.crawler = MultiSourceCrawler(NEWS_SOURCES_V2, time_window_hours=48)
         
         # 使用云端AI处理器（Kimi/DeepSeek/OpenAI/Claude）
         ai_provider = os.getenv('AI_PROVIDER', 'kimi')
@@ -126,14 +126,11 @@ class NewsServiceV2:
                 logger.info("没有新新闻需要处理")
                 return
 
-            # 2.5. 轻量内容过滤（仅过滤明显低质量内容）
+            # 2.5. 轻量内容过滤（仅过滤空内容，其他全部保留）
             logger.info("步骤 2.5/5: 轻量内容过滤...")
             before_filter = len(new_news)
 
             filtered_news = []
-            skipped_twitter_rt = 0
-            skipped_twitter_short = 0
-            skipped_youtube_short = 0
             skipped_empty_content = 0
             
             for news in new_news:
@@ -141,33 +138,13 @@ class NewsServiceV2:
                 content = news.get('content', '').strip()
                 source_type = news.get('source_type', '')
                 
-                # 过滤空标题或空内容
+                # 只过滤空标题或空内容
                 if not title or not content:
                     skipped_empty_content += 1
                     continue
                 
-                # Twitter 内容基础过滤（放宽条件，保留更多内容）
-                if source_type == 'twitter':
-                    # 保留转推（RT），因为很多有价值的讨论是转推形式
-                    # 只过滤纯转推（没有附加评论的）
-                    if title.startswith('RT @') and len(title) < 30:
-                        skipped_twitter_rt += 1
-                        continue
-                    # 放宽长度限制：5个字符以上就保留（原来10个）
-                    if len(title) < 5:
-                        skipped_twitter_short += 1
-                        continue
-                
-                # YouTube 内容过滤（过滤Shorts，保留长视频）
-                if source_type == 'youtube':
-                    duration = news.get('video_duration')
-                    if duration and isinstance(duration, (int, float)):
-                        # 跳过少于30秒的短视频（Shorts）
-                        if duration < 30:
-                            skipped_youtube_short += 1
-                            continue
-                
-                # 所有其他新闻都保留（不进行质量评分）
+                # 保留所有来源的内容（Twitter/X、YouTube、微信、微博、RSS全部保留）
+                # 用户关注的账号内容全部放行，不做任何额外过滤
                 filtered_news.append(news)
 
             after_filter = len(filtered_news)
@@ -178,12 +155,6 @@ class NewsServiceV2:
             logger.info(f"   原始新闻: {before_filter} 条")
             if skipped_empty_content > 0:
                 logger.info(f"   - 空内容过滤: {skipped_empty_content} 条")
-            if skipped_twitter_rt > 0:
-                logger.info(f"   - Twitter RT过滤: {skipped_twitter_rt} 条")
-            if skipped_twitter_short > 0:
-                logger.info(f"   - Twitter 超短内容过滤: {skipped_twitter_short} 条")
-            if skipped_youtube_short > 0:
-                logger.info(f"   - YouTube Shorts过滤: {skipped_youtube_short} 条")
             logger.info(f"   保留新闻: {after_filter} 条 ({after_filter/before_filter*100:.1f}%)")
 
             if not filtered_news:

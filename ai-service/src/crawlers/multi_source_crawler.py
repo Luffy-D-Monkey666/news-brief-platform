@@ -138,15 +138,15 @@ class MultiSourceCrawler:
             feed = feedparser.parse(feed_url)
             news_items = []
             
-            # 优化：增加每源条数到20条（原来10条）
-            # RSSHub Twitter 通常返回20条，我们取全部可用
-            limit = 20 if 'twitter' in feed_url else 20
+            # 优化：大幅增加每源条数到50条（原来10条→20条→50条）
+            # RSSHub Twitter 通常返回20条，但我们尝试获取更多
+            limit = 50
             
             for entry in feed.entries[:limit]:
                 # 解析发布时间
                 published = self._parse_date(entry)
                 
-                # 时间过滤：只保留24小时内的新闻
+                # 时间过滤：保留48小时内的新闻（放宽时间窗口，让更多内容通过）
                 if published < self.cutoff_time:
                     continue
                 
