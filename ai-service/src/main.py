@@ -17,7 +17,7 @@ from flask import Flask, jsonify
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 导入 V2 配置
-from config.sources_v2 import NEWS_SOURCES_V2
+from config.sources_v2 import NEWS_SOURCES_V2, is_twitter_vip
 from config.settings import (
     MONGODB_URI, CRAWL_INTERVAL,
     SUMMARIZE_PROMPT, CLASSIFY_PROMPT, COMBINED_PROMPT, REDIS_URL
@@ -126,25 +126,59 @@ class NewsServiceV2:
                 logger.info("没有新新闻需要处理")
                 return
 
-            # 2.5. 轻量内容过滤（仅过滤空内容，其他全部保留）
-            logger.info("步骤 2.5/5: 轻量内容过滤...")
+            # 2.5. 智能内容过滤（VIP账号全保留，普通账号按规则过滤）
+            logger.info("步骤 2.5/5: 智能内容过滤...")
             before_filter = len(new_news)
 
             filtered_news = []
             skipped_empty_content = 0
+            skipped_twitter_rt = 0
+            skipped_twitter_short = 0
+            skipped_youtube_short = 0
+            vip_passed_count = 0
             
             for news in new_news:
                 title = news.get('title', '').strip()
                 content = news.get('content', '').strip()
                 source_type = news.get('source_type', '')
+                source_url = news.get('source_url', '')
                 
                 # 只过滤空标题或空内容
                 if not title or not content:
                     skipped_empty_content += 1
                     continue
                 
-                # 保留所有来源的内容（Twitter/X、YouTube、微信、微博、RSS全部保留）
-                # 用户关注的账号内容全部放行，不做任何额外过滤
+                # === VIP Twitter账号检查 ===
+                if source_type == 'twitter':
+                    # 提取用户名（从URL: https://rsshub.app/twitter/user/username）
+                    username = source_url.split('/')[-1] if '/' in source_url else ''
+                    
+                    if is_twitter_vip(username):
+                        # VIP账号：100%保留，不过滤任何内容
+                        filtered_news.append(news)
+                        vip_passed_count += 1
+                        continue
+                    else:
+                        # 普通Twitter账号：应用通用过滤规则
+                        # 过滤纯转推（RT @username 没有附加评论的）
+                        if title.startswith('RT @') and len(title) < 40:
+                            skipped_twitter_rt += 1
+                            continue
+                        # 过滤超短内容（少于5个字符）
+                        if len(title) < 5:
+                            skipped_twitter_short += 1
+                            continue
+                
+                # === YouTube 过滤 ===
+                if source_type == 'youtube':
+                    duration = news.get('video_duration')
+                    if duration and isinstance(duration, (int, float)):
+                        # 过滤Shorts（少于30秒）
+                        if duration < 30:
+                            skipped_youtube_short += 1
+                            continue
+                
+                # 其他来源（微信、微博、RSS）：全部保留
                 filtered_news.append(news)
 
             after_filter = len(filtered_news)
@@ -155,6 +189,14 @@ class NewsServiceV2:
             logger.info(f"   原始新闻: {before_filter} 条")
             if skipped_empty_content > 0:
                 logger.info(f"   - 空内容过滤: {skipped_empty_content} 条")
+            if vip_passed_count > 0:
+                logger.info(f"   - VIP账号保留: {vip_passed_count} 条")
+            if skipped_twitter_rt > 0:
+                logger.info(f"   - 普通Twitter RT过滤: {skipped_twitter_rt} 条")
+            if skipped_twitter_short > 0:
+                logger.info(f"   - 普通Twitter短内容过滤: {skipped_twitter_short} 条")
+            if skipped_youtube_short > 0:
+                logger.info(f"   - YouTube Shorts过滤: {skipped_youtube_short} 条")
             logger.info(f"   保留新闻: {after_filter} 条 ({after_filter/before_filter*100:.1f}%)")
 
             if not filtered_news:

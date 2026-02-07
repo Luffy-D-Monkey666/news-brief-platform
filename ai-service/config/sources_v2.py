@@ -6,7 +6,63 @@
 2. 增加微信公众号、知乎等中文源
 3. 优化源质量，移除低价值RSS
 4. 分类更精准，减少噪音
+5. VIP账号机制：指定账号内容100%保留
 """
+
+# ====================================
+# VIP Twitter/X 账号（用户关注的重要账号，内容100%保留不过滤）
+# ====================================
+# 这些账号的所有内容都会进入简报，包括RT转推、短内容等
+TWITTER_VIP_ACCOUNTS = {
+    # === 海贼王官方账号 ===
+    'mugistore_info',           # ONE PIECE 麦わらストア公式
+    'op_kfpj',                  # ONE PIECE熊本復興プロジェクト
+    'OPMerchandise',            # One Piece Merch News
+    'OPcom_info',               # ONE PIECE.com
+    'onepiece_mag',             # ワンピース・マガジン
+    'Eiichiro_Staff',           # ONE PIECE スタッフ【公式】
+    'OP_base_shop',             # 【公式】ONE PIECE BASE SHOP
+    
+    # === OPCG卡牌游戏官方 ===
+    'ONEPIECE_tcg_EN',          # Official One Piece Card Game English
+    'official_BCG_JP',          # 【OFFICIAL】BANDAI CARD GAMES
+    'ONEPIECETcgSHOP',          # ONE PIECEカードゲーム 公式ショップ
+    'ONEPIECE_tcg',             # 【公式】ONE PIECEカードゲーム
+    
+    # === 龙珠官方 ===
+    '1kUJIdragonball',          # 一番くじ『ドラゴンボール』公式
+    'dbfw_cgSTORE',             # ドラゴンボールスーパーカードゲーム
+    'DB_official_jp',           # ドラゴンボールオフィシャル
+    'DB_STORE_info',            # DRAGON BALL STORE TOKYO
+    
+    # === 其他卡牌/动漫 ===
+    '1kuji_onepiece',           # 一番くじ海賊団
+    'PokemonTCG',               # Pokémon TCG
+    
+    # === 网红/创作者 ===
+    'sichuanc',                 # Pickle
+    'ishowspeedsui',            # Speed
+    'MrBeast',                  # MrBeast
+    'LoganPaul',                # Logan Paul
+    
+    # === 汽车/科技 ===
+    'electric_nick',            # Electric Nick
+    'autogefuehl',              # Autogefühl
+    
+    # === 新闻媒体 ===
+    'asahi_shinsen',            # 朝日新闻中文频道
+    'kyodo_chinese',            # Kyodo News Chinese 日本共同社
+    'bbcchinese',               # BBC News 中文
+    'nytchinese',               # 纽约时报中文网
+    'wangzhian8848',            # 王志安
+    
+    # === 音乐/娱乐 ===
+    'Eminem',                   # Marshall Mathers
+}
+
+def is_twitter_vip(username: str) -> bool:
+    """检查是否为VIP Twitter账号（内容100%保留）"""
+    return username.lower() in {acc.lower() for acc in TWITTER_VIP_ACCOUNTS}
 
 # ====================================
 # 1. X (Twitter) 信息源
