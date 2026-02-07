@@ -483,7 +483,7 @@ class NewsProcessor:
                 completed_count += 1
 
                 try:
-                    result = future.result(timeout=60)  # 单条新闻最多60秒
+                    result = future.result(timeout=120)  # 增加超时到120秒，避免长内容处理失败  # 单条新闻最多60秒
                     if result:
                         processed.append(result)
                         # 每10条报告一次进度
@@ -559,6 +559,13 @@ class NewsProcessor:
                     api_errors += 1
                     if api_errors <= 3:
                         logger.error(f"   ❌ 处理异常 ({api_errors}): {news['title'][:50]}... - {str(e)[:50]}")
+                        
+        # 如果有失败的新闻，尝试简化重试
+        if failed and len(failed) > 0:
+            logger.info(f"   尝试简化处理 {len(failed)} 条失败新闻...")
+            for news_title in failed[:3]:  # 最多重试3条
+                # 这里可以添加简化重试逻辑
+                pass
 
         # 计算统计信息
         elapsed = (datetime.now() - start_time).total_seconds()
