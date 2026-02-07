@@ -15,12 +15,13 @@ CATEGORIES = [
     # 核心关注领域（最高优先级）
     'ai_technology',         # AI技术
     'robotics',              # 机器人（原embodied_intelligence）
-    'ai_programming',        # AI编程（原coding_development）
+    'ai_coding_agent',       # AI编码与智能体（AI Coding + Agent）
     'semiconductors',        # 芯片半导体
     'opcg',                  # OPCG卡牌游戏（原opcg_tcg）
     'automotive',            # 汽车（原ev_automotive，现包含所有类型汽车）
     'consumer_electronics',  # 消费电子（手机、手表、眼镜、相机等）
     'one_piece',             # ONE PIECE（海贼王动漫周边）
+    'anime_otaku',           # 动漫二次元（日本+欧洲动画漫画）
     'podcasts',              # 播客节目
     'finance_investment',    # 投资财经
 
@@ -39,12 +40,13 @@ CATEGORY_NAMES = {
     # 核心关注领域
     'ai_technology': 'AI技术',
     'robotics': '机器人',
-    'ai_programming': 'AI编程',
+    'ai_coding_agent': 'AI编码与智能体',
     'semiconductors': '芯片',
     'opcg': 'OPCG',
     'automotive': '汽车',
     'consumer_electronics': '消费电子',
-    'one_piece': 'OP',
+    'one_piece': '海贼王',
+    'anime_otaku': '动漫二次元',
     'podcasts': '播客推荐',
     'finance_investment': '投资财经',
 

@@ -40,9 +40,6 @@ TWITTER_SOURCES = {
         'https://rsshub.app/twitter/user/omarsar0',         # Elvis (Hugging Face)
         
         # AI 公司/产品
-        'https://rsshub.app/twitter/user/LangChainAI',      # LangChain
-        'https://rsshub.app/twitter/user/llama_index',      # LlamaIndex
-        'https://rsshub.app/twitter/user/pinecone',         # Pinecone (向量数据库)
         'https://rsshub.app/twitter/user/weights_biases',   # Weights & Biases
         'https://rsshub.app/twitter/user/runwayml',         # Runway ML
         'https://rsshub.app/twitter/user/StabilityAI',      # Stability AI
@@ -68,8 +65,27 @@ TWITTER_SOURCES = {
         'https://rsshub.app/twitter/user/PeterAbbeel',      # Peter Abbeel (UC Berkeley)
     ],
     'semiconductors': [
-        # 芯片公司官方
+        # NVIDIA 生态（黄仁勋重点扩展）
         'https://rsshub.app/twitter/user/nvidia',           # NVIDIA
+        'https://rsshub.app/twitter/user/NVIDIAAI',         # NVIDIA AI
+        'https://rsshub.app/twitter/user/NVIDIADGX',        # NVIDIA DGX
+        'https://rsshub.app/twitter/user/NVIDIAGame',       # NVIDIA GeForce
+        'https://rsshub.app/twitter/user/NVIDIAHPC',        # NVIDIA HPC
+        'https://rsshub.app/twitter/user/nvidiadeveloper',  # NVIDIA Developer
+        'https://rsshub.app/twitter/user/NVIDIAGTC',        # NVIDIA GTC大会
+        'https://rsshub.app/twitter/user/nvidiacorp',       # NVIDIA Corp
+        'https://rsshub.app/twitter/user/NVIDIAGaming',     # NVIDIA Gaming
+        'https://rsshub.app/twitter/user/NVIDIAAStudio',    # NVIDIA Studio
+        'https://rsshub.app/twitter/user/NVIDIARobotics',   # NVIDIA Robotics
+        'https://rsshub.app/twitter/user/NVIDIAOmniverse',  # NVIDIA Omniverse
+        'https://rsshub.app/twitter/user/NVIDIADrive',      # NVIDIA Drive (自动驾驶)
+        'https://rsshub.app/twitter/user/NVIDIAJetson',     # NVIDIA Jetson (边缘AI)
+        'https://rsshub.app/twitter/user/NVIDIACN',         # NVIDIA 中国
+        
+        # 黄仁勋相关
+        'https://rsshub.app/twitter/user/jensenhuangnvidia', # Jensen Huang (黄仁勋)
+        
+        # 其他芯片公司
         'https://rsshub.app/twitter/user/AMD',              # AMD
         'https://rsshub.app/twitter/user/Intel',            # Intel
         'https://rsshub.app/twitter/user/ARMCommunity',     # ARM
@@ -83,18 +99,52 @@ TWITTER_SOURCES = {
         'https://rsshub.app/twitter/user/cerebras',         # Cerebras
         'https://rsshub.app/twitter/user/GroqInc',          # Groq (AI芯片)
         'https://rsshub.app/twitter/user/SambanovaSys',     # SambaNova
+        'https://rsshub.app/twitter/user/GraphcoreAI',      # Graphcore
+        'https://rsshub.app/twitter/user/tenstorrent',      # Tenstorrent (Jim Keller)
+        'https://rsshub.app/twitter/user/Real_Hyun',        # Hyun (Tenstorrent)
+        'https://rsshub.app/twitter/user/01Light_AI',       # 01.AI (零一万物，李开复)
+        'https://rsshub.app/twitter/user/karpathy',         # Andrej Karpathy (前Tesla AI，现回归OpenAI)
         
         # 芯片分析师/媒体
         'https://rsshub.app/twitter/user/anandshimpi',      # Anand Shimpi
         'https://rsshub.app/twitter/user/IanCutress',       # Ian Cutress
         'https://rsshub.app/twitter/user/mooresislaw',      # Moore's Law Is Dead
+        'https://rsshub.app/twitter/user/akibamark',        # Akiba Mark
+        'https://rsshub.app/twitter/user/TechTechPotat',    # TechTechPotato (Ian Cutress)
+        'https://rsshub.app/twitter/user/semianalysis',     # SemiAnalysis (芯片分析)
     ],
     'automotive': [
-        # 汽车公司
-        'https://rsshub.app/twitter/user/Tesla',            # Tesla
+        # 特斯拉/Tesla 生态（重点扩展）
+        'https://rsshub.app/twitter/user/Tesla',            # Tesla 官方
         'https://rsshub.app/twitter/user/elonmusk',         # Elon Musk
-        'https://rsshub.app/twitter/user/ElectrekCo',       # Electrek
+        'https://rsshub.app/twitter/user/Tesla_AI',         # Tesla AI (FSD/机器人)
+        'https://rsshub.app/twitter/user/Tesla_Optimus',    # Tesla Optimus 机器人
+        'https://rsshub.app/twitter/user/Tesla_Megapack',   # Tesla 能源
+        'https://rsshub.app/twitter/user/ashleevance',      # Ashlee Vance (马斯克传记作者)
+        'https://rsshub.app/twitter/user/TeslaPodcast',     # Tesla Podcast
+        
+        # 马斯克其他公司
+        'https://rsshub.app/twitter/user/SpaceX',           # SpaceX
+        'https://rsshub.app/twitter/user/Neuralink',        # Neuralink
+        'https://rsshub.app/twitter/user/xai',              # xAI (Grok)
+        'https://rsshub.app/twitter/user/TheBoringCompany', # Boring Company
+        'https://rsshub.app/twitter/user/Hyperloop',        # Hyperloop
+        'https://rsshub.app/twitter/user/Starlink',         # Starlink
+        
+        # 特斯拉媒体/分析师
+        'https://rsshub.app/twitter/user/ElectrekCo',       # Electrek (Fred Lambert)
+        'https://rsshub.app/twitter/user/FredericLambert',  # Fred Lambert (Electrek创始人)
         'https://rsshub.app/twitter/user/InsideEVs',        # InsideEVs
+        'https://rsshub.app/twitter/user/SawyerMerritt',    # Sawyer Merritt (Tesla消息)
+        'https://rsshub.app/twitter/user/WholeMarsBlog',    # Whole Mars Catalog (Omar)
+        'https://rsshub.app/twitter/user/dima_zeniuk',      # Dima Zeniuk (科技爆料)
+        'https://rsshub.app/twitter/user/teslaownersSV',    # Tesla Owners Silicon Valley
+        'https://rsshub.app/twitter/user/TroyTeslike',      # Troy Teslike (Tesla数据分析)
+        'https://rsshub.app/twitter/user/ray4tesla',        # Ray (Tesla视频博主)
+        'https://rsshub.app/twitter/user/klwtts',           # Kelvin (Tesla分析师)
+        'https://rsshub.app/twitter/user/EstherCrawford',   # Esther Crawford (前Twitter/Tesla)
+        
+        # 其他汽车公司
         'https://rsshub.app/twitter/user/Rivian',           # Rivian
         'https://rsshub.app/twitter/user/lucidmotors',      # Lucid Motors
         'https://rsshub.app/twitter/user/NIOGlobal',        # NIO 蔚来
@@ -111,10 +161,7 @@ TWITTER_SOURCES = {
         'https://rsshub.app/twitter/user/Toyota',           # 丰田
         'https://rsshub.app/twitter/user/Honda',            # 本田
         
-        # 汽车行业媒体/分析师
-        'https://rsshub.app/twitter/user/SawyerMerritt',    # Sawyer Merritt (Tesla新闻)
-        'https://rsshub.app/twitter/user/WholeMarsBlog',    # Whole Mars Catalog
-        # 汽车评测 (图片)
+        # 汽车评测
         'https://rsshub.app/twitter/user/autogefuehl',      # Autogefühl 汽车评测
         'https://rsshub.app/twitter/user/electric_nick',    # Electric Nick (电动车)
     ],
@@ -247,6 +294,49 @@ TWITTER_SOURCES = {
         # 音乐/艺人 (图片)
         'https://rsshub.app/twitter/user/Eminem',           # Eminem (Marshall Mathers)
     ],
+    
+    'anime_otaku': [
+        # 日本动漫官方/制作公司
+        'https://rsshub.app/twitter/user/ToeiAnimation',    # 东映动画（龙珠、海贼王）
+        'https://rsshub.app/twitter/user/MAPPA_Info',       # MAPPA（咒术回战、电锯人）
+        'https://rsshub.app/twitter/user/ufotable',         # ufotable（鬼灭之刃、Fate）
+        'https://rsshub.app/twitter/user/WIT_STUDIO',       # WIT STUDIO（进击的巨人、间谍过家家）
+        'https://rsshub.app/twitter/user/CloverWorks',      # CloverWorks（更衣人偶、孤独摇滚）
+        'https://rsshub.app/twitter/user/A_1Pictures',      # A-1 Pictures（刀剑神域、辉夜）
+        'https://rsshub.app/twitter/user/bones_anime',      # BONES（文豪野犬、我的英雄学院）
+        'https://rsshub.app/twitter/user/Trigger_TG',       # TRIGGER（赛博朋克、小魔女学园）
+        'https://rsshub.app/twitter/user/KyotoAnimation',   # 京都动画（紫罗兰、声之形）
+        'https://rsshub.app/twitter/user/ProductionIG',     # Production I.G（攻壳机动队）
+        'https://rsshub.app/twitter/user/ScienceSARU',      # Science SARU（四畳半、犬王）
+        
+        # 日本动漫资讯/媒体
+        'https://rsshub.app/twitter/user/AnimeNewsNet',     # Anime News Network
+        'https://rsshub.app/twitter/user/Crunchyroll',      # Crunchyroll
+        'https://rsshub.app/twitter/user/FUNimation',       # Funimation
+        'https://rsshub.app/twitter/user/hulu_japan',       # Hulu Japan
+        'https://rsshub.app/twitter/user/netflixjp_anime',  # Netflix Japan Anime
+        
+        # 日本漫画家/创作者
+        'https://rsshub.app/twitter/user/Eiichiro_Staff',   # 尾田荣一郎官方（海贼王）
+        'https://rsshub.app/twitter/user/horikoshiko',      # 堀越耕平（我的英雄学院）
+        'https://rsshub.app/twitter/user/gegeakutami',      # 芥见下下（咒术回战）
+        'https://rsshub.app/twitter/user/nagatoro_kuro',    # ナナシ（长瀞同学）
+        
+        # 欧洲动漫（法国、英国、德国）
+        'https://rsshub.app/twitter/user/FolivariStudio',   # Folivari（法国，艾特熊和赛娜鼠）
+        'https://rsshub.app/twitter/user/XilamAnimation',   # Xilam（法国，肥猫大战三小强）
+        'https://rsshub.app/twitter/user/dargaudmedia',     # Dargaud Media（法国，高卢英雄）
+        'https://rsshub.app/twitter/user/Aardman',          # Aardman（英国，小羊肖恩）
+        'https://rsshub.app/twitter/user/studioaka',        # Studio AKA（英国，嗨！道奇）
+        'https://rsshub.app/twitter/user/BlueZooAnims',     # Blue-Zoo（英国）
+        'https://rsshub.app/twitter/user/StudioFilmBilder', # Studio Film Bilder（德国）
+        'https://rsshub.app/twitter/user/MotionWorks_GmbH', # MotionWorks（德国）
+        
+        # 国际动漫展/活动
+        'https://rsshub.app/twitter/user/animenyc',         # Anime NYC
+        'https://rsshub.app/twitter/user/AnimeExpo',        # Anime Expo
+        'https://rsshub.app/twitter/user/japan_anime',      # Japan Anime
+    ],
 }
 
 # ====================================
@@ -334,7 +424,26 @@ YOUTUBE_SOURCES = {
         'https://rsshub.app/youtube/channel/UCMpWpGXG8PqAvM-HY2tfNtw',  # Library of Ohara
         'https://rsshub.app/youtube/channel/UCRwox6tQO5nDVx8_Lwoqybw',  # RogersBase
     ],
-    'ai_programming': [
+    
+    'anime_otaku': [
+        # 日本动漫评论/分析
+        'https://rsshub.app/youtube/channel/UCpuT8AlP9P9EgW_pZ0_xInQ',  # Gigguk (Anime YouTuber)
+        'https://rsshub.app/youtube/channel/UCAz5YVPud6U3a8r4tLdRmcQ',  # The Anime Man
+        'https://rsshub.app/youtube/channel/UC0Yp3P8T_t8rvVj0E3bBq1A',  # Mother's Basement
+        'https://rsshub.app/youtube/channel/UC0mqX9fGFjGkHKGrNbH0omw',  # Super Eyepatch Wolf
+        'https://rsshub.app/youtube/channel/UCB7hFdJhT5q8J7n5z8g2rXQ',  # Under The Scope
+        'https://rsshub.app/youtube/channel/UCzRJl9x3_h3l_h5Y9-Z7r2A',  # AnimeEveryday
+        'https://rsshub.app/youtube/channel/UCnJ8P7gNXHYSM8Vr7p8v3eQ',  # Canipa Effect (日本动画产业)
+        
+        # 欧洲动漫
+        'https://rsshub.app/youtube/channel/UC8fF3q1qF5z2F1xP3v7f9dA',  # Toniko Pantoja (欧洲动画师)
+        'https://rsshub.app/youtube/channel/UCYIQ2P8hL4QeC3XwC7e6Dqg',  # Frame by Frame (动画分析)
+        
+        # 动漫新闻/资讯
+        'https://rsshub.app/youtube/channel/UCy5L3QpCIYgQwj9_NP9Z4TQ',  # Crunchyroll Collection
+        'https://rsshub.app/youtube/channel/UC6-1kwiMfB4qw47LM4qC7wQ',  # Funimation
+    ],
+    'ai_coding_agent': [  # AI编码与智能体（原ai_programming）
         # 编程/技术频道
         'https://rsshub.app/youtube/channel/UCsBjURrPoezykLs9EqgamOA',  # Fireship
         'https://rsshub.app/youtube/channel/UCS0N5baNlQWJCUrhCEo8WlA',  # Ben Eater
@@ -391,10 +500,30 @@ RSS_SOURCES_V2 = {
         'https://csail.mit.edu/news/rss.xml',
     ],
     
-    'ai_programming': [
+    'ai_coding_agent': [  # AI编码与智能体
+        # AI编码工具
         'https://github.blog/feed/',            # GitHub 官方博客
         'https://code.visualstudio.com/feed.xml',  # VSCode 官方
         'https://engineering.fb.com/feed/',     # Meta Engineering
+        
+        # AI Agent 公司/项目
+        'https://rsshub.app/twitter/user/AutoGPT',           # AutoGPT
+        'https://rsshub.app/twitter/user/CrewAIInc',         # CrewAI
+        'https://rsshub.app/twitter/user/LangChainAI',       # LangChain
+        'https://rsshub.app/twitter/user/llama_index',       # LlamaIndex
+        'https://rsshub.app/twitter/user/pinecone',          # Pinecone
+        'https://rsshub.app/twitter/user/vectara',           # Vectara
+        'https://rsshub.app/twitter/user/Weaviate_io',       # Weaviate
+        'https://rsshub.app/twitter/user/chromadb',          # Chroma
+        'https://rsshub.app/twitter/user/unitycatalog',      # Unity Catalog
+        
+        # AI Agent 开发者/研究者
+        'https://rsshub.app/twitter/user/hwchase17',         # Harrison Chase (LangChain创始人)
+        'https://rsshub.app/twitter/user/jerryjliu0',        # Jerry Liu (LlamaIndex创始人)
+        'https://rsshub.app/twitter/user/yoheinakajima',     # Yohei Nakajima (BabyAGI)
+        'https://rsshub.app/twitter/user/bindureddy',        # Bindu Reddy (Abacus AI)
+        'https://rsshub.app/twitter/user/alexalbert__',      # Alex Albert (Cursor)
+        'https://rsshub.app/twitter/user/amanrs',            # Aman Sanger (Cursor)
     ],
     
     'semiconductors': [
@@ -407,6 +536,14 @@ RSS_SOURCES_V2 = {
     'opcg': [
         # 日本官方
         'https://one-piece-cardgame.com/news/rss.xml',  # 日版官网
+    ],
+    
+    'anime_otaku': [
+        # 动漫新闻
+        'https://www.animenewsnetwork.com/all/rss.xml',      # Anime News Network (英文)
+        'https://rsshub.app/crunchyroll/news',               # Crunchyroll News
+        'https://rsshub.app/funimation/news',                # Funimation News
+        'https://rsshub.app/myanimelist/news',               # MyAnimeList News
     ],
     
     'automotive': [
