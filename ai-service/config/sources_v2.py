@@ -114,6 +114,9 @@ TWITTER_SOURCES = {
         # 汽车行业媒体/分析师
         'https://rsshub.app/twitter/user/SawyerMerritt',    # Sawyer Merritt (Tesla新闻)
         'https://rsshub.app/twitter/user/WholeMarsBlog',    # Whole Mars Catalog
+        # 汽车评测 (图片)
+        'https://rsshub.app/twitter/user/autogefuehl',      # Autogefühl 汽车评测
+        'https://rsshub.app/twitter/user/electric_nick',    # Electric Nick (电动车)
     ],
     'consumer_electronics': [
         # 科技媒体
@@ -198,18 +201,51 @@ TWITTER_SOURCES = {
         'https://rsshub.app/twitter/user/AFP',              # AFP
         'https://rsshub.app/twitter/user/dw_chinese',       # 德国之声中文
         'https://rsshub.app/twitter/user/RFA_Chinese',      # RFA 自由亚洲电台
+        # 中文新闻媒体 (图片)
+        'https://rsshub.app/twitter/user/asahi_shinsen',    # 朝日新闻中文频道
+        'https://rsshub.app/twitter/user/kyodo_chinese',    # 共同社中文
+        'https://rsshub.app/twitter/user/bbcchinese',       # BBC News 中文
+        'https://rsshub.app/twitter/user/ChineseWSJ',       # 华尔街日报中文
+        'https://rsshub.app/twitter/user/nytchinese',       # 纽约时报中文网
+        'https://rsshub.app/twitter/user/wangzhian8848',    # 王志安
     ],
     'opcg': [
         # OPCG 官方与社区
         'https://rsshub.app/twitter/user/OnePieceCardGame', # OPCG 官方
         'https://rsshub.app/twitter/user/OnePieceUS',       # OPCG US
         'https://rsshub.app/twitter/user/BandaiNamcoUS',    # Bandai Namco
+        'https://rsshub.app/twitter/user/ONEPIECE_tcg_EN',  # OPCG English (图片)
+        'https://rsshub.app/twitter/user/official_BCG_JP',  # BANDAI CARD GAMES (图片)
+        'https://rsshub.app/twitter/user/ONEPIECEtcgSHOP',  # OPCG Shop (图片)
+        'https://rsshub.app/twitter/user/OP_BASE_tcg',      # ONE PIECE BASE (图片)
+        'https://rsshub.app/twitter/user/PokemonTCG',       # Pokemon TCG (图片)
     ],
     'one_piece': [
         # 海贼王官方
         'https://rsshub.app/twitter/user/OnePieceAnime',    # 海贼王动画官方
         'https://rsshub.app/twitter/user/ToeiAnimation',    # 东映动画
         'https://rsshub.app/twitter/user/Eiichiro_Staff',   # 尾田荣一郎官方
+        # 海贼王商店/周边 (图片)
+        'https://rsshub.app/twitter/user/mugistore_info',   # ONE PIECE麦わらストア公式
+        'https://rsshub.app/twitter/user/op_kfpj',          # ONE PIECE熊本復興プロジェクト
+        'https://rsshub.app/twitter/user/OPMerchandise',    # One Piece Merch News
+        'https://rsshub.app/twitter/user/OPcom_info',       # ONE PIECE.com
+        'https://rsshub.app/twitter/user/onepiece_mag',     # ワンピース・マガジン
+        # 一番くじ (图片)
+        'https://rsshub.app/twitter/user/1kuji_dragonball', # 一番くじドラゴンボール
+        'https://rsshub.app/twitter/user/1kuji_onepiece',   # 一番くじ海賊団
+        # 龙珠 (图片)
+        'https://rsshub.app/twitter/user/dbfw_cgSTORE',     # ドラゴンボールスーパーカードゲーム
+        'https://rsshub.app/twitter/user/DB_official_jp',   # ドラゴンボールオフィシャル
+    ],
+    
+    'entertainment_sports': [
+        # 网红/创作者 (图片)
+        'https://rsshub.app/twitter/user/MrBeast',          # MrBeast
+        'https://rsshub.app/twitter/user/LoganPaul',        # Logan Paul
+        'https://rsshub.app/twitter/user/ishowspeedsui',    # Speed (IShowSpeed)
+        # 音乐/艺人 (图片)
+        'https://rsshub.app/twitter/user/Eminem',           # Eminem (Marshall Mathers)
     ],
 }
 
