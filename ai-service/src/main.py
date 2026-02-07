@@ -126,64 +126,70 @@ class NewsServiceV2:
                 logger.info("没有新新闻需要处理")
                 return
 
-            # 2.5. 内容质量过滤
-            logger.info("步骤 2.5/5: 内容质量过滤...")
+            # 2.5. 轻量内容过滤（仅过滤明显低质量内容）
+            logger.info("步骤 2.5/5: 轻量内容过滤...")
             before_filter = len(new_news)
 
-            quality_filtered_news = []
+            filtered_news = []
             skipped_twitter_rt = 0
             skipped_twitter_short = 0
             skipped_youtube_short = 0
+            skipped_empty_content = 0
             
             for news in new_news:
-                title = news.get('title', '')
+                title = news.get('title', '').strip()
+                content = news.get('content', '').strip()
                 source_type = news.get('source_type', '')
                 
-                # Twitter 内容需要特殊处理（RT、@mention 过滤）
+                # 过滤空标题或空内容
+                if not title or not content:
+                    skipped_empty_content += 1
+                    continue
+                
+                # Twitter 内容基础过滤（保留转发但标记，过滤纯表情/过短）
                 if source_type == 'twitter':
-                    # 跳过纯转推（RT 开头）
+                    # 跳过纯转推（RT 开头）- 这些通常没有原创内容
                     if title.startswith('RT @'):
                         skipped_twitter_rt += 1
                         continue
-                    # 跳过低质量 Twitter 内容（如纯表情、过短）
-                    if len(title) < 20:
+                    # 跳过纯表情或过短内容（少于10个字符）
+                    if len(title) < 10:
                         skipped_twitter_short += 1
                         continue
                 
-                # YouTube 内容特殊处理（短视频过滤）
+                # YouTube 内容过滤（过滤Shorts，保留长视频）
                 if source_type == 'youtube':
                     duration = news.get('video_duration')
                     if duration and isinstance(duration, (int, float)):
-                        # 跳过少于一分钟的短视频（如 Shorts）
-                        if duration < 60:
+                        # 跳过少于30秒的短视频（Shorts）
+                        if duration < 30:
                             skipped_youtube_short += 1
                             continue
                 
-                # 使用更宽松的阈值（2而不是3）
-                if self.quality_filter.should_process(title, 'general', threshold=2):
-                    quality_filtered_news.append(news)
+                # 所有其他新闻都保留（不进行质量评分）
+                filtered_news.append(news)
 
-            after_filter = len(quality_filtered_news)
+            after_filter = len(filtered_news)
             filtered_count = before_filter - after_filter
 
             # 详细日志
             logger.info(f"步骤 2.5/5 完成:")
             logger.info(f"   原始新闻: {before_filter} 条")
+            if skipped_empty_content > 0:
+                logger.info(f"   - 空内容过滤: {skipped_empty_content} 条")
             if skipped_twitter_rt > 0:
                 logger.info(f"   - Twitter RT过滤: {skipped_twitter_rt} 条")
             if skipped_twitter_short > 0:
-                logger.info(f"   - Twitter 短内容过滤: {skipped_twitter_short} 条")
+                logger.info(f"   - Twitter 超短内容过滤: {skipped_twitter_short} 条")
             if skipped_youtube_short > 0:
-                logger.info(f"   - YouTube 短视频过滤: {skipped_youtube_short} 条")
-            logger.info(f"   质量过滤移除: {filtered_count - skipped_twitter_rt - skipped_twitter_short - skipped_youtube_short} 条")
-            logger.info(f"   最终剩余: {after_filter} 条")
-            logger.info(f"   通过率: {after_filter/before_filter*100:.1f}%")
+                logger.info(f"   - YouTube Shorts过滤: {skipped_youtube_short} 条")
+            logger.info(f"   保留新闻: {after_filter} 条 ({after_filter/before_filter*100:.1f}%)")
 
-            if not quality_filtered_news:
-                logger.warning("⚠️ 质量过滤后没有剩余新闻，请检查过滤规则是否过于严格")
+            if not filtered_news:
+                logger.warning("⚠️ 过滤后没有剩余新闻")
                 return
 
-            new_news = quality_filtered_news
+            new_news = filtered_news
 
             # 3. 保存原始新闻
             logger.info("步骤 3/5: 保存原始新闻到数据库...")

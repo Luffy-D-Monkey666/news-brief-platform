@@ -209,8 +209,11 @@ class CloudAIProcessor:
 
     def summarize_news(self, title: str, content: str, prompt_template: str) -> tuple[Optional[str], Optional[str]]:
         """新闻摘要 - 返回(中文标题, 详细总结)"""
-        prompt = prompt_template.format(title=title, content=content[:1000])  # 增加输入内容长度
-        result = self.generate(prompt, max_tokens=500)  # 增加输出长度以支持详细总结
+        # 增加内容长度到3000字符，保留更多上下文信息
+        content_truncated = content[:3000] if len(content) > 3000 else content
+        prompt = prompt_template.format(title=title, content=content_truncated)
+        # 增加输出长度以支持详细总结
+        result = self.generate(prompt, max_tokens=800)
 
         if result:
             # 解析返回的中文标题和详细总结（按行分割）
@@ -253,9 +256,16 @@ class CloudAIProcessor:
         """
         合并处理：一次调用完成摘要+分类 (Token优化: 节省50%)
         返回: (中文标题, 摘要, 分类)
+        
+        内容处理策略:
+        - 限制输入内容长度，避免超出模型上下文限制
+        - 优先保留文章开头部分（通常包含关键信息）
         """
-        prompt = prompt_template.format(title=title, content=content[:1000])
-        result = self.generate(prompt, max_tokens=600)
+        # 增加内容截断长度到3000字符，保留更多上下文
+        content_truncated = content[:3000] if len(content) > 3000 else content
+        prompt = prompt_template.format(title=title, content=content_truncated)
+        # 增加max_tokens以支持更长摘要
+        result = self.generate(prompt, max_tokens=800)
 
         if result:
             try:
@@ -342,9 +352,9 @@ class NewsProcessor:
             if not chinese_title or not chinese_summary:
                 logger.warning(f"摘要生成失败，使用fallback: {news_item['title']}")
                 chinese_title = news_item['title'][:100]  # 限制长度
-                # 使用更好的fallback: 提取前200字符而不是100
+                # fallback时保留更多内容（500字符）
                 content = news_item['content']
-                chinese_summary = content[:200] + '...' if len(content) > 200 else content
+                chinese_summary = content[:500] + '...' if len(content) > 500 else content
                 if not chinese_summary:
                     chinese_summary = '暂无摘要'
 
@@ -406,7 +416,8 @@ class NewsProcessor:
             if not chinese_title or not chinese_summary:
                 logger.debug(f"   AI返回空结果，使用fallback处理")
                 chinese_title = original_title[:100]
-                chinese_summary = content[:200] + '...' if len(content) > 200 else content
+                # fallback时保留更多内容（500字符）
+                chinese_summary = content[:500] + '...' if len(content) > 500 else content
                 if not chinese_summary:
                     chinese_summary = '暂无摘要'
                 category = 'general'
