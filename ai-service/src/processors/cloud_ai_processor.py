@@ -25,6 +25,12 @@ class CloudAIProcessor:
             self.api_url = 'https://api.deepseek.com/v1/chat/completions'
             self.model = os.getenv('DEEPSEEK_MODEL', 'deepseek-chat')
             logger.info("使用DeepSeek AI（中国）")
+        elif self.provider == 'kimi':
+            # Kimi (Moonshot AI) - 兼容OpenAI格式
+            self.api_key = os.getenv('KIMI_API_KEY')
+            self.api_url = 'https://api.moonshot.cn/v1/chat/completions'
+            self.model = os.getenv('KIMI_MODEL', 'moonshot-v1-8k')
+            logger.info("使用Kimi AI（Moonshot）")
         elif self.provider == 'claude':
             self.api_key = os.getenv('CLAUDE_API_KEY')
             self.api_url = 'https://api.anthropic.com/v1/messages'
@@ -184,8 +190,8 @@ class CloudAIProcessor:
 
     def generate(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
         """生成文本"""
-        if self.provider == 'openai' or self.provider == 'deepseek':
-            # DeepSeek使用OpenAI兼容格式
+        if self.provider in ('openai', 'deepseek', 'kimi'):
+            # DeepSeek和Kimi都使用OpenAI兼容格式
             return self._call_openai(prompt, max_tokens)
         elif self.provider == 'claude':
             return self._call_claude(prompt, max_tokens)

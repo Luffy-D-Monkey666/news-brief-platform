@@ -156,13 +156,21 @@ python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# 创建 .env 文件
+# 创建 .env 文件（使用Kimi）
 cat > .env << EOF
-# DeepSeek API配置
-AI_PROVIDER=openai
-OPENAI_API_KEY=sk-your-deepseek-api-key
-OPENAI_BASE_URL=https://api.deepseek.com
-OPENAI_MODEL=deepseek-chat
+# ====================================
+# AI配置（使用Kimi - Moonshot AI）
+# ====================================
+
+# 是否使用云端AI
+USE_CLOUD_AI=true
+
+# AI提供商: kimi (Moonshot AI)
+AI_PROVIDER=kimi
+
+# Kimi API配置
+KIMI_API_KEY=your-kimi-api-key-here
+KIMI_MODEL=moonshot-v1-8k
 
 # 数据库配置
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/news_brief?retryWrites=true&w=majority
@@ -177,10 +185,18 @@ PORT=10000
 EOF
 ```
 
-**获取 DeepSeek API Key：**
-1. 注册 [DeepSeek](https://platform.deepseek.com/)
-2. 获取 API Key
-3. 充值（推荐 $10，可用1-2个月）
+**获取 Kimi API Key：**
+1. 注册 [Moonshot AI](https://platform.moonshot.cn/)
+2. 创建 API Key
+3. 充值（新用户有免费额度）
+
+**支持的AI提供商：**
+| 提供商 | 配置方式 | 特点 |
+|--------|----------|------|
+| **Kimi** | `AI_PROVIDER=kimi` + `KIMI_API_KEY` | 中文能力强，速度快 |
+| DeepSeek | `AI_PROVIDER=deepseek` + `DEEPSEEK_API_KEY` | 价格便宜 |
+| OpenAI | `AI_PROVIDER=openai` + `OPENAI_API_KEY` | 国际通用 |
+| Claude | `AI_PROVIDER=claude` + `CLAUDE_API_KEY` | 推理能力强 |
 
 ---
 

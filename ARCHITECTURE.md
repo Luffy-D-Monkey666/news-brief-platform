@@ -75,9 +75,9 @@
 - 定时调度
 
 #### AI处理器 (ai_processor.py)
-- 使用Ollama本地LLM
+- 支持多种云端AI: Kimi(Moonshot), DeepSeek, OpenAI, Claude
 - 新闻摘要生成（50-100字）
-- 智能分类（8个类别）
+- 智能分类（17个类别）
 - 批量处理优化
 
 #### 数据模型 (database.py)
