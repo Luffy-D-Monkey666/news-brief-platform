@@ -75,15 +75,15 @@ class MultiSourceCrawler:
                 except Exception as e:
                     logger.error(f"知乎话题失败 {zhihu_url}: {e}")
         
-        # 5. 爬取即刻
-        if self.sources.get('jike'):
-            logger.info(f"开始爬取 {len(self.sources['jike'])} 个即刻圈子...")
-            for jike_url in self.sources['jike']:
+        # 5. 爬取微博
+        if self.sources.get('weibo'):
+            logger.info(f"开始爬取 {len(self.sources['weibo'])} 个微博大V...")
+            for weibo_url in self.sources['weibo']:
                 try:
-                    news = self._crawl_jike(jike_url)
+                    news = self._crawl_weibo(weibo_url)
                     all_news.extend(news)
                 except Exception as e:
-                    logger.error(f"即刻圈子失败 {jike_url}: {e}")
+                    logger.error(f"微博大V失败 {weibo_url}: {e}")
         
         # 6. 爬取 YouTube
         if self.sources.get('youtube'):
@@ -175,10 +175,13 @@ class MultiSourceCrawler:
         # 知乎通过 RSSHub 提供
         return self._crawl_rss(zhihu_url, source_type='zhihu')
 
-    def _crawl_jike(self, jike_url: str) -> List[Dict]:
-        """爬取即刻圈子"""
-        # 即刻通过 RSSHub 提供
-        return self._crawl_rss(jike_url, source_type='jike')
+    def _crawl_weibo(self, weibo_url: str) -> List[Dict]:
+        """爬取微博大V
+        
+        微博 URL 格式: https://rsshub.app/weibo/user/{用户ID}
+        """
+        # 微博通过 RSSHub 提供 RSS 格式
+        return self._crawl_rss(weibo_url, source_type='weibo')
 
     def _crawl_youtube(self, youtube_url: str) -> List[Dict]:
         """爬取 YouTube 频道
@@ -327,8 +330,11 @@ class MultiSourceCrawler:
         if source_type == 'zhihu':
             return "知乎话题"
         
-        if source_type == 'jike':
-            return "即刻圈子"
+        if source_type == 'weibo':
+            # 微博来源名称
+            if hasattr(feed, 'feed') and feed.feed.get('title'):
+                return f"{feed.feed.get('title')} (微博)"
+            return "微博"
         
         if source_type == 'youtube':
             # 从 URL 提取频道名称

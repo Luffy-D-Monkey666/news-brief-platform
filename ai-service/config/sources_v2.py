@@ -340,28 +340,94 @@ TWITTER_SOURCES = {
 }
 
 # ====================================
-# 2. 中文本土信息源（WeChat/知乎/即刻）
+# 2. 中文本土信息源（微信公众号/微博）
 # ====================================
 
 CHINA_SOURCES = {
     'wechat_official': [
-        # 微信公众号（通过 RSSHub）
+        # ===== 科技/互联网大厂 =====
         'https://rsshub.app/wechat/mp/抖音集团',             # 抖音技术团队
         'https://rsshub.app/wechat/mp/阿里巴巴',             # 阿里巴巴官方
         'https://rsshub.app/wechat/mp/腾讯科技',             # 腾讯科技
         'https://rsshub.app/wechat/mp/百度AI',               # 百度AI
         'https://rsshub.app/wechat/mp/华为开发者',           # 华为开发者
+        'https://rsshub.app/wechat/mp/京东技术',             # 京东技术
+        'https://rsshub.app/wechat/mp/美团技术团队',         # 美团技术团队
+        'https://rsshub.app/wechat/mp/字节跳动技术团队',     # 字节跳动技术团队
+        
+        # ===== AI/大模型 =====
+        'https://rsshub.app/wechat/mp/机器之心',             # 机器之心（AI媒体）
+        'https://rsshub.app/wechat/mp/量子位',               # 量子位（AI媒体）
+        'https://rsshub.app/wechat/mp/新智元',               # 新智元（AI媒体）
+        'https://rsshub.app/wechat/mp/AI科技评论',           # AI科技评论
+        'https://rsshub.app/wechat/mp/智东西',               # 智东西
+        'https://rsshub.app/wechat/mp/大数据文摘',           # 大数据文摘
+        'https://rsshub.app/wechat/mp/InfoQ',                # InfoQ中国
+        
+        # ===== 投资/财经 =====
+        'https://rsshub.app/wechat/mp/36氪',                 # 36氪
+        'https://rsshub.app/wechat/mp/虎嗅APP',              # 虎嗅
+        'https://rsshub.app/wechat/mp/晚点LatePost',         # 晚点LatePost
+        'https://rsshub.app/wechat/mp/投资界',               # 投资界
+        'https://rsshub.app/wechat/mp/投中网',               # 投中网
+        'https://rsshub.app/wechat/mp/动脉网',               # 动脉网（医疗投资）
+        
+        # ===== 汽车/新能源 =====
+        'https://rsshub.app/wechat/mp/电动汽车观察家',       # 电动汽车观察家
+        'https://rsshub.app/wechat/mp/42号车库',             # 42号车库
+        'https://rsshub.app/wechat/mp/汽车之心',             # 汽车之心
+        'https://rsshub.app/wechat/mp/高工智能汽车',         # 高工智能汽车
+        
+        # ===== 半导体/硬科技 =====
+        'https://rsshub.app/wechat/mp/芯智讯',               # 芯智讯
+        'https://rsshub.app/wechat/mp/半导体行业观察',       # 半导体行业观察
+        'https://rsshub.app/wechat/mp/芯东西',               # 芯东西
+        
+        # ===== 创业/商业 =====
+        'https://rsshub.app/wechat/mp/创业邦',               # 创业邦
+        'https://rsshub.app/wechat/mp/字母榜',               # 字母榜
+        'https://rsshub.app/wechat/mp/晚点',                 # 晚点
+        
+        # ===== 深度/评论 =====
+        'https://rsshub.app/wechat/mp/知识分子',             # 知识分子
+        'https://rsshub.app/wechat/mp/第一财经',             # 第一财经
+        'https://rsshub.app/wechat/mp/财新网',               # 财新网
+        'https://rsshub.app/wechat/mp/澎湃新闻',             # 澎湃新闻
     ],
-    'zhihu': [
-        # 知乎专栏/话题
-        'https://rsshub.app/zhihu/topic/19550517',           # 人工智能话题
-        'https://rsshub.app/zhihu/topic/19550728',           # 机器学习话题
-        'https://rsshub.app/zhihu/topic/19550538',           # 芯片话题
-    ],
-    'jike': [
-        # 即刻圈子（通过 RSSHub）
-        'https://rsshub.app/jike/topic/56d2f9b6cfe47312089448c6',  # 人工智能
-        'https://rsshub.app/jike/topic/5b5e2f43c2e78d00172d9988',  # 科技资讯
+    
+    'weibo': [
+        # ===== 科技/互联网大佬 =====
+        'https://rsshub.app/weibo/user/1111681197',          # 雷军（小米创始人）
+        'https://rsshub.app/weibo/user/1750070171',          # 周鸿祎（360创始人）
+        'https://rsshub.app/weibo/user/1494759802',          # 罗永浩
+        'https://rsshub.app/weibo/user/1892653243',          # 王兴（美团创始人）
+        'https://rsshub.app/weibo/user/1650111241',          # 张一鸣（字节跳动，如公开）
+        'https://rsshub.app/weibo/user/1659809157',          # 李想（理想汽车）
+        'https://rsshub.app/weibo/user/1632078473',          # 何小鹏（小鹏汽车）
+        'https://rsshub.app/weibo/user/1656801620',          # 李斌（蔚来汽车）
+        
+        # ===== AI/科技大V =====
+        'https://rsshub.app/weibo/user/1402400261',          # 李开复（创新工场）
+        'https://rsshub.app/weibo/user/1288915263',          # 王思聪
+        'https://rsshub.app/weibo/user/1195242865',          # 霍金（官方账号）
+        'https://rsshub.app/weibo/user/1566936885',          # 薛兆丰
+        
+        # ===== 财经/投资大V =====
+        'https://rsshub.app/weibo/user/1364707591',          # 但斌（投资人）
+        'https://rsshub.app/weibo/user/1318599007',          # 李大霄
+        'https://rsshub.app/weibo/user/1737878851',          # 洪灝（交银国际）
+        'https://rsshub.app/weibo/user/1239883480',          # 叶檀（财经评论家）
+        
+        # ===== 汽车/评测大V =====
+        'https://rsshub.app/weibo/user/1651428902',          # 韩路（汽车之家创始人）
+        'https://rsshub.app/weibo/user/1641523987',          # 陈震（萝卜报告）
+        'https://rsshub.app/weibo/user/1700648435',          # 闫闯
+        
+        # ===== 媒体/机构 =====
+        'https://rsshub.app/weibo/user/1618051664',          # 人民日报
+        'https://rsshub.app/weibo/user/1974576991',          # 新华社
+        'https://rsshub.app/weibo/user/1634489957',          # 央视财经
+        'https://rsshub.app/weibo/user/1644114654',          # 中国新闻周刊
     ],
 }
 
@@ -619,8 +685,7 @@ NEWS_SOURCES_V2 = {
     'rss_feeds': [],
     'twitter': [],
     'wechat': [],
-    'zhihu': [],
-    'jike': [],
+    'weibo': [],
     'youtube': [],
 }
 
@@ -634,8 +699,7 @@ for category, urls in TWITTER_SOURCES.items():
 
 # 合并中文源
 NEWS_SOURCES_V2['wechat'] = CHINA_SOURCES['wechat_official']
-NEWS_SOURCES_V2['zhihu'] = CHINA_SOURCES['zhihu']
-NEWS_SOURCES_V2['jike'] = CHINA_SOURCES['jike']
+NEWS_SOURCES_V2['weibo'] = CHINA_SOURCES['weibo']
 
 # 合并 YouTube 源
 for category, urls in YOUTUBE_SOURCES.items():
@@ -646,8 +710,7 @@ TOTAL_SOURCES = (
     len(NEWS_SOURCES_V2['rss_feeds']) +
     len(NEWS_SOURCES_V2['twitter']) +
     len(NEWS_SOURCES_V2['wechat']) +
-    len(NEWS_SOURCES_V2['zhihu']) +
-    len(NEWS_SOURCES_V2['jike']) +
+    len(NEWS_SOURCES_V2['weibo']) +
     len(NEWS_SOURCES_V2['youtube'])
 )
 
@@ -655,7 +718,6 @@ print(f"新闻源 V2 统计:")
 print(f"  - RSS 源: {len(NEWS_SOURCES_V2['rss_feeds'])} 个")
 print(f"  - Twitter/X 源: {len(NEWS_SOURCES_V2['twitter'])} 个")
 print(f"  - 微信公众号: {len(NEWS_SOURCES_V2['wechat'])} 个")
-print(f"  - 知乎话题: {len(NEWS_SOURCES_V2['zhihu'])} 个")
-print(f"  - 即刻圈子: {len(NEWS_SOURCES_V2['jike'])} 个")
+print(f"  - 微博大V: {len(NEWS_SOURCES_V2['weibo'])} 个")
 print(f"  - YouTube 频道: {len(NEWS_SOURCES_V2['youtube'])} 个")
 print(f"  - 总计: {TOTAL_SOURCES} 个")

@@ -1,6 +1,6 @@
 """
 新闻简报AI服务 V2 - 多源支持
-支持 RSS、Twitter/X、微信公众号、知乎、即刻
+支持 RSS、Twitter/X、微信公众号、微博大V、YouTube
 """
 
 import sys
@@ -79,7 +79,7 @@ class NewsServiceV2:
 
             logger.info("=" * 60)
             logger.info("NewsHub V2.1 - 开始新一轮新闻采集")
-            logger.info(f"支持源: RSS + Twitter/X + 微信公众号 + 知乎 + 即刻 + YouTube")
+            logger.info(f"支持源: RSS + Twitter/X + 微信公众号 + 微博大V + YouTube")
 
             # 1. 爬取新闻（多源）
             logger.info("步骤 1/5: 开始爬取所有新闻源...")
@@ -284,7 +284,7 @@ def health_check():
         "status": "running",
         "service": "news-ai-service-v2",
         "version": "2.1.0",
-        "features": ["rss", "twitter", "wechat", "zhihu", "jike", "youtube"],
+        "features": ["rss", "twitter", "wechat", "weibo", "youtube"],
         "timestamp": datetime.now().isoformat()
     })
 
@@ -319,8 +319,15 @@ def main():
     # 显示源统计
     from config.sources_v2 import TOTAL_SOURCES
     from config.sources_v2 import YOUTUBE_SOURCES
+    from config.sources_v2 import CHINA_SOURCES
     youtube_count = sum(len(urls) for urls in YOUTUBE_SOURCES.values())
-    logger.info(f"总计新闻源: {TOTAL_SOURCES} 个 (含 {youtube_count} 个YouTube频道)")
+    weibo_count = len(CHINA_SOURCES.get('weibo', []))
+    wechat_count = len(CHINA_SOURCES.get('wechat_official', []))
+    logger.info(f"总计新闻源: {TOTAL_SOURCES} 个")
+    logger.info(f"  - Twitter/X: {len(NEWS_SOURCES_V2['twitter'])} 个")
+    logger.info(f"  - 微信公众号: {wechat_count} 个")
+    logger.info(f"  - 微博大V: {weibo_count} 个")
+    logger.info(f"  - YouTube: {youtube_count} 个")
     
     # 启动Flask
     flask_thread = Thread(target=run_flask, daemon=True)

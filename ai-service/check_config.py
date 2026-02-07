@@ -78,14 +78,19 @@ def check_news_sources():
     print(f"   - RSS源: {len(NEWS_SOURCES_V2.get('rss_feeds', []))} 个")
     print(f"   - Twitter源: {len(NEWS_SOURCES_V2.get('twitter', []))} 个")
     print(f"   - 微信公众号: {len(NEWS_SOURCES_V2.get('wechat', []))} 个")
-    print(f"   - 知乎话题: {len(NEWS_SOURCES_V2.get('zhihu', []))} 个")
-    print(f"   - 即刻圈子: {len(NEWS_SOURCES_V2.get('jike', []))} 个")
+    print(f"   - 微博大V: {len(NEWS_SOURCES_V2.get('weibo', []))} 个")
     print(f"   - YouTube频道: {len(NEWS_SOURCES_V2.get('youtube', []))} 个")
     print(f"   - 总计: {TOTAL_SOURCES} 个")
     
+    # 中文源详情
+    from config.sources_v2 import CHINA_SOURCES
+    print(f"\n2. 中文源分类统计:")
+    print(f"   - 微信公众号: {len(CHINA_SOURCES.get('wechat_official', []))} 个")
+    print(f"   - 微博大V: {len(CHINA_SOURCES.get('weibo', []))} 个")
+    
     # YouTube 频道详情
     from config.sources_v2 import YOUTUBE_SOURCES
-    print(f"\n2. YouTube 频道分类统计:")
+    print(f"\n3. YouTube 频道分类统计:")
     for category, urls in YOUTUBE_SOURCES.items():
         print(f"   - {category}: {len(urls)} 个频道")
     
