@@ -3,7 +3,7 @@ const Brief = require('../models/Brief');
 // 获取最新简报
 exports.getLatestBriefs = async (req, res) => {
   try {
-    const { category, limit = 20 } = req.query;
+    const { category, limit = 100 } = req.query;  // 默认100条
 
     const query = {};
     if (category) {

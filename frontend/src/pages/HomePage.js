@@ -22,9 +22,9 @@ const HomePage = () => {
     try {
       setLoading(true);
       setCurrentPage(1);  // 重置页码
-      const response = await getLatestBriefs(selectedCategory, 30);  // 优化：减少初始加载量50→30
+      const response = await getLatestBriefs(selectedCategory, 100);  // 增加初始加载量到100条
       setBriefs(response.data || []);
-      setHasMore(response.data && response.data.length === 30);  // 判断是否有更多
+      setHasMore(response.data && response.data.length === 100);  // 判断是否有更多
     } catch (error) {
       console.error('加载简报失败:', error);
       // 如果是超时错误（通常是后端正在从休眠中唤醒），自动重试

@@ -40,8 +40,8 @@ class NewsServiceV2:
     """新闻服务主类 V2"""
 
     def __init__(self):
-        # 使用多源爬虫
-        self.crawler = MultiSourceCrawler(NEWS_SOURCES_V2)
+        # 使用多源爬虫（24小时时间窗口，并发采集）
+        self.crawler = MultiSourceCrawler(NEWS_SOURCES_V2, time_window_hours=24)
         
         # 使用云端AI处理器（Kimi/DeepSeek/OpenAI/Claude）
         ai_provider = os.getenv('AI_PROVIDER', 'kimi')

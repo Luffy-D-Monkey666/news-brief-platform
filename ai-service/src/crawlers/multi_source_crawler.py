@@ -1,123 +1,162 @@
 """
-多源新闻爬虫 V2
-支持 RSS、Twitter/X、微信公众号、知乎、即刻
+多源新闻爬虫 V2 - 优化版
+支持 RSS、Twitter/X、微信公众号、微博、YouTube
+优化：并发采集、增加每源条数、24小时时间窗口
 """
 
 import feedparser
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class MultiSourceCrawler:
-    """多源新闻爬虫"""
+    """多源新闻爬虫 - 优化版"""
 
-    def __init__(self, sources_config: Dict):
+    def __init__(self, sources_config: Dict, time_window_hours: int = 24):
         """
         初始化爬虫
         
         Args:
-            sources_config: 包含 rss_feeds, twitter, wechat, zhihu, jike 的配置
+            sources_config: 包含 rss_feeds, twitter, wechat, weibo, youtube 的配置
+            time_window_hours: 只采集最近N小时的新闻（默认24小时）
         """
         self.sources = sources_config
+        self.time_window = timedelta(hours=time_window_hours)
+        self.cutoff_time = datetime.now() - self.time_window
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
 
     def crawl_all(self) -> List[Dict]:
-        """爬取所有来源的新闻"""
+        """爬取所有来源的新闻（并发优化版）"""
         all_news = []
+        self.cutoff_time = datetime.now() - self.time_window  # 更新时间窗口
+        
+        logger.info(f"🕐 采集时间窗口: 最近 {self.time_window.total_seconds()/3600:.0f} 小时")
+        logger.info(f"📅 只采集 {self.cutoff_time.strftime('%Y-%m-%d %H:%M')} 之后的新闻")
+        
+        # 统计变量
+        stats = {
+            'rss': {'total': 0, 'success': 0, 'failed': 0},
+            'twitter': {'total': 0, 'success': 0, 'failed': 0},
+            'wechat': {'total': 0, 'success': 0, 'failed': 0},
+            'weibo': {'total': 0, 'success': 0, 'failed': 0},
+            'youtube': {'total': 0, 'success': 0, 'failed': 0},
+        }
+        
+        # 并发采集函数
+        def crawl_with_stats(urls, crawl_func, source_type):
+            """并发采集并统计"""
+            if not urls:
+                return []
+            
+            results = []
+            stats[source_type]['total'] = len(urls)
+            
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                future_to_url = {executor.submit(crawl_func, url): url for url in urls}
+                for future in as_completed(future_to_url):
+                    url = future_to_url[future]
+                    try:
+                        news = future.result()
+                        results.extend(news)
+                        stats[source_type]['success'] += 1
+                    except Exception as e:
+                        stats[source_type]['failed'] += 1
+                        logger.error(f"  ✗ {self._get_short_url(url)}: {e}")
+            
+            return results
         
         # 1. 爬取 RSS 源
         if self.sources.get('rss_feeds'):
-            logger.info(f"开始爬取 {len(self.sources['rss_feeds'])} 个 RSS 源...")
-            for feed_url in self.sources['rss_feeds']:
-                try:
-                    news = self._crawl_rss(feed_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"RSS 源失败 {feed_url}: {e}")
+            logger.info(f"📡 开始并发爬取 {len(self.sources['rss_feeds'])} 个 RSS 源...")
+            news = crawl_with_stats(self.sources['rss_feeds'], self._crawl_rss, 'rss')
+            all_news.extend(news)
+            logger.info(f"📡 RSS: {stats['rss']['success']}/{stats['rss']['total']} 成功, "
+                       f"{stats['rss']['failed']} 失败, 获取 {len(news)} 条")
         
         # 2. 爬取 Twitter/X 源
         if self.sources.get('twitter'):
-            logger.info(f"开始爬取 {len(self.sources['twitter'])} 个 Twitter 源...")
-            for twitter_url in self.sources['twitter']:
-                try:
-                    news = self._crawl_twitter(twitter_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"Twitter 源失败 {twitter_url}: {e}")
+            logger.info(f"🐦 开始并发爬取 {len(self.sources['twitter'])} 个 Twitter 源...")
+            news = crawl_with_stats(self.sources['twitter'], self._crawl_twitter, 'twitter')
+            all_news.extend(news)
+            logger.info(f"🐦 Twitter: {stats['twitter']['success']}/{stats['twitter']['total']} 成功, "
+                       f"{stats['twitter']['failed']} 失败, 获取 {len(news)} 条")
         
         # 3. 爬取微信公众号
         if self.sources.get('wechat'):
-            logger.info(f"开始爬取 {len(self.sources['wechat'])} 个微信公众号...")
-            for wechat_url in self.sources['wechat']:
-                try:
-                    news = self._crawl_wechat(wechat_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"微信公众号失败 {wechat_url}: {e}")
+            logger.info(f"💬 开始并发爬取 {len(self.sources['wechat'])} 个微信公众号...")
+            news = crawl_with_stats(self.sources['wechat'], self._crawl_wechat, 'wechat')
+            all_news.extend(news)
+            logger.info(f"💬 WeChat: {stats['wechat']['success']}/{stats['wechat']['total']} 成功, "
+                       f"{stats['wechat']['failed']} 失败, 获取 {len(news)} 条")
         
-        # 4. 爬取知乎
-        if self.sources.get('zhihu'):
-            logger.info(f"开始爬取 {len(self.sources['zhihu'])} 个知乎话题...")
-            for zhihu_url in self.sources['zhihu']:
-                try:
-                    news = self._crawl_zhihu(zhihu_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"知乎话题失败 {zhihu_url}: {e}")
-        
-        # 5. 爬取微博
+        # 4. 爬取微博
         if self.sources.get('weibo'):
-            logger.info(f"开始爬取 {len(self.sources['weibo'])} 个微博大V...")
-            for weibo_url in self.sources['weibo']:
-                try:
-                    news = self._crawl_weibo(weibo_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"微博大V失败 {weibo_url}: {e}")
+            logger.info(f"📱 开始并发爬取 {len(self.sources['weibo'])} 个微博大V...")
+            news = crawl_with_stats(self.sources['weibo'], self._crawl_weibo, 'weibo')
+            all_news.extend(news)
+            logger.info(f"📱 Weibo: {stats['weibo']['success']}/{stats['weibo']['total']} 成功, "
+                       f"{stats['weibo']['failed']} 失败, 获取 {len(news)} 条")
         
-        # 6. 爬取 YouTube
+        # 5. 爬取 YouTube
         if self.sources.get('youtube'):
-            logger.info(f"开始爬取 {len(self.sources['youtube'])} 个 YouTube 频道...")
-            for youtube_url in self.sources['youtube']:
-                try:
-                    news = self._crawl_youtube(youtube_url)
-                    all_news.extend(news)
-                except Exception as e:
-                    logger.error(f"YouTube 频道失败 {youtube_url}: {e}")
+            logger.info(f"📺 开始并发爬取 {len(self.sources['youtube'])} 个 YouTube 频道...")
+            news = crawl_with_stats(self.sources['youtube'], self._crawl_youtube, 'youtube')
+            all_news.extend(news)
+            logger.info(f"📺 YouTube: {stats['youtube']['success']}/{stats['youtube']['total']} 成功, "
+                       f"{stats['youtube']['failed']} 失败, 获取 {len(news)} 条")
         
-        logger.info(f"总共爬取到 {len(all_news)} 条新闻")
-        return all_news
+        # 按时间过滤（只保留24小时内的新闻）
+        time_filtered_news = [n for n in all_news if n.get('published', datetime.now()) > self.cutoff_time]
+        filtered_count = len(all_news) - len(time_filtered_news)
+        
+        logger.info("=" * 60)
+        logger.info(f"📊 采集统计:")
+        logger.info(f"   原始获取: {len(all_news)} 条")
+        logger.info(f"   时间过滤(>{self.time_window.total_seconds()/3600:.0f}小时): 移除 {filtered_count} 条")
+        logger.info(f"   最终保留: {len(time_filtered_news)} 条")
+        logger.info("=" * 60)
+        
+        return time_filtered_news
 
     def _crawl_rss(self, feed_url: str, source_type: str = 'rss') -> List[Dict]:
-        """爬取 RSS 订阅源"""
+        """爬取 RSS 订阅源（优化版）"""
         try:
             import socket
-            socket.setdefaulttimeout(10)
+            socket.setdefaulttimeout(30)  # 增加到30秒超时
             
             feed = feedparser.parse(feed_url)
             news_items = []
             
-            # RSSHub Twitter 路由通常返回 20 条，取前10条
-            limit = 10 if 'twitter' in feed_url else 10
+            # 优化：增加每源条数到20条（原来10条）
+            # RSSHub Twitter 通常返回20条，我们取全部可用
+            limit = 20 if 'twitter' in feed_url else 20
             
             for entry in feed.entries[:limit]:
+                # 解析发布时间
+                published = self._parse_date(entry)
+                
+                # 时间过滤：只保留24小时内的新闻
+                if published < self.cutoff_time:
+                    continue
+                
                 news_item = {
                     'title': entry.get('title', ''),
                     'content': self._extract_content(entry),
                     'link': entry.get('link', ''),
                     'image': self._extract_image(entry),
                     'video': self._extract_video(entry),
-                    'published': self._parse_date(entry),
+                    'published': published,
                     'source': self._extract_source_name(feed, feed_url, source_type),
                     'source_url': feed_url,
                     'source_type': source_type,
