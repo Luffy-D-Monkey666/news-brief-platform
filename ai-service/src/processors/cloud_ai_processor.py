@@ -55,7 +55,8 @@ class CloudAIProcessor:
         """调用OpenAI API"""
         try:
             if not self.api_key:
-                logger.error(f"{self.provider.upper()} API Key 未设置")
+                logger.error(f"❌ {self.provider.upper()} API Key 未设置")
+                logger.error(f"   请设置环境变量: {self.provider.upper()}_API_KEY")
                 return None
 
             headers = {
@@ -72,7 +73,10 @@ class CloudAIProcessor:
                 'temperature': 0.3
             }
 
-            logger.info(f"正在调用 {self.provider} API (model: {self.model})...")
+            logger.info(f"🤖 正在调用 {self.provider} API (model: {self.model})...")
+            logger.debug(f"   API URL: {self.api_url}")
+            logger.debug(f"   Prompt长度: {len(prompt)} 字符")
+            
             response = requests.post(
                 self.api_url,
                 headers=headers,
@@ -83,17 +87,22 @@ class CloudAIProcessor:
             if response.status_code == 200:
                 result = response.json()
                 content = result['choices'][0]['message']['content'].strip()
-                logger.info(f"{self.provider} API 调用成功，返回 {len(content)} 字符")
+                logger.info(f"✅ {self.provider} API 调用成功，返回 {len(content)} 字符")
+                logger.debug(f"   返回内容预览: {content[:100]}...")
                 return content
             else:
-                logger.error(f"{self.provider} API错误: {response.status_code} - {response.text}")
+                logger.error(f"❌ {self.provider} API错误: {response.status_code}")
+                logger.error(f"   响应内容: {response.text[:200]}")
                 return None
 
         except requests.exceptions.Timeout:
-            logger.error(f"{self.provider} API 调用超时（30秒）")
+            logger.error(f"❌ {self.provider} API 调用超时（30秒）")
+            return None
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"❌ {self.provider} API 连接失败: {str(e)}")
             return None
         except Exception as e:
-            logger.error(f"{self.provider} 调用失败: {str(e)}")
+            logger.error(f"❌ {self.provider} 调用失败: {str(e)}")
             return None
 
     def _call_claude(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
@@ -284,16 +293,22 @@ class CloudAIProcessor:
                     else:
                         category = 'general'
 
+                logger.debug(f"✅ 成功解析AI响应: 标题={chinese_title[:30]}..., 分类={category}")
                 return chinese_title, chinese_summary, category
 
             except json.JSONDecodeError as e:
-                logger.warning(f"JSON解析失败: {e}, 尝试使用fallback")
+                logger.warning(f"⚠️ JSON解析失败: {e}")
+                logger.debug(f"   AI返回内容: {result[:200]}...")
                 # Fallback: 尝试分行解析
                 lines = result.strip().split('\n')
                 lines = [line.strip() for line in lines if line.strip()]
                 if len(lines) >= 2:
+                    logger.debug(f"   使用fallback解析: {len(lines)} 行")
                     return lines[0], '\n'.join(lines[1:-1]), lines[-1] if len(lines) > 2 else 'general'
+            except Exception as e:
+                logger.error(f"❌ 处理AI响应时出错: {str(e)}")
 
+        logger.warning(f"⚠️ AI处理返回空结果，将使用fallback")
         return None, None, 'general'
 
 
@@ -366,21 +381,28 @@ class NewsProcessor:
         使用合并提示词处理单条新闻 (Token优化: 一次调用完成摘要+分类)
         """
         try:
+            original_title = news_item.get('title', '')
+            content = news_item.get('content', '')
+            
+            logger.debug(f"📝 处理新闻: {original_title[:50]}...")
+            
             # 使用合并提示词一次性完成摘要和分类
             chinese_title, chinese_summary, category = self.ai.process_combined(
-                news_item['title'],
-                news_item['content'],
+                original_title,
+                content,
                 combined_prompt
             )
 
             if not chinese_title or not chinese_summary:
-                logger.warning(f"合并处理失败，使用fallback: {news_item['title']}")
-                chinese_title = news_item['title'][:100]
-                content = news_item['content']
+                logger.debug(f"   AI返回空结果，使用fallback处理")
+                chinese_title = original_title[:100]
                 chinese_summary = content[:200] + '...' if len(content) > 200 else content
                 if not chinese_summary:
                     chinese_summary = '暂无摘要'
                 category = 'general'
+                logger.debug(f"   Fallback分类: {category}")
+            else:
+                logger.debug(f"   AI处理成功: 分类={category}")
 
             # 构建处理后的新闻
             processed_news = {
@@ -396,11 +418,11 @@ class NewsProcessor:
                 'created_at': news_item.get('created_at')
             }
 
-            logger.info(f"合并处理完成: [{category}] {chinese_title[:30]}...")
             return processed_news
 
         except Exception as e:
-            logger.error(f"合并处理失败: {str(e)}")
+            logger.error(f"❌ 处理新闻失败: {str(e)[:100]}")
+            logger.debug(f"   标题: {news_item.get('title', 'N/A')[:50]}...")
             return None
 
     def batch_process(self, news_list: list, summarize_prompt: str, classify_prompt: str) -> list:
@@ -467,10 +489,14 @@ class NewsProcessor:
         # 获取并发线程数
         max_workers = int(os.getenv('AI_CONCURRENT_WORKERS', 5))
 
-        logger.info(f"开始合并批量处理 {len(news_list)} 条新闻（{max_workers}个线程，Token优化模式）...")
+        logger.info(f"🚀 开始批量AI处理: {len(news_list)} 条新闻")
+        logger.info(f"   并发线程: {max_workers}个")
+        logger.info(f"   AI Provider: {self.ai.provider}")
+        logger.info(f"   模型: {self.ai.model}")
 
         processed = []
         failed = []
+        api_errors = 0
 
         # 使用线程池并发处理
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -490,26 +516,33 @@ class NewsProcessor:
                     result = future.result(timeout=60)
                     if result:
                         processed.append(result)
-                        if completed_count % 10 == 0:
-                            logger.info(f"进度: {completed_count}/{len(news_list)} 条已处理")
+                        if completed_count % 5 == 0 or completed_count == len(news_list):
+                            logger.info(f"   进度: {completed_count}/{len(news_list)} 条已处理 ({completed_count/len(news_list)*100:.0f}%)")
                     else:
                         failed.append(news['title'][:50])
-                        logger.warning(f"处理失败: {news['title'][:50]}")
+                        api_errors += 1
+                        if api_errors <= 3:  # 只显示前3个失败
+                            logger.warning(f"   ⚠️ 处理失败 ({api_errors}): {news['title'][:50]}...")
                 except Exception as e:
                     failed.append(news['title'][:50])
-                    logger.error(f"处理异常: {news['title'][:50]} - {str(e)}")
+                    api_errors += 1
+                    if api_errors <= 3:
+                        logger.error(f"   ❌ 处理异常 ({api_errors}): {news['title'][:50]}... - {str(e)[:50]}")
 
         # 计算统计信息
         elapsed = (datetime.now() - start_time).total_seconds()
         success_rate = len(processed) / len(news_list) * 100 if news_list else 0
         avg_time_per_news = elapsed / len(news_list) if news_list else 0
 
-        logger.info(f"合并批量处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
-        logger.info(f"总耗时: {elapsed:.1f}秒, 平均: {avg_time_per_news:.2f}秒/条")
-        logger.info(f"Token优化: 相比传统方式节省约50% Token消耗")
+        logger.info(f"✅ 批量处理完成:")
+        logger.info(f"   成功: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
+        logger.info(f"   失败: {len(failed)}")
+        logger.info(f"   总耗时: {elapsed:.1f}秒")
+        logger.info(f"   平均: {avg_time_per_news:.2f}秒/条")
 
         if success_rate < 90 and len(news_list) > 0:
-            logger.warning(f"⚠️  高失败率检测: {100-success_rate:.1f}% 的新闻处理失败")
-            logger.warning(f"失败的新闻示例: {failed[:3]}")
+            logger.warning(f"⚠️  高失败率警告: {100-success_rate:.1f}% 的新闻处理失败")
+            if failed:
+                logger.warning(f"   失败示例: {failed[:3]}")
 
         return processed

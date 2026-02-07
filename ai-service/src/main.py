@@ -131,30 +131,42 @@ class NewsServiceV2:
             before_filter = len(new_news)
 
             quality_filtered_news = []
+            skipped_twitter_rt = 0
+            skipped_twitter_short = 0
+            
             for news in new_news:
                 title = news.get('title', '')
                 # Twitter 内容需要特殊处理（RT、@mention 过滤）
                 if news.get('source_type') == 'twitter':
                     # 跳过纯转推（RT 开头）
                     if title.startswith('RT @'):
+                        skipped_twitter_rt += 1
                         continue
                     # 跳过低质量 Twitter 内容（如纯表情、过短）
                     if len(title) < 20:
+                        skipped_twitter_short += 1
                         continue
                 
-                if self.quality_filter.should_process(title, 'general', threshold=3):
+                # 使用更宽松的阈值（2而不是3）
+                if self.quality_filter.should_process(title, 'general', threshold=2):
                     quality_filtered_news.append(news)
 
             after_filter = len(quality_filtered_news)
             filtered_count = before_filter - after_filter
 
-            if filtered_count > 0:
-                logger.info(f"步骤 2.5/5 完成: 质量过滤移除 {filtered_count} 条，剩余 {after_filter} 条")
-            else:
-                logger.info(f"步骤 2.5/5 完成: 所有内容通过质量检查")
+            # 详细日志
+            logger.info(f"步骤 2.5/5 完成:")
+            logger.info(f"   原始新闻: {before_filter} 条")
+            if skipped_twitter_rt > 0:
+                logger.info(f"   - Twitter RT过滤: {skipped_twitter_rt} 条")
+            if skipped_twitter_short > 0:
+                logger.info(f"   - Twitter 短内容过滤: {skipped_twitter_short} 条")
+            logger.info(f"   质量过滤移除: {filtered_count - skipped_twitter_rt - skipped_twitter_short} 条")
+            logger.info(f"   最终剩余: {after_filter} 条")
+            logger.info(f"   通过率: {after_filter/before_filter*100:.1f}%")
 
             if not quality_filtered_news:
-                logger.info("质量过滤后没有剩余新闻")
+                logger.warning("⚠️ 质量过滤后没有剩余新闻，请检查过滤规则是否过于严格")
                 return
 
             new_news = quality_filtered_news
@@ -167,25 +179,50 @@ class NewsServiceV2:
 
             # 4. AI处理
             logger.info(f"步骤 4/5: 开始 AI 处理 ({len(new_news)} 条新闻)...")
-            logger.info(f"当前 AI Provider: {os.getenv('AI_PROVIDER', 'kimi')}")
-            logger.info(f"Token优化: 使用合并提示词，一次调用完成摘要+分类")
+            
+            # 检查AI配置
+            ai_provider = os.getenv('AI_PROVIDER', 'kimi')
+            logger.info(f"🤖 当前 AI Provider: {ai_provider}")
+            
+            # 检查API Key是否设置
+            api_key_var = f"{ai_provider.upper()}_API_KEY"
+            if not os.getenv(api_key_var):
+                logger.error(f"❌ 警告: 环境变量 {api_key_var} 未设置!")
+                logger.error(f"   AI处理将无法正常工作，请设置API Key")
+            else:
+                logger.info(f"✅ API Key 已设置 ({api_key_var})")
+            
+            logger.info(f"💡 Token优化: 使用合并提示词，一次调用完成摘要+分类")
 
             processed_news = self.processor.batch_process_combined(
                 new_news,
                 COMBINED_PROMPT
             )
-            logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
+            
+            # 统计处理结果
+            success_count = len(processed_news)
+            fail_count = len(new_news) - success_count
+            logger.info(f"步骤 4/5 完成:")
+            logger.info(f"   AI 处理成功: {success_count}/{len(new_news)} 条")
+            if fail_count > 0:
+                logger.warning(f"   ⚠️ 处理失败: {fail_count} 条")
+            logger.info(f"   成功率: {success_count/len(new_news)*100:.1f}%")
 
             # 5. 保存简报
             logger.info("步骤 5/5: 保存简报到数据库...")
             saved_count = 0
+            publish_count = 0
             for brief in processed_news:
                 brief_id = self.db.save_brief(brief)
                 if brief_id:
                     saved_count += 1
-                    self.publish_brief(brief)
+                    if self.publish_brief(brief):
+                        publish_count += 1
 
-            logger.info(f"步骤 5/5 完成: 成功保存 {saved_count}/{len(processed_news)} 条简报")
+            logger.info(f"步骤 5/5 完成:")
+            logger.info(f"   成功保存: {saved_count}/{len(processed_news)} 条")
+            if self.redis_enabled:
+                logger.info(f"   发布通知: {publish_count} 条")
 
             elapsed = (datetime.now() - start_time).total_seconds()
             logger.info(f"本轮采集完成，耗时 {elapsed:.1f} 秒")
@@ -200,10 +237,10 @@ class NewsServiceV2:
             self._lock.release()
             logger.debug("采集锁已释放")
 
-    def publish_brief(self, brief: Dict):
+    def publish_brief(self, brief: Dict) -> bool:
         """发布简报到Redis"""
         if not self.redis_enabled or not self.redis_client:
-            return
+            return False
 
         try:
             if '_id' in brief:
@@ -216,9 +253,11 @@ class NewsServiceV2:
             import json
             self.redis_client.publish('news:new', json.dumps(brief, ensure_ascii=False))
             logger.debug(f"发布简报到Redis: [{brief['category']}] {brief['title'][:30]}")
+            return True
         except Exception as e:
             logger.error(f"发布到Redis失败: {str(e)}")
             self.redis_enabled = False
+            return False
 
 
 # Flask应用

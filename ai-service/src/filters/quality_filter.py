@@ -15,33 +15,32 @@ class ContentQualityFilter:
 
     def __init__(self):
         # 低价值关键词（通用）- 出现在标题中会降低评分
+        # 优化：精简列表，只保留明显低质量的内容，避免误伤正常新闻
         self.low_value_keywords = [
-            # 教程指南类
-            '教程', '指南', '入门', '新手', '基础', '初级',
-            'tutorial', 'guide', 'beginner', 'basics', 'how to',
+            # 教程指南类（保留明显教程性质的词）
+            '入门指南', '新手指南', '基础教程', '初级教程',
+            'tutorial for beginners', 'beginner guide', 'how to ',
 
-            # 推荐排行类
-            '推荐', '排行', '榜单', 'top 10', 'top 5', 'best of',
-            '必看', '必读', '必学', '精选', '合集',
+            # 推荐排行类（保留明显的列表类内容）
+            'top 10', 'top 5', 'best of 20', '必看清单',
 
-            # 评测对比类
-            '评测', '测评', '对比', '横评', 'review', 'comparison',
-            '体验', '上手', '使用感受',
+            # 评测对比类（保留明显的个人体验类）
+            '上手体验', '使用感受', '个人测评',
 
             # 营销软文类
-            '购买', '买', '优惠', '折扣', '促销', '秒杀',
-            'buy', 'purchase', 'deal', 'discount',
+            '限时优惠', '折扣促销', '秒杀活动',
+            'buy now', 'limited deal', 'flash sale',
 
             # 个人观点类
-            '我的', '我认为', '个人', '观点', '看法',
-            '如何', '怎样', '方法', '技巧', '心得',
+            '我认为', '我的观点', '个人看法',
+            '如何学会', '怎样做到', '心得体会',
 
-            # 低质量标题
+            # 低质量标题（严格保留）
             '震惊', '竟然', '居然', '万万没想到', '不敢相信',
-            '?', '？？', '！！',
+            '!!!', '???', '！！！', '？？？',
             
             # Twitter/X 特定低质量内容
-            'rt @', 'retweet', '转发', '早上好', '晚上好',
+            'rt @', 'retweet', '早上好', '晚上好',
             'good morning', 'good night', 'happy birthday',
             '节日快乐', '周末愉快', '打卡', '签到',
         ]
@@ -107,18 +106,18 @@ class ContentQualityFilter:
 
         title_lower = title.lower()
 
-        # 检查低价值关键词（-3分）
+        # 检查低价值关键词（-2分，原来是-3分，降低惩罚力度）
         for keyword in self.low_value_keywords:
             if keyword in title_lower:
-                score -= 3
+                score -= 2
                 logger.debug(f"低价值关键词: {keyword} in {title[:50]}")
                 break  # 只扣一次分
 
-        # 检查高价值关键词（+2分）
+        # 检查高价值关键词（+3分，原来是+2分，提高奖励力度）
         category_keywords = self.high_value_keywords.get(category, [])
         for keyword in category_keywords:
             if keyword in title_lower:
-                score += 2
+                score += 3
                 logger.debug(f"高价值关键词: {keyword} in {title[:50]}")
                 break  # 只加一次分
 
@@ -127,7 +126,7 @@ class ContentQualityFilter:
 
         return score
 
-    def should_process(self, title: str, category: str, threshold: int = 4) -> bool:
+    def should_process(self, title: str, category: str, threshold: int = 3) -> bool:
         """
         判断是否应该处理这条新闻
 
@@ -142,9 +141,10 @@ class ContentQualityFilter:
         score = self.evaluate_importance(title, '', category)
 
         if score < threshold:
-            logger.info(f"⏭️  跳过低质量新闻（评分{score}）: {title[:50]}...")
+            logger.info(f"⏭️  跳过低质量新闻（评分{score} < {threshold}）: {title[:50]}...")
             return False
-
+        
+        logger.debug(f"✅ 通过质量检查（评分{score} >= {threshold}）: {title[:50]}...")
         return True
 
     def filter_news_list(self, news_list: List[Dict], category_key: str = 'category') -> List[Dict]:
@@ -164,16 +164,20 @@ class ContentQualityFilter:
         for news in news_list:
             title = news.get('title', '')
             category = news.get(category_key, 'general')
+            
+            # 记录过滤前的评分详情
+            score = self.evaluate_importance(title, '', category)
+            news['quality_score'] = score
 
-            if self.should_process(title, category):
-                # 添加质量评分到新闻数据
-                news['quality_score'] = self.evaluate_importance(title, '', category)
+            if self.should_process(title, category, threshold=3):
                 filtered.append(news)
             else:
                 skipped_count += 1
+                logger.debug(f"  被过滤: {title[:60]}... (评分: {score})")
 
         if skipped_count > 0:
             logger.info(f"📊 质量过滤: 保留 {len(filtered)} 条，跳过 {skipped_count} 条低质量新闻")
+            logger.info(f"   通过率: {len(filtered)}/{len(news_list)} ({len(filtered)/len(news_list)*100:.1f}%)")
 
         return filtered
 
