@@ -78,8 +78,8 @@ class NewsServiceV2:
             start_time = datetime.now()
 
             logger.info("=" * 60)
-            logger.info("NewsHub V2 - 开始新一轮新闻采集")
-            logger.info(f"支持源: RSS + Twitter/X + 微信公众号 + 知乎 + 即刻")
+            logger.info("NewsHub V2.1 - 开始新一轮新闻采集")
+            logger.info(f"支持源: RSS + Twitter/X + 微信公众号 + 知乎 + 即刻 + YouTube")
 
             # 1. 爬取新闻（多源）
             logger.info("步骤 1/5: 开始爬取所有新闻源...")
@@ -133,11 +133,14 @@ class NewsServiceV2:
             quality_filtered_news = []
             skipped_twitter_rt = 0
             skipped_twitter_short = 0
+            skipped_youtube_short = 0
             
             for news in new_news:
                 title = news.get('title', '')
+                source_type = news.get('source_type', '')
+                
                 # Twitter 内容需要特殊处理（RT、@mention 过滤）
-                if news.get('source_type') == 'twitter':
+                if source_type == 'twitter':
                     # 跳过纯转推（RT 开头）
                     if title.startswith('RT @'):
                         skipped_twitter_rt += 1
@@ -146,6 +149,15 @@ class NewsServiceV2:
                     if len(title) < 20:
                         skipped_twitter_short += 1
                         continue
+                
+                # YouTube 内容特殊处理（短视频过滤）
+                if source_type == 'youtube':
+                    duration = news.get('video_duration')
+                    if duration and isinstance(duration, (int, float)):
+                        # 跳过少于一分钟的短视频（如 Shorts）
+                        if duration < 60:
+                            skipped_youtube_short += 1
+                            continue
                 
                 # 使用更宽松的阈值（2而不是3）
                 if self.quality_filter.should_process(title, 'general', threshold=2):
@@ -161,7 +173,9 @@ class NewsServiceV2:
                 logger.info(f"   - Twitter RT过滤: {skipped_twitter_rt} 条")
             if skipped_twitter_short > 0:
                 logger.info(f"   - Twitter 短内容过滤: {skipped_twitter_short} 条")
-            logger.info(f"   质量过滤移除: {filtered_count - skipped_twitter_rt - skipped_twitter_short} 条")
+            if skipped_youtube_short > 0:
+                logger.info(f"   - YouTube 短视频过滤: {skipped_youtube_short} 条")
+            logger.info(f"   质量过滤移除: {filtered_count - skipped_twitter_rt - skipped_twitter_short - skipped_youtube_short} 条")
             logger.info(f"   最终剩余: {after_filter} 条")
             logger.info(f"   通过率: {after_filter/before_filter*100:.1f}%")
 
@@ -269,8 +283,8 @@ def health_check():
     return jsonify({
         "status": "running",
         "service": "news-ai-service-v2",
-        "version": "2.0.0",
-        "features": ["rss", "twitter", "wechat", "zhihu", "jike"],
+        "version": "2.1.0",
+        "features": ["rss", "twitter", "wechat", "zhihu", "jike", "youtube"],
         "timestamp": datetime.now().isoformat()
     })
 
@@ -280,7 +294,7 @@ def root():
     return jsonify({
         "service": "NewsHub AI Service V2",
         "status": "running",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "endpoints": {
             "/health": "Health check endpoint"
         }
@@ -297,14 +311,16 @@ def run_flask():
 def main():
     """主函数"""
     logger.info("=" * 60)
-    logger.info("NewsHub V2 新闻简报AI服务启动")
+    logger.info("NewsHub V2.1 新闻简报AI服务启动")
     logger.info("=" * 60)
     logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'kimi')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
     
     # 显示源统计
     from config.sources_v2 import TOTAL_SOURCES
-    logger.info(f"总计新闻源: {TOTAL_SOURCES} 个")
+    from config.sources_v2 import YOUTUBE_SOURCES
+    youtube_count = sum(len(urls) for urls in YOUTUBE_SOURCES.values())
+    logger.info(f"总计新闻源: {TOTAL_SOURCES} 个 (含 {youtube_count} 个YouTube频道)")
     
     # 启动Flask
     flask_thread = Thread(target=run_flask, daemon=True)

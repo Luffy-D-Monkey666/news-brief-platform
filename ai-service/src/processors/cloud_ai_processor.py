@@ -368,6 +368,16 @@ class NewsProcessor:
                 'published': news_item['published'],
                 'created_at': news_item.get('created_at')
             }
+            
+            # YouTube 视频特有字段
+            if news_item.get('source_type') == 'youtube':
+                processed_news['source_type'] = 'youtube'
+                if 'video_duration' in news_item:
+                    processed_news['video_duration'] = news_item['video_duration']
+                if 'video_author' in news_item:
+                    processed_news['video_author'] = news_item['video_author']
+                if 'video_views' in news_item:
+                    processed_news['video_views'] = news_item['video_views']
 
             logger.info(f"处理完成: [{category}] {chinese_title[:30]}...")
             return processed_news
@@ -417,6 +427,16 @@ class NewsProcessor:
                 'published': news_item['published'],
                 'created_at': news_item.get('created_at')
             }
+            
+            # YouTube 视频特有字段
+            if news_item.get('source_type') == 'youtube':
+                processed_news['source_type'] = 'youtube'
+                if 'video_duration' in news_item:
+                    processed_news['video_duration'] = news_item['video_duration']
+                if 'video_author' in news_item:
+                    processed_news['video_author'] = news_item['video_author']
+                if 'video_views' in news_item:
+                    processed_news['video_views'] = news_item['video_views']
 
             return processed_news
 

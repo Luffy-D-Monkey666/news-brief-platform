@@ -80,9 +80,16 @@ def check_news_sources():
     print(f"   - 微信公众号: {len(NEWS_SOURCES_V2.get('wechat', []))} 个")
     print(f"   - 知乎话题: {len(NEWS_SOURCES_V2.get('zhihu', []))} 个")
     print(f"   - 即刻圈子: {len(NEWS_SOURCES_V2.get('jike', []))} 个")
+    print(f"   - YouTube频道: {len(NEWS_SOURCES_V2.get('youtube', []))} 个")
     print(f"   - 总计: {TOTAL_SOURCES} 个")
     
-    print(f"\n2. 支持的新闻分类 ({len(CATEGORIES)} 个):")
+    # YouTube 频道详情
+    from config.sources_v2 import YOUTUBE_SOURCES
+    print(f"\n2. YouTube 频道分类统计:")
+    for category, urls in YOUTUBE_SOURCES.items():
+        print(f"   - {category}: {len(urls)} 个频道")
+    
+    print(f"\n3. 支持的新闻分类 ({len(CATEGORIES)} 个):")
     for cat in CATEGORIES[:10]:  # 只显示前10个
         print(f"   - {cat}")
     if len(CATEGORIES) > 10:

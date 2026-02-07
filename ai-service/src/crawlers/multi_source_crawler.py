@@ -85,6 +85,16 @@ class MultiSourceCrawler:
                 except Exception as e:
                     logger.error(f"即刻圈子失败 {jike_url}: {e}")
         
+        # 6. 爬取 YouTube
+        if self.sources.get('youtube'):
+            logger.info(f"开始爬取 {len(self.sources['youtube'])} 个 YouTube 频道...")
+            for youtube_url in self.sources['youtube']:
+                try:
+                    news = self._crawl_youtube(youtube_url)
+                    all_news.extend(news)
+                except Exception as e:
+                    logger.error(f"YouTube 频道失败 {youtube_url}: {e}")
+        
         logger.info(f"总共爬取到 {len(all_news)} 条新闻")
         return all_news
 
@@ -113,6 +123,29 @@ class MultiSourceCrawler:
                     'source_type': source_type,
                     'raw_data': entry
                 }
+                
+                # YouTube 特有字段
+                if source_type == 'youtube':
+                    # 使用专门的缩略图提取方法
+                    youtube_thumbnail = self._extract_video_thumbnail(entry)
+                    if youtube_thumbnail:
+                        news_item['image'] = youtube_thumbnail
+                    
+                    # 视频时长
+                    duration = self._extract_video_duration(entry)
+                    if duration:
+                        news_item['video_duration'] = duration
+                    
+                    # 视频作者
+                    if hasattr(entry, 'author'):
+                        news_item['video_author'] = entry.author
+                    
+                    # 视频观看数（如果可用）
+                    if hasattr(entry, 'media_group') and hasattr(entry.media_group, 'media_community'):
+                        community = entry.media_group.media_community
+                        if hasattr(community, 'media_statistics'):
+                            news_item['video_views'] = community.media_statistics.get('views')
+                
                 news_items.append(news_item)
             
             socket.setdefaulttimeout(None)
@@ -146,6 +179,15 @@ class MultiSourceCrawler:
         """爬取即刻圈子"""
         # 即刻通过 RSSHub 提供
         return self._crawl_rss(jike_url, source_type='jike')
+
+    def _crawl_youtube(self, youtube_url: str) -> List[Dict]:
+        """爬取 YouTube 频道
+        
+        YouTube URL 格式: https://rsshub.app/youtube/user/{username}
+                         https://rsshub.app/youtube/channel/{channel_id}
+        """
+        # YouTube 通过 RSSHub 提供 RSS 格式
+        return self._crawl_rss(youtube_url, source_type='youtube')
 
     def _extract_content(self, entry) -> str:
         """提取新闻内容"""
@@ -201,6 +243,12 @@ class MultiSourceCrawler:
         video_url = None
         
         try:
+            # YouTube 视频链接通常在 link 字段
+            if entry.get('link'):
+                link = entry.get('link', '')
+                if 'youtube.com/watch' in link or 'youtu.be' in link:
+                    return link
+            
             if hasattr(entry, 'media_content') and entry.media_content:
                 for media in entry.media_content:
                     if media.get('url'):
@@ -217,6 +265,43 @@ class MultiSourceCrawler:
         except Exception:
             pass
         
+        return None
+
+    def _extract_video_duration(self, entry) -> Optional[str]:
+        """提取视频时长（YouTube特有）"""
+        try:
+            # YouTube RSS 中时长通常在 media:group -> yt:duration
+            if hasattr(entry, 'media_group'):
+                mg = entry.media_group
+                if hasattr(mg, 'media_duration'):
+                    return mg.media_duration.get('seconds')
+            
+            # 或者从 itunes:duration 获取
+            if hasattr(entry, 'itunes_duration'):
+                return entry.itunes_duration
+                
+        except Exception:
+            pass
+        return None
+
+    def _extract_video_thumbnail(self, entry) -> Optional[str]:
+        """提取视频缩略图（YouTube特有）"""
+        try:
+            # YouTube 缩略图
+            if hasattr(entry, 'media_group'):
+                mg = entry.media_group
+                if hasattr(mg, 'media_thumbnail') and mg.media_thumbnail:
+                    return mg.media_thumbnail[0].get('url')
+            
+            # 尝试从 media:thumbnail 获取最大尺寸
+            if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
+                thumbnails = entry.media_thumbnail
+                # 返回第一个（通常是最大尺寸）
+                if thumbnails:
+                    return thumbnails[0].get('url')
+                    
+        except Exception:
+            pass
         return None
 
     def _extract_source_name(self, feed, feed_url: str, source_type: str) -> str:
@@ -244,6 +329,15 @@ class MultiSourceCrawler:
         
         if source_type == 'jike':
             return "即刻圈子"
+        
+        if source_type == 'youtube':
+            # 从 URL 提取频道名称
+            # https://rsshub.app/youtube/channel/UCxxx -> YouTube Channel
+            # https://rsshub.app/youtube/user/username -> YouTube User
+            if 'youtube' in feed_url:
+                if hasattr(feed, 'feed') and feed.feed.get('title'):
+                    return f"{feed.feed.get('title')} (YouTube)"
+                return "YouTube 频道"
         
         # 默认：使用域名
         try:
