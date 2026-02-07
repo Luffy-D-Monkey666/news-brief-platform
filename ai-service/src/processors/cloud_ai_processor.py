@@ -288,7 +288,7 @@ class CloudAIProcessor:
                 # 验证分类
                 valid_categories = [
                     'ai_technology', 'robotics', 'ai_coding_agent', 'semiconductors', 'opcg',
-                    'automotive', 'consumer_electronics', 'one_piece', 'podcasts',
+                    'automotive', 'consumer_electronics', 'one_piece', 'anime_otaku', 'podcasts',
                     'finance_investment', 'business_tech', 'politics_world', 'economy_policy',
                     'health_medical', 'energy_environment', 'entertainment_sports',
                     'general'
@@ -376,12 +376,12 @@ class NewsProcessor:
                 'image': news_item.get('image'),
                 'video': news_item.get('video'),  # 添加video字段
                 'published': news_item['published'],
-                'created_at': news_item.get('created_at')
+                'created_at': news_item.get('created_at'),
+                'source_type': news_item.get('source_type', 'rss')  # 保留来源类型
             }
             
-            # YouTube 视频特有字段
+            # 视频特有字段
             if news_item.get('source_type') == 'youtube':
-                processed_news['source_type'] = 'youtube'
                 if 'video_duration' in news_item:
                     processed_news['video_duration'] = news_item['video_duration']
                 if 'video_author' in news_item:
@@ -436,12 +436,12 @@ class NewsProcessor:
                 'image': news_item.get('image'),
                 'video': news_item.get('video'),
                 'published': news_item['published'],
-                'created_at': news_item.get('created_at')
+                'created_at': news_item.get('created_at'),
+                'source_type': news_item.get('source_type', 'rss')  # 保留来源类型
             }
             
-            # YouTube 视频特有字段
+            # 视频特有字段
             if news_item.get('source_type') == 'youtube':
-                processed_news['source_type'] = 'youtube'
                 if 'video_duration' in news_item:
                     processed_news['video_duration'] = news_item['video_duration']
                 if 'video_author' in news_item:

@@ -8,7 +8,11 @@ import {
   FaTimes,
   FaVolumeUp,
   FaPause,
-  FaPlay
+  FaPlay,
+  FaTwitter,
+  FaYoutube,
+  FaWeixin,
+  FaRobot
 } from 'react-icons/fa';
 
 // Apple风格配色（更简洁清爽）
@@ -543,9 +547,30 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 底部信息 */}
           <div className="flex items-center justify-between text-xs text-gray-400 pt-3 border-t border-gray-100">
-            <div className="flex items-center max-w-[45%]">
+            <div className="flex items-center max-w-[60%]">
               <FaLink className="mr-1.5 flex-shrink-0" />
               <span className="truncate">{brief.source}</span>
+              {/* 来源类型标识 */}
+              {brief.source_type === 'twitter' && (
+                <span className="ml-2 px-1.5 py-0.5 bg-blue-50 text-blue-500 rounded text-[10px] flex items-center">
+                  <FaTwitter className="mr-0.5" /> X
+                </span>
+              )}
+              {brief.source_type === 'weibo' && (
+                <span className="ml-2 px-1.5 py-0.5 bg-red-50 text-red-500 rounded text-[10px]">
+                  微博
+                </span>
+              )}
+              {brief.source_type === 'youtube' && (
+                <span className="ml-2 px-1.5 py-0.5 bg-red-50 text-red-600 rounded text-[10px] flex items-center">
+                  <FaYoutube className="mr-0.5" /> 
+                </span>
+              )}
+              {brief.source_type === 'wechat' && (
+                <span className="ml-2 px-1.5 py-0.5 bg-green-50 text-green-600 rounded text-[10px] flex items-center">
+                  <FaWeixin className="mr-0.5" /> 公众号
+                </span>
+              )}
             </div>
             {!brief.video && !brief.image && (
               <div className="flex items-center">

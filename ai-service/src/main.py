@@ -146,14 +146,15 @@ class NewsServiceV2:
                     skipped_empty_content += 1
                     continue
                 
-                # Twitter 内容基础过滤（保留转发但标记，过滤纯表情/过短）
+                # Twitter 内容基础过滤（放宽条件，保留更多内容）
                 if source_type == 'twitter':
-                    # 跳过纯转推（RT 开头）- 这些通常没有原创内容
-                    if title.startswith('RT @'):
+                    # 保留转推（RT），因为很多有价值的讨论是转推形式
+                    # 只过滤纯转推（没有附加评论的）
+                    if title.startswith('RT @') and len(title) < 30:
                         skipped_twitter_rt += 1
                         continue
-                    # 跳过纯表情或过短内容（少于10个字符）
-                    if len(title) < 10:
+                    # 放宽长度限制：5个字符以上就保留（原来10个）
+                    if len(title) < 5:
                         skipped_twitter_short += 1
                         continue
                 
