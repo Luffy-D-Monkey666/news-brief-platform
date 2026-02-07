@@ -39,6 +39,11 @@ class ContentQualityFilter:
             # 低质量标题
             '震惊', '竟然', '居然', '万万没想到', '不敢相信',
             '?', '？？', '！！',
+            
+            # Twitter/X 特定低质量内容
+            'rt @', 'retweet', '转发', '早上好', '晚上好',
+            'good morning', 'good night', 'happy birthday',
+            '节日快乐', '周末愉快', '打卡', '签到',
         ]
 
         # 高价值关键词（按分类）- 出现在标题中会提高评分
