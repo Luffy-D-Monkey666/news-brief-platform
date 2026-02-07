@@ -15,7 +15,8 @@ const briefSchema = new mongoose.Schema({
     enum: [
       'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
       'robotics',              // 机器人（工业/服务/人形/移动机器人、自动驾驶、DMS、智能座舱）
-      'ai_programming',        // AI编程（AI编程助手、传统开发工具、开源项目）
+      'ai_coding_agent',       // AI编码与智能体（AI Coding + AI Agent）
+      'anime_otaku',           // 动漫二次元（日本+欧洲动画漫画）
       'semiconductors',        // 芯片半导体（芯片设计、制造、设备、材料）
       'opcg',                  // OPCG卡牌游戏（One Piece Card Game）
       'automotive',            // 汽车（电动车/燃油车/混动车、充电桩、电池、新车、销量）

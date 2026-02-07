@@ -15,7 +15,8 @@ import {
 const categoryColors = {
   ai_technology: 'text-purple-600',
   robotics: 'text-indigo-600',
-  ai_programming: 'text-blue-600',
+  ai_coding_agent: 'text-blue-600',
+  anime_otaku: 'text-pink-500',
   semiconductors: 'text-gray-700',
   opcg: 'text-orange-600',
   automotive: 'text-emerald-600',
@@ -35,7 +36,8 @@ const categoryColors = {
 const categoryNames = {
   ai_technology: 'AI技术',
   robotics: '机器人',
-  ai_programming: 'AI编程',
+  ai_coding_agent: 'AI编码与智能体',
+  anime_otaku: '动漫二次元',
   semiconductors: '芯片',
   opcg: 'OPCG',
   automotive: '汽车',

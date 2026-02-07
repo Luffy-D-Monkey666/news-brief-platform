@@ -24,7 +24,8 @@ const categoryIcons = {
   // 核心关注领域（最高优先级）
   ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
   robotics: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
-  ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
+  ai_coding_agent: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
+  anime_otaku: { icon: FaFilm, color: 'text-pink-500', highlight: true, special: true },
   semiconductors: { icon: FaMicrochip, color: 'text-gray-700', highlight: true, special: true },
   opcg: { icon: FaAddressCard, color: 'text-orange-600', highlight: true, special: true },
   automotive: { icon: FaCar, color: 'text-green-600', highlight: true },
@@ -47,7 +48,8 @@ const categoryNames = {
   // 核心关注领域
   ai_technology: 'AI技术',
   robotics: '机器人',
-  ai_programming: 'AI编程',
+  ai_coding_agent: 'AI编码与智能体',
+  anime_otaku: '动漫二次元',
   semiconductors: '芯片',
   opcg: 'OPCG',
   automotive: '汽车',

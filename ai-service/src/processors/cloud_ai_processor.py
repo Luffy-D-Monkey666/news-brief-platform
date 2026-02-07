@@ -239,7 +239,7 @@ class CloudAIProcessor:
             # 清理和验证分类结果
             category = category.lower().strip()
             valid_categories = [
-                'ai_technology', 'robotics', 'ai_programming', 'semiconductors', 'opcg',
+                'ai_technology', 'robotics', 'ai_coding_agent', 'semiconductors', 'opcg',
                 'automotive', 'consumer_electronics', 'one_piece', 'podcasts',
                 'finance_investment', 'business_tech', 'politics_world', 'economy_policy',
                 'health_medical', 'energy_environment', 'entertainment_sports',
@@ -287,7 +287,7 @@ class CloudAIProcessor:
 
                 # 验证分类
                 valid_categories = [
-                    'ai_technology', 'robotics', 'ai_programming', 'semiconductors', 'opcg',
+                    'ai_technology', 'robotics', 'ai_coding_agent', 'semiconductors', 'opcg',
                     'automotive', 'consumer_electronics', 'one_piece', 'podcasts',
                     'finance_investment', 'business_tech', 'politics_world', 'economy_policy',
                     'health_medical', 'energy_environment', 'entertainment_sports',

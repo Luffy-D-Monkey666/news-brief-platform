@@ -356,7 +356,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
            计算机视觉, computer vision, 图像识别, image recognition,
            语音识别, speech recognition, 文本生成, text generation
    判断：任何与AI算法、模型、应用相关的纯软件/算法层面内容（不包括AI编程工具）
-   排除：如果新闻主题是"AI用于编程"或"AI编程助手"，应归入ai_programming而非此类
+   排除：如果新闻主题是"AI用于编程"或"AI编程助手"，应归入ai_coding_agent而非此类
 
 2. robotics - 机器人
    关键词：机器人, robot, robots, robotics, 机器人技术,
@@ -496,7 +496,7 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    判断：所有与芯片、半导体相关的新闻，包括设计、制造、设备、材料、市场动态
    核心特征：涉及芯片硬件、制造工艺、半导体产业链
 
-4. ai_programming - AI编程
+4. ai_coding_agent - AI编码与智能体
    关键词：AI编程助手, AI coding, AI代码助手, AI开发工具, AI programming,
            Claude Code, Cursor, GitHub Copilot, Copilot, Copilot Chat,
            Kimi Code, OpenClaw, Windsurf, Aider, Cody, Sourcegraph Cody,
@@ -760,12 +760,12 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 - general: 综合（无法明确分类的其他新闻）
 
 ⚠️ 分类规则：
-1. 优先匹配核心分类（ai_technology, robotics, ai_programming, semiconductors, opcg, consumer_electronics, one_piece, podcasts）
+1. 优先匹配核心分类（ai_technology, robotics, ai_coding_agent, semiconductors, opcg, consumer_electronics, one_piece, podcasts, anime_otaku）
 2. AI类新闻判断标准（重要：按以下顺序匹配）：
    a) **AI编程工具优先规则**：
-      - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_programming
-      - 如果新闻主题是"AI用于编程"、"AI代码生成" → ai_programming
-      - 如果新闻涉及GitHub、VSCode、IDE的AI功能 → ai_programming
+      - 如果新闻提到Claude Code、Cursor、Copilot等AI编程助手 → ai_coding_agent
+      - 如果新闻主题是"AI用于编程"、"AI代码生成" → ai_coding_agent
+      - 如果新闻涉及GitHub、VSCode、IDE的AI功能 → ai_coding_agent
    b) 纯AI算法/模型/理论（不涉及编程工具） → ai_technology
    c) AI在物理世界（机器人/硬件/传感器） → robotics
    d) 自动驾驶系统（包含感知/决策/控制） → robotics
@@ -790,8 +790,8 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
 7. 芯片分类判断标准：
    - 芯片设计、制造、设备、材料、产业链 → semiconductors
    - 芯片应用在消费电子产品中（如手机芯片评测） → consumer_electronics
-8. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_programming
-9. 如果新闻同时涉及AI和编程，优先选择ai_programming而非ai_technology
+8. 编程相关内容（包括AI编程助手和传统开发）必须归入ai_coding_agent
+9. 如果新闻同时涉及AI和编程，优先选择ai_coding_agent而非ai_technology
 10. 只返回分类代码，不要解释
 
 新闻标题: {title}
@@ -813,7 +813,7 @@ COMBINED_PROMPT = """分析新闻，生成中文摘要并分类。
 }}
 
 分类必须从以下选择:
-ai_technology(AI技术), robotics(机器人), ai_programming(AI编程),
+ai_technology(AI技术), robotics(机器人), ai_coding_agent(AI编码与智能体),
 semiconductors(芯片), opcg(OPCG卡牌), automotive(汽车),
 consumer_electronics(消费电子), one_piece(海贼王), podcasts(播客),
 finance_investment(投资), business_tech(商业), politics_world(政治),
@@ -824,7 +824,7 @@ entertainment_sports(娱乐), general(综合)
 - 标题翻译成中文，保留专有名词
 - 摘要50-150字，结构化三段式
 - 根据关键词精确分类
-- AI编程工具→ai_programming，不是ai_technology
+- AI编程工具→ai_coding_agent，不是ai_technology
 - 机器人相关→robotics
 - 只返回JSON，不要其他内容
 """

@@ -56,9 +56,13 @@ class ContentQualityFilter:
                 '研发', '量产', '商用', '应用', '技术', '系统',
                 '新型', '创新', 'innovative', 'commercial', 'production'
             ],
-            'ai_programming': [
-                '发布', '更新', '版本', '功能', '开源',
-                'release', 'update', 'version', 'feature', 'open source'
+            'ai_coding_agent': [
+                '发布', '更新', '版本', '功能', '开源', 'Agent', 'Coding',
+                'release', 'update', 'version', 'feature', 'open source', 'agent', 'coding'
+            ],
+            'anime_otaku': [
+                '新番', '动画', '漫画', '剧场版', '声优', '制作',
+                'anime', 'manga', 'new season', 'movie', 'voice actor', 'studio'
             ],
             'semiconductors': [
                 '量产', '代工', '制程', '工艺', '晶圆厂',
