@@ -212,8 +212,8 @@ class CloudAIProcessor:
         # 增加内容长度到3000字符，保留更多上下文信息
         content_truncated = content[:3000] if len(content) > 3000 else content
         prompt = prompt_template.format(title=title, content=content_truncated)
-        # 增加输出长度以支持详细总结
-        result = self.generate(prompt, max_tokens=800)
+        # 增加输出长度以支持详细总结（无字数限制，让AI充分表达）
+        result = self.generate(prompt, max_tokens=1500)
 
         if result:
             # 解析返回的中文标题和详细总结（按行分割）
@@ -264,8 +264,8 @@ class CloudAIProcessor:
         # 增加内容截断长度到3000字符，保留更多上下文
         content_truncated = content[:3000] if len(content) > 3000 else content
         prompt = prompt_template.format(title=title, content=content_truncated)
-        # 增加max_tokens以支持更长摘要
-        result = self.generate(prompt, max_tokens=800)
+        # 增加max_tokens以支持更长摘要（无字数限制，让AI充分表达）
+        result = self.generate(prompt, max_tokens=1500)
 
         if result:
             try:
