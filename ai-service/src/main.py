@@ -100,7 +100,12 @@ class NewsServiceV2:
 
             # 2. 过滤已存在的新闻
             # 检查是否跳过数据库去重（用于首次运行或数据清理后）
-            skip_db_dedupe = os.getenv('SKIP_DB_DEDUPE', 'false').lower() == 'true'
+            skip_db_dedupe_raw = os.getenv('SKIP_DB_DEDUPE', 'false')
+            skip_db_dedupe = skip_db_dedupe_raw.lower() == 'true'
+            
+            # 调试日志：显示环境变量实际值
+            logger.info(f"   [DEBUG] SKIP_DB_DEDUPE 原始值: '{skip_db_dedupe_raw}'")
+            logger.info(f"   [DEBUG] SKIP_DB_DEDUPE 解析结果: {skip_db_dedupe}")
             
             if skip_db_dedupe:
                 logger.info("步骤 2/5: ⚠️ 跳过数据库去重（SKIP_DB_DEDUPE=true），处理所有新闻...")
@@ -349,6 +354,7 @@ def main():
     logger.info("=" * 60)
     logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'kimi')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
+    logger.info(f"数据库去重: {'已禁用' if os.getenv('SKIP_DB_DEDUPE', 'false').lower() == 'true' else '已启用'}")
     
     # 显示源统计
     from config.sources_v2 import TOTAL_SOURCES
