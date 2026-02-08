@@ -138,6 +138,10 @@ class NewsServiceV2:
                 logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
                 logger.info(f"   - 重复过滤: {duplicate_count} 条已存在")
                 
+                # 如果全部重复，显示第一条重复的链接
+                if len(new_news) == 0 and raw_news:
+                    logger.info(f"   [DEBUG] 所有新闻都已存在，第一条: {raw_news[0].get('link', 'N/A')[:80]}...")
+                
                 # 显示一些新新闻的样本
                 if new_news:
                     logger.info(f"   - 新新闻样本: {new_news[0]['title'][:50]}... ({new_news[0].get('source_type', 'unknown')})")
@@ -157,6 +161,11 @@ class NewsServiceV2:
             skipped_youtube_short = 0
             vip_passed_count = 0
             
+            # 调试：显示第一条新闻的内容
+            if new_news:
+                sample = new_news[0]
+                logger.info(f"   [DEBUG] 新闻样本: title='{sample.get('title', '')[:50]}...', content长度={len(sample.get('content', ''))}, source_type={sample.get('source_type', 'unknown')}")
+            
             for news in new_news:
                 title = news.get('title', '').strip()
                 content = news.get('content', '').strip()
@@ -166,6 +175,7 @@ class NewsServiceV2:
                 # 只过滤空标题或空内容
                 if not title or not content:
                     skipped_empty_content += 1
+                    logger.debug(f"   [DEBUG] 过滤空内容: title='{title[:30] if title else 'EMPTY'}...', content长度={len(content)}")
                     continue
                 
                 # === VIP Twitter账号检查 ===
