@@ -99,10 +99,10 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`flex flex-col items-center justify-center p-4 rounded-xl transition-all ${
+              className={`flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 ${
                 isSelected
-                  ? 'bg-black text-white shadow-lg scale-105'
-                  : 'bg-gray-50 hover:bg-gray-100 hover:shadow-md'
+                  ? 'bg-gradient-to-br from-gray-900 to-gray-700 text-white shadow-lg scale-105 ring-2 ring-gray-900/20'
+                  : 'bg-gray-50 hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5'
               }`}
             >
               <Icon className={`text-3xl mb-2 ${isSelected ? 'text-white' : color}`} />

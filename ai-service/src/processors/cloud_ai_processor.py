@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 from typing import Dict, Optional, List
 import logging
 import os
@@ -7,6 +8,34 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
+
+
+def retry_on_error(max_retries=3, base_delay=2):
+    """带指数退避的重试装饰器"""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_retries):
+                try:
+                    result = func(*args, **kwargs)
+                    if result is not None:
+                        return result
+                    # 如果返回 None 且不是最后一次，也重试
+                    if attempt < max_retries - 1:
+                        delay = base_delay * (2 ** attempt)
+                        logger.warning(f"第{attempt + 1}次尝试返回空结果，{delay}秒后重试...")
+                        time.sleep(delay)
+                    else:
+                        return result
+                except Exception as e:
+                    if attempt == max_retries - 1:
+                        logger.error(f"最终失败（{max_retries}次尝试）: {e}")
+                        return None
+                    delay = base_delay * (2 ** attempt)
+                    logger.warning(f"第{attempt + 1}次尝试失败: {e}，{delay}秒后重试...")
+                    time.sleep(delay)
+            return None
+        return wrapper
+    return decorator
 
 
 class CloudAIProcessor:
@@ -51,94 +80,84 @@ class CloudAIProcessor:
         if not self.api_key:
             raise ValueError(f"API key not found for {provider}")
 
+    @retry_on_error(max_retries=3, base_delay=2)
     def _call_openai(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
-        """调用OpenAI API"""
-        try:
-            if not self.api_key:
-                logger.error(f"❌ {self.provider.upper()} API Key 未设置")
-                logger.error(f"   请设置环境变量: {self.provider.upper()}_API_KEY")
-                return None
+        """调用OpenAI API（带自动重试）"""
+        if not self.api_key:
+            logger.error(f"❌ {self.provider.upper()} API Key 未设置")
+            raise ValueError(f"{self.provider.upper()}_API_KEY not set")
 
-            headers = {
-                'Authorization': f'Bearer {self.api_key}',
-                'Content-Type': 'application/json'
-            }
+        headers = {
+            'Authorization': f'Bearer {self.api_key}',
+            'Content-Type': 'application/json'
+        }
 
-            data = {
-                'model': self.model,
-                'messages': [
-                    {'role': 'user', 'content': prompt}
-                ],
-                'max_tokens': max_tokens,
-                'temperature': 0.3
-            }
+        data = {
+            'model': self.model,
+            'messages': [
+                {'role': 'user', 'content': prompt}
+            ],
+            'max_tokens': max_tokens,
+            'temperature': 0.3
+        }
 
-            logger.info(f"🤖 正在调用 {self.provider} API (model: {self.model})...")
-            logger.debug(f"   API URL: {self.api_url}")
-            logger.debug(f"   Prompt长度: {len(prompt)} 字符")
-            
-            response = requests.post(
-                self.api_url,
-                headers=headers,
-                json=data,
-                timeout=30
-            )
+        logger.info(f"🤖 正在调用 {self.provider} API (model: {self.model})...")
 
-            if response.status_code == 200:
-                result = response.json()
-                content = result['choices'][0]['message']['content'].strip()
-                logger.info(f"✅ {self.provider} API 调用成功，返回 {len(content)} 字符")
-                logger.debug(f"   返回内容预览: {content[:100]}...")
-                return content
-            else:
-                logger.error(f"❌ {self.provider} API错误: {response.status_code}")
-                logger.error(f"   响应内容: {response.text[:200]}")
-                return None
+        response = requests.post(
+            self.api_url,
+            headers=headers,
+            json=data,
+            timeout=60
+        )
 
-        except requests.exceptions.Timeout:
-            logger.error(f"❌ {self.provider} API 调用超时（30秒）")
-            return None
-        except requests.exceptions.ConnectionError as e:
-            logger.error(f"❌ {self.provider} API 连接失败: {str(e)}")
-            return None
-        except Exception as e:
-            logger.error(f"❌ {self.provider} 调用失败: {str(e)}")
+        if response.status_code == 200:
+            result = response.json()
+            content = result['choices'][0]['message']['content'].strip()
+            logger.info(f"✅ {self.provider} API 调用成功，返回 {len(content)} 字符")
+            return content
+        elif response.status_code == 429:
+            # 速率限制，抛出异常触发重试
+            raise Exception(f"Rate limited: {response.status_code}")
+        elif response.status_code >= 500:
+            # 服务器错误，抛出异常触发重试
+            raise Exception(f"Server error: {response.status_code}")
+        else:
+            logger.error(f"❌ {self.provider} API错误: {response.status_code}")
+            logger.error(f"   响应内容: {response.text[:200]}")
             return None
 
+    @retry_on_error(max_retries=3, base_delay=2)
     def _call_claude(self, prompt: str, max_tokens: int = 200) -> Optional[str]:
-        """调用Claude API"""
-        try:
-            headers = {
-                'x-api-key': self.api_key,
-                'anthropic-version': '2023-06-01',
-                'Content-Type': 'application/json'
-            }
+        """调用Claude API（带自动重试）"""
+        headers = {
+            'x-api-key': self.api_key,
+            'anthropic-version': '2023-06-01',
+            'Content-Type': 'application/json'
+        }
 
-            data = {
-                'model': self.model,
-                'messages': [
-                    {'role': 'user', 'content': prompt}
-                ],
-                'max_tokens': max_tokens,
-                'temperature': 0.3
-            }
+        data = {
+            'model': self.model,
+            'messages': [
+                {'role': 'user', 'content': prompt}
+            ],
+            'max_tokens': max_tokens,
+            'temperature': 0.3
+        }
 
-            response = requests.post(
-                self.api_url,
-                headers=headers,
-                json=data,
-                timeout=30
-            )
+        response = requests.post(
+            self.api_url,
+            headers=headers,
+            json=data,
+            timeout=60
+        )
 
-            if response.status_code == 200:
-                result = response.json()
-                return result['content'][0]['text'].strip()
-            else:
-                logger.error(f"Claude API错误: {response.status_code} - {response.text}")
-                return None
-
-        except Exception as e:
-            logger.error(f"Claude调用失败: {str(e)}")
+        if response.status_code == 200:
+            result = response.json()
+            return result['content'][0]['text'].strip()
+        elif response.status_code in (429, 500, 502, 503):
+            raise Exception(f"Claude API error: {response.status_code}")
+        else:
+            logger.error(f"Claude API错误: {response.status_code} - {response.text[:200]}")
             return None
 
     def _call_huggingface(self, prompt: str, max_tokens: int = 200) -> Optional[str]:

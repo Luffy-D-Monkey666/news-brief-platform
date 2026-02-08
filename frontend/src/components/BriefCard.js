@@ -311,8 +311,8 @@ const BriefCard = ({ brief, isNew = false }) => {
   return (
     <>
       <div
-        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-gray-300 ${
-          isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-xl transition-all duration-300 hover:border-gray-300 hover:-translate-y-1 ${
+          isNew ? 'ring-2 ring-blue-500 ring-offset-2 animate-pulse-once' : ''
         }`}
       >
         {/* 视频/图片区域 */}
@@ -339,12 +339,13 @@ const BriefCard = ({ brief, isNew = false }) => {
         ) : (brief.video && videoError && brief.image) ? (
           // 视频加载失败，降级显示图片
           <div
-            className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
+            className="relative w-full h-52 overflow-hidden bg-gray-100 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
           >
             <img
               src={brief.image}
               alt={brief.title}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               onError={(e) => {
                 e.target.style.display = 'none';
@@ -380,15 +381,23 @@ const BriefCard = ({ brief, isNew = false }) => {
         ) : brief.image ? (
           // 只有图片
           <div
-            className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
+            className="relative w-full h-52 overflow-hidden bg-gray-100 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
           >
             <img
               src={brief.image}
               alt={brief.title}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               onError={(e) => {
-                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = `
+                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                    <div class="text-center">
+                      <svg class="mx-auto h-10 w-10 text-gray-300 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>`;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
@@ -403,7 +412,7 @@ const BriefCard = ({ brief, isNew = false }) => {
         ) : null}
 
         {/* 内容区域 */}
-        <div className="p-5">
+        <div className="p-5 space-y-1">
           {/* 没有视频和图片时的分类标签 */}
           {!brief.video && !brief.image && (
             <div className="flex items-center justify-between mb-3">

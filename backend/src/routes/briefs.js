@@ -5,6 +5,9 @@ const briefController = require('../controllers/briefController');
 // 获取最新简报
 router.get('/latest', briefController.getLatestBriefs);
 
+// 搜索简报
+router.get('/search', briefController.searchBriefs);
+
 // 获取历史简报（分页）
 router.get('/history', briefController.getHistoryBriefs);
 

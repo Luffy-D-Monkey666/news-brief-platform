@@ -3,18 +3,23 @@ const Brief = require('../models/Brief');
 // 获取最新简报
 exports.getLatestBriefs = async (req, res) => {
   try {
-    const { category, limit = 100 } = req.query;  // 默认100条
+    const { category, limit = 100 } = req.query;
 
     const query = {};
     if (category) {
       query.category = category;
     }
 
-    // 性能优化：使用lean()返回纯JS对象，比Mongoose文档快~30%
     const briefs = await Brief.find(query)
       .sort({ created_at: -1 })
       .limit(parseInt(limit, 10))
       .lean();
+
+    // 添加HTTP缓存头
+    res.set({
+      'Cache-Control': 'public, max-age=120',
+      'X-Total-Count': briefs.length.toString()
+    });
 
     res.json({
       success: true,
@@ -41,14 +46,14 @@ exports.getHistoryBriefs = async (req, res) => {
       query.category = category;
     }
 
-    // 性能优化：使用lean()返回纯JS对象
-    const briefs = await Brief.find(query)
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(parseInt(limit, 10))
-      .lean();
-
-    const total = await Brief.countDocuments(query);
+    const [briefs, total] = await Promise.all([
+      Brief.find(query)
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(parseInt(limit, 10))
+        .lean(),
+      Brief.countDocuments(query)
+    ]);
 
     res.json({
       success: true,
@@ -69,6 +74,48 @@ exports.getHistoryBriefs = async (req, res) => {
   }
 };
 
+// 搜索简报
+exports.searchBriefs = async (req, res) => {
+  try {
+    const { q, category, limit = 30 } = req.query;
+
+    if (!q || !q.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: '请提供搜索关键词'
+      });
+    }
+
+    const query = {
+      $or: [
+        { title: { $regex: q, $options: 'i' } },
+        { summary: { $regex: q, $options: 'i' } }
+      ]
+    };
+
+    if (category) {
+      query.category = category;
+    }
+
+    const briefs = await Brief.find(query)
+      .sort({ created_at: -1 })
+      .limit(parseInt(limit, 10))
+      .lean();
+
+    res.json({
+      success: true,
+      count: briefs.length,
+      data: briefs
+    });
+  } catch (error) {
+    console.error('搜索简报失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '搜索简报失败'
+    });
+  }
+};
+
 // 获取分类统计
 exports.getCategoryStats = async (req, res) => {
   try {
@@ -84,6 +131,8 @@ exports.getCategoryStats = async (req, res) => {
         $sort: { count: -1 }
       }
     ]);
+
+    res.set('Cache-Control', 'public, max-age=300');
 
     res.json({
       success: true,
@@ -102,7 +151,6 @@ exports.getCategoryStats = async (req, res) => {
 exports.getBriefById = async (req, res) => {
   try {
     const { id } = req.params;
-    // 详情页返回完整数据（包含summary）
     const brief = await Brief.findById(id).lean();
 
     if (!brief) {

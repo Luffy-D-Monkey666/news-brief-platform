@@ -73,5 +73,8 @@ const briefSchema = new mongoose.Schema({
 briefSchema.index({ created_at: -1 });  // 时间倒序查询
 briefSchema.index({ category: 1, created_at: -1 });  // 复合索引：按分类+时间查询（最常用）
 briefSchema.index({ is_pushed: 1 });
+briefSchema.index({ source_url: 1 });  // 去重查询优化
+// TTL索引：自动删除60天前的数据
+briefSchema.index({ created_at: 1 }, { expireAfterSeconds: 60 * 24 * 3600 });
 
 module.exports = mongoose.model('Brief', briefSchema);
