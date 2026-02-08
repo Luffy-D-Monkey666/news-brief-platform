@@ -393,13 +393,18 @@ class MultiSourceCrawler:
             return feed_url
 
     def _parse_date(self, entry) -> datetime:
-        """解析发布时间"""
+        """解析发布时间（统一为无时区的本地时间）"""
         date_str = entry.get('published', entry.get('updated', ''))
         if date_str:
             try:
                 from dateutil import parser
-                return parser.parse(date_str)
-            except:
+                parsed = parser.parse(date_str)
+                # 如果带时区，转换为无时区的本地时间
+                if parsed.tzinfo is not None:
+                    parsed = parsed.replace(tzinfo=None)
+                return parsed
+            except Exception as e:
+                logger.debug(f"日期解析失败: {date_str}, 错误: {e}")
                 pass
         return datetime.now()
 
