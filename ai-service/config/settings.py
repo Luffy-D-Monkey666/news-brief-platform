@@ -764,11 +764,14 @@ CLASSIFY_PROMPT = """请将以下新闻分类到最合适的类别。必须严�
    e) DMS/智能座舱/驾驶员监控系统 → robotics
    f) Tesla/汽车的自动驾驶技术 → robotics
    g) Tesla/汽车的电池/续航/销量/新车发布 → automotive
-3. 汽车类新闻判断标准：
-   - 电动车/燃油车/混动车的产品、销量、评测 → automotive
-   - 充电桩、电池技术、续航 → automotive
-   - 汽车行业动态、车企财报、新车发布 → automotive
-   - 自动驾驶技术本身（非车辆产品） → robotics
+3. 汽车类新闻判断标准（重要）：
+   - 任何车型的新车发布、上市、改款（如理想L9、蔚来ET7、Model Y等） → automotive
+   - 汽车品牌新闻（理想、蔚来、小鹏、比亚迪、特斯拉、奔驰、宝马等） → automotive
+   - 电动车/燃油车/混动车的产品评测、试驾、对比 → automotive
+   - 汽车销量数据、财报、行业分析 → automotive
+   - 充电桩、电池技术、续航技术 → automotive
+   - 自动驾驶技术本身（算法/软件/激光雷达） → robotics
+   - 智能座舱/车机系统（非整车产品） → consumer_electronics
 4. OPCG卡牌判断标准：
    - 必须同时包含"海贼王/One Piece"和"卡牌/TCG/Card"相关词汇
    - 单纯的海贼王动漫/漫画新闻（无卡牌元素） → one_piece

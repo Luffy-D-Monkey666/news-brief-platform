@@ -428,11 +428,24 @@ CHINA_SOURCES = {
         'https://rsshub.app/wechat/mp/投中网',               # 投中网
         'https://rsshub.app/wechat/mp/动脉网',               # 动脉网（医疗投资）
         
-        # ===== 汽车/新能源 =====
+        # ===== 汽车/新能源（重点覆盖新车发布、行业动态） =====
         'https://rsshub.app/wechat/mp/电动汽车观察家',       # 电动汽车观察家
-        'https://rsshub.app/wechat/mp/42号车库',             # 42号车库
+        'https://rsshub.app/wechat/mp/42号车库',             # 42号车库（新车评测）
         'https://rsshub.app/wechat/mp/汽车之心',             # 汽车之心
         'https://rsshub.app/wechat/mp/高工智能汽车',         # 高工智能汽车
+        'https://rsshub.app/wechat/mp/理想汽车',             # 理想汽车官方
+        'https://rsshub.app/wechat/mp/蔚来',                 # 蔚来官方
+        'https://rsshub.app/wechat/mp/小鹏汽车',             # 小鹏汽车官方
+        'https://rsshub.app/wechat/mp/车东西',               # 车东西（新车资讯）
+        'https://rsshub.app/wechat/mp/懂车帝',               # 懂车帝
+        'https://rsshub.app/wechat/mp/汽车之家',             # 汽车之家
+        'https://rsshub.app/wechat/mp/易车',                 # 易车
+        'https://rsshub.app/wechat/mp/腾讯汽车',             # 腾讯汽车
+        'https://rsshub.app/wechat/mp/网易汽车',             # 网易汽车
+        'https://rsshub.app/wechat/mp/凤凰汽车',             # 凤凰汽车
+        'https://rsshub.app/wechat/mp/第一电动网',           # 第一电动网
+        'https://rsshub.app/wechat/mp/电动邦',               # 电动邦
+        'https://rsshub.app/wechat/mp/新出行',               # 新出行（新能源专注）
         
         # ===== 半导体/硬科技 =====
         'https://rsshub.app/wechat/mp/芯智讯',               # 芯智讯
@@ -669,10 +682,29 @@ RSS_SOURCES_V2 = {
     ],
     
     'automotive': [
+        # 国际汽车媒体
         'https://electrek.co/feed/',
         'https://insideevs.com/rss/',
-        'https://rsshub.app/dongchedi/news',    # 懂车帝
         'https://feeds.bloomberg.com/markets/autos.rss',
+        
+        # 中文汽车媒体（重点覆盖国内新车发布）
+        'https://rsshub.app/dongchedi/news',                # 懂车帝
+        'https://rsshub.app/weibo/user/1659809157',         # 李想（理想汽车创始人微博）
+        'https://rsshub.app/weibo/user/1656801620',         # 李斌（蔚来创始人微博）
+        'https://rsshub.app/weibo/user/1632078473',         # 何小鹏（小鹏汽车创始人微博）
+        'https://rsshub.app/weibo/user/1651428902',         # 韩路（汽车之家创始人）
+        'https://rsshub.app/weibo/user/1641523987',         # 陈震（萝卜报告）
+        
+        # 理想汽车相关RSS
+        'https://rsshub.app/weibo/user/5511980344',         # 理想汽车官方微博
+        'https://rsshub.app/weibo/user/5875144708',         # 蔚来汽车官方微博
+        'https://rsshub.app/weibo/user/5872225792',         # 小鹏汽车官方微博
+        
+        # 36氪汽车板块
+        'https://rsshub.app/36kr/search/articles/汽车',
+        'https://rsshub.app/36kr/search/articles/新能源',
+        'https://rsshub.app/36kr/search/articles/理想汽车',
+        'https://rsshub.app/36kr/search/articles/蔚来',
     ],
     
     'consumer_electronics': [
