@@ -546,6 +546,18 @@ YOUTUBE_SOURCES = {
         'https://rsshub.app/youtube/channel/UCa6TeYZ2DlueFRne5DyAnyg',  # Unbox Therapy
         'https://rsshub.app/youtube/channel/UCR0AnF7hbhIJ9SjS5GzB9rw',  # Dave2D
         'https://rsshub.app/youtube/channel/UCy0tL1HwJ5d2LqKgeG4L2aw',  # Linus Tech Tips
+        
+        # 中文消费电子媒体（全面覆盖）
+        'https://rsshub.app/ithome/it',              # IT之家
+        'https://rsshub.app/wechat/mp/ZEALER',       # ZEALER
+        'https://rsshub.app/wechat/mp/爱范儿',       # 爱范儿
+        'https://rsshub.app/36kr/search/articles/手机',    # 36氪手机
+        'https://rsshub.app/36kr/search/articles/苹果',    # 36氪苹果
+        'https://rsshub.app/36kr/search/articles/小米',    # 36氪小米
+        'https://rsshub.app/36kr/search/articles/华为',    # 36氪华为
+        'https://rsshub.app/sina/tech/mobile',       # 新浪手机
+        'https://rsshub.app/netease/tech/mobile',    # 网易手机
+        'https://rsshub.app/pingwest/products',      # 品玩产品
     ],
     'opcg': [
         # OPCG 卡牌游戏
@@ -592,12 +604,42 @@ YOUTUBE_SOURCES = {
         'https://rsshub.app/youtube/channel/UCrM7B7SL_g1edFOnmj-SDKg',  # Bloomberg Television
         'https://rsshub.app/youtube/channel/UC-4bDH2ApW2ZaAOUVZsn8cQ',  # CNBC Television
         'https://rsshub.app/youtube/channel/UCaqzC3nF9F2ZzmqXWWE9DlQ',  # Patrick Boyle
+        
+        # 中文财经媒体（全面覆盖）
+        'https://rsshub.app/caixin/finance',         # 财新网
+        'https://rsshub.app/wallstreetcn/news',      # 华尔街见闻
+        'https://rsshub.app/wechat/mp/36氪',         # 36氪
+        'https://rsshub.app/36kr/newsflashes',       # 36氪快讯
+        'https://rsshub.app/36kr/search/articles/投资',    # 36氪投资
+        'https://rsshub.app/36kr/search/articles/股市',    # 36氪股市
+        'https://rsshub.app/36kr/search/articles/融资',    # 36氪融资
+        'https://rsshub.app/wechat/mp/虎嗅APP',      # 虎嗅
+        'https://rsshub.app/wechat/mp/晚点LatePost', # 晚点LatePost
+        'https://rsshub.app/wechat/mp/投资界',       # 投资界
+        'https://rsshub.app/sina/finance',           # 新浪财经
+        'https://rsshub.app/netease/money',          # 网易财经
     ],
     'business_tech': [
         # 商业科技
         'https://rsshub.app/youtube/channel/UCdBK94H6oZT2Q7l0-bWmxKA',  # The Verge
         'https://rsshub.app/youtube/channel/UCj22tfcQr_F7l4KSeyRWu7Q',  # TechCrunch
         'https://rsshub.app/youtube/channel/UCVLZmDKeT-VDqxD2ExagzCw',  # Bloomberg Originals
+        
+        # 中文商业科技媒体（全面覆盖）
+        'https://rsshub.app/36kr/news',              # 36氪
+        'https://rsshub.app/36kr/search/articles/创业',    # 36氪创业
+        'https://rsshub.app/36kr/search/articles/科技',    # 36氪科技
+        'https://rsshub.app/36kr/search/articles/互联网',  # 36氪互联网
+        'https://rsshub.app/36kr/search/articles/商业',    # 36氪商业
+        'https://rsshub.app/wechat/mp/虎嗅APP',      # 虎嗅
+        'https://rsshub.app/wechat/mp/晚点LatePost', # 晚点LatePost
+        'https://rsshub.app/wechat/mp/创业邦',       # 创业邦
+        'https://rsshub.app/wechat/mp/字母榜',       # 字母榜
+        'https://rsshub.app/wechat/mp/第一财经',     # 第一财经
+        'https://rsshub.app/sina/tech',              # 新浪科技
+        'https://rsshub.app/netease/tech',           # 网易科技
+        'https://rsshub.app/pingwest',               # 品玩
+        'https://rsshub.app/thepaper/featured',      # 澎湃新闻
     ],
     'general': [
         # 综合科技新闻
@@ -619,9 +661,21 @@ RSS_SOURCES_V2 = {
         'https://huggingface.co/blog/rss.xml',
         'https://mistral.ai/news/rss.xml',
         
-        # 中国 AI 媒体
+        # 中国 AI 媒体（全面覆盖）
         'https://rsshub.app/jiqizhixin/ai',     # 机器之心
         'https://rsshub.app/qbitai',            # 量子位
+        'https://rsshub.app/wechat/mp/机器之心', # 机器之心公众号
+        'https://rsshub.app/wechat/mp/量子位',   # 量子位公众号
+        'https://rsshub.app/wechat/mp/新智元',   # 新智元
+        'https://rsshub.app/wechat/mp/AI科技评论', # AI科技评论
+        'https://rsshub.app/wechat/mp/智东西',   # 智东西
+        'https://rsshub.app/wechat/mp/大数据文摘', # 大数据文摘
+        'https://rsshub.app/36kr/search/articles/人工智能', # 36氪AI
+        'https://rsshub.app/36kr/search/articles/大模型',   # 36氪大模型
+        'https://rsshub.app/sina/tech',          # 新浪科技
+        'https://rsshub.app/netease/tech',       # 网易科技
+        'https://rsshub.app/ifanr',              # 爱范儿
+        'https://rsshub.app/pingwest',           # 品玩
         
         # 学术源
         'https://rsshub.app/arxiv/cs.AI',       # arXiv AI
@@ -633,6 +687,13 @@ RSS_SOURCES_V2 = {
         'https://spectrum.ieee.org/robotics/rss',
         'https://rsshub.app/irobotnews',        # 韩国机器人新闻
         'https://csail.mit.edu/news/rss.xml',
+        
+        # 中国机器人媒体
+        'https://rsshub.app/wechat/mp/高工智能汽车', # 高工智能（含自动驾驶）
+        'https://rsshub.app/wechat/mp/汽车之心',     # 汽车之心
+        'https://rsshub.app/36kr/search/articles/机器人', # 36氪机器人
+        'https://rsshub.app/36kr/search/articles/自动驾驶', # 36氪自动驾驶
+        'https://rsshub.app/sina/tech/robot',        # 新浪科技机器人
     ],
     
     'ai_coding_agent': [  # AI编码与智能体
@@ -666,6 +727,17 @@ RSS_SOURCES_V2 = {
         'https://semiengineering.com/feed/',
         'https://www.anandtech.com/rss/',
         'https://www.tomshardware.com/rss.xml',
+        
+        # 中国半导体媒体（全面覆盖）
+        'https://rsshub.app/wechat/mp/芯智讯',       # 芯智讯
+        'https://rsshub.app/wechat/mp/半导体行业观察', # 半导体行业观察
+        'https://rsshub.app/wechat/mp/芯东西',       # 芯东西
+        'https://rsshub.app/wechat/mp/电子工程专辑', # 电子工程专辑
+        'https://rsshub.app/36kr/search/articles/芯片',    # 36氪芯片
+        'https://rsshub.app/36kr/search/articles/半导体',  # 36氪半导体
+        'https://rsshub.app/36kr/search/articles/台积电',  # 36氪台积电
+        'https://rsshub.app/ithome/it/芯片',         # IT之家芯片
+        'https://rsshub.app/ithome/it/半导体',       # IT之家半导体
     ],
     
     'opcg': [
@@ -679,6 +751,15 @@ RSS_SOURCES_V2 = {
         'https://rsshub.app/crunchyroll/news',               # Crunchyroll News
         'https://rsshub.app/funimation/news',                # Funimation News
         'https://rsshub.app/myanimelist/news',               # MyAnimeList News
+        
+        # 中文动漫媒体（全面覆盖）
+        'https://rsshub.app/bilibili/user/video/63231',      # 哔哩哔哩番剧
+        'https://rsshub.app/bilibili/user/video/928123',     # 哔哩哔哩国创
+        'https://rsshub.app/weibo/user/5738741667',          #  AnimeTranslator
+        'https://rsshub.app/acfun/bangumi',                  # AcFun番剧
+        'https://rsshub.app/wechat/mp/动画学术趴',           # 动画学术趴
+        'https://rsshub.app/wechat/mp/AnimeTamashii',        # AnimeTamashii
+        'https://rsshub.app/douban/explore/tv/animation',    # 豆瓣动画
     ],
     
     'automotive': [
@@ -744,18 +825,56 @@ RSS_SOURCES_V2 = {
         'https://www.reuters.com/rssFeed/worldNews',
         'https://www.theguardian.com/world/rss',
         'https://thediplomat.com/rss/',
+        
+        # 中文国际新闻媒体
+        'https://rsshub.app/thepaper/featured',      # 澎湃新闻
+        'https://rsshub.app/thepaper/hot',           # 澎湃热榜
+        'https://rsshub.app/caixin/latest',          # 财新最新
+        'https://rsshub.app/zaobao/realtime/china',  # 联合早报中国
+        'https://rsshub.app/zaobao/realtime/world',  # 联合早报国际
+        'https://rsshub.app/sina/news/china',        # 新浪国内新闻
+        'https://rsshub.app/sina/news/world',        # 新浪国际新闻
+        'https://rsshub.app/netease/news',           # 网易新闻
+        'https://rsshub.app/sohu/news',              # 搜狐新闻
     ],
     
     'health_medical': [
         'https://rsshub.app/statnews',          # Stat News
         'https://www.who.int/rss-feeds/news-english.xml',
         'https://rsshub.app/thelancet/current', # The Lancet
+        
+        # 中文医疗健康媒体
+        'https://rsshub.app/wechat/mp/丁香医生',     # 丁香医生
+        'https://rsshub.app/wechat/mp/丁香园',       # 丁香园
+        'https://rsshub.app/wechat/mp/动脉网',       # 动脉网
+        'https://rsshub.app/dxy/column',             # 丁香园专栏
+        'https://rsshub.app/36kr/search/articles/医疗', # 36氪医疗
+        'https://rsshub.app/36kr/search/articles/健康', # 36氪健康
     ],
     
     'energy_environment': [
         'https://rsshub.app/iea/news',          # IEA
         'https://www.carbon-brief.org/feed',
         'https://cleantechnica.com/feed/',
+        
+        # 中文能源环境媒体
+        'https://rsshub.app/36kr/search/articles/新能源', # 36氪新能源
+        'https://rsshub.app/36kr/search/articles/碳中和', # 36氪碳中和
+        'https://rsshub.app/36kr/search/articles/光伏',   # 36氪光伏
+        'https://rsshub.app/36kr/search/articles/储能',   # 36氪储能
+        'https://rsshub.app/wechat/mp/能源杂志',    # 能源杂志
+        'https://rsshub.app/sina/finance/view',     # 新浪能源
+    ],
+    
+    'economy_policy': [
+        # 经济政策相关
+        'https://rsshub.app/gov/zhengce/zuixin',     # 中国政府网最新政策
+        'https://rsshub.app/gov/zhengce/duzhe',      # 中国政府网政策解读
+        'https://rsshub.app/caixin/economy',         # 财新经济
+        'https://rsshub.app/36kr/search/articles/政策',   # 36氪政策
+        'https://rsshub.app/36kr/search/articles/经济',   # 36氪经济
+        'https://rsshub.app/wallstreetcn/news',      # 华尔街见闻
+        'https://rsshub.app/sina/finance/economy',   # 新浪经济
     ],
     
     # 综合新闻（精简）
