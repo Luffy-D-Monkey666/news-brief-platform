@@ -100,7 +100,8 @@ class NewsServiceV2:
 
             # 2. 过滤已存在的新闻
             # 检查是否跳过数据库去重（用于首次运行或数据清理后）
-            skip_db_dedupe_raw = os.getenv('SKIP_DB_DEDUPE', 'false')
+            # 临时强制启用：将下一行的 'false' 改为 'true'
+            skip_db_dedupe_raw = os.getenv('SKIP_DB_DEDUPE', 'true')  # ← 强制默认为 true
             skip_db_dedupe = skip_db_dedupe_raw.lower() == 'true'
             
             # 调试日志：显示环境变量实际值
