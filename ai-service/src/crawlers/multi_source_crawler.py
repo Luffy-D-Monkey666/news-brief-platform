@@ -39,9 +39,13 @@ class MultiSourceCrawler:
     def crawl_all(self) -> List[Dict]:
         """爬取所有来源的新闻（并发优化版）"""
         all_news = []
-        self.cutoff_time = datetime.now() - self.time_window  # 更新时间窗口
         
-        logger.info(f"🕐 采集时间窗口: 最近 {self.time_window.total_seconds()/3600:.0f} 小时")
+        # 强制更新时间窗口（确保使用最新设置）
+        current_time = datetime.now()
+        self.cutoff_time = current_time - self.time_window
+        
+        hours = self.time_window.total_seconds() / 3600
+        logger.info(f"🕐 采集时间窗口: 最近 {hours:.0f} 小时 (cutoff: {self.cutoff_time.strftime('%Y-%m-%d %H:%M')})")
         logger.info(f"📅 只采集 {self.cutoff_time.strftime('%Y-%m-%d %H:%M')} 之后的新闻")
         
         # 统计变量

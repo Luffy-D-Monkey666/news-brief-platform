@@ -99,38 +99,46 @@ class NewsServiceV2:
                 return
 
             # 2. 过滤已存在的新闻
-            logger.info("步骤 2/5: 批量过滤重复新闻...")
-            step2_start = datetime.now()
-
-            all_links = [news['link'] for news in raw_news]
-            existing_links = set()
-            BATCH_SIZE = 500
-
-            if len(all_links) <= BATCH_SIZE:
-                existing_links = self.db.check_news_exists_batch(all_links)
-            else:
-                batch_count = (len(all_links) + BATCH_SIZE - 1) // BATCH_SIZE
-                for i in range(0, len(all_links), BATCH_SIZE):
-                    batch = all_links[i:i + BATCH_SIZE]
-                    batch_num = i // BATCH_SIZE + 1
-                    logger.info(f"  处理第 {batch_num}/{batch_count} 批...")
-                    existing_links.update(self.db.check_news_exists_batch(batch))
-
-            step2_elapsed = (datetime.now() - step2_start).total_seconds()
-            logger.info(f"批量查询总计耗时: {step2_elapsed:.1f} 秒")
-
-            new_news = [news for news in raw_news if news['link'] not in existing_links]
-            duplicate_count = len(raw_news) - len(new_news)
-            logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
-            logger.info(f"   - 重复过滤: {duplicate_count} 条已存在")
+            # 检查是否跳过数据库去重（用于首次运行或数据清理后）
+            skip_db_dedupe = os.getenv('SKIP_DB_DEDUPE', 'false').lower() == 'true'
             
-            # 显示一些新新闻的样本
-            if new_news:
-                logger.info(f"   - 新新闻样本: {new_news[0]['title'][:50]}... ({new_news[0].get('source_type', 'unknown')})")
+            if skip_db_dedupe:
+                logger.info("步骤 2/5: ⚠️ 跳过数据库去重（SKIP_DB_DEDUPE=true），处理所有新闻...")
+                new_news = raw_news
+                logger.info(f"步骤 2/5 完成: 处理全部 {len(new_news)} 条新闻（跳过去重）")
+            else:
+                logger.info("步骤 2/5: 批量过滤重复新闻...")
+                step2_start = datetime.now()
 
-            if not new_news:
-                logger.info("没有新新闻需要处理")
-                return
+                all_links = [news['link'] for news in raw_news]
+                existing_links = set()
+                BATCH_SIZE = 500
+
+                if len(all_links) <= BATCH_SIZE:
+                    existing_links = self.db.check_news_exists_batch(all_links)
+                else:
+                    batch_count = (len(all_links) + BATCH_SIZE - 1) // BATCH_SIZE
+                    for i in range(0, len(all_links), BATCH_SIZE):
+                        batch = all_links[i:i + BATCH_SIZE]
+                        batch_num = i // BATCH_SIZE + 1
+                        logger.info(f"  处理第 {batch_num}/{batch_count} 批...")
+                        existing_links.update(self.db.check_news_exists_batch(batch))
+
+                step2_elapsed = (datetime.now() - step2_start).total_seconds()
+                logger.info(f"批量查询总计耗时: {step2_elapsed:.1f} 秒")
+
+                new_news = [news for news in raw_news if news['link'] not in existing_links]
+                duplicate_count = len(raw_news) - len(new_news)
+                logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
+                logger.info(f"   - 重复过滤: {duplicate_count} 条已存在")
+                
+                # 显示一些新新闻的样本
+                if new_news:
+                    logger.info(f"   - 新新闻样本: {new_news[0]['title'][:50]}... ({new_news[0].get('source_type', 'unknown')})")
+
+                if not new_news:
+                    logger.info("没有新新闻需要处理")
+                    return
 
             # 2.5. 智能内容过滤（VIP账号全保留，普通账号按规则过滤）
             logger.info("步骤 2.5/5: 智能内容过滤...")
