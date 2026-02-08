@@ -120,7 +120,13 @@ class NewsServiceV2:
             logger.info(f"批量查询总计耗时: {step2_elapsed:.1f} 秒")
 
             new_news = [news for news in raw_news if news['link'] not in existing_links]
+            duplicate_count = len(raw_news) - len(new_news)
             logger.info(f"步骤 2/5 完成: 过滤后剩余 {len(new_news)} 条新新闻")
+            logger.info(f"   - 重复过滤: {duplicate_count} 条已存在")
+            
+            # 显示一些新新闻的样本
+            if new_news:
+                logger.info(f"   - 新新闻样本: {new_news[0]['title'][:50]}... ({new_news[0].get('source_type', 'unknown')})")
 
             if not new_news:
                 logger.info("没有新新闻需要处理")
