@@ -189,6 +189,7 @@ class NewsCrawler:
     def crawl_all(self) -> List[Dict]:
         """爬取所有新闻源"""
         all_news = []
+        seen_titles = set()  # 用于标题去重
         total_feeds = len(self.rss_feeds)
 
         for idx, feed_url in enumerate(self.rss_feeds, 1):
@@ -197,12 +198,21 @@ class NewsCrawler:
                 if idx % 10 == 1:
                     logger.info(f"正在爬取第 {idx}-{min(idx+9, total_feeds)}/{total_feeds} 个新闻源...")
                 news = self.crawl_rss(feed_url)
-                all_news.extend(news)
+
+                # 标题去重：如果标题已存在，跳过
+                for item in news:
+                    title = item.get('title', '').strip()
+                    if title and title not in seen_titles:
+                        seen_titles.add(title)
+                        all_news.append(item)
+                    else:
+                        logger.debug(f"跳过重复标题: {title[:50]}...")
+
             except Exception as e:
                 logger.error(f"爬取新闻源 {idx} 失败: {str(e)}")
                 continue
 
-        logger.info(f"总共爬取到 {len(all_news)} 条新闻")
+        logger.info(f"总共爬取到 {len(all_news)} 条新闻（已去重）")
         return all_news
 
 
