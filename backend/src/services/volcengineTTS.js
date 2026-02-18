@@ -7,31 +7,33 @@ const https = require('https');
 
 // 配置
 const config = {
-  appId: process.env.VOLC_APP_ID || '1292782583',
+  appId: process.env.VOLC_APP_ID || '6922135515',
   accessToken: process.env.VOLC_ACCESS_TOKEN,
   // 语音合成 API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
-  cluster: 'volcano_tts',
+  cluster: 'volcano_icl',  // 大模型语音合成 cluster
 };
 
-// 音色配置 - 火山引擎豆包语音
+// 音色配置 - 火山引擎豆包大模型语音（基于用户开通的音色）
 const voiceTypes = {
-  // 新闻播报（推荐）
-  'BV011_streaming': { name: '新闻女声', description: '播音腔，适合新闻播报' },
-  'BV012_streaming': { name: '新闻男声', description: '播音腔，适合新闻播报' },
-  // 通用场景
-  'BV001_streaming': { name: '通用女声', description: '自然、标准' },
-  'BV002_streaming': { name: '通用男声', description: '自然、标准' },
-  // 特色音色
-  'BV700_streaming': { name: '灿灿', description: '甜美、温柔，支持多情感' },
-  'BV701_streaming': { name: '擎苍', description: '有声阅读，沉稳男声' },
-  'BV405_streaming': { name: '甜美小源', description: '甜美、活泼' },
-  'BV007_streaming': { name: '亲切女声', description: '温暖、亲切' },
+  // 通用场景（推荐）
+  'zh_female_vv_uranus_bigtts': { name: 'vivi 2.0', description: '通用场景，自然女声' },
+  // 视频配音
+  'zh_male_dayi_saturn_bigtts': { name: '大壹', description: '视频配音，男声' },
+  'zh_female_mizai_saturn_bigtts': { name: '黑猫侦探社咪仔', description: '视频配音，活泼女声' },
+  'zh_female_jitangnv_saturn_bigtts': { name: '鸡汤女', description: '视频配音，温柔女声' },
+  'zh_female_meilinvyou_saturn_bigtts': { name: '魅力女友', description: '视频配音，甜美女声' },
+  'zh_female_santongyongns_saturn_bigtts': { name: '流畅女声', description: '视频配音，流畅女声' },
+  'zh_male_ruyayichen_saturn_bigtts': { name: '儒雅逸辰', description: '视频配音，儒雅男声' },
+  // 角色扮演
+  'saturn_zh_female_cancan_tob': { name: '知性灿灿', description: '角色扮演，知性女声' },
+  'saturn_zh_female_keainvsheng_tob': { name: '可爱女生', description: '角色扮演，可爱女声' },
+  'saturn_zh_female_tiaopigongzhu_tob': { name: '调皮公主', description: '角色扮演，活泼女声' },
 };
 
 // 默认音色
-const DEFAULT_VOICE = 'BV011_streaming';
+const DEFAULT_VOICE = 'zh_female_vv_uranus_bigtts';
 
 /**
  * 调用火山引擎 TTS API
