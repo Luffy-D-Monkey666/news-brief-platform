@@ -253,12 +253,19 @@ def main():
     logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'openai')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
 
-    # 启动健康检查服务器（Render Web Service 需要）
+    # 先启动健康检查服务器（Render 需要在启动后快速响应健康检查）
     start_health_server()
+    
+    # 等待2秒确保健康检查服务器就绪
+    import time
+    time.sleep(2)
+    logger.info("健康检查服务器已就绪，开始初始化服务...")
 
     service = NewsService()
 
-    # 立即执行一次
+    # 延迟执行首次采集（避免阻塞启动）
+    logger.info("首次采集将在10秒后开始...")
+    time.sleep(10)
     logger.info("执行首次采集...")
     service.run_cycle()
 
