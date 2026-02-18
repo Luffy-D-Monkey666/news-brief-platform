@@ -80,7 +80,7 @@ class CloudAIProcessor:
         content_truncated = content[:800] if content else ""
         prompt = prompt_template.format(title=title, content=content_truncated)
         
-        result = self._call_api(prompt, max_tokens=400)
+        result = self._call_api(prompt, max_tokens=800)
         
         if not result:
             return None
