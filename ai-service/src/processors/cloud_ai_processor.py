@@ -115,6 +115,22 @@ class CloudAIProcessor:
                 # 处理行动建议字段（可能为null）
                 if 'action_advice' not in data:
                     data['action_advice'] = None
+                
+                # 处理关键指标字段
+                if 'key_metrics' not in data or not isinstance(data['key_metrics'], list):
+                    data['key_metrics'] = []
+                else:
+                    # 验证每个指标的格式
+                    valid_metrics = []
+                    for metric in data['key_metrics']:
+                        if isinstance(metric, dict) and 'name' in metric and 'value' in metric:
+                            valid_metrics.append({
+                                'name': metric.get('name', ''),
+                                'value': metric.get('value', 0),
+                                'unit': metric.get('unit', ''),
+                                'entity': metric.get('entity', '')
+                            })
+                    data['key_metrics'] = valid_metrics
                     
                 return data
             else:
@@ -161,6 +177,7 @@ class NewsProcessor:
                 'category': result['category'],
                 'importance': result.get('importance', 'normal'),
                 'action_advice': result.get('action_advice'),
+                'key_metrics': result.get('key_metrics', []),  # 关键指标
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
                 'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度

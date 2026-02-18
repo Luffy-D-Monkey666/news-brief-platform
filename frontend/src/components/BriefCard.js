@@ -561,6 +561,30 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           )}
 
+          {/* 关键指标（如果有数字数据） */}
+          {brief.key_metrics && brief.key_metrics.length > 0 && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-blue-600">📊</span>
+                <span className="text-xs font-bold text-blue-800">关键数据</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {brief.key_metrics.slice(0, 4).map((metric, i) => (
+                  <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50">
+                    <div className="text-xs text-gray-500 mb-1">{metric.name}</div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg font-bold text-gray-900">{metric.value}</span>
+                      <span className="text-xs text-gray-500">{metric.unit}</span>
+                    </div>
+                    {metric.entity && (
+                      <div className="text-xs text-blue-600 mt-1">{metric.entity}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* 行动建议（仅财经/商业类显示） */}
           {brief.action_advice && (
             <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">

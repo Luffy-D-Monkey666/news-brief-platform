@@ -265,6 +265,12 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
    - "重要细节:" 用•列出3-4个关键信息点
    - "后续影响:" 分析意义和后续发展
 5. action_advice: 仅当category是finance_investment/business_tech/economy_policy时生成，包含风险提示和行动建议，其他分类设为null
+6. key_metrics: 提取新闻中的关键数字/指标，数组格式，每个元素包含：
+   - name: 指标名称（如"营收"、"用户数"、"股价"、"融资额"等）
+   - value: 数值
+   - unit: 单位（如"亿美元"、"万人"、"%"等）
+   - entity: 关联实体（公司/产品名，如"OpenAI"、"GPT-5"）
+   如果新闻中没有明确数字，设为空数组[]
 
 输出示例：
 {{
@@ -272,16 +278,26 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
   "category": "ai_technology",
   "importance": "breaking",
   "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n原文引用: \"This is a pivotal moment for AI safety and capability.\" — Sam Altman, CEO\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• 已向部分企业开放测试\n\n后续影响: GPT-5的发布将加速AI应用落地，预计对搜索、编程、教育等行业产生深远影响。竞争对手可能加快发布节奏。",
-  "action_advice": null
+  "action_advice": null,
+  "key_metrics": [
+    {{"name": "性能提升", "value": 3, "unit": "倍", "entity": "GPT-5"}},
+    {{"name": "准确率提升", "value": 40, "unit": "%", "entity": "GPT-5"}}
+  ]
 }}
 
 财经类示例：
 {{
-  "title_zh": "美联储宣布加息25个基点",
+  "title_zh": "特斯拉Q4营收251亿美元，同比增长3%",
   "category": "finance_investment",
   "importance": "high",
-  "summary": "事件概述: 美联储宣布将基准利率上调25个基点至5.5%，为今年第三次加息。\n\n原文引用: \"We remain committed to bringing inflation back to 2%.\" — Jerome Powell\n\n重要细节:\n• 加息幅度：25个基点\n• 当前利率：5.5%\n• 这是今年第三次加息\n• 点阵图显示年内可能再加息一次\n\n后续影响: 加息将增加企业融资成本，科技股可能承压，美元走强，新兴市场资本外流压力加大。",
-  "action_advice": "⚠️ 风险提示: 利率上升将压制成长股估值，高杠杆企业面临偿债压力\n\n✅ 行动建议:\n• 审视持仓中的高估值科技股\n• 关注银行等受益于加息的板块\n• 适度增加现金或短债配置"
+  "summary": "事件概述: 特斯拉发布2025年Q4财报，营收251亿美元，略低于市场预期。\n\n原文引用: \"We remain focused on cost reduction and new product launches.\" — Elon Musk\n\n重要细节:\n• Q4营收：251亿美元\n• 同比增长：3%\n• 汽车毛利率：17.6%\n• 全年交付量：180万辆\n\n后续影响: 增速放缓反映电动车市场竞争加剧，投资者关注Cybertruck量产进展和FSD收入增长。",
+  "action_advice": "⚠️ 风险提示: 增速放缓，毛利率承压，需关注竞争格局变化\n\n✅ 行动建议:\n• 关注后续交付数据和新车型发布\n• 注意估值与增速匹配度",
+  "key_metrics": [
+    {{"name": "Q4营收", "value": 251, "unit": "亿美元", "entity": "特斯拉"}},
+    {{"name": "同比增长", "value": 3, "unit": "%", "entity": "特斯拉"}},
+    {{"name": "汽车毛利率", "value": 17.6, "unit": "%", "entity": "特斯拉"}},
+    {{"name": "全年交付量", "value": 180, "unit": "万辆", "entity": "特斯拉"}}
+  ]
 }}
 
 请严格按此格式输出JSON："""
