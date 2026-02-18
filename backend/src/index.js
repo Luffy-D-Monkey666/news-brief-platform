@@ -8,6 +8,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const briefRoutes = require('./routes/briefs');
+const topicRoutes = require('./routes/topics');
 const WebSocketService = require('./services/websocketService');
 
 const app = express();
@@ -58,8 +59,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// 将原生MongoDB连接挂载到app.locals供路由使用
+mongoose.connection.once('open', () => {
+  app.locals.db = mongoose.connection.db;
+});
+
 // API路由
 app.use('/api/briefs', briefRoutes);
+app.use('/api/topics', topicRoutes);
 
 // 404处理
 app.use((req, res) => {

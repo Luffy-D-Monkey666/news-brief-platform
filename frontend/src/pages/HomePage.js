@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getLatestBriefs, getHistoryBriefs } from '../services/api';
+import { getLatestBriefs, getHistoryBriefs, getHotTopics } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import BriefCard from '../components/BriefCard';
+import TopicCard from '../components/TopicCard';
 import CategoryFilter from '../components/CategoryFilter';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder } from 'react-icons/fa';
 
 // 时间筛选选项
 const TIME_FILTERS = [
@@ -20,18 +21,38 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('card'); // 'card' | 'list'
+  const [viewMode, setViewMode] = useState('card'); // 'card' | 'list' | 'topics'
   const [newBriefId, setNewBriefId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [hotTopics, setHotTopics] = useState([]);
+  const [topicsLoading, setTopicsLoading] = useState(false);
 
   const { latestBrief } = useWebSocket();
 
   // 加载初始数据
   useEffect(() => {
     loadBriefs();
-  }, [selectedCategory]);
+    if (viewMode === 'topics') {
+      loadTopics();
+    }
+  }, [selectedCategory, viewMode]);
+  
+  // 加载热门话题
+  const loadTopics = async () => {
+    try {
+      setTopicsLoading(true);
+      const result = await getHotTopics(24, 20);
+      if (result.success) {
+        setHotTopics(result.data || []);
+      }
+    } catch (error) {
+      console.error('加载话题失败:', error);
+    } finally {
+      setTopicsLoading(false);
+    }
+  };
 
   // 时间筛选
   useEffect(() => {
@@ -236,6 +257,17 @@ const HomePage = () => {
               >
                 <FaList />
               </button>
+              <button
+                onClick={() => setViewMode('topics')}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === 'topics'
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+                title="话题视图"
+              >
+                <FaFolder />
+              </button>
             </div>
 
             {/* 刷新按钮 */}
@@ -257,7 +289,28 @@ const HomePage = () => {
           </div>
         )}
 
-        {loading ? (
+        {viewMode === 'topics' ? (
+          // 话题视图
+          topicsLoading ? (
+            <div className="flex items-center justify-center py-32">
+              <FaSpinner className="animate-spin text-5xl text-black" />
+              <span className="ml-4 text-gray-600 text-lg">加载话题中...</span>
+            </div>
+          ) : hotTopics.length === 0 ? (
+            <div className="text-center py-32 bg-white rounded-2xl">
+              <p className="text-gray-500 text-xl">暂无热门话题</p>
+              <p className="text-gray-400 text-sm mt-2">
+                话题需要同一事件有2篇以上报道才会形成
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {hotTopics.map((topic) => (
+                <TopicCard key={topic._id} topic={topic} />
+              ))}
+            </div>
+          )
+        ) : loading ? (
           <div className="flex items-center justify-center py-32">
             <FaSpinner className="animate-spin text-5xl text-black" />
             <span className="ml-4 text-gray-600 text-lg">加载中...</span>

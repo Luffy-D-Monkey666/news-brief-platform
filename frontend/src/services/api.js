@@ -47,4 +47,23 @@ export const getBriefById = async (id) => {
   return api.get(`/briefs/${id}`);
 };
 
+// 获取热门话题
+export const getHotTopics = async (hours = 24, limit = 10) => {
+  return api.get('/topics/hot', { params: { hours, limit } });
+};
+
+// 获取话题详情及相关新闻
+export const getTopicDetail = async (topicId, limit = 20) => {
+  return api.get(`/topics/${topicId}`, { params: { limit } });
+};
+
+// 获取所有话题
+export const getTopics = async (category = null, limit = 50) => {
+  const params = { limit };
+  if (category) {
+    params.category = category;
+  }
+  return api.get('/topics', { params });
+};
+
 export default api;

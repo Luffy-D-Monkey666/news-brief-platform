@@ -18,6 +18,7 @@ from crawlers.news_crawler import NewsCrawler
 from processors.cloud_ai_processor import NewsProcessor
 from models.database import NewsDatabase
 from filters.quality_filter import ContentQualityFilter
+from services.topic_service import TopicService
 import redis
 
 # 配置日志
@@ -38,9 +39,13 @@ class NewsService:
         self.processor = NewsProcessor(ai_provider)
         self.db = NewsDatabase(MONGODB_URI)
 
-        # 内容质量过滤器（新增）
+        # 内容质量过滤器
         self.quality_filter = ContentQualityFilter()
         logger.info("内容质量过滤器已启用")
+        
+        # 话题聚合服务
+        self.topic_service = TopicService(self.db.db)
+        logger.info("话题聚合服务已启用")
 
         # 添加锁，防止并发执行
         self._lock = Lock()
@@ -161,15 +166,24 @@ class NewsService:
             )
             logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
 
-            # 5. 保存简报
-            logger.info("步骤 5/5: 保存简报到数据库...")
+            # 5. 保存简报 + 话题聚合
+            logger.info("步骤 5/5: 保存简报并进行话题聚合...")
             saved_count = 0
+            topic_assigned = 0
             for brief in processed_news:
+                # 话题聚合：为新闻找到或创建话题
+                topic_id = self.topic_service.find_or_create_topic(brief)
+                if topic_id:
+                    brief['topic_id'] = topic_id
+                    topic_assigned += 1
+                
                 brief_id = self.db.save_brief(brief)
                 if brief_id:
                     saved_count += 1
                     # 发布到Redis，通知后端服务
                     self.publish_brief(brief)
+            
+            logger.info(f"话题聚合: {topic_assigned}/{len(processed_news)} 条新闻已分配话题")
 
             logger.info(f"步骤 5/5 完成: 成功保存 {saved_count}/{len(processed_news)} 条简报")
 
