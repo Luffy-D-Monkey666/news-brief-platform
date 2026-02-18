@@ -229,7 +229,25 @@ NEWS_SOURCES = {
 # 合并的摘要+分类提示词（v2.1：三段式 + 原文引用 + 重要性 + 行动建议）
 PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON。
 
-分类：ai_technology, robotics, ai_programming, semiconductors, automotive, consumer_electronics, podcasts, finance_investment, business_tech, politics_world, economy_policy, health_medical, energy_environment, entertainment_sports, anime, one_piece, tcg, general
+分类（注意区分）：
+- ai_technology: AI技术
+- robotics: 机器人
+- ai_programming: AI编程工具
+- semiconductors: 芯片半导体
+- automotive: 汽车
+- consumer_electronics: 消费电子
+- podcasts: 播客节目
+- finance_investment: 投资财经
+- business_tech: 商业科技
+- politics_world: 政治国际
+- economy_policy: 经济政策
+- health_medical: 健康医疗
+- energy_environment: 能源环境
+- entertainment_sports: 娱乐体育
+- anime: 动漫二次元（非海贼王的动漫）
+- one_piece: 海贼王/One Piece（专门用于海贼王相关内容，包括漫画、动画、讨论）
+- tcg: TCG卡牌游戏（游戏王/PTCG/OPCG/MTG等）
+- general: 综合
 
 新闻标题: {title}
 新闻内容: {content}
