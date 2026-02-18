@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
-import { FaPlay, FaPause, FaVolumeUp, FaClock, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaPlay, FaPause, FaSpinner, FaClock, FaExternalLinkAlt } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 
@@ -52,6 +52,7 @@ const AudioViewCard = ({ brief, index, isNew = false }) => {
     currentIndex, 
     isPlaying, 
     isPaused,
+    isLoading,
     playSingle,
     togglePlay 
   } = useAudioPlayer();
@@ -102,16 +103,21 @@ const AudioViewCard = ({ brief, index, isNew = false }) => {
         {/* 播放按钮 */}
         <button
           onClick={handlePlayClick}
+          disabled={isCurrentPlaying && isLoading}
           className={`
             flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center
             transition-all duration-200
-            ${isCurrentPlaying
-              ? 'bg-black text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ${isCurrentPlaying && isLoading
+              ? 'bg-gray-300 cursor-not-allowed'
+              : isCurrentPlaying
+                ? 'bg-black text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }
           `}
         >
-          {isCurrentPlaying && isPlaying ? (
+          {isCurrentPlaying && isLoading ? (
+            <FaSpinner className="text-lg animate-spin" />
+          ) : isCurrentPlaying && isPlaying ? (
             <FaPause className="text-lg" />
           ) : isCurrentPlaying && isPaused ? (
             <FaPlay className="text-lg ml-0.5" />

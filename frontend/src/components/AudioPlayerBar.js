@@ -7,8 +7,7 @@ import {
   FaStepForward,
   FaStop,
   FaVolumeUp,
-  FaTimes,
-  FaListUl
+  FaSpinner
 } from 'react-icons/fa';
 
 const AudioPlayerBar = () => {
@@ -18,6 +17,7 @@ const AudioPlayerBar = () => {
     currentBrief,
     isPlaying,
     isPaused,
+    isLoading,
     playMode,
     selectedVoice,
     voicePresets,
@@ -96,10 +96,21 @@ const AudioPlayerBar = () => {
               {/* 播放/暂停 */}
               <button
                 onClick={togglePlay}
-                className="p-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
-                title={isPlaying ? '暂停' : isPaused ? '继续' : '播放'}
+                disabled={isLoading}
+                className={`p-3 rounded-full transition-colors ${
+                  isLoading 
+                    ? 'bg-gray-300 cursor-not-allowed' 
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
+                title={isLoading ? '加载中...' : isPlaying ? '暂停' : isPaused ? '继续' : '播放'}
               >
-                {isPlaying ? <FaPause /> : <FaPlay className="ml-0.5" />}
+                {isLoading ? (
+                  <FaSpinner className="animate-spin" />
+                ) : isPlaying ? (
+                  <FaPause />
+                ) : (
+                  <FaPlay className="ml-0.5" />
+                )}
               </button>
               
               {/* 下一条 */}

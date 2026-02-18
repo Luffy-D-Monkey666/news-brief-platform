@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
+import { getBriefAudioUrl, getTTSVoices } from '../services/api';
 
 const AudioPlayerContext = createContext(null);
 
@@ -33,14 +34,18 @@ const playEndSound = (audioContext) => {
   setTimeout(() => createBeep(audioContext, 523.25, 0.2), 150); // C5
 };
 
-// 语音预设配置
+// 语音预设配置（火山引擎豆包音色）
 const voicePresets = {
-  siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
-  siri_male: { pitch: 0.9, rate: 1.0, name: 'Siri (男声)' },
-  xiao_ai: { pitch: 1.05, rate: 1.02, name: '小爱同学' },
-  ideal_assistant: { pitch: 0.95, rate: 0.98, name: '理想同学' },
-  nomi: { pitch: 0.92, rate: 1.0, name: 'NOMI' }
+  zh_female_news: { name: '新闻女声', description: '播音腔，适合新闻播报' },
+  zh_male_news: { name: '新闻男声', description: '播音腔，适合新闻播报' },
+  BV001_streaming: { name: '通用女声', description: '自然、标准' },
+  BV002_streaming: { name: '通用男声', description: '自然、标准' },
+  zh_female_tianmei: { name: '甜美女声', description: '甜美、温柔' },
+  zh_female_shuangkuai: { name: '爽快女声', description: '爽朗、活泼' },
 };
+
+// 是否使用云端 TTS（火山引擎）
+const USE_CLOUD_TTS = true;
 
 export const AudioPlayerProvider = ({ children }) => {
   // 播放列表状态
@@ -48,20 +53,25 @@ export const AudioPlayerProvider = ({ children }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState('siri_female');
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState('zh_female_news');
   
   // 播放模式
   const [playMode, setPlayMode] = useState('single'); // 'single' | 'continuous'
   
   // Refs
+  const audioRef = useRef(null); // HTML5 Audio 元素（用于云端 TTS）
   const speechSynthesisRef = useRef(window.speechSynthesis);
   const utteranceRef = useRef(null);
   const audioContextRef = useRef(null);
   const voicesRef = useRef([]);
   
-  // 初始化 AudioContext 和语音
+  // 初始化
   useEffect(() => {
-    // 加载语音
+    // 创建 Audio 元素
+    audioRef.current = new Audio();
+    
+    // 加载浏览器语音（备用）
     const loadVoices = () => {
       voicesRef.current = speechSynthesisRef.current.getVoices().filter(
         voice => voice.lang === 'zh-CN' || voice.lang === 'zh'
@@ -73,6 +83,10 @@ export const AudioPlayerProvider = ({ children }) => {
     
     return () => {
       speechSynthesisRef.current.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
@@ -99,28 +113,18 @@ export const AudioPlayerProvider = ({ children }) => {
   }, []);
   
   // 播放指定索引的新闻
-  const playAt = useCallback((index) => {
+  const playAt = useCallback(async (index) => {
     if (index < 0 || index >= playlist.length) return;
     
-    // 取消当前播放
-    speechSynthesisRef.current.cancel();
-    
     const brief = playlist[index];
-    const text = `${brief.title}。${brief.summary}`;
+    setCurrentIndex(index);
+    setIsLoading(true);
     
-    // 创建新的 utterance
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    
-    // 设置语音
-    if (voicesRef.current.length > 0) {
-      utterance.voice = voicesRef.current[0];
+    // 停止当前播放
+    if (audioRef.current) {
+      audioRef.current.pause();
     }
-    
-    // 应用语音预设
-    const preset = voicePresets[selectedVoice];
-    utterance.pitch = preset.pitch;
-    utterance.rate = preset.rate;
+    speechSynthesisRef.current.cancel();
     
     // 播放开始音效
     try {
@@ -130,56 +134,129 @@ export const AudioPlayerProvider = ({ children }) => {
       console.log('音效播放失败:', e);
     }
     
-    // 延迟 500ms 后开始朗读（等音效播完）
-    setTimeout(() => {
-      utterance.onend = () => {
-        // 播放结束音效
-        try {
-          const audioContext = getAudioContext();
-          playEndSound(audioContext);
-        } catch (e) {
-          console.log('音效播放失败:', e);
-        }
+    // 等待音效播完
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    if (USE_CLOUD_TTS && brief._id) {
+      // 使用云端 TTS（火山引擎）
+      try {
+        const audioUrl = getBriefAudioUrl(brief._id, selectedVoice);
         
-        // 连续播放模式下，1.5秒后播放下一条
-        if (playMode === 'continuous' && index < playlist.length - 1) {
-          setTimeout(() => {
-            playAt(index + 1);
-          }, 1500);
-        } else {
-          setIsPlaying(false);
+        audioRef.current.src = audioUrl;
+        
+        audioRef.current.oncanplaythrough = () => {
+          setIsLoading(false);
+          setIsPlaying(true);
           setIsPaused(false);
-        }
-      };
+          audioRef.current.play();
+        };
+        
+        audioRef.current.onended = () => {
+          // 播放结束音效
+          try {
+            const audioContext = getAudioContext();
+            playEndSound(audioContext);
+          } catch (e) {
+            console.log('音效播放失败:', e);
+          }
+          
+          // 连续播放模式下，1.5秒后播放下一条
+          if (playMode === 'continuous' && index < playlist.length - 1) {
+            setTimeout(() => {
+              playAt(index + 1);
+            }, 1500);
+          } else {
+            setIsPlaying(false);
+            setIsPaused(false);
+          }
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error('云端 TTS 播放失败，回退到浏览器 TTS:', e);
+          setIsLoading(false);
+          // 回退到浏览器 TTS
+          playWithBrowserTTS(brief, index);
+        };
+        
+        audioRef.current.load();
+        
+      } catch (error) {
+        console.error('云端 TTS 错误:', error);
+        setIsLoading(false);
+        playWithBrowserTTS(brief, index);
+      }
+    } else {
+      // 使用浏览器 TTS
+      setIsLoading(false);
+      playWithBrowserTTS(brief, index);
+    }
+  }, [playlist, selectedVoice, playMode, getAudioContext]);
+  
+  // 浏览器 TTS 播放（备用）
+  const playWithBrowserTTS = useCallback((brief, index) => {
+    const text = `${brief.title}。${brief.summary}`;
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN';
+    
+    if (voicesRef.current.length > 0) {
+      utterance.voice = voicesRef.current[0];
+    }
+    
+    utterance.onend = () => {
+      try {
+        const audioContext = getAudioContext();
+        playEndSound(audioContext);
+      } catch (e) {}
       
-      utterance.onerror = (e) => {
-        console.error('语音播放错误:', e);
+      if (playMode === 'continuous' && index < playlist.length - 1) {
+        setTimeout(() => {
+          playAt(index + 1);
+        }, 1500);
+      } else {
         setIsPlaying(false);
         setIsPaused(false);
-      };
-      
-      utteranceRef.current = utterance;
-      speechSynthesisRef.current.speak(utterance);
-    }, 500);
+      }
+    };
     
-    setCurrentIndex(index);
+    utterance.onerror = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
+    
+    utteranceRef.current = utterance;
+    speechSynthesisRef.current.speak(utterance);
     setIsPlaying(true);
     setIsPaused(false);
-  }, [playlist, selectedVoice, playMode, getAudioContext]);
+  }, [playMode, playlist.length, getAudioContext, playAt]);
   
   // 播放/暂停切换
   const togglePlay = useCallback(() => {
-    if (isPaused) {
-      speechSynthesisRef.current.resume();
-      setIsPaused(false);
-      setIsPlaying(true);
-    } else if (isPlaying) {
-      speechSynthesisRef.current.pause();
-      setIsPaused(true);
-      setIsPlaying(false);
-    } else if (playlist.length > 0) {
-      // 从头开始或继续
-      playAt(currentIndex >= 0 ? currentIndex : 0);
+    if (USE_CLOUD_TTS && audioRef.current) {
+      if (isPaused) {
+        audioRef.current.play();
+        setIsPaused(false);
+        setIsPlaying(true);
+      } else if (isPlaying) {
+        audioRef.current.pause();
+        setIsPaused(true);
+        setIsPlaying(false);
+      } else if (playlist.length > 0) {
+        playAt(currentIndex >= 0 ? currentIndex : 0);
+      }
+    } else {
+      // 浏览器 TTS
+      if (isPaused) {
+        speechSynthesisRef.current.resume();
+        setIsPaused(false);
+        setIsPlaying(true);
+      } else if (isPlaying) {
+        speechSynthesisRef.current.pause();
+        setIsPaused(true);
+        setIsPlaying(false);
+      } else if (playlist.length > 0) {
+        playAt(currentIndex >= 0 ? currentIndex : 0);
+      }
     }
   }, [isPaused, isPlaying, playlist, currentIndex, playAt]);
   
@@ -215,9 +292,14 @@ export const AudioPlayerProvider = ({ children }) => {
   
   // 停止
   const stop = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
     speechSynthesisRef.current.cancel();
     setIsPlaying(false);
     setIsPaused(false);
+    setIsLoading(false);
   }, []);
   
   // 切换语音
@@ -232,6 +314,7 @@ export const AudioPlayerProvider = ({ children }) => {
     currentBrief,
     isPlaying,
     isPaused,
+    isLoading,
     playMode,
     selectedVoice,
     voicePresets,

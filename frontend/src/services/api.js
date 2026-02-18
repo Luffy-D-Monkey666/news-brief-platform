@@ -66,4 +66,39 @@ export const getTopics = async (category = null, limit = 50) => {
   return api.get('/topics', { params });
 };
 
+// ==================== TTS 相关 API ====================
+
+// 获取可用音色列表
+export const getTTSVoices = async () => {
+  return api.get('/tts/voices');
+};
+
+// 合成语音（返回音频 URL）
+export const synthesizeSpeech = async (text, voice = 'zh_female_news', options = {}) => {
+  const response = await fetch(`${API_URL}/api/tts/synthesize`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text,
+      voice,
+      ...options,
+    }),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || '语音合成失败');
+  }
+  
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+};
+
+// 获取简报语音 URL
+export const getBriefAudioUrl = (briefId, voice = 'zh_female_news') => {
+  return `${API_URL}/api/tts/brief/${briefId}?voice=${voice}`;
+};
+
 export default api;
