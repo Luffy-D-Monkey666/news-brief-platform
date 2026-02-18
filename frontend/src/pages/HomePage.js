@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getLatestBriefs, getHistoryBriefs, getHotTopics } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 import BriefCard from '../components/BriefCard';
 import TopicCard from '../components/TopicCard';
 import CategoryFilter from '../components/CategoryFilter';
+import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones } from 'react-icons/fa';
 
 // 时间筛选选项
 const TIME_FILTERS = [
@@ -21,7 +23,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('card'); // 'card' | 'list' | 'topics'
+  const [viewMode, setViewMode] = useState('card'); // 'card' | 'list' | 'topics' | 'audio'
+  const { setPlaylistFromBriefs } = useAudioPlayer();
   const [newBriefId, setNewBriefId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -56,20 +59,26 @@ const HomePage = () => {
 
   // 时间筛选
   useEffect(() => {
+    let filtered;
     if (selectedTimeFilter === 'all') {
-      setFilteredBriefs(briefs);
+      filtered = briefs;
     } else {
       const filter = TIME_FILTERS.find(f => f.key === selectedTimeFilter);
       if (filter && filter.hours) {
         const cutoff = new Date(Date.now() - filter.hours * 60 * 60 * 1000);
-        const filtered = briefs.filter(brief => {
+        filtered = briefs.filter(brief => {
           const briefDate = new Date(brief.created_at || brief.published);
           return briefDate >= cutoff;
         });
-        setFilteredBriefs(filtered);
+      } else {
+        filtered = briefs;
       }
     }
-  }, [briefs, selectedTimeFilter]);
+    setFilteredBriefs(filtered);
+    
+    // 同步更新播放列表
+    setPlaylistFromBriefs(filtered);
+  }, [briefs, selectedTimeFilter, setPlaylistFromBriefs]);
 
   // 监听新简报
   useEffect(() => {
@@ -268,6 +277,17 @@ const HomePage = () => {
               >
                 <FaFolder />
               </button>
+              <button
+                onClick={() => setViewMode('audio')}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === 'audio'
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+                title="音频视图"
+              >
+                <FaHeadphones />
+              </button>
             </div>
 
             {/* 刷新按钮 */}
@@ -346,6 +366,29 @@ const HomePage = () => {
               />
             ))}
           </Masonry>
+        ) : viewMode === 'audio' ? (
+          // 音频视图
+          <div className="space-y-3 max-w-3xl mx-auto">
+            <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-4 mb-6 text-white">
+              <div className="flex items-center gap-3">
+                <FaHeadphones className="text-2xl" />
+                <div>
+                  <h3 className="font-semibold">音频模式</h3>
+                  <p className="text-sm text-gray-300">
+                    点击播放按钮收听单条新闻，或使用底部播放栏连续播放
+                  </p>
+                </div>
+              </div>
+            </div>
+            {filteredBriefs.map((brief, index) => (
+              <AudioViewCard
+                key={brief._id}
+                brief={brief}
+                index={index}
+                isNew={brief._id === newBriefId}
+              />
+            ))}
+          </div>
         ) : (
           // 列表视图
           <div className="space-y-0">
