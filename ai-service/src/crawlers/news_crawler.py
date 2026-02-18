@@ -25,14 +25,21 @@ class NewsCrawler:
             feed = feedparser.parse(feed_url)
             news_items = []
 
-            for entry in feed.entries[:20]:  # 每个源取最新20条（阶段2：完整方案）
+            for entry in feed.entries[:20]:  # 每个源取最新20条
+                published_date = self._parse_date(entry)
+                
+                # 过滤超过7天的旧新闻
+                if not self._is_recent(published_date, max_days=7):
+                    logger.debug(f"跳过旧新闻: {entry.get('title', '')[:50]}... (发布于 {published_date})")
+                    continue
+                
                 news_item = {
                     'title': entry.get('title', ''),
                     'content': self._extract_content(entry),
                     'link': entry.get('link', ''),
                     'image': self._extract_image(entry),
-                    'video': self._extract_video(entry),  # 添加视频提取（可选）
-                    'published': self._parse_date(entry),
+                    'video': self._extract_video(entry),
+                    'published': published_date,
                     'source': feed.feed.get('title', feed_url),
                     'source_url': feed_url,
                     'raw_data': entry
@@ -185,6 +192,22 @@ class NewsCrawler:
             except:
                 pass
         return datetime.now()
+
+    def _is_recent(self, published_date: datetime, max_days: int = 7) -> bool:
+        """检查文章是否在指定天数内发布"""
+        from datetime import timedelta
+        try:
+            # 处理带时区的日期
+            now = datetime.now()
+            if published_date.tzinfo is not None:
+                from datetime import timezone
+                now = datetime.now(timezone.utc)
+            
+            age = now - published_date
+            return age.days <= max_days
+        except Exception as e:
+            logger.debug(f"日期比较失败: {e}")
+            return True  # 出错时默认接受
 
     def crawl_all(self) -> List[Dict]:
         """爬取所有新闻源"""
