@@ -1,175 +1,182 @@
-# 实时新闻简报平台
+# NewsHub - AI新闻聚合平台
 
-一个基于开源AI模型的实时新闻聚合和简报系统，支持多分类新闻自动提炼和实时推送。
+一个基于AI的实时新闻聚合和简报系统，支持多分类新闻自动提炼、结构化展示和实时推送。
 
-## 功能特性
+## ✨ 功能特性
 
-- ✅ 全网新闻实时抓取
-- ✅ AI智能提炼和分类（财经、科技、健康、新能源、汽车、机器人、AI等）
-- ✅ WebSocket实时推送
-- ✅ 新闻来源追溯
-- ✅ 响应式Web界面
+### 核心功能
+- ✅ **70+全球新闻源实时抓取** - 覆盖AI、机器人、芯片、汽车、财经等18个分类
+- ✅ **AI智能提炼** - DeepSeek驱动，自动生成结构化简报
+- ✅ **三段式简报结构** - 事件概述 → 重要细节 → 后续影响
+- ✅ **WebSocket实时推送** - 新闻实时更新，无需刷新页面
+- ✅ **新闻来源追溯** - 一键跳转原文
 
-## 技术栈
+### v2.0 新增功能
+- ✅ **时间筛选器** - 支持"1小时内"/"今日"/"本周"快速筛选
+- ✅ **双视图模式** - 卡片瀑布流 / 列表紧凑视图自由切换
+- ✅ **语音朗读** - 5种中文语音预设（Siri/小爱/理想同学/NOMI）
+- ✅ **按时间排序** - 最新新闻始终在前
 
-### 后端
-- Node.js + Express (API服务)
-- MongoDB (数据存储)
-- Redis (缓存和消息队列)
-- Socket.io (WebSocket实时通信)
+### 新闻分类（18个）
+| 核心科技 | 主流新闻 | 兴趣领域 |
+|---------|---------|---------|
+| AI技术 | 商业科技 | 动漫二次元 |
+| 机器人 | 政治国际 | 海贼王(OP) |
+| AI编程 | 经济政策 | TCG卡牌 |
+| 芯片半导体 | 健康医疗 | |
+| 汽车 | 能源环境 | |
+| 消费电子 | 娱乐体育 | |
+| 播客推荐 | | |
+| 投资财经 | | |
 
-### AI服务
-- Python 3.9+
-- Ollama (本地开源LLM运行环境)
-- Llama 3 / Qwen 2 (新闻提炼和分类)
-- Feedparser (RSS订阅)
-- BeautifulSoup4 (网页解析)
+## 🏗️ 技术架构
 
-### 前端
-- React 18 + TypeScript
-- Tailwind CSS
-- Socket.io-client
-- Axios
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend                              │
+│    React 18 + Tailwind CSS + Socket.io + Masonry            │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Backend (Node.js)                       │
+│         Express + MongoDB + Redis + Socket.io               │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    AI Service (Python)                       │
+│    RSS Crawler → DeepSeek API → 结构化简报生成              │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## 快速开始
+### 技术栈
 
-### 前置要求
+| 层级 | 技术 |
+|-----|------|
+| 前端 | React 18, Tailwind CSS, Socket.io-client, react-masonry-css |
+| 后端 | Node.js, Express, MongoDB, Redis, Socket.io |
+| AI服务 | Python 3.9+, DeepSeek API, Feedparser, BeautifulSoup4 |
+| 部署 | Docker, Render/Railway/Vercel |
 
-- Node.js 18+
-- Python 3.9+
-- MongoDB 6+
-- Redis 7+
-- Docker & Docker Compose (推荐)
+## 🚀 快速开始
 
-### 使用Docker部署（推荐）
+### 云端部署（推荐）
+
+项目支持一键部署到 Render/Railway：
+
+1. Fork 本项目
+2. 参考 `CLOUD_DEPLOY.md` 配置环境变量
+3. 连接 MongoDB Atlas
+4. 部署完成！
+
+### 本地开发
 
 ```bash
 # 克隆项目
-git clone <your-repo>
+git clone https://github.com/Luffy-D-Monkey666/news-brief-platform.git
 cd news-brief-platform
 
-# 启动所有服务
+# 使用 Docker Compose（推荐）
 docker-compose up -d
 
-# 访问应用
-# 前端: http://localhost:3000
-# 后端API: http://localhost:5000
+# 或手动启动各服务
+# 1. AI服务
+cd ai-service && pip install -r requirements.txt && python src/main.py
+
+# 2. 后端
+cd backend && npm install && npm run dev
+
+# 3. 前端
+cd frontend && npm install && npm start
 ```
 
-### 手动部署
-
-#### 1. 安装Ollama和模型
+### 环境变量
 
 ```bash
-# 安装Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+# AI服务 (.env)
+DEEPSEEK_API_KEY=your_deepseek_key
+MONGODB_URI=mongodb://...
 
-# 拉取Llama 3模型
-ollama pull llama3
+# 后端 (.env)
+MONGODB_URI=mongodb://...
+REDIS_URL=redis://...
 
-# 或使用Qwen 2（中文效果更好）
-ollama pull qwen2:7b
-```
-
-#### 2. 启动AI服务
-
-```bash
-cd ai-service
-pip install -r requirements.txt
-python src/main.py
-```
-
-#### 3. 启动后端服务
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-#### 4. 启动前端服务
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
-## 环境变量配置
-
-### backend/.env
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/news-brief
-REDIS_URL=redis://localhost:6379
-AI_SERVICE_URL=http://localhost:8000
-```
-
-### ai-service/.env
-```
-OLLAMA_HOST=http://localhost:11434
-MODEL_NAME=llama3
-CRAWL_INTERVAL=300
-```
-
-### frontend/.env
-```
+# 前端 (.env)
 REACT_APP_API_URL=http://localhost:5000
-REACT_APP_WS_URL=ws://localhost:5000
 ```
 
-## 项目结构
+## 📖 简报结构说明
+
+每条新闻简报包含三个层次：
+
+```
+📰 标题（中文，≤30字）
+
+🔵 事件概述
+   1-2句话说清楚"发生了什么"
+
+🟡 重要细节（3-5条要点）
+   • 关键数据/人物/时间
+   • 技术细节/产品规格
+   • 涉及的公司/机构
+   • 官方说法或权威引用
+
+🟢 后续影响
+   这件事对行业/市场/用户意味着什么？
+   后续可能的发展方向
+```
+
+## 🗺️ 路线图
+
+### 已完成 ✅
+- [x] 三段式结构化简报
+- [x] 时间筛选器
+- [x] 列表/卡片视图切换
+- [x] 语音朗读功能
+- [x] 70+ 优质新闻源
+
+### 计划中 🔜
+- [ ] 话题聚合 - 相关新闻自动关联
+- [ ] 原文关键引用 - 保留1-2句原文
+- [ ] Breaking News标签 - 紧急/重要新闻高亮
+- [ ] 来源可信度标识 - 官方/非官方来源区分
+- [ ] 数据对比 - 关键数字与历史对比
+- [ ] 行动建议 - 针对管理者的风险提示
+- [ ] 定制化订阅 - 关注特定公司/领域
+- [ ] 一键分享 - 生成摘要卡片
+
+## 📁 项目结构
 
 ```
 news-brief-platform/
-├── backend/              # Node.js后端服务
-│   ├── src/
-│   │   ├── controllers/  # 控制器
-│   │   ├── models/       # 数据模型
-│   │   ├── routes/       # 路由
-│   │   ├── services/     # 业务逻辑
-│   │   └── middleware/   # 中间件
-│   └── config/           # 配置文件
 ├── ai-service/           # Python AI服务
 │   ├── src/
-│   │   ├── crawlers/     # 新闻爬虫
-│   │   ├── processors/   # AI处理器
+│   │   ├── crawlers/     # RSS新闻爬虫
+│   │   ├── processors/   # AI处理器（DeepSeek）
 │   │   └── models/       # 数据模型
-│   └── config/           # 配置文件
+│   └── config/           # 配置（新闻源、提示词）
+├── backend/              # Node.js后端
+│   └── src/
+│       ├── controllers/  # API控制器
+│       ├── models/       # MongoDB模型
+│       └── routes/       # 路由定义
 ├── frontend/             # React前端
-│   ├── src/
-│   │   ├── components/   # UI组件
-│   │   ├── pages/        # 页面
-│   │   ├── hooks/        # 自定义Hooks
-│   │   └── services/     # API服务
-│   └── public/           # 静态资源
-└── docker-compose.yml    # Docker编排
+│   └── src/
+│       ├── components/   # UI组件（BriefCard等）
+│       ├── pages/        # 页面（HomePage）
+│       └── hooks/        # WebSocket等Hooks
+└── docs/                 # 部署文档
 ```
 
-## API文档
+## 🤝 贡献
 
-### 获取最新简报
-```
-GET /api/briefs/latest?category=tech
-```
+欢迎提交 Issue 和 PR！
 
-### 获取历史简报
-```
-GET /api/briefs/history?page=1&limit=20
-```
-
-### WebSocket事件
-- `news:update` - 新简报推送
-- `category:update` - 分类更新
-
-## 开发计划
-
-- [ ] 添加用户订阅功能
-- [ ] 邮件/推送通知
-- [ ] 自定义新闻源
-- [ ] 多语言支持
-- [ ] 数据可视化
-
-## 许可证
+## 📄 许可证
 
 MIT License
+
+---
+
+**NewsHub** - 让新闻阅读更高效 📰
