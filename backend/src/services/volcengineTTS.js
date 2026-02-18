@@ -12,7 +12,7 @@ const config = {
   // 语音合成 API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
-  cluster: 'volcano_mega',  // 豆包大模型语音合成 2.0 cluster
+  cluster: 'volcano_tts',  // 火山引擎 TTS cluster
 };
 
 // 音色配置 - 火山引擎豆包大模型语音（基于用户开通的音色）
