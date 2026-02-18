@@ -107,6 +107,15 @@ class CloudAIProcessor:
                 ]
                 if data['category'] not in valid_categories:
                     data['category'] = 'general'
+                
+                # 验证重要性字段
+                if 'importance' not in data or data['importance'] not in ['breaking', 'high', 'normal']:
+                    data['importance'] = 'normal'
+                
+                # 处理行动建议字段（可能为null）
+                if 'action_advice' not in data:
+                    data['action_advice'] = None
+                    
                 return data
             else:
                 logger.warning(f"JSON缺少必要字段: {result[:100]}")
@@ -142,13 +151,19 @@ class NewsProcessor:
                 logger.warning(f"处理失败: {news_item['title'][:50]}")
                 return None
 
+            # 导入来源分级函数
+            from config.settings import get_source_tier
+            
             # 构建处理后的新闻
             processed_news = {
                 'title': result['title_zh'],
                 'summary': result['summary'],
                 'category': result['category'],
+                'importance': result.get('importance', 'normal'),
+                'action_advice': result.get('action_advice'),
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
+                'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度
                 'link': news_item['link'],
                 'image': news_item.get('image'),
                 'video': news_item.get('video'),
@@ -156,7 +171,8 @@ class NewsProcessor:
                 'created_at': news_item.get('created_at')
             }
 
-            logger.info(f"✓ [{result['category']}] {result['title_zh'][:30]}...")
+            importance_icon = '🔴' if result.get('importance') == 'breaking' else '🟡' if result.get('importance') == 'high' else '⚪'
+            logger.info(f"{importance_icon} [{result['category']}] {result['title_zh'][:30]}...")
             return processed_news
 
         except Exception as e:

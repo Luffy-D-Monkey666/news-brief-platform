@@ -10,6 +10,53 @@ REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 # 爬虫配置
 CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟
 
+# ============================================================
+# 来源可信度分级配置
+# ============================================================
+SOURCE_TIERS = {
+    # 🏛️ 官方来源：公司/政府官方发布
+    'official': [
+        'openai.com', 'blog.google', 'apple.com', 'microsoft.com',
+        'nvidia.com', 'tesla.com', 'anthropic.com', 'deepmind.com',
+        'huggingface.co', 'github.blog', 'machinelearning.apple.com',
+        'whitehouse.gov', 'imf.org', 'worldbank.org', 'oecd.org'
+    ],
+    # 📰 权威媒体：主流新闻机构
+    'mainstream': [
+        'nytimes.com', 'bbc.com', 'bbc.co.uk', 'reuters.com',
+        'theguardian.com', 'bloomberg.com', 'ft.com', 'wsj.com',
+        'economist.com', 'aljazeera.com', 'apnews.com'
+    ],
+    # 🔬 专业媒体：垂直领域媒体
+    'specialized': [
+        'techcrunch.com', 'theverge.com', 'wired.com', 'arstechnica.com',
+        'venturebeat.com', 'engadget.com', 'anandtech.com', 'tomshardware.com',
+        'electrek.co', 'insideevs.com', 'semiengineering.com', 'eetimes.com',
+        'statnews.com', 'fiercebiotech.com', 'variety.com', 'hollywoodreporter.com',
+        '9to5mac.com', '9to5google.com', 'gsmarena.com', 'therobotreport.com',
+        'cleantechnica.com', 'greentechmedia.com', 'carbonbrief.org'
+    ],
+    # 💬 社区来源：Reddit、论坛、个人博客
+    'community': [
+        'reddit.com', 'news.ycombinator.com', 'medium.com',
+        'substack.com', 'dev.to', 'hackernoon.com'
+    ]
+}
+
+def get_source_tier(source_url: str) -> str:
+    """根据来源URL判断可信度等级"""
+    if not source_url:
+        return 'community'
+    
+    source_url = source_url.lower()
+    
+    for tier, domains in SOURCE_TIERS.items():
+        for domain in domains:
+            if domain in source_url:
+                return tier
+    
+    return 'community'  # 默认为社区来源
+
 # 新闻分类（优化后顺序）
 CATEGORIES = [
     # 核心科技领域
@@ -179,27 +226,44 @@ NEWS_SOURCES = {
 # AI提示词模板（优化版：合并摘要+分类，大幅减少token）
 # ============================================================
 
-# 合并的摘要+分类提示词（单次调用，结构化三段式输出）
-PROCESS_PROMPT = """你是新闻编辑，分析以下新闻并输出JSON。
+# 合并的摘要+分类提示词（v2.1：三段式 + 原文引用 + 重要性 + 行动建议）
+PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON。
 
 分类：ai_technology, robotics, ai_programming, semiconductors, automotive, consumer_electronics, podcasts, finance_investment, business_tech, politics_world, economy_policy, health_medical, energy_environment, entertainment_sports, anime, one_piece, tcg, general
 
 新闻标题: {title}
 新闻内容: {content}
 
-要求：
+输出要求：
 1. title_zh: 中文标题，≤30字
 2. category: 从上面分类中选一个
-3. summary: 必须包含三部分，用换行符分隔：
-   - 第一行写"事件概述:"后面跟1-2句话概括发生了什么
-   - 空一行后写"重要细节:"然后用•列出3-4个关键信息点
-   - 空一行后写"后续影响:"分析这件事的意义和后续发展
+3. importance: 判断重要性
+   - "breaking": 重大突发（战争/灾难/巨头重大发布/全球性事件）
+   - "high": 较重要（行业重要动态）
+   - "normal": 普通新闻
+4. summary: 结构化摘要，必须包含以下部分：
+   - "事件概述:" 1-2句话说清楚发生了什么
+   - "原文引用:" 提取原文中最有价值的1句话（英文保留原文，标注说话人）
+   - "重要细节:" 用•列出3-4个关键信息点
+   - "后续影响:" 分析意义和后续发展
+5. action_advice: 仅当category是finance_investment/business_tech/economy_policy时生成，包含风险提示和行动建议，其他分类设为null
 
 输出示例：
 {{
   "title_zh": "OpenAI发布GPT-5，性能提升3倍",
   "category": "ai_technology",
-  "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• CEO Sam Altman称这是\"迈向AGI的关键一步\"\n\n后续影响: GPT-5的发布将加速AI应用落地，预计将对搜索、编程、教育等行业产生深远影响。竞争对手可能加快发布节奏。"
+  "importance": "breaking",
+  "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n原文引用: \"This is a pivotal moment for AI safety and capability.\" — Sam Altman, CEO\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• 已向部分企业开放测试\n\n后续影响: GPT-5的发布将加速AI应用落地，预计对搜索、编程、教育等行业产生深远影响。竞争对手可能加快发布节奏。",
+  "action_advice": null
+}}
+
+财经类示例：
+{{
+  "title_zh": "美联储宣布加息25个基点",
+  "category": "finance_investment",
+  "importance": "high",
+  "summary": "事件概述: 美联储宣布将基准利率上调25个基点至5.5%，为今年第三次加息。\n\n原文引用: \"We remain committed to bringing inflation back to 2%.\" — Jerome Powell\n\n重要细节:\n• 加息幅度：25个基点\n• 当前利率：5.5%\n• 这是今年第三次加息\n• 点阵图显示年内可能再加息一次\n\n后续影响: 加息将增加企业融资成本，科技股可能承压，美元走强，新兴市场资本外流压力加大。",
+  "action_advice": "⚠️ 风险提示: 利率上升将压制成长股估值，高杠杆企业面临偿债压力\n\n✅ 行动建议:\n• 审视持仓中的高估值科技股\n• 关注银行等受益于加息的板块\n• 适度增加现金或短债配置"
 }}
 
 请严格按此格式输出JSON："""

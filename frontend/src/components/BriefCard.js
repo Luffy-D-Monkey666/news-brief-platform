@@ -52,6 +52,21 @@ const categoryNames = {
   general: '综合'
 };
 
+// 来源可信度配置
+const sourceTierConfig = {
+  official: { label: '官方', icon: '🏛️', color: 'bg-blue-100 text-blue-800' },
+  mainstream: { label: '权威媒体', icon: '📰', color: 'bg-green-100 text-green-800' },
+  specialized: { label: '专业媒体', icon: '🔬', color: 'bg-purple-100 text-purple-800' },
+  community: { label: '社区', icon: '💬', color: 'bg-gray-100 text-gray-600' }
+};
+
+// 重要性配置
+const importanceConfig = {
+  breaking: { label: 'Breaking', color: 'bg-red-500 text-white', border: 'ring-2 ring-red-500' },
+  high: { label: '重要', color: 'bg-orange-500 text-white', border: 'ring-2 ring-orange-300' },
+  normal: { label: '', color: '', border: '' }
+};
+
 // 声音预设配置
 const voicePresets = {
   siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
@@ -242,18 +257,25 @@ const BriefCard = ({ brief, isNew = false }) => {
     }
   };
 
-  // 格式化摘要为三段式结构
+  // 格式化摘要为结构化内容（支持原文引用）
   const formatSummary = (text) => {
     const sections = {
       overview: null,
+      quote: null,
       details: [],
       impact: null
     };
 
     // 提取"事件概述"
-    const overviewMatch = text.match(/事件概述[:：]\s*([\s\S]*?)(?=重要细节|后续影响|$)/);
+    const overviewMatch = text.match(/事件概述[:：]\s*([\s\S]*?)(?=原文引用|重要细节|后续影响|$)/);
     if (overviewMatch) {
       sections.overview = overviewMatch[1].trim();
+    }
+
+    // 提取"原文引用"
+    const quoteMatch = text.match(/原文引用[:：]\s*([\s\S]*?)(?=重要细节|后续影响|$)/);
+    if (quoteMatch) {
+      sections.quote = quoteMatch[1].trim();
     }
 
     // 提取"重要细节"
@@ -286,20 +308,30 @@ const BriefCard = ({ brief, isNew = false }) => {
     return {
       hasStructure: sections.overview || sections.details.length || sections.impact,
       overview: sections.overview,
+      quote: sections.quote,
       details: sections.details,
       impact: sections.impact
     };
   };
 
   const summary = formatSummary(brief.summary);
+  const sourceTier = sourceTierConfig[brief.source_tier] || sourceTierConfig.community;
+  const importance = importanceConfig[brief.importance] || importanceConfig.normal;
 
   return (
     <>
       <div
         className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-gray-300 ${
           isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
-        }`}
+        } ${importance.border}`}
       >
+        {/* Breaking News 标签 */}
+        {brief.importance === 'breaking' && (
+          <div className="bg-red-500 text-white text-center py-1 text-xs font-bold tracking-wide">
+            🔴 BREAKING NEWS
+          </div>
+        )}
+        
         {/* 视频/图片区域 */}
         {(brief.video && !videoError) ? (
           <div
@@ -315,10 +347,15 @@ const BriefCard = ({ brief, isNew = false }) => {
                 setVideoError(true);
               }}
             />
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-4 flex gap-2">
               <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
                 {categoryName}
               </span>
+              {brief.importance === 'high' && (
+                <span className="px-2 py-1.5 rounded-full text-xs font-medium bg-orange-500 text-white">
+                  重要
+                </span>
+              )}
             </div>
           </div>
         ) : brief.image && (
@@ -337,22 +374,34 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
               <span className="text-white text-sm font-medium">查看大图</span>
             </div>
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-4 flex gap-2">
               <span className={`px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md ${colorClass}`}>
                 {categoryName}
               </span>
+              {brief.importance === 'high' && (
+                <span className="px-2 py-1.5 rounded-full text-xs font-medium bg-orange-500 text-white">
+                  重要
+                </span>
+              )}
             </div>
           </div>
         )}
 
         {/* 内容区域 */}
         <div className="p-5">
-          {/* 没有视频和图片时的分类标签 */}
+          {/* 没有视频和图片时的分类标签 + 来源可信度 */}
           {!brief.video && !brief.image && (
             <div className="flex items-center justify-between mb-3">
-              <span className={`text-xs font-semibold ${colorClass}`}>
-                {categoryName}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-semibold ${colorClass}`}>
+                  {categoryName}
+                </span>
+                {brief.importance === 'high' && (
+                  <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-500 text-white">
+                    重要
+                  </span>
+                )}
+              </div>
               <div className="flex items-center text-gray-400 text-xs">
                 <FaClock className="mr-1.5" />
                 {formatDate(brief.created_at || brief.published)}
@@ -434,13 +483,20 @@ const BriefCard = ({ brief, isNew = false }) => {
             {brief.title}
           </h3>
 
-          {/* 摘要 - 结构化显示（增加间距和虚线） */}
+          {/* 来源可信度标签 */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className={`px-2 py-1 rounded text-xs font-medium ${sourceTier.color}`}>
+              {sourceTier.icon} {sourceTier.label}
+            </span>
+          </div>
+
+          {/* 摘要 - 结构化显示 */}
           {summary.hasStructure ? (
-            <div className="space-y-6 mb-5">
+            <div className="space-y-5 mb-5">
               {/* 事件概述 */}
               {summary.overview && (
                 <div>
-                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                  <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                     <div className="w-2 h-5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600" />
                     <span className="text-sm font-bold text-gray-700 tracking-wide">事件概述</span>
                   </div>
@@ -450,14 +506,27 @@ const BriefCard = ({ brief, isNew = false }) => {
                 </div>
               )}
 
+              {/* 原文引用 */}
+              {summary.quote && (
+                <div className="bg-gray-50 border-l-4 border-blue-400 pl-4 pr-3 py-3 rounded-r-lg">
+                  <div className="flex items-center gap-1 mb-2">
+                    <span className="text-blue-500">💬</span>
+                    <span className="text-xs font-medium text-gray-500">原文引用</span>
+                  </div>
+                  <p className="text-sm text-gray-700 italic leading-relaxed">
+                    {summary.quote}
+                  </p>
+                </div>
+              )}
+
               {/* 重要细节 */}
               {summary.details.length > 0 && (
-                <div className={summary.overview ? "" : "mt-2"}>
-                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                <div>
+                  <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                     <div className="w-2 h-5 rounded-full bg-gradient-to-b from-purple-400 to-purple-600" />
                     <span className="text-sm font-bold text-gray-700 tracking-wide">重要细节</span>
                   </div>
-                  <ul className="space-y-3 pl-5">
+                  <ul className="space-y-2 pl-5">
                     {summary.details.map((detail, i) => (
                       <li key={i} className="flex items-start text-sm text-gray-800 leading-relaxed">
                         <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 mr-3 flex-shrink-0" />
@@ -470,8 +539,8 @@ const BriefCard = ({ brief, isNew = false }) => {
 
               {/* 后续影响 */}
               {summary.impact && (
-                <div className="mt-6">
-                  <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-dashed border-gray-200">
+                <div>
+                  <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                     <div className="w-2 h-5 rounded-full bg-gradient-to-b from-green-400 to-green-600" />
                     <span className="text-sm font-bold text-gray-700 tracking-wide">后续影响</span>
                   </div>
@@ -485,6 +554,15 @@ const BriefCard = ({ brief, isNew = false }) => {
             // 非结构化摘要
             <div className="mb-5 p-4 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed whitespace-pre-line">
               {brief.summary}
+            </div>
+          )}
+
+          {/* 行动建议（仅财经/商业类显示） */}
+          {brief.action_advice && (
+            <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <div className="text-sm text-amber-900 leading-relaxed whitespace-pre-line">
+                {brief.action_advice}
+              </div>
             </div>
           )}
 
