@@ -13,23 +13,34 @@ const briefSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
-      'ai_technology',         // AI技术（机器学习、大语言模型、AI应用）
-      'robotics',              // 机器人（工业/服务/人形/移动机器人、自动驾驶、DMS、智能座舱）
-      'ai_programming',        // AI编程（AI编程助手、传统开发工具、开源项目）
-      'semiconductors',        // 芯片半导体（芯片设计、制造、设备、材料）
-      'opcg',                  // OPCG卡牌游戏（One Piece Card Game）
-      'automotive',            // 汽车（电动车/燃油车/混动车、充电桩、电池、新车、销量）
-      'consumer_electronics',  // 消费电子（手机、手表、眼镜、相机、无人机等）
-      'one_piece',             // ONE PIECE（海贼王动漫周边）
-      'podcasts',              // 播客推荐（优质播客节目内容推荐）
+      // 核心科技领域
+      'ai_technology',         // AI技术
+      'robotics',              // 机器人
+      'ai_programming',        // AI编码与智能体
+      'semiconductors',        // 芯片半导体
+      'automotive',            // 汽车
+      'consumer_electronics',  // 消费电子
+      'podcasts',              // 播客推荐
       'finance_investment',    // 投资财经
+      
+      // 主流新闻分类
       'business_tech',         // 商业科技
       'politics_world',        // 政治国际
       'economy_policy',        // 经济政策
       'health_medical',        // 健康医疗
       'energy_environment',    // 能源环境
       'entertainment_sports',  // 娱乐体育
-      'general'               // 综合
+      
+      // 兴趣领域
+      'anime',                 // 动漫二次元
+      'one_piece',             // OP（海贼王）
+      'tcg',                   // TCG集换式卡牌（OPCG/PTCG/游戏王等）
+      
+      // 综合
+      'general',               // 综合
+      
+      // 兼容旧数据
+      'opcg'                   // 旧OPCG分类（将迁移到tcg）
     ]
   },
   source: {

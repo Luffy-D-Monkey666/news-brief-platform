@@ -11,28 +11,27 @@ import {
   FaChartLine,
   FaBolt,
   FaLandmark,
-  FaNewspaper,
   FaFilm,
-  FaCode,        // AI编程图标
-  FaAddressCard, // OPCG卡牌图标
-  FaMobileAlt,   // 消费电子图标
-  FaShip,        // ONE PIECE图标
-  FaPodcast      // 播客图标
+  FaCode,
+  FaMobileAlt,
+  FaShip,
+  FaPodcast,
+  FaLayerGroup,  // TCG卡牌图标
+  FaPlay         // 动漫图标
 } from 'react-icons/fa';
 
+// 分类图标和颜色配置
 const categoryIcons = {
-  // 核心关注领域（最高优先级）
-  ai_technology: { icon: FaBrain, color: 'text-purple-600', highlight: true, special: true },
-  robotics: { icon: FaRobot, color: 'text-indigo-600', highlight: true, special: true },
-  ai_programming: { icon: FaCode, color: 'text-blue-600', highlight: true, special: true },
-  semiconductors: { icon: FaMicrochip, color: 'text-gray-700', highlight: true, special: true },
-  opcg: { icon: FaAddressCard, color: 'text-orange-600', highlight: true, special: true },
-  automotive: { icon: FaCar, color: 'text-green-600', highlight: true },
-  consumer_electronics: { icon: FaMobileAlt, color: 'text-cyan-600', highlight: true },
-  one_piece: { icon: FaShip, color: 'text-red-600', highlight: true },
-  podcasts: { icon: FaPodcast, color: 'text-pink-600', highlight: true },
-  finance_investment: { icon: FaChartLine, color: 'text-red-600', highlight: true },
-
+  // 核心科技领域
+  ai_technology: { icon: FaBrain, color: 'text-purple-600' },
+  robotics: { icon: FaRobot, color: 'text-indigo-600' },
+  ai_programming: { icon: FaCode, color: 'text-blue-600' },
+  semiconductors: { icon: FaMicrochip, color: 'text-gray-700' },
+  automotive: { icon: FaCar, color: 'text-green-600' },
+  consumer_electronics: { icon: FaMobileAlt, color: 'text-cyan-600' },
+  podcasts: { icon: FaPodcast, color: 'text-pink-600' },
+  finance_investment: { icon: FaChartLine, color: 'text-red-600' },
+  
   // 主流新闻分类
   business_tech: { icon: FaBolt, color: 'text-blue-600' },
   politics_world: { icon: FaLandmark, color: 'text-indigo-600' },
@@ -40,36 +39,61 @@ const categoryIcons = {
   health_medical: { icon: FaHeartbeat, color: 'text-pink-600' },
   energy_environment: { icon: FaLeaf, color: 'text-teal-600' },
   entertainment_sports: { icon: FaFilm, color: 'text-orange-600' },
+  
+  // 兴趣领域（放在综合前）
+  anime: { icon: FaPlay, color: 'text-purple-500' },
+  one_piece: { icon: FaShip, color: 'text-red-600' },
+  tcg: { icon: FaLayerGroup, color: 'text-orange-500' },
+  
+  // 综合
   general: { icon: FaGlobe, color: 'text-gray-600' }
 };
 
+// 分类中文名称（按显示顺序）
 const categoryNames = {
-  // 核心关注领域
   ai_technology: 'AI技术',
   robotics: '机器人',
-  ai_programming: 'AI编程',
+  ai_programming: 'AI编码与智能体',
   semiconductors: '芯片',
-  opcg: 'OPCG',
   automotive: '汽车',
   consumer_electronics: '消费电子',
-  one_piece: 'OP',
   podcasts: '播客推荐',
   finance_investment: '投资财经',
-
-  // 主流新闻分类
   business_tech: '商业科技',
   politics_world: '政治国际',
   economy_policy: '经济政策',
   health_medical: '健康医疗',
   energy_environment: '能源环境',
   entertainment_sports: '娱乐体育',
+  anime: '动漫二次元',
+  one_piece: 'OP',
+  tcg: 'TCG',
   general: '综合'
 };
 
-const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
-  // 所有分类按顺序排列
-  const allCategories = Object.keys(categoryNames);
+// 分类顺序（动漫/OP/TCG放在综合前面）
+const categoryOrder = [
+  'ai_technology',
+  'robotics', 
+  'ai_programming',
+  'semiconductors',
+  'automotive',
+  'consumer_electronics',
+  'podcasts',
+  'finance_investment',
+  'business_tech',
+  'politics_world',
+  'economy_policy',
+  'health_medical',
+  'energy_environment',
+  'entertainment_sports',
+  'anime',
+  'one_piece',
+  'tcg',
+  'general'
+];
 
+const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
   return (
     <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-2xl p-6 mb-8">
       {/* 全部分类按钮 */}
@@ -89,8 +113,11 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
 
       {/* 所有分类统一展示 */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {allCategories.map((category) => {
-          const { icon: Icon, color } = categoryIcons[category];
+        {categoryOrder.map((category) => {
+          const iconConfig = categoryIcons[category];
+          if (!iconConfig) return null;
+          
+          const { icon: Icon, color } = iconConfig;
           const isSelected = selectedCategory === category;
 
           return (
