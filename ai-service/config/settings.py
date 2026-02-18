@@ -180,25 +180,29 @@ NEWS_SOURCES = {
 # ============================================================
 
 # 合并的摘要+分类提示词（单次调用，结构化三段式输出）
-PROCESS_PROMPT = """分析新闻并输出JSON格式结果。
+PROCESS_PROMPT = """你是新闻编辑，分析以下新闻并输出JSON。
 
-分类列表：
-ai_technology(AI技术), robotics(机器人), ai_programming(AI编程工具), 
-semiconductors(芯片), automotive(汽车), consumer_electronics(消费电子), 
-podcasts(播客), finance_investment(投资财经), business_tech(商业科技), 
-politics_world(政治国际), economy_policy(经济政策), health_medical(健康医疗), 
-energy_environment(能源环境), entertainment_sports(娱乐体育), 
-anime(动漫二次元), one_piece(海贼王), tcg(TCG卡牌游戏), general(综合)
+分类：ai_technology, robotics, ai_programming, semiconductors, automotive, consumer_electronics, podcasts, finance_investment, business_tech, politics_world, economy_policy, health_medical, energy_environment, entertainment_sports, anime, one_piece, tcg, general
 
 新闻标题: {title}
 新闻内容: {content}
 
-输出JSON（严格格式）:
+要求：
+1. title_zh: 中文标题，≤30字
+2. category: 从上面分类中选一个
+3. summary: 必须包含三部分，用换行符分隔：
+   - 第一行写"事件概述:"后面跟1-2句话概括发生了什么
+   - 空一行后写"重要细节:"然后用•列出3-4个关键信息点
+   - 空一行后写"后续影响:"分析这件事的意义和后续发展
+
+输出示例：
 {{
-  "title_zh": "中文标题(≤30字)",
-  "category": "分类代码",
-  "summary": "事件概述: [1-2句话说清楚发生了什么]\n\n重要细节:\n• [关键信息点1：具体数据/人物/时间]\n• [关键信息点2：技术细节/产品规格]\n• [关键信息点3：涉及的公司/机构]\n• [关键信息点4：官方说法或权威引用]\n\n后续影响: [这件事对行业/市场/用户意味着什么，后续可能的发展方向]"
-}}"""
+  "title_zh": "OpenAI发布GPT-5，性能提升3倍",
+  "category": "ai_technology",
+  "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• CEO Sam Altman称这是\"迈向AGI的关键一步\"\n\n后续影响: GPT-5的发布将加速AI应用落地，预计将对搜索、编程、教育等行业产生深远影响。竞争对手可能加快发布节奏。"
+}}
+
+请严格按此格式输出JSON："""
 
 # 保留旧变量名以兼容（但不再使用）
 SUMMARIZE_PROMPT = PROCESS_PROMPT
