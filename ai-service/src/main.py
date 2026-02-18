@@ -211,11 +211,36 @@ class NewsService:
             self.redis_enabled = False
 
 
+def start_health_server():
+    """启动健康检查HTTP服务器（用于Render Web Service）"""
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+    import threading
+
+    class HealthHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'AI Service Running')
+
+        def log_message(self, format, *args):
+            pass  # 禁用请求日志
+
+    port = int(os.getenv('PORT', 10000))
+    server = HTTPServer(('0.0.0.0', port), HealthHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    logger.info(f"健康检查服务器启动在端口 {port}")
+
+
 def main():
     """主函数"""
     logger.info("新闻简报AI服务启动")
     logger.info(f"AI提供商: {os.getenv('AI_PROVIDER', 'openai')}")
     logger.info(f"采集间隔: {CRAWL_INTERVAL}秒")
+
+    # 启动健康检查服务器（Render Web Service 需要）
+    start_health_server()
 
     service = NewsService()
 
