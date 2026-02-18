@@ -120,17 +120,25 @@ NEWS_SOURCES = {
         'https://www.deepmind.com/blog/rss.xml',           # DeepMind
         'https://machinelearning.apple.com/rss.xml',       # Apple ML
 
-        # ==================== 机器人（4个核心源）====================
+        # ==================== 机器人（8个核心源）====================
         'https://www.therobotreport.com/feed/',            # The Robot Report
         'https://robohub.org/feed/',                       # Robohub（学术机器人）
         'https://spectrum.ieee.org/feeds/topic/robotics.rss', # IEEE Spectrum机器人
         'https://www.automate.org/rss/news',               # Automate（工业机器人）
+        'https://www.reddit.com/r/robotics/.rss',          # Reddit 机器人（新增）
+        'https://www.reddit.com/r/teslabot/.rss',          # Reddit Tesla Bot（新增）
+        'https://www.reddit.com/r/singularity/.rss',       # Reddit Singularity（新增）
+        'https://bdtechtalks.com/feed/',                   # BD Tech Talks 机器人（新增）
 
-        # ==================== AI编程（4个核心源）====================
+        # ==================== AI编程/Agent（8个核心源）====================
         'https://github.blog/feed/',                       # GitHub官方博客
         'https://code.visualstudio.com/feed.xml',          # VSCode官方
         'https://blog.stackblitz.com/rss/',                # StackBlitz
         'https://www.cursor.com/blog/rss.xml',             # Cursor官方
+        'https://www.latent.space/feed',                   # Latent Space（新增）
+        'https://lilianweng.github.io/index.xml',          # Lil'Log AI博客（新增）
+        'https://www.reddit.com/r/LocalLLaMA/.rss',        # Reddit LocalLLaMA（新增）
+        'https://simonwillison.net/atom/everything/',      # Simon Willison（新增）
 
         # ==================== 芯片半导体（4个核心源）====================
         'https://www.anandtech.com/rss/',                  # AnandTech
@@ -203,16 +211,20 @@ NEWS_SOURCES = {
         'https://www.crunchyroll.com/feed',                # Crunchyroll
         'https://myanimelist.net/rss/news.xml',            # MyAnimeList
 
-        # ==================== OP海贼王（2个核心源）====================
+        # ==================== OP海贼王（4个核心源）====================
         'https://www.reddit.com/r/OnePiece/.rss',          # Reddit OnePiece
         'https://onepiece.fandom.com/wiki/Special:NewPages?feed=rss', # OP Wiki
+        'https://www.reddit.com/r/MemePiece/.rss',         # Reddit MemePiece（新增）
+        'https://comicbook.com/anime/feed/',               # ComicBook Anime（新增）
 
-        # ==================== TCG集换式卡牌（5个核心源）====================
+        # ==================== TCG集换式卡牌（7个核心源）====================
         'https://www.reddit.com/r/OnePieceTCG/.rss',       # Reddit OPCG
         'https://www.reddit.com/r/PokemonTCG/.rss',        # Reddit PTCG
         'https://www.reddit.com/r/yugioh/.rss',            # Reddit 游戏王
         'https://www.reddit.com/r/magicTCG/.rss',          # Reddit MTG
         'https://www.tcgplayer.com/blog/feed/',            # TCGPlayer Blog
+        'https://www.reddit.com/r/DigimonCardGame2020/.rss', # Reddit 数码宝贝TCG（新增）
+        'https://www.reddit.com/r/WeissSchwarz/.rss',      # Reddit WS（新增）
 
         # ==================== 综合新闻（4个核心源）====================
         'https://feeds.feedburner.com/TechCrunch/',        # TechCrunch综合

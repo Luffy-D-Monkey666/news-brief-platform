@@ -122,7 +122,7 @@ class ContentQualityFilter:
 
         return score
 
-    def should_process(self, title: str, category: str, threshold: int = 4) -> bool:
+    def should_process(self, title: str, category: str, threshold: int = 3) -> bool:
         """
         判断是否应该处理这条新闻
 
