@@ -131,6 +131,27 @@ class CloudAIProcessor:
                                 'entity': metric.get('entity', '')
                             })
                     data['key_metrics'] = valid_metrics
+                
+                # 处理背景知识字段
+                if 'background' not in data or data['background'] is None:
+                    data['background'] = None
+                elif isinstance(data['background'], dict):
+                    # 验证背景知识格式
+                    bg = data['background']
+                    valid_bg = {
+                        'context': bg.get('context', ''),
+                        'timeline': []
+                    }
+                    if 'timeline' in bg and isinstance(bg['timeline'], list):
+                        for item in bg['timeline'][:4]:  # 最多4条
+                            if isinstance(item, dict) and 'date' in item and 'event' in item:
+                                valid_bg['timeline'].append({
+                                    'date': item.get('date', ''),
+                                    'event': item.get('event', '')
+                                })
+                    data['background'] = valid_bg if valid_bg['context'] else None
+                else:
+                    data['background'] = None
                     
                 return data
             else:
@@ -178,6 +199,7 @@ class NewsProcessor:
                 'importance': result.get('importance', 'normal'),
                 'action_advice': result.get('action_advice'),
                 'key_metrics': result.get('key_metrics', []),  # 关键指标
+                'background': result.get('background'),  # 背景知识+时间线
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
                 'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度

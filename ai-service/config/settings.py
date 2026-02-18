@@ -271,33 +271,64 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
    - unit: 单位（如"亿美元"、"万人"、"%"等）
    - entity: 关联实体（公司/产品名，如"OpenAI"、"GPT-5"）
    如果新闻中没有明确数字，设为空数组[]
+7. background: 仅当importance为"breaking"或"high"时生成背景知识，包含：
+   - context: 1-2句话介绍相关公司/人物/技术的背景（基于你的知识）
+   - timeline: 相关事件时间线数组，每个元素包含date(时间)和event(事件)，按时间倒序排列，最多4条
+   普通新闻设为null
 
-输出示例：
+输出示例（重大新闻，含背景知识）：
 {{
   "title_zh": "OpenAI发布GPT-5，性能提升3倍",
   "category": "ai_technology",
   "importance": "breaking",
-  "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n原文引用: \"This is a pivotal moment for AI safety and capability.\" — Sam Altman, CEO\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• 已向部分企业开放测试\n\n后续影响: GPT-5的发布将加速AI应用落地，预计对搜索、编程、教育等行业产生深远影响。竞争对手可能加快发布节奏。",
+  "summary": "事件概述: OpenAI正式发布GPT-5模型，在推理能力和多模态理解方面实现重大突破。\n\n原文引用: \"This is a pivotal moment for AI safety and capability.\" — Sam Altman, CEO\n\n重要细节:\n• 发布时间：2026年2月18日\n• 性能提升：推理速度提升3倍，准确率提高40%\n• 定价：API价格维持不变\n• 已向部分企业开放测试\n\n后续影响: GPT-5的发布将加速AI应用落地，预计对搜索、编程、教育等行业产生深远影响。",
   "action_advice": null,
   "key_metrics": [
     {{"name": "性能提升", "value": 3, "unit": "倍", "entity": "GPT-5"}},
     {{"name": "准确率提升", "value": 40, "unit": "%", "entity": "GPT-5"}}
-  ]
+  ],
+  "background": {{
+    "context": "OpenAI成立于2015年，由Sam Altman、Elon Musk等人创立，是全球领先的AI研究公司。2022年发布ChatGPT引发全球AI热潮。",
+    "timeline": [
+      {{"date": "2024.05", "event": "GPT-4o发布，支持多模态"}},
+      {{"date": "2023.11", "event": "GPT-4 Turbo发布"}},
+      {{"date": "2023.03", "event": "GPT-4发布"}},
+      {{"date": "2022.11", "event": "ChatGPT发布，2个月用户破亿"}}
+    ]
+  }}
 }}
 
-财经类示例：
+财经类示例（重要新闻）：
 {{
   "title_zh": "特斯拉Q4营收251亿美元，同比增长3%",
   "category": "finance_investment",
   "importance": "high",
-  "summary": "事件概述: 特斯拉发布2025年Q4财报，营收251亿美元，略低于市场预期。\n\n原文引用: \"We remain focused on cost reduction and new product launches.\" — Elon Musk\n\n重要细节:\n• Q4营收：251亿美元\n• 同比增长：3%\n• 汽车毛利率：17.6%\n• 全年交付量：180万辆\n\n后续影响: 增速放缓反映电动车市场竞争加剧，投资者关注Cybertruck量产进展和FSD收入增长。",
-  "action_advice": "⚠️ 风险提示: 增速放缓，毛利率承压，需关注竞争格局变化\n\n✅ 行动建议:\n• 关注后续交付数据和新车型发布\n• 注意估值与增速匹配度",
+  "summary": "事件概述: 特斯拉发布2025年Q4财报，营收251亿美元，略低于市场预期。\n\n原文引用: \"We remain focused on cost reduction and new product launches.\" — Elon Musk\n\n重要细节:\n• Q4营收：251亿美元\n• 同比增长：3%\n• 汽车毛利率：17.6%\n• 全年交付量：180万辆\n\n后续影响: 增速放缓反映电动车市场竞争加剧。",
+  "action_advice": "⚠️ 风险提示: 增速放缓，毛利率承压\n\n✅ 行动建议:\n• 关注后续交付数据\n• 注意估值与增速匹配度",
   "key_metrics": [
     {{"name": "Q4营收", "value": 251, "unit": "亿美元", "entity": "特斯拉"}},
-    {{"name": "同比增长", "value": 3, "unit": "%", "entity": "特斯拉"}},
-    {{"name": "汽车毛利率", "value": 17.6, "unit": "%", "entity": "特斯拉"}},
-    {{"name": "全年交付量", "value": 180, "unit": "万辆", "entity": "特斯拉"}}
-  ]
+    {{"name": "同比增长", "value": 3, "unit": "%", "entity": "特斯拉"}}
+  ],
+  "background": {{
+    "context": "特斯拉是全球最大电动车制造商，由Elon Musk领导，市值曾突破万亿美元。",
+    "timeline": [
+      {{"date": "2024.Q3", "event": "Cybertruck开始量产交付"}},
+      {{"date": "2023.Q4", "event": "全年交付181万辆创纪录"}},
+      {{"date": "2022.Q4", "event": "上海工厂产能突破"}},
+      {{"date": "2020.Q3", "event": "首次实现连续四季度盈利"}}
+    ]
+  }}
+}}
+
+普通新闻示例（无背景知识）：
+{{
+  "title_zh": "某公司发布新产品",
+  "category": "general",
+  "importance": "normal",
+  "summary": "事件概述: ...",
+  "action_advice": null,
+  "key_metrics": [],
+  "background": null
 }}
 
 请严格按此格式输出JSON："""

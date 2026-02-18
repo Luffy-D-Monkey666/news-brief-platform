@@ -585,6 +585,38 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           )}
 
+          {/* 背景知识（仅重要新闻显示） */}
+          {brief.background && brief.background.context && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-slate-600">📚</span>
+                <span className="text-xs font-bold text-slate-700">背景知识</span>
+              </div>
+              <p className="text-sm text-slate-700 leading-relaxed mb-3">
+                {brief.background.context}
+              </p>
+              
+              {/* 时间线 */}
+              {brief.background.timeline && brief.background.timeline.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-slate-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-slate-500">⏱️</span>
+                    <span className="text-xs font-medium text-slate-600">事件时间线</span>
+                  </div>
+                  <div className="space-y-2">
+                    {brief.background.timeline.map((item, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs">
+                        <span className="text-slate-500 font-mono whitespace-nowrap">{item.date}</span>
+                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-700">{item.event}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* 行动建议（仅财经/商业类显示） */}
           {brief.action_advice && (
             <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
