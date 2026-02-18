@@ -8,6 +8,22 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+# 股票服务（延迟导入以避免循环依赖）
+_stock_service = None
+
+def get_stock_service():
+    """延迟加载股票服务"""
+    global _stock_service
+    if _stock_service is None:
+        try:
+            from services.stock_service import StockService
+            _stock_service = StockService()
+            logger.info("股票服务初始化成功")
+        except Exception as e:
+            logger.warning(f"股票服务初始化失败: {e}")
+            _stock_service = False  # 标记为不可用
+    return _stock_service if _stock_service else None
+
 
 class CloudAIProcessor:
     """使用云端AI API进行处理（DeepSeek/OpenAI/Claude）"""
@@ -152,6 +168,70 @@ class CloudAIProcessor:
                     data['background'] = valid_bg if valid_bg['context'] else None
                 else:
                     data['background'] = None
+                
+                # 处理技术解读字段（仅ai_technology/robotics/ai_programming/semiconductors）
+                if 'tech_insight' not in data or data['tech_insight'] is None:
+                    data['tech_insight'] = None
+                elif isinstance(data['tech_insight'], dict):
+                    ti = data['tech_insight']
+                    valid_ti = {
+                        'principle': ti.get('principle', ''),
+                        'comparison': ti.get('comparison', ''),
+                        'maturity': ti.get('maturity', '商用落地')
+                    }
+                    # 验证maturity值
+                    valid_maturities = ['实验室阶段', '小规模试用', '商用落地', '大规模应用']
+                    if valid_ti['maturity'] not in valid_maturities:
+                        valid_ti['maturity'] = '商用落地'
+                    data['tech_insight'] = valid_ti if valid_ti['principle'] else None
+                else:
+                    data['tech_insight'] = None
+                
+                # 处理融资历史字段
+                if 'funding_history' not in data or data['funding_history'] is None:
+                    data['funding_history'] = None
+                elif isinstance(data['funding_history'], dict):
+                    fh = data['funding_history']
+                    valid_fh = {
+                        'company': fh.get('company', ''),
+                        'rounds': [],
+                        'total_funding': fh.get('total_funding', ''),
+                        'valuation': fh.get('valuation', '')
+                    }
+                    if 'rounds' in fh and isinstance(fh['rounds'], list):
+                        for r in fh['rounds'][:6]:  # 最多6轮
+                            if isinstance(r, dict) and 'round' in r:
+                                valid_fh['rounds'].append({
+                                    'round': r.get('round', ''),
+                                    'amount': r.get('amount', ''),
+                                    'date': r.get('date', ''),
+                                    'investors': r.get('investors', []) if isinstance(r.get('investors'), list) else []
+                                })
+                    data['funding_history'] = valid_fh if valid_fh['company'] else None
+                else:
+                    data['funding_history'] = None
+                
+                # 处理供应链视角字段（仅consumer_electronics/automotive）
+                if 'supply_chain_insight' not in data or data['supply_chain_insight'] is None:
+                    data['supply_chain_insight'] = None
+                elif isinstance(data['supply_chain_insight'], dict):
+                    sci = data['supply_chain_insight']
+                    valid_sci = {
+                        'impact': sci.get('impact', ''),
+                        'related_companies': [],
+                        'capacity_info': sci.get('capacity_info', '')
+                    }
+                    if 'related_companies' in sci and isinstance(sci['related_companies'], list):
+                        for c in sci['related_companies'][:6]:  # 最多6家
+                            if isinstance(c, dict) and 'name' in c:
+                                valid_sci['related_companies'].append({
+                                    'name': c.get('name', ''),
+                                    'role': c.get('role', ''),
+                                    'effect': c.get('effect', '中性')
+                                })
+                    data['supply_chain_insight'] = valid_sci if valid_sci['impact'] else None
+                else:
+                    data['supply_chain_insight'] = None
                     
                 return data
             else:
@@ -200,6 +280,10 @@ class NewsProcessor:
                 'action_advice': result.get('action_advice'),
                 'key_metrics': result.get('key_metrics', []),  # 关键指标
                 'background': result.get('background'),  # 背景知识+时间线
+                'tech_insight': result.get('tech_insight'),  # 技术解读
+                'funding_history': result.get('funding_history'),  # 融资历史
+                'supply_chain_insight': result.get('supply_chain_insight'),  # 供应链视角
+                'stock_info': None,  # 股票信息（将在下方填充）
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],
                 'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度
@@ -209,6 +293,22 @@ class NewsProcessor:
                 'published': news_item['published'],
                 'created_at': news_item.get('created_at')
             }
+            
+            # 获取股票数据（仅针对财经/商业/汽车/消费电子类新闻）
+            stock_categories = ['finance_investment', 'business_tech', 'automotive', 'consumer_electronics', 'economy_policy']
+            if result['category'] in stock_categories:
+                try:
+                    stock_service = get_stock_service()
+                    if stock_service:
+                        stock_info = stock_service.get_stock_info_from_text(
+                            result['title_zh'],
+                            news_item.get('content', '')
+                        )
+                        if stock_info:
+                            processed_news['stock_info'] = stock_info
+                            logger.info(f"📈 添加股票数据: {stock_info['ticker']} - {stock_info.get('name', '')}")
+                except Exception as e:
+                    logger.warning(f"获取股票数据失败: {e}")
 
             importance_icon = '🔴' if result.get('importance') == 'breaking' else '🟡' if result.get('importance') == 'high' else '⚪'
             logger.info(f"{importance_icon} [{result['category']}] {result['title_zh'][:30]}...")

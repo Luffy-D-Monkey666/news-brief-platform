@@ -561,6 +561,58 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           )}
 
+          {/* 股票信息（仅财经/商业类显示） */}
+          {brief.stock_info && brief.stock_info.ticker && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600">📈</span>
+                  <span className="text-xs font-bold text-green-800">实时股票数据</span>
+                </div>
+                <span className="text-xs text-gray-400">数据延迟约15分钟</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg font-bold text-gray-900">{brief.stock_info.ticker}</span>
+                    <span className="text-sm text-gray-500">{brief.stock_info.name}</span>
+                  </div>
+                  {brief.stock_info.price && (
+                    <div className="flex items-baseline gap-2 mt-1">
+                      <span className="text-2xl font-bold text-gray-900">
+                        {brief.stock_info.currency === 'USD' ? '$' : 
+                         brief.stock_info.currency === 'HKD' ? 'HK$' : 
+                         brief.stock_info.currency === 'CNY' ? '¥' : ''}
+                        {brief.stock_info.price?.toFixed(2)}
+                      </span>
+                      {brief.stock_info.change_formatted && (
+                        <span className={`text-sm font-medium ${
+                          brief.stock_info.change_percent >= 0 ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {brief.stock_info.change_formatted}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="text-right">
+                  {brief.stock_info.market_cap_formatted && (
+                    <div>
+                      <span className="text-xs text-gray-500">市值</span>
+                      <div className="text-sm font-bold text-gray-800">{brief.stock_info.market_cap_formatted}</div>
+                    </div>
+                  )}
+                  {brief.stock_info.pe_ratio && (
+                    <div className="mt-1">
+                      <span className="text-xs text-gray-500">PE(TTM)</span>
+                      <div className="text-sm font-bold text-gray-800">{brief.stock_info.pe_ratio?.toFixed(1)}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 关键指标（如果有数字数据） */}
           {brief.key_metrics && brief.key_metrics.length > 0 && (
             <div className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
@@ -612,6 +664,126 @@ const BriefCard = ({ brief, isNew = false }) => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 技术解读（仅AI/机器人/芯片类显示） */}
+          {brief.tech_insight && brief.tech_insight.principle && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-violet-600">🔬</span>
+                <span className="text-xs font-bold text-violet-800">技术解读</span>
+                {brief.tech_insight.maturity && (
+                  <span className="ml-auto px-2 py-0.5 bg-violet-100 text-violet-700 rounded text-xs">
+                    {brief.tech_insight.maturity}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-3">
+                {brief.tech_insight.principle && (
+                  <div>
+                    <div className="text-xs text-violet-600 font-medium mb-1">技术原理</div>
+                    <p className="text-sm text-gray-700 leading-relaxed">{brief.tech_insight.principle}</p>
+                  </div>
+                )}
+                {brief.tech_insight.comparison && (
+                  <div>
+                    <div className="text-xs text-violet-600 font-medium mb-1">技术对比</div>
+                    <p className="text-sm text-gray-700 leading-relaxed">{brief.tech_insight.comparison}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 融资历史（仅融资新闻显示） */}
+          {brief.funding_history && brief.funding_history.company && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-emerald-600">💰</span>
+                <span className="text-xs font-bold text-emerald-800">融资历史 · {brief.funding_history.company}</span>
+              </div>
+              
+              {/* 融资轮次时间线 */}
+              {brief.funding_history.rounds && brief.funding_history.rounds.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  {brief.funding_history.rounds.map((round, i) => (
+                    <div key={i} className="flex items-start gap-3 text-sm">
+                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium whitespace-nowrap">
+                        {round.round}
+                      </span>
+                      <div className="flex-1">
+                        <span className="font-medium text-gray-800">{round.amount}</span>
+                        {round.date && <span className="text-gray-400 mx-2">·</span>}
+                        {round.date && <span className="text-gray-500 text-xs">{round.date}</span>}
+                        {round.investors && round.investors.length > 0 && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            投资方: {round.investors.join('、')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* 累计融资和估值 */}
+              <div className="flex gap-4 pt-2 border-t border-emerald-200">
+                {brief.funding_history.total_funding && (
+                  <div>
+                    <span className="text-xs text-gray-500">累计融资</span>
+                    <div className="text-sm font-bold text-emerald-700">{brief.funding_history.total_funding}</div>
+                  </div>
+                )}
+                {brief.funding_history.valuation && (
+                  <div>
+                    <span className="text-xs text-gray-500">最新估值</span>
+                    <div className="text-sm font-bold text-emerald-700">{brief.funding_history.valuation}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 供应链视角（仅消费电子/汽车类显示） */}
+          {brief.supply_chain_insight && brief.supply_chain_insight.impact && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-orange-600">🔗</span>
+                <span className="text-xs font-bold text-orange-800">供应链视角</span>
+              </div>
+              
+              <p className="text-sm text-gray-700 leading-relaxed mb-3">{brief.supply_chain_insight.impact}</p>
+              
+              {/* 关联公司 */}
+              {brief.supply_chain_insight.related_companies && brief.supply_chain_insight.related_companies.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  <div className="text-xs text-orange-600 font-medium">关联供应商</div>
+                  <div className="flex flex-wrap gap-2">
+                    {brief.supply_chain_insight.related_companies.map((company, i) => (
+                      <div key={i} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white/70 rounded-lg border border-orange-100">
+                        <span className="text-sm font-medium text-gray-800">{company.name}</span>
+                        {company.role && <span className="text-xs text-gray-400">({company.role})</span>}
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${
+                          company.effect === '利好' ? 'bg-green-100 text-green-700' :
+                          company.effect === '利空' ? 'bg-red-100 text-red-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {company.effect}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* 产能信息 */}
+              {brief.supply_chain_insight.capacity_info && (
+                <div className="pt-2 border-t border-orange-200">
+                  <div className="text-xs text-orange-600 font-medium mb-1">产能/良率</div>
+                  <p className="text-sm text-gray-600">{brief.supply_chain_insight.capacity_info}</p>
                 </div>
               )}
             </div>

@@ -226,7 +226,7 @@ NEWS_SOURCES = {
 # AI提示词模板（优化版：合并摘要+分类，大幅减少token）
 # ============================================================
 
-# 合并的摘要+分类提示词（v2.1：三段式 + 原文引用 + 重要性 + 行动建议）
+# 合并的摘要+分类提示词（v2.2：三段式 + 原文引用 + 重要性 + 行动建议 + 技术解读 + 融资历史 + 供应链视角）
 PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON。
 
 分类（注意区分）：
@@ -275,8 +275,24 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
    - context: 1-2句话介绍相关公司/人物/技术的背景（基于你的知识）
    - timeline: 相关事件时间线数组，每个元素包含date(时间)和event(事件)，按时间倒序排列，最多4条
    普通新闻设为null
+8. tech_insight: 仅当category是ai_technology/robotics/ai_programming/semiconductors时生成技术解读，包含：
+   - principle: 技术原理简述（1-2句）
+   - comparison: 与现有技术/竞品的对比
+   - maturity: 技术成熟度，从以下选择："实验室阶段"/"小规模试用"/"商用落地"/"大规模应用"
+   其他分类设为null
+9. funding_history: 仅当新闻涉及公司融资时生成（基于你的知识），包含：
+   - company: 公司名称
+   - rounds: 历史融资轮次数组，每个元素包含round(轮次如"天使轮"/"A轮")、amount(金额)、date(时间)、investors(主要投资方数组)
+   - total_funding: 累计融资总额（如有）
+   - valuation: 最新估值（如有）
+   非融资新闻设为null
+10. supply_chain_insight: 仅当category是consumer_electronics/automotive时生成供应链视角分析，包含：
+   - impact: 供应链影响分析（哪些环节/供应商受益或受损）
+   - related_companies: 关联供应商数组，每个元素包含name(公司名)、role(角色如"显示屏供应商")、effect(影响如"利好"/"利空"/"中性")
+   - capacity_info: 产能/良率相关信息（如有提及）
+   其他分类设为null
 
-输出示例（重大新闻，含背景知识）：
+输出示例（AI技术类重大新闻，含技术解读）：
 {{
   "title_zh": "OpenAI发布GPT-5，性能提升3倍",
   "category": "ai_technology",
@@ -295,7 +311,14 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
       {{"date": "2023.03", "event": "GPT-4发布"}},
       {{"date": "2022.11", "event": "ChatGPT发布，2个月用户破亿"}}
     ]
-  }}
+  }},
+  "tech_insight": {{
+    "principle": "GPT-5采用MoE（混合专家）架构，将参数量扩展至万亿级别，通过稀疏激活保持推理效率。",
+    "comparison": "相比GPT-4，主要改进在长上下文理解（支持100万token）和多模态融合（原生支持视频输入）。",
+    "maturity": "商用落地"
+  }},
+  "funding_history": null,
+  "supply_chain_insight": null
 }}
 
 财经类示例（重要新闻）：
@@ -317,10 +340,84 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
       {{"date": "2022.Q4", "event": "上海工厂产能突破"}},
       {{"date": "2020.Q3", "event": "首次实现连续四季度盈利"}}
     ]
+  }},
+  "tech_insight": null,
+  "funding_history": null,
+  "supply_chain_insight": null
+}}
+
+融资新闻示例（含融资历史）：
+{{
+  "title_zh": "智元机器人完成A轮6亿融资",
+  "category": "robotics",
+  "importance": "high",
+  "summary": "事件概述: 智元机器人宣布完成A轮融资，金额达6亿元人民币。\n\n原文引用: \"我们将加速人形机器人的商业化落地。\" — 稚晖君\n\n重要细节:\n• 融资金额：6亿元人民币\n• 投资方：高瓴创投、鼎晖投资领投\n• 资金用途：研发和产线建设\n• 估值：约50亿元\n\n后续影响: 此轮融资将加速智元在人形机器人赛道的布局。",
+  "action_advice": null,
+  "key_metrics": [
+    {{"name": "融资金额", "value": 6, "unit": "亿元", "entity": "智元机器人"}},
+    {{"name": "估值", "value": 50, "unit": "亿元", "entity": "智元机器人"}}
+  ],
+  "background": {{
+    "context": "智元机器人由前华为天才少年稚晖君（彭志辉）创立，专注于通用人形机器人研发。",
+    "timeline": [
+      {{"date": "2023.08", "event": "发布首款人形机器人远征A1"}},
+      {{"date": "2023.02", "event": "公司成立"}}
+    ]
+  }},
+  "tech_insight": {{
+    "principle": "采用端到端强化学习控制，结合视觉-语言大模型实现任务理解。",
+    "comparison": "相比波士顿动力，更侧重商业场景实用性而非极限运动能力。",
+    "maturity": "小规模试用"
+  }},
+  "funding_history": {{
+    "company": "智元机器人",
+    "rounds": [
+      {{"round": "A轮", "amount": "6亿元", "date": "2026.02", "investors": ["高瓴创投", "鼎晖投资"]}},
+      {{"round": "天使轮", "amount": "数千万元", "date": "2023.06", "investors": ["高瓴创投", "奇绩创坛"]}}
+    ],
+    "total_funding": "约7亿元",
+    "valuation": "约50亿元"
+  }},
+  "supply_chain_insight": null
+}}
+
+消费电子/汽车类示例（含供应链视角）：
+{{
+  "title_zh": "苹果发布Vision Pro 2，配备Micro-LED屏幕",
+  "category": "consumer_electronics",
+  "importance": "breaking",
+  "summary": "事件概述: 苹果正式发布第二代Vision Pro，首次采用Micro-LED显示技术。\n\n原文引用: \"This is the future of spatial computing.\" — Tim Cook\n\n重要细节:\n• 显示技术：Micro-LED取代OLED\n• 分辨率：单眼4K\n• 重量：降低30%\n• 售价：$2999\n\n后续影响: Micro-LED在消费电子的大规模应用将加速该技术成熟。",
+  "action_advice": null,
+  "key_metrics": [
+    {{"name": "售价", "value": 2999, "unit": "美元", "entity": "Vision Pro 2"}},
+    {{"name": "重量减少", "value": 30, "unit": "%", "entity": "Vision Pro 2"}}
+  ],
+  "background": {{
+    "context": "Vision Pro是苹果首款MR头显，2024年初发布，定位高端空间计算设备。",
+    "timeline": [
+      {{"date": "2024.02", "event": "Vision Pro一代美国上市"}},
+      {{"date": "2023.06", "event": "WWDC首次发布Vision Pro"}}
+    ]
+  }},
+  "tech_insight": {{
+    "principle": "Micro-LED采用无机自发光技术，每个像素独立驱动，实现更高亮度和更低功耗。",
+    "comparison": "相比OLED，Micro-LED寿命更长、亮度更高，但良率和成本仍是挑战。",
+    "maturity": "商用落地"
+  }},
+  "funding_history": null,
+  "supply_chain_insight": {{
+    "impact": "Micro-LED产业链迎来重大利好，显示面板厂商订单有望大幅增长。",
+    "related_companies": [
+      {{"name": "京东方", "role": "显示面板供应商", "effect": "利好"}},
+      {{"name": "三安光电", "role": "Micro-LED芯片供应商", "effect": "利好"}},
+      {{"name": "立讯精密", "role": "组装代工", "effect": "利好"}},
+      {{"name": "三星显示", "role": "OLED供应商", "effect": "利空"}}
+    ],
+    "capacity_info": "目前Micro-LED良率约70%，苹果订单将推动良率提升至85%以上。"
   }}
 }}
 
-普通新闻示例（无背景知识）：
+普通新闻示例（无额外字段）：
 {{
   "title_zh": "某公司发布新产品",
   "category": "general",
@@ -328,7 +425,10 @@ PROCESS_PROMPT = """你是资深新闻编辑，分析以下新闻并输出JSON�
   "summary": "事件概述: ...",
   "action_advice": null,
   "key_metrics": [],
-  "background": null
+  "background": null,
+  "tech_insight": null,
+  "funding_history": null,
+  "supply_chain_insight": null
 }}
 
 请严格按此格式输出JSON："""
