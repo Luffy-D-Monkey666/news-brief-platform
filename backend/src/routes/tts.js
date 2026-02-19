@@ -151,8 +151,8 @@ router.get('/brief/:id', async (req, res) => {
     // 限制长度
     const truncatedText = text.length > 500 ? text.substring(0, 497) + '...' : text;
     
-    const voice = req.query.voice || 'zh_female_news';
     const volcTTS = require('../services/volcengineTTS');
+    const voice = req.query.voice || volcTTS.DEFAULT_VOICE;
     
     // 检查缓存
     const cacheKey = getCacheKey(truncatedText, voice);

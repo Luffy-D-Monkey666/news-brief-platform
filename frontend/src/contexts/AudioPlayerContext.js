@@ -34,14 +34,14 @@ const playEndSound = (audioContext) => {
   setTimeout(() => createBeep(audioContext, 523.25, 0.2), 150); // C5
 };
 
-// 语音预设配置（火山引擎豆包音色）
+// 语音预设配置（火山引擎豆包大模型音色）
 const voicePresets = {
-  zh_female_news: { name: '新闻女声', description: '播音腔，适合新闻播报' },
-  zh_male_news: { name: '新闻男声', description: '播音腔，适合新闻播报' },
-  BV001_streaming: { name: '通用女声', description: '自然、标准' },
-  BV002_streaming: { name: '通用男声', description: '自然、标准' },
-  zh_female_tianmei: { name: '甜美女声', description: '甜美、温柔' },
-  zh_female_shuangkuai: { name: '爽快女声', description: '爽朗、活泼' },
+  'zh_female_vv_uranus_bigtts': { name: 'vivi 2.0', description: '通用场景，自然女声' },
+  'zh_male_dayi_saturn_bigtts': { name: '大壹', description: '视频配音，男声' },
+  'zh_female_jitangnv_saturn_bigtts': { name: '鸡汤女', description: '温柔女声' },
+  'zh_female_meilinvyou_saturn_bigtts': { name: '魅力女友', description: '甜美女声' },
+  'zh_male_ruyayichen_saturn_bigtts': { name: '儒雅逸辰', description: '儒雅男声' },
+  'saturn_zh_female_cancan_tob': { name: '知性灿灿', description: '知性女声' },
 };
 
 // 是否使用云端 TTS（火山引擎）
@@ -54,7 +54,7 @@ export const AudioPlayerProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState('zh_female_news');
+  const [selectedVoice, setSelectedVoice] = useState('zh_female_vv_uranus_bigtts');
   
   // 播放模式
   const [playMode, setPlayMode] = useState('single'); // 'single' | 'continuous'
