@@ -355,7 +355,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               )}
             </div>
 
-            {/* 声音选择器 - 豆包音色 */}
+            {/* 声音选择器 - 豆包音色（分类显示） */}
             <div className="relative">
               <button
                 onClick={() => setShowVoiceMenu(!showVoiceMenu)}
@@ -366,22 +366,38 @@ const BriefCard = ({ brief, isNew = false }) => {
               </button>
 
               {showVoiceMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
-                  {Object.entries(voicePresets).map(([key, preset]) => (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        changeVoice(key);
-                        setShowVoiceMenu(false);
-                      }}
-                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
-                        selectedVoice === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      <span>{preset.name}</span>
-                      <span className="text-xs text-gray-400 ml-2">{preset.description}</span>
-                    </button>
-                  ))}
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
+                  {/* 按分类分组显示 */}
+                  {(() => {
+                    const categories = {};
+                    Object.entries(voicePresets).forEach(([key, preset]) => {
+                      const cat = preset.description || '其他';
+                      if (!categories[cat]) categories[cat] = [];
+                      categories[cat].push({ key, ...preset });
+                    });
+                    
+                    return Object.entries(categories).map(([category, voices]) => (
+                      <div key={category}>
+                        <div className="px-3 py-1 text-xs text-gray-400 font-medium sticky top-0 bg-white border-b border-gray-50">
+                          {category}
+                        </div>
+                        {voices.map(({ key, name }) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              changeVoice(key);
+                              setShowVoiceMenu(false);
+                            }}
+                            className={`w-full px-4 py-1.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                              selectedVoice === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
+                            }`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    ));
+                  })()}
                 </div>
               )}
             </div>

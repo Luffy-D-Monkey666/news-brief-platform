@@ -144,25 +144,42 @@ const AudioPlayerBar = () => {
                 className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <FaVolumeUp />
-                <span className="hidden sm:inline">{voicePresets[selectedVoice].name}</span>
+                <span className="hidden sm:inline">{voicePresets[selectedVoice]?.name || '选择音色'}</span>
               </button>
               
               {showVoiceMenu && (
-                <div className="absolute bottom-full right-0 mb-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
-                  {Object.entries(voicePresets).map(([key, preset]) => (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        changeVoice(key);
-                        setShowVoiceMenu(false);
-                      }}
-                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
-                        selectedVoice === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      {preset.name}
-                    </button>
-                  ))}
+                <div className="absolute bottom-full right-0 mb-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-80 overflow-y-auto">
+                  {/* 按分类分组显示 */}
+                  {(() => {
+                    const categories = {};
+                    Object.entries(voicePresets).forEach(([key, preset]) => {
+                      const cat = preset.description || '其他';
+                      if (!categories[cat]) categories[cat] = [];
+                      categories[cat].push({ key, ...preset });
+                    });
+                    
+                    return Object.entries(categories).map(([category, voices]) => (
+                      <div key={category}>
+                        <div className="px-3 py-1 text-xs text-gray-400 font-medium sticky top-0 bg-white">
+                          {category}
+                        </div>
+                        {voices.map(({ key, name }) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              changeVoice(key);
+                              setShowVoiceMenu(false);
+                            }}
+                            className={`w-full px-4 py-1.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                              selectedVoice === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
+                            }`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    ));
+                  })()}
                 </div>
               )}
             </div>
