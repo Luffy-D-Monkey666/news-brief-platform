@@ -526,18 +526,36 @@ const BriefCard = ({ brief, isNew = false }) => {
                 <span className="text-xs font-bold text-blue-800">关键数据</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {brief.key_metrics.slice(0, 4).map((metric, i) => (
-                  <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50 overflow-hidden">
-                    <div className="text-xs text-gray-500 mb-1 truncate">{metric.name}</div>
-                    <div className="flex items-baseline gap-1 flex-wrap">
-                      <span className="text-lg font-bold text-gray-900 break-all">{metric.value}</span>
-                      <span className="text-xs text-gray-500">{metric.unit}</span>
+                {brief.key_metrics.slice(0, 4).map((metric, i) => {
+                  // 判断值是否为数字
+                  const isNumericValue = typeof metric.value === 'number' || !isNaN(parseFloat(metric.value));
+                  // 格式化显示值
+                  const displayValue = isNumericValue 
+                    ? (typeof metric.value === 'number' ? metric.value.toLocaleString() : metric.value)
+                    : metric.value;
+                  
+                  return (
+                    <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50 overflow-hidden">
+                      <div className="text-xs text-gray-500 mb-1 truncate">{metric.name}</div>
+                      <div className="flex items-baseline gap-1 flex-wrap">
+                        {isNumericValue ? (
+                          <>
+                            <span className="text-lg font-bold text-gray-900 break-all">{displayValue}</span>
+                            <span className="text-xs text-gray-500">{metric.unit}</span>
+                          </>
+                        ) : (
+                          // 非数字值，用更紧凑的方式显示
+                          <span className="text-sm font-semibold text-gray-800">
+                            {displayValue}{metric.unit && ` ${metric.unit}`}
+                          </span>
+                        )}
+                      </div>
+                      {metric.entity && (
+                        <div className="text-xs text-blue-600 mt-1 truncate">{metric.entity}</div>
+                      )}
                     </div>
-                    {metric.entity && (
-                      <div className="text-xs text-blue-600 mt-1 truncate">{metric.entity}</div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
