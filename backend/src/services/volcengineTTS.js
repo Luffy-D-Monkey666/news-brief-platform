@@ -1,43 +1,42 @@
 /**
  * 火山引擎 TTS 服务
- * 使用豆包语音合成模型，提供高质量中文语音合成
+ * 使用豆包语音合成，提供高质量中文语音合成
+ * 
+ * 官方文档：https://www.volcengine.com/docs/6561/79820
  */
 
 const https = require('https');
 
-// 配置
+// 配置 - 从环境变量读取
 const config = {
-  appId: process.env.VOLC_APP_ID || '6922135515',
+  appId: process.env.VOLC_APP_ID,
   accessToken: process.env.VOLC_ACCESS_TOKEN,
-  // 语音合成 API 地址
+  cluster: process.env.VOLC_CLUSTER || 'volcano_tts',
+  // API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
-  cluster: 'volcano_tts',  // 火山引擎 TTS cluster
 };
 
-// 音色配置 - 火山引擎豆包大模型语音（基于用户开通的音色）
+// 音色配置
+// 注意：需要在火山引擎控制台开通对应音色才能使用
+// 免费音色：BV001_streaming（通用女声）、BV002_streaming（通用男声）
 const voiceTypes = {
-  // 通用场景（推荐）
-  'zh_female_vv_uranus_bigtts': { name: 'vivi 2.0', description: '通用场景，自然女声' },
-  // 视频配音
-  'zh_male_dayi_saturn_bigtts': { name: '大壹', description: '视频配音，男声' },
-  'zh_female_mizai_saturn_bigtts': { name: '黑猫侦探社咪仔', description: '视频配音，活泼女声' },
-  'zh_female_jitangnv_saturn_bigtts': { name: '鸡汤女', description: '视频配音，温柔女声' },
-  'zh_female_meilinvyou_saturn_bigtts': { name: '魅力女友', description: '视频配音，甜美女声' },
-  'zh_female_santongyongns_saturn_bigtts': { name: '流畅女声', description: '视频配音，流畅女声' },
-  'zh_male_ruyayichen_saturn_bigtts': { name: '儒雅逸辰', description: '视频配音，儒雅男声' },
-  // 角色扮演
-  'saturn_zh_female_cancan_tob': { name: '知性灿灿', description: '角色扮演，知性女声' },
-  'saturn_zh_female_keainvsheng_tob': { name: '可爱女生', description: '角色扮演，可爱女声' },
-  'saturn_zh_female_tiaopigongzhu_tob': { name: '调皮公主', description: '角色扮演，活泼女声' },
+  // 免费通用音色（推荐先用这两个测试）
+  'BV001_streaming': { name: '通用女声', description: '标准女声，免费' },
+  'BV002_streaming': { name: '通用男声', description: '标准男声，免费' },
+  // 付费精品音色（需要在控制台购买/开通）
+  'BV700_streaming': { name: '灿灿', description: '活泼女声' },
+  'BV701_streaming': { name: '炀炀', description: '温暖男声' },
+  'BV705_streaming': { name: '甜美女声', description: '甜美可爱' },
+  'BV406_streaming': { name: '知性女声', description: '知性稳重' },
 };
 
-// 默认音色
-const DEFAULT_VOICE = 'zh_female_vv_uranus_bigtts';
+// 默认音色 - 使用免费的通用女声
+const DEFAULT_VOICE = 'BV001_streaming';
 
 /**
- * 调用火山引擎 TTS API
- * @param {string} text - 要合成的文本
+ * 调用火山引擎 TTS API（HTTP 一次性合成）
+ * @param {string} text - 要合成的文本（最大1024字节）
  * @param {string} voiceType - 音色类型
  * @param {object} options - 其他选项
  * @returns {Promise<Buffer>} - 音频数据 (MP3)
@@ -50,6 +49,9 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
   } = options;
 
   // 检查配置
+  if (!config.appId) {
+    throw new Error('火山引擎 TTS 未配置 App ID (VOLC_APP_ID)');
+  }
   if (!config.accessToken) {
     throw new Error('火山引擎 TTS 未配置 Access Token (VOLC_ACCESS_TOKEN)');
   }
@@ -57,11 +59,11 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
   // 生成唯一请求 ID
   const reqid = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-  // 构建请求体
+  // 构建请求体（严格按照官方文档）
   const requestBody = {
     app: {
       appid: config.appId,
-      token: 'access_token', // 使用 Bearer Token 认证时这个字段可以是任意值
+      token: 'access_token',  // Bearer Token 认证时可传任意非空值
       cluster: config.cluster,
     },
     user: {
@@ -78,14 +80,14 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
       reqid: reqid,
       text: text,
       text_type: 'plain',
-      operation: 'query',
+      operation: 'query',  // HTTP 只能用 query（非流式）
     },
   };
 
   const postData = JSON.stringify(requestBody);
   
   return new Promise((resolve, reject) => {
-    const options = {
+    const reqOptions = {
       hostname: config.host,
       port: 443,
       path: config.apiPath,
@@ -93,13 +95,14 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(postData),
-        'Authorization': `Bearer ${config.accessToken}`,
+        // 官方文档：Bearer和token使用分号分隔
+        'Authorization': `Bearer;${config.accessToken}`,
       },
     };
 
-    console.log(`[TTS] 请求火山引擎: voice=${voiceType}, text_len=${text.length}`);
+    console.log(`[TTS] 请求参数: appId=${config.appId}, cluster=${config.cluster}, voice=${voiceType}, text_len=${text.length}`);
 
-    const req = https.request(options, (res) => {
+    const req = https.request(reqOptions, (res) => {
       const chunks = [];
       
       res.on('data', (chunk) => {
@@ -108,13 +111,16 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
       
       res.on('end', () => {
         const body = Buffer.concat(chunks);
+        const bodyStr = body.toString();
         
         try {
-          const response = JSON.parse(body.toString());
+          const response = JSON.parse(bodyStr);
           
-          // 检查响应码
+          console.log(`[TTS] 响应: code=${response.code}, message=${response.message}`);
+          
+          // 成功码是 3000
           if (response.code !== 3000) {
-            console.error(`[TTS] API 错误: code=${response.code}, message=${response.message}`);
+            console.error(`[TTS] API 错误详情:`, JSON.stringify(response, null, 2));
             reject(new Error(`TTS 合成失败: ${response.message || `错误码 ${response.code}`}`));
             return;
           }
@@ -122,27 +128,27 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
           // 返回 base64 解码的音频数据
           if (response.data) {
             const audioBuffer = Buffer.from(response.data, 'base64');
-            console.log(`[TTS] 合成成功: ${audioBuffer.length} bytes`);
+            console.log(`[TTS] 合成成功: ${audioBuffer.length} bytes, duration=${response.addition?.duration || 'unknown'}ms`);
             resolve(audioBuffer);
           } else {
             reject(new Error('TTS 响应中没有音频数据'));
           }
         } catch (e) {
           console.error(`[TTS] 解析响应失败: ${e.message}`);
-          console.error(`[TTS] 原始响应: ${body.toString().substring(0, 200)}`);
+          console.error(`[TTS] 原始响应 (前500字符): ${bodyStr.substring(0, 500)}`);
           reject(new Error(`解析 TTS 响应失败: ${e.message}`));
         }
       });
     });
 
     req.on('error', (e) => {
-      console.error(`[TTS] 请求失败: ${e.message}`);
+      console.error(`[TTS] 网络请求失败: ${e.message}`);
       reject(new Error(`TTS 请求失败: ${e.message}`));
     });
 
     req.setTimeout(30000, () => {
       req.destroy();
-      reject(new Error('TTS 请求超时'));
+      reject(new Error('TTS 请求超时 (30s)'));
     });
 
     req.write(postData);
