@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import {
@@ -8,8 +8,10 @@ import {
   FaTimes,
   FaVolumeUp,
   FaPause,
-  FaPlay
+  FaPlay,
+  FaSpinner
 } from 'react-icons/fa';
+import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 
 // Apple风格配色（更简洁清爽）
 const categoryColors = {
@@ -71,15 +73,7 @@ const importanceConfig = {
   normal: { label: '', color: '', border: '' }
 };
 
-// 声音预设配置
-const voicePresets = {
-  siri_female: { pitch: 1.0, rate: 1.0, name: 'Siri (女声)' },
-  siri_male: { pitch: 0.9, rate: 1.0, name: 'Siri (男声)' },
-  // AI语音模拟
-  xiao_ai: { pitch: 1.05, rate: 1.02, name: '小爱同学 (小米)' },  // 活泼、阳光、友好，年轻女声
-  ideal_assistant: { pitch: 0.95, rate: 0.98, name: '理想同学 (理想汽车)' },  // 温暖、有亲和力、稍成熟女声
-  nomi: { pitch: 0.92, rate: 1.0, name: 'NOMI (蔚来)' }  // 温柔、有温度、自然感
-};
+// 声音预设配置现在从 AudioPlayerContext 获取
 
 // 图片放大Modal
 const ImageModal = ({ src, alt, onClose }) => {
@@ -106,145 +100,45 @@ const ImageModal = ({ src, alt, onClose }) => {
 
 const BriefCard = ({ brief, isNew = false }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState('siri_female');
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
   const [videoError, setVideoError] = useState(false);
 
-  const speechSynthesisRef = useRef(window.speechSynthesis);
-  const utteranceRef = useRef(null);
-  const allVoicesRef = useRef([]);
-  const currentVoiceRef = useRef(null);
+  // 使用统一的 AudioPlayerContext（豆包 TTS）
+  const {
+    playlist,
+    currentIndex,
+    isPlaying: globalIsPlaying,
+    isPaused: globalIsPaused,
+    isLoading,
+    selectedVoice,
+    voicePresets,
+    playSingle,
+    togglePlay,
+    stop,
+    changeVoice,
+  } = useAudioPlayer();
 
-  // 只保留5种中文声音预设
-  useEffect(() => {
-    const loadVoices = () => {
-      const allVoices = speechSynthesisRef.current.getVoices();
+  // 判断当前卡片是否正在播放
+  const cardIndex = playlist.findIndex(b => b._id === brief._id);
+  const isCurrentCard = cardIndex === currentIndex && currentIndex >= 0;
+  const isPlaying = isCurrentCard && globalIsPlaying;
+  const isPaused = isCurrentCard && globalIsPaused;
+  const isCardLoading = isCurrentCard && isLoading;
 
-      // 打印所有语音到控制台（便于调试）
-      console.log('=== 所有可用语音 ===');
-      allVoices.forEach(v => console.log(`${v.name} (${v.lang})`));
-
-      // 只保留中文声音
-      const zhVoices = allVoices.filter(voice =>
-        voice.lang === 'zh-CN' || voice.lang === 'zh'
-      );
-
-      console.log('=== 可用的中文语音 ===');
-      zhVoices.forEach(v => console.log(`- ${v.name}`));
-
-      // 为每个预设分配不同的声音
-      // Siri女声 - 优先Ting-Ting
-      const siriFemale = zhVoices.find(v =>
-        v.name.includes('Ting-Ting') || v.name.includes('Huihui') || v.name.includes('Xiaoxiao')
-      );
-
-      // Siri男声 - 优先Kangkang
-      const siriMale = zhVoices.find(v =>
-        v.name.includes('Kangkang') || v.name.includes('Yunxi') || v.name.includes('Yaqi')
-      );
-
-      // 小爱同学（小米）- 活泼、阳光、友好的年轻女声
-      const xiaoAiVoice = zhVoices.find(v =>
-        v.name.includes('Xiaoxiao') || v.name.includes('Yaoyao')
-      ) || siriFemale;
-
-      // 理想同学（理想汽车）- 温暖、有亲和力、稍成熟的女声
-      const idealVoice = zhVoices.find(v =>
-        v.name.includes('Huihui') || v.name.includes('Xiaoyi') || v.name.includes('Lili')
-      ) || siriFemale;
-
-      // NOMI（蔚来）- 温柔、有温度、自然感的语音
-      const nomiVoice = zhVoices.find(v =>
-        v.name.includes('Xiaoyi') || v.name.includes('Yaoyao') || v.name.includes('Xiaoxiao')
-      ) || siriFemale;
-
-      // 声音预设映射
-      const voiceMap = {
-        siri_female: siriFemale || zhVoices[0],
-        siri_male: siriMale || zhVoices[1] || zhVoices[0],
-        xiao_ai: xiaoAiVoice || zhVoices[2] || siriFemale,
-        ideal_assistant: idealVoice || zhVoices[3] || siriFemale,
-        nomi: nomiVoice || zhVoices[4] || siriFemale
-      };
-
-      currentVoiceRef.current = voiceMap[selectedPreset];
-      allVoicesRef.current = voiceMap;
-
-      // 将可用语音保存到全局，供调试使用
-      window.availableZhVoices = zhVoices;
-    };
-
-    speechSynthesisRef.current.onvoiceschanged = loadVoices;
-    loadVoices();
-
-    return () => {
-      speechSynthesisRef.current.cancel();
-    };
-  }, [selectedPreset]);
-
-  // 开始朗读
+  // 点击朗读按钮 - 使用统一的底部播放栏
   const handleRead = () => {
-    if (isPaused) {
-      speechSynthesisRef.current.resume();
-      setIsPaused(false);
-      setIsPlaying(true);
-      return;
+    if (isCurrentCard) {
+      // 当前卡片正在播放/暂停，切换播放状态
+      togglePlay();
+    } else {
+      // 播放这条新闻
+      playSingle(brief);
     }
-
-    if (isPlaying) {
-      handlePause();
-      return;
-    }
-
-    // 取消之前的朗读
-    speechSynthesisRef.current.cancel();
-
-    const text = `${brief.title}。${brief.summary}`;
-    const utterance = new SpeechSynthesisUtterance(text);
-    utteranceRef.current = utterance;
-
-    // 设置中文语言
-    utterance.lang = 'zh-CN';
-
-    // 设置声音
-    if (currentVoiceRef.current) {
-      utterance.voice = currentVoiceRef.current;
-    }
-
-    // 应用声音预设的语调和语速
-    const preset = voicePresets[selectedPreset];
-    utterance.pitch = preset.pitch;
-    utterance.rate = preset.rate;
-
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
-
-    utterance.onerror = (e) => {
-      console.error('Speech error:', e);
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
-
-    speechSynthesisRef.current.speak(utterance);
-    setIsPlaying(true);
-  };
-
-  // 暂停朗读
-  const handlePause = () => {
-    speechSynthesisRef.current.pause();
-    setIsPaused(true);
-    setIsPlaying(false);
   };
 
   // 停止朗读
   const handleStop = () => {
-    speechSynthesisRef.current.cancel();
-    setIsPlaying(false);
-    setIsPaused(false);
+    stop();
   };
 
   const colorClass = categoryColors[brief.category] || categoryColors.general;
@@ -413,10 +307,18 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           )}
 
-          {/* 朗读控制栏 */}
+          {/* 朗读控制栏 - 使用豆包 TTS */}
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              {!isPlaying && !isPaused ? (
+              {isCardLoading ? (
+                <button
+                  disabled
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm font-medium"
+                >
+                  <FaSpinner className="animate-spin" />
+                  加载中...
+                </button>
+              ) : !isPlaying && !isPaused ? (
                 <button
                   onClick={handleRead}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
@@ -434,7 +336,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                 </button>
               ) : (
                 <button
-                  onClick={handlePause}
+                  onClick={handleRead}
                   className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
                 >
                   <FaPause />
@@ -452,29 +354,31 @@ const BriefCard = ({ brief, isNew = false }) => {
               )}
             </div>
 
-            {/* 声音选择器 */}
+            {/* 声音选择器 - 豆包音色 */}
             <div className="relative">
               <button
                 onClick={() => setShowVoiceMenu(!showVoiceMenu)}
                 className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <span className="font-medium">{voicePresets[selectedPreset].name}</span>
+                <FaVolumeUp className="text-gray-400" />
+                <span className="font-medium">{voicePresets[selectedVoice]?.name || '选择音色'}</span>
               </button>
 
               {showVoiceMenu && (
-                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 max-h-64 overflow-y-auto">
                   {Object.entries(voicePresets).map(([key, preset]) => (
                     <button
                       key={key}
                       onClick={() => {
-                        setSelectedPreset(key);
+                        changeVoice(key);
                         setShowVoiceMenu(false);
                       }}
                       className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
-                        selectedPreset === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
+                        selectedVoice === key ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
                       }`}
                     >
-                      {preset.name}
+                      <span>{preset.name}</span>
+                      <span className="text-xs text-gray-400 ml-2">{preset.description}</span>
                     </button>
                   ))}
                 </div>

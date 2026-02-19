@@ -18,23 +18,40 @@ const config = {
   apiPath: '/api/v1/tts',
 };
 
-// 音色配置 - 从控制台音色列表获取
+// 音色配置 - 与火山引擎控制台音色名称完全一致（根据用户提供的音色表）
 const voiceTypes = {
-  // 通用场景
-  'BV001_streaming': { name: '通用女声', description: '通用场景' },
-  'BV002_streaming': { name: '通用男声', description: '通用场景' },
-  // 特色音色
-  'BV051_streaming': { name: '奶气萌娃', description: '特色音色' },
-  'BV115_streaming': { name: '古风少御', description: '有声阅读' },
-  'BV102_streaming': { name: '儒雅青年', description: '有声阅读' },
-  'BV056_streaming': { name: '阳光男声', description: '视频配音' },
-  // 多语种
-  'BV504_streaming': { name: '活力男声-Jackson', description: '美式发音' },
-  'BV503_streaming': { name: '活力女声-Ariana', description: '美式发音' },
+  // === 通用场景 ===
+  'zh_female_vv_uranus_bigtts': { name: 'vivi 2.0', description: '通用场景', lang: 'cn' },
+  'zh_female_xiaohe_uranus_bigtts': { name: '小何', description: '通用场景', lang: 'cn' },
+  'zh_male_m191_uranus_bigtts': { name: '云舟', description: '通用场景', lang: 'cn' },
+  'zh_male_taocheng_uranus_bigtts': { name: '小天', description: '通用场景', lang: 'cn' },
+  
+  // === 视频配音 ===
+  'zh_male_dayi_saturn_bigtts': { name: '大壹', description: '视频配音', lang: 'cn' },
+  'zh_female_mizai_saturn_bigtts': { name: '黑猫侦探社咪仔', description: '视频配音', lang: 'cn' },
+  'zh_female_jitangnv_saturn_bigtts': { name: '鸡汤女', description: '视频配音', lang: 'cn' },
+  'zh_female_meilinvyou_saturn_bigtts': { name: '魅力女友', description: '视频配音', lang: 'cn' },
+  'zh_female_santongyongns_saturn_bigtts': { name: '流畅女声', description: '视频配音', lang: 'cn' },
+  'zh_male_ruyayichen_saturn_bigtts': { name: '儒雅逸辰', description: '视频配音', lang: 'cn' },
+  
+  // === 角色扮演 ===
+  'saturn_zh_female_cancan_tob': { name: '知性灿灿', description: '角色扮演', lang: 'cn' },
+  'saturn_zh_female_keainvsheng_tob': { name: '可爱女生', description: '角色扮演', lang: 'cn' },
+  'saturn_zh_female_tiaopigongzhu_tob': { name: '调皮公主', description: '角色扮演', lang: 'cn' },
+  'saturn_zh_male_shuanglangshaonian_tob': { name: '爽朗少年', description: '角色扮演', lang: 'cn' },
+  'saturn_zh_male_tiancaitongzhuo_tob': { name: '天才同桌', description: '角色扮演', lang: 'cn' },
+  
+  // === 有声阅读 ===
+  'zh_female_xueayi_saturn_bigtts': { name: '儿童绘本', description: '有声阅读', lang: 'cn' },
+  
+  // === 英文音色 ===
+  'en_male_tim_uranus_bigtts': { name: 'Tim', description: '英文', lang: 'en' },
+  'en_female_dacey_uranus_bigtts': { name: 'Dacey', description: '英文', lang: 'en' },
+  'en_female_stokie_uranus_bigtts': { name: 'Stokie', description: '英文', lang: 'en' },
 };
 
-// 默认音色 - 使用通用女声
-const DEFAULT_VOICE = 'BV001_streaming';
+// 默认音色 - 使用知性灿灿（角色扮演类，适合新闻朗读）
+const DEFAULT_VOICE = 'saturn_zh_female_cancan_tob';
 
 /**
  * 调用火山引擎 TTS API（HTTP 一次性合成）
@@ -53,6 +70,12 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
   // 检查配置
   if (!config.accessToken) {
     throw new Error('火山引擎 TTS 未配置 Access Token (VOLC_ACCESS_TOKEN)');
+  }
+
+  // 验证音色是否存在
+  if (!voiceTypes[voiceType]) {
+    console.warn(`[TTS] 未知音色 ${voiceType}，使用默认音色 ${DEFAULT_VOICE}`);
+    voiceType = DEFAULT_VOICE;
   }
 
   // 生成唯一请求 ID
