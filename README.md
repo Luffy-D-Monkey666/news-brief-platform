@@ -213,68 +213,36 @@ cd ../frontend && npm install && npm start
 
 ---
 
-## 🐛 常见问题
-
-### AI Service 长时间没有新新闻
-- Render 免费版 Worker 会休眠，访问前端会自动唤醒
-- 检查 Render Dashboard → AI Service → Logs
-
-### 简报只显示一句话
-- 只有新抓取的新闻才会用新格式
-- 旧数据需要等待新新闻自动进入
-
-### 话题视图为空
-- 话题需要同一事件≥2篇报道才会形成
-- 新部署后需要等待数据积累
-
-### 语音播放没声音
-- 当前使用浏览器原生TTS，需要浏览器支持
-- 火山引擎云端TTS正在开发中
-
----
-
 ## 📁 项目结构
 
 ```
 news-brief-platform/
-├── ai-service/           # Python AI服务
-│   ├── src/
-│   │   ├── crawlers/     # RSS新闻爬虫
-│   │   ├── processors/   # AI处理器
-│   │   └── services/     # 话题聚合等服务
-│   └── config/           # 新闻源、提示词配置
-├── backend/              # Node.js 后端
-│   └── src/
-│       ├── routes/       # API路由（briefs, topics, tts）
-│       └── services/     # WebSocket, TTS服务
-├── frontend/             # React 前端
-│   └── src/
-│       ├── components/   # BriefCard, TopicCard, AudioPlayer等
-│       ├── contexts/     # AudioPlayerContext
-│       └── pages/        # HomePage
-└── docs/                 # 文档
+├── ai-service/      # Python AI服务 (爬虫+处理)
+├── backend/         # Node.js 后端 (API+WebSocket)
+├── frontend/        # React 前端
+└── docs/            # 详细文档
 ```
+
+详细结构见各子目录 README。
 
 ---
 
 ## 💰 运营成本
 
-| 项目 | 月费用 | 说明 |
-|------|--------|------|
-| DeepSeek API | ~¥10 | 新闻处理，约2300 tokens/条 |
-| Render | $0 | 免费版够用 |
-| MongoDB Atlas | $0 | 免费版 512MB |
-| 火山引擎TTS | ~¥5 | 预估，按字数计费 |
-| **合计** | **~¥15/月** | |
+| 项目 | 月费用 |
+|------|--------|
+| DeepSeek API | ~¥10 |
+| Render / MongoDB Atlas | $0 (免费版) |
+| **合计** | **~¥10-15/月** |
 
 ---
 
-## 🤝 贡献指南
+## 📚 更多文档
 
-1. Fork 本项目
-2. 创建功能分支：`git checkout -b feature/xxx`
-3. 提交更改：`git commit -m "feat: 添加xxx功能"`
-4. 推送并创建 Pull Request
+- [FAQ - 常见问题](./docs/FAQ.md)
+- [部署指南](./docs/DEPLOYMENT_STEPS.md)
+- [开发路线图](./docs/ROADMAP.md)
+- [归档文档](./docs/archive/) - 开发过程记录
 
 ---
 
