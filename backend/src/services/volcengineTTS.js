@@ -1,6 +1,6 @@
 /**
  * 火山引擎 TTS 服务
- * 使用豆包语音合成，提供高质量中文语音合成
+ * 使用豆包语音合成大模型，提供高质量中文语音合成
  * 
  * 官方文档：https://www.volcengine.com/docs/6561/79820
  */
@@ -9,30 +9,34 @@ const https = require('https');
 
 // 配置 - 从环境变量读取
 const config = {
-  appId: process.env.VOLC_APP_ID,
+  appId: process.env.VOLC_APP_ID || '6922135515',
   accessToken: process.env.VOLC_ACCESS_TOKEN,
-  cluster: process.env.VOLC_CLUSTER || 'volcano_tts',
+  // 语音合成大模型使用 volcano_mega 集群
+  cluster: process.env.VOLC_CLUSTER || 'volcano_mega',
   // API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
 };
 
-// 音色配置
-// 注意：需要在火山引擎控制台开通对应音色才能使用
-// 免费音色：BV001_streaming（通用女声）、BV002_streaming（通用男声）
+// 音色配置 - 语音合成大模型音色（从控制台截图获取）
 const voiceTypes = {
-  // 免费通用音色（推荐先用这两个测试）
-  'BV001_streaming': { name: '通用女声', description: '标准女声，免费' },
-  'BV002_streaming': { name: '通用男声', description: '标准男声，免费' },
-  // 付费精品音色（需要在控制台购买/开通）
-  'BV700_streaming': { name: '灿灿', description: '活泼女声' },
-  'BV701_streaming': { name: '炀炀', description: '温暖男声' },
-  'BV705_streaming': { name: '甜美女声', description: '甜美可爱' },
-  'BV406_streaming': { name: '知性女声', description: '知性稳重' },
+  // 趣味方言
+  'zh_female_wanqudashu_moon_bigtts': { name: '湾区大叔', description: '趣味方言' },
+  'zh_female_daimengchuanmei_moon_bigtts': { name: '呆萌川妹', description: '趣味方言' },
+  'zh_male_guozhoudege_moon_bigtts': { name: '广州德哥', description: '趣味方言' },
+  'zh_male_beijingxiaoye_moon_bigtts': { name: '北京小爷', description: '趣味方言' },
+  // 通用场景
+  'zh_male_shaonianzixin_moon_bigtts': { name: '少年梓昕/Brayan', description: '通用场景，中/英' },
+  // 角色扮演
+  'zh_female_meilinvyou_moon_bigtts': { name: '魅力女友', description: '角色扮演' },
+  'zh_male_shenyeboke_moon_bigtts': { name: '深夜播客', description: '角色扮演' },
+  'zh_female_sajiaonvyou_moon_bigtts': { name: '柔美女友', description: '角色扮演' },
+  'zh_female_yuanqinvyou_moon_bigtts': { name: '撒娇学妹', description: '角色扮演' },
+  'zh_male_haoyuxiaoge_moon_bigtts': { name: '浩宇小哥', description: '趣味方言' },
 };
 
-// 默认音色 - 使用免费的通用女声
-const DEFAULT_VOICE = 'BV001_streaming';
+// 默认音色 - 使用通用场景的少年梓昕
+const DEFAULT_VOICE = 'zh_male_shaonianzixin_moon_bigtts';
 
 /**
  * 调用火山引擎 TTS API（HTTP 一次性合成）
@@ -49,9 +53,6 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
   } = options;
 
   // 检查配置
-  if (!config.appId) {
-    throw new Error('火山引擎 TTS 未配置 App ID (VOLC_APP_ID)');
-  }
   if (!config.accessToken) {
     throw new Error('火山引擎 TTS 未配置 Access Token (VOLC_ACCESS_TOKEN)');
   }
