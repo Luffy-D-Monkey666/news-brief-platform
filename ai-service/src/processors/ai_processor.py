@@ -1,3 +1,10 @@
+"""
+[DEPRECATED] Ollama 本地处理器 - 已弃用
+
+当前系统使用 cloud_ai_processor.py (DeepSeek API)
+
+此文件保留仅供本地开发/测试参考。
+"""
 import requests
 import json
 from typing import Dict, Optional
