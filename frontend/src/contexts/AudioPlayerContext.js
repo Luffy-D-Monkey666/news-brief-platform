@@ -34,23 +34,56 @@ const playEndSound = (audioContext) => {
   setTimeout(() => createBeep(audioContext, 523.25, 0.2), 150); // C5
 };
 
-// 语音预设配置（火山引擎豆包音色 - 使用已开通的 BV 系列）
+// 语音预设配置（火山引擎 BV 系列音色）
 const voicePresets = {
-  // 通用场景
+  // === 通用场景（推荐） ===
+  'BV700_V2_streaming': { name: '灿灿 2.0', description: '通用场景', lang: 'cn' },
+  'BV705_streaming': { name: '炀炀', description: '通用场景', lang: 'cn' },
+  'BV701_V2_streaming': { name: '擎苍 2.0', description: '通用场景', lang: 'cn' },
+  'BV001_V2_streaming': { name: '通用女声 2.0', description: '通用场景', lang: 'cn' },
   'BV001_streaming': { name: '通用女声', description: '通用场景', lang: 'cn' },
   'BV002_streaming': { name: '通用男声', description: '通用场景', lang: 'cn' },
-  // 特色音色
-  'BV051_streaming': { name: '奶气萌娃', description: '特色音色', lang: 'cn' },
+  
+  // === 超自然音色 ===
+  'BV406_V2_streaming': { name: '梓梓 2.0', description: '超自然音色', lang: 'cn' },
+  'BV407_V2_streaming': { name: '燃燃 2.0', description: '超自然音色', lang: 'cn' },
+  
+  // === 有声阅读 ===
+  'BV701_streaming': { name: '擎苍', description: '有声阅读', lang: 'cn' },
+  'BV123_streaming': { name: '阳光青年', description: '有声阅读', lang: 'cn' },
   'BV115_streaming': { name: '古风少御', description: '有声阅读', lang: 'cn' },
   'BV102_streaming': { name: '儒雅青年', description: '有声阅读', lang: 'cn' },
+  'BV104_streaming': { name: '温柔淑女', description: '有声阅读', lang: 'cn' },
+  'BV113_streaming': { name: '甜宠少御', description: '有声阅读', lang: 'cn' },
+  
+  // === 智能助手 ===
+  'BV405_streaming': { name: '甜美小源', description: '智能助手', lang: 'cn' },
+  'BV007_streaming': { name: '亲切女声', description: '智能助手', lang: 'cn' },
+  'BV009_streaming': { name: '知性女声', description: '智能助手', lang: 'cn' },
+  'BV008_streaming': { name: '亲切男声', description: '智能助手', lang: 'cn' },
+  
+  // === 视频配音 ===
   'BV056_streaming': { name: '阳光男声', description: '视频配音', lang: 'cn' },
-  // 多语种
+  'BV005_streaming': { name: '活泼女声', description: '视频配音', lang: 'cn' },
+  'BV411_streaming': { name: '影视解说小帅', description: '视频配音', lang: 'cn' },
+  'BV412_streaming': { name: '影视解说小美', description: '视频配音', lang: 'cn' },
+  'BV142_streaming': { name: '沉稳解说男', description: '视频配音', lang: 'cn' },
+  
+  // === 新闻播报 ===
+  'BV011_streaming': { name: '新闻女声', description: '新闻播报', lang: 'cn' },
+  'BV012_streaming': { name: '新闻男声', description: '新闻播报', lang: 'cn' },
+  
+  // === 特色音色 ===
+  'BV051_streaming': { name: '奶气萌娃', description: '特色音色', lang: 'cn' },
+  'BV061_streaming': { name: '天才童声', description: '特色音色', lang: 'cn' },
+  
+  // === 多语种 ===
   'BV504_streaming': { name: '活力男声-Jackson', description: '美式发音', lang: 'en' },
   'BV503_streaming': { name: '活力女声-Ariana', description: '美式发音', lang: 'en' },
 };
 
-// 默认音色 - 使用通用女声
-const DEFAULT_VOICE = 'BV001_streaming';
+// 默认音色 - 使用灿灿 2.0
+const DEFAULT_VOICE = 'BV700_V2_streaming';
 
 export const AudioPlayerProvider = ({ children }) => {
   // 播放列表状态
