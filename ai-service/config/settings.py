@@ -8,7 +8,7 @@ MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/news-brief')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # 爬虫配置
-CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 120))  # 2分钟
+CRAWL_INTERVAL = int(os.getenv('CRAWL_INTERVAL', 300))  # 5分钟
 
 # ============================================================
 # 来源可信度分级配置
