@@ -270,33 +270,74 @@ Render 免费版会在无流量时休眠。使用 [UptimeRobot](https://uptimero
 
 本项目使用**火山引擎豆包语音合成**提供高质量中文 TTS 服务，支持 30+ 音色。
 
-### 前置条件
+### Step 1: 注册火山引擎账号
 
-1. **火山引擎账号** - 注册 [火山引擎](https://www.volcengine.com/)
-2. **开通语音技术服务** - 进入控制台开通「语音技术」
-3. **创建应用获取凭证** - 获取 App ID 和 Access Token
+1. 打开 https://www.volcengine.com/
+2. 点击右上角 **「注册」**
+3. 支持手机号/邮箱注册，完成实名认证（需要身份证）
 
-### 获取凭证步骤
+### Step 2: 开通语音合成服务
 
-1. 登录 [火山引擎控制台](https://console.volcengine.com/)
-2. 进入 **语音技术** → **语音合成**
-3. 点击 **创建应用**，填写应用名称
-4. 创建后获取：
-   - **App ID**: 如 `6922135515`
-   - **Access Token**: 在应用详情页生成
+1. 登录后进入控制台：https://console.volcengine.com/
+2. 在顶部搜索框搜索 **「语音技术」**，或直接访问：
+   - https://console.volcengine.com/speech/app
+3. 首次进入会提示 **「开通服务」**，点击开通（免费）
+4. 阅读并同意服务协议
 
-### 配置环境变量
+### Step 3: 购买资源包（可选但推荐）
+
+> ⚠️ 不购买也可以使用，会按量后付费。购买资源包更便宜。
+
+1. 进入 https://console.volcengine.com/speech/usage
+2. 点击 **「购买资源包」**
+3. 选择 **「语音合成」** 类型
+4. 推荐购买：
+   - **通用语音合成 - 100万字符包** ≈ ¥20（够用很久）
+   - 或先用免费额度试用
+
+### Step 4: 创建应用并获取凭证
+
+1. 进入应用管理页面：https://console.volcengine.com/speech/app
+2. 点击 **「创建应用」** 按钮
+3. 填写信息：
+   - **应用名称**: 如 `NewsHub-TTS`
+   - **应用描述**: 如 `新闻语音播报`
+   - **使用场景**: 选择 `语音合成`
+4. 创建成功后，在应用列表点击应用名称进入详情
+5. 记录以下信息：
+   - **App ID**: 页面顶部显示，如 `6922135515`
+6. 点击 **「生成 Token」** 按钮，复制生成的 **Access Token**
+
+### Step 5: 配置环境变量
 
 在 Backend 服务的环境变量中添加：
 
 ```bash
-# 火山引擎 TTS 配置
-VOLC_APP_ID=你的AppID
-VOLC_ACCESS_TOKEN=你的AccessToken
+# 火山引擎 TTS 配置（必填）
+VOLC_APP_ID=你的AppID（如 6922135515）
+VOLC_ACCESS_TOKEN=你的AccessToken（很长的字符串）
+
+# 可选配置（有默认值）
 VOLC_CLUSTER=volcano_tts
 ```
 
-**Render 部署时**：在 Backend Service → Environment → Environment Variables 中添加以上变量。
+**Render 部署配置方法**：
+1. 打开 https://dashboard.render.com/
+2. 点击你的 **Backend Service**（如 `news-backend`）
+3. 左侧菜单选择 **「Environment」**
+4. 在 **「Environment Variables」** 区域点击 **「Add Environment Variable」**
+5. 分别添加 `VOLC_APP_ID` 和 `VOLC_ACCESS_TOKEN`
+6. 点击 **「Save Changes」**，服务会自动重新部署
+
+### Step 6: 验证配置
+
+部署完成后，访问以下 URL 测试：
+
+```
+https://你的backend域名/api/tts/voices
+```
+
+如果返回音色列表 JSON，说明配置成功！
 
 ### 可用音色（30+）
 
