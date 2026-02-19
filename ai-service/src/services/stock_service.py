@@ -1,13 +1,20 @@
 """
-股票数据服务 - 使用 Yahoo Finance API
+股票数据服务 - 使用 yfinance 库
 获取上市公司的市值、PE、当日涨跌等数据
 """
-import requests
 import logging
-from typing import Dict, Optional, List
+from typing import Dict, Optional
 import re
 
 logger = logging.getLogger(__name__)
+
+# 尝试导入 yfinance
+try:
+    import yfinance as yf
+    YFINANCE_AVAILABLE = True
+except ImportError:
+    YFINANCE_AVAILABLE = False
+    logger.warning("yfinance 未安装，股票功能将不可用。请运行: pip install yfinance")
 
 # 常见公司名称到股票代码的映射
 COMPANY_TICKER_MAP = {
@@ -97,14 +104,11 @@ COMPANY_TICKER_MAP = {
 
 
 class StockService:
-    """股票数据服务"""
+    """股票数据服务 - 使用 yfinance"""
     
     def __init__(self):
-        self.base_url = "https://query1.finance.yahoo.com/v8/finance/chart"
-        self.quote_url = "https://query1.finance.yahoo.com/v7/finance/quote"
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
+        if not YFINANCE_AVAILABLE:
+            logger.error("yfinance 不可用，股票服务初始化失败")
     
     def _extract_ticker_from_text(self, text: str) -> Optional[str]:
         """从文本中提取股票代码"""
@@ -129,49 +133,56 @@ class StockService:
     
     def get_stock_info(self, ticker: str) -> Optional[Dict]:
         """获取单个股票的详细信息"""
+        if not YFINANCE_AVAILABLE:
+            logger.warning("yfinance 不可用")
+            return None
+            
         try:
-            url = f"{self.quote_url}?symbols={ticker}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            stock = yf.Ticker(ticker)
+            info = stock.info
             
-            if response.status_code != 200:
-                logger.warning(f"Yahoo Finance API 返回 {response.status_code}")
+            if not info or 'regularMarketPrice' not in info:
+                # 尝试获取 fast_info
+                try:
+                    fast_info = stock.fast_info
+                    if hasattr(fast_info, 'last_price') and fast_info.last_price:
+                        stock_info = {
+                            'ticker': ticker,
+                            'name': info.get('shortName') or info.get('longName', ticker),
+                            'price': fast_info.last_price,
+                            'change': None,
+                            'change_percent': fast_info.last_price / fast_info.previous_close - 1 if hasattr(fast_info, 'previous_close') and fast_info.previous_close else None,
+                            'market_cap': fast_info.market_cap if hasattr(fast_info, 'market_cap') else None,
+                            'pe_ratio': None,
+                            'pe_forward': None,
+                            'currency': info.get('currency', 'USD'),
+                        }
+                        if stock_info['change_percent']:
+                            stock_info['change_percent'] *= 100
+                            stock_info['change_formatted'] = f"{'+' if stock_info['change_percent'] >= 0 else ''}{stock_info['change_percent']:.2f}%"
+                        self._format_market_cap(stock_info)
+                        logger.info(f"获取股票数据成功 (fast_info): {ticker}")
+                        return stock_info
+                except:
+                    pass
+                logger.warning(f"无法获取 {ticker} 的股票数据")
                 return None
-            
-            data = response.json()
-            
-            if 'quoteResponse' not in data or 'result' not in data['quoteResponse']:
-                return None
-            
-            results = data['quoteResponse']['result']
-            if not results:
-                return None
-            
-            quote = results[0]
             
             # 提取关键数据
             stock_info = {
                 'ticker': ticker,
-                'name': quote.get('shortName') or quote.get('longName', ''),
-                'price': quote.get('regularMarketPrice'),
-                'change': quote.get('regularMarketChange'),
-                'change_percent': quote.get('regularMarketChangePercent'),
-                'market_cap': quote.get('marketCap'),
-                'pe_ratio': quote.get('trailingPE'),
-                'pe_forward': quote.get('forwardPE'),
-                'currency': quote.get('currency', 'USD'),
+                'name': info.get('shortName') or info.get('longName', ''),
+                'price': info.get('regularMarketPrice') or info.get('currentPrice'),
+                'change': info.get('regularMarketChange'),
+                'change_percent': info.get('regularMarketChangePercent'),
+                'market_cap': info.get('marketCap'),
+                'pe_ratio': info.get('trailingPE'),
+                'pe_forward': info.get('forwardPE'),
+                'currency': info.get('currency', 'USD'),
             }
             
             # 格式化市值
-            if stock_info['market_cap']:
-                market_cap = stock_info['market_cap']
-                if market_cap >= 1e12:
-                    stock_info['market_cap_formatted'] = f"{market_cap/1e12:.2f}万亿"
-                elif market_cap >= 1e9:
-                    stock_info['market_cap_formatted'] = f"{market_cap/1e9:.0f}亿"
-                elif market_cap >= 1e6:
-                    stock_info['market_cap_formatted'] = f"{market_cap/1e6:.0f}百万"
-                else:
-                    stock_info['market_cap_formatted'] = str(market_cap)
+            self._format_market_cap(stock_info)
             
             # 格式化涨跌幅
             if stock_info['change_percent'] is not None:
@@ -181,18 +192,31 @@ class StockService:
             logger.info(f"获取股票数据成功: {ticker} - {stock_info['name']}")
             return stock_info
             
-        except requests.exceptions.Timeout:
-            logger.warning(f"获取 {ticker} 股票数据超时")
-            return None
         except Exception as e:
             logger.error(f"获取 {ticker} 股票数据失败: {str(e)}")
             return None
+    
+    def _format_market_cap(self, stock_info: Dict):
+        """格式化市值"""
+        if stock_info.get('market_cap'):
+            market_cap = stock_info['market_cap']
+            if market_cap >= 1e12:
+                stock_info['market_cap_formatted'] = f"{market_cap/1e12:.2f}万亿"
+            elif market_cap >= 1e9:
+                stock_info['market_cap_formatted'] = f"{market_cap/1e9:.0f}亿"
+            elif market_cap >= 1e6:
+                stock_info['market_cap_formatted'] = f"{market_cap/1e6:.0f}百万"
+            else:
+                stock_info['market_cap_formatted'] = str(market_cap)
     
     def get_stock_info_from_text(self, title: str, content: str) -> Optional[Dict]:
         """
         从新闻标题和内容中提取公司信息，并获取股票数据
         返回格式化的股票信息
         """
+        if not YFINANCE_AVAILABLE:
+            return None
+            
         # 合并标题和内容进行分析
         full_text = f"{title} {content[:500]}"
         
@@ -227,6 +251,10 @@ def enrich_news_with_stock_info(news_item: Dict) -> Dict:
     为新闻条目添加股票信息
     直接修改并返回 news_item
     """
+    if not YFINANCE_AVAILABLE:
+        news_item['stock_info'] = None
+        return news_item
+        
     try:
         service = get_stock_service()
         
