@@ -227,13 +227,42 @@ news-brief-platform/
 
 ---
 
+## 🔄 自动运行机制
+
+系统部署后**完全自动运行**，无需人工干预：
+
+| 组件 | 行为 | 间隔 |
+|------|------|------|
+| AI Service | 自动采集 RSS → AI 处理 → 存入数据库 | 每 5 分钟 |
+| UptimeRobot | 防止 Render 免费版休眠 | 每 5 分钟 |
+| Frontend/Backend | 按需响应用户请求 | - |
+
+### 🛡️ 保活配置 (UptimeRobot)
+
+Render 免费版会在无流量时休眠。使用 [UptimeRobot](https://uptimerobot.com)（免费）防止休眠：
+
+1. 注册 UptimeRobot 账号
+2. 添加 HTTP(s) Monitor：
+   - **URL**: `https://news-platform-ai-service.onrender.com`
+   - **Interval**: 5 minutes
+3. 完成！AI Service 将保持 24/7 运行
+
+### ✅ 你只需关注
+
+- **DeepSeek API 余额** - 确保有足够余额（约 ¥10/月）
+- 其他一切自动运行
+
+---
+
 ## 💰 运营成本
 
-| 项目 | 月费用 |
-|------|--------|
-| DeepSeek API | ~¥10 |
-| Render / MongoDB Atlas | $0 (免费版) |
-| **合计** | **~¥10-15/月** |
+| 项目 | 月费用 | 说明 |
+|------|--------|------|
+| DeepSeek API | ~¥10 | 新闻处理，约 2300 tokens/条 |
+| Render | $0 | 免费版 + UptimeRobot 保活 |
+| MongoDB Atlas | $0 | 免费版 512MB |
+| UptimeRobot | $0 | 免费版 50 monitors |
+| **合计** | **~¥10/月** | |
 
 ---
 

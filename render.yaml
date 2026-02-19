@@ -39,7 +39,7 @@ services:
       - key: REDIS_URL
         sync: false
       - key: CRAWL_INTERVAL
-        value: 120
+        value: 300
 
   # Frontend Service
   - type: web
