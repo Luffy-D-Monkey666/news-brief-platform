@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import {
@@ -9,7 +9,9 @@ import {
   FaVolumeUp,
   FaPause,
   FaPlay,
-  FaSpinner
+  FaSpinner,
+  FaChevronDown,
+  FaChevronUp
 } from 'react-icons/fa';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 
@@ -102,6 +104,18 @@ const BriefCard = ({ brief, isNew = false }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // 检测屏幕宽度，768px 以下为手机端
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // 使用统一的 AudioPlayerContext（豆包 TTS）
   const {
@@ -418,7 +432,7 @@ const BriefCard = ({ brief, isNew = false }) => {
           {/* 摘要 - 结构化显示 */}
           {summary.hasStructure ? (
             <div className="space-y-5 mb-5">
-              {/* 事件概述 */}
+              {/* 事件概述 - 始终显示 */}
               {summary.overview && (
                 <div>
                   <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
@@ -431,57 +445,109 @@ const BriefCard = ({ brief, isNew = false }) => {
                 </div>
               )}
 
-              {/* 原文引用 */}
-              {summary.quote && (
-                <div className="bg-gray-50 border-l-4 border-blue-400 pl-4 pr-3 py-3 rounded-r-lg">
-                  <div className="flex items-center gap-1 mb-2">
-                    <span className="text-blue-500">💬</span>
-                    <span className="text-xs font-medium text-gray-500">原文引用</span>
-                  </div>
-                  <p className="text-sm text-gray-700 italic leading-relaxed">
-                    {summary.quote}
-                  </p>
-                </div>
+              {/* 手机端折叠内容 - 原文引用、重要细节、后续影响 */}
+              {(!isMobile || isExpanded) && (
+                <>
+                  {/* 原文引用 */}
+                  {summary.quote && (
+                    <div className="bg-gray-50 border-l-4 border-blue-400 pl-4 pr-3 py-3 rounded-r-lg">
+                      <div className="flex items-center gap-1 mb-2">
+                        <span className="text-blue-500">💬</span>
+                        <span className="text-xs font-medium text-gray-500">原文引用</span>
+                      </div>
+                      <p className="text-sm text-gray-700 italic leading-relaxed">
+                        {summary.quote}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* 重要细节 */}
+                  {summary.details.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
+                        <div className="w-2 h-5 rounded-full bg-gradient-to-b from-purple-400 to-purple-600" />
+                        <span className="text-sm font-bold text-gray-700 tracking-wide">重要细节</span>
+                      </div>
+                      <ul className="space-y-2 pl-5">
+                        {summary.details.map((detail, i) => (
+                          <li key={i} className="flex items-start text-sm text-gray-800 leading-relaxed">
+                            <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 mr-3 flex-shrink-0" />
+                            <span className="flex-1">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* 后续影响 */}
+                  {summary.impact && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
+                        <div className="w-2 h-5 rounded-full bg-gradient-to-b from-green-400 to-green-600" />
+                        <span className="text-sm font-bold text-gray-700 tracking-wide">后续影响</span>
+                      </div>
+                      <p className="text-sm text-gray-800 leading-relaxed pl-5">
+                        {summary.impact}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
 
-              {/* 重要细节 */}
-              {summary.details.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
-                    <div className="w-2 h-5 rounded-full bg-gradient-to-b from-purple-400 to-purple-600" />
-                    <span className="text-sm font-bold text-gray-700 tracking-wide">重要细节</span>
-                  </div>
-                  <ul className="space-y-2 pl-5">
-                    {summary.details.map((detail, i) => (
-                      <li key={i} className="flex items-start text-sm text-gray-800 leading-relaxed">
-                        <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 mr-3 flex-shrink-0" />
-                        <span className="flex-1">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* 后续影响 */}
-              {summary.impact && (
-                <div>
-                  <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
-                    <div className="w-2 h-5 rounded-full bg-gradient-to-b from-green-400 to-green-600" />
-                    <span className="text-sm font-bold text-gray-700 tracking-wide">后续影响</span>
-                  </div>
-                  <p className="text-sm text-gray-800 leading-relaxed pl-5">
-                    {summary.impact}
-                  </p>
-                </div>
+              {/* 手机端展开/收起按钮 */}
+              {isMobile && (summary.quote || summary.details.length > 0 || summary.impact) && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                >
+                  {isExpanded ? (
+                    <>
+                      <FaChevronUp className="text-xs" />
+                      收起详情
+                    </>
+                  ) : (
+                    <>
+                      <FaChevronDown className="text-xs" />
+                      展开详情
+                    </>
+                  )}
+                </button>
               )}
             </div>
           ) : (
             // 非结构化摘要
             <div className="mb-5 p-4 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed whitespace-pre-line">
-              {brief.summary}
+              {isMobile && !isExpanded ? (
+                <>
+                  {brief.summary.length > 150 ? `${brief.summary.slice(0, 150)}...` : brief.summary}
+                  {brief.summary.length > 150 && (
+                    <button
+                      onClick={() => setIsExpanded(true)}
+                      className="block mt-2 text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      展开全文
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  {brief.summary}
+                  {isMobile && brief.summary.length > 150 && (
+                    <button
+                      onClick={() => setIsExpanded(false)}
+                      className="block mt-2 text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      收起
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           )}
 
+          {/* 附加信息区域 - 手机端需展开才显示 */}
+          {(!isMobile || isExpanded) && (
+            <>
           {/* 股票信息（仅财经/商业类显示） */}
           {brief.stock_info && brief.stock_info.ticker && (
             <div className="mb-5 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
@@ -735,6 +801,27 @@ const BriefCard = ({ brief, isNew = false }) => {
                 {brief.action_advice}
               </div>
             </div>
+          )}
+            </>
+          )}
+
+          {/* 手机端附加信息展开按钮 - 仅当有附加内容时显示 */}
+          {isMobile && !isExpanded && (
+            brief.stock_info?.ticker || 
+            (brief.key_metrics && brief.key_metrics.length > 0) ||
+            brief.background?.context ||
+            brief.tech_insight?.principle ||
+            brief.funding_history?.company ||
+            brief.supply_chain_insight?.impact ||
+            brief.action_advice
+          ) && (
+            <button
+              onClick={() => setIsExpanded(true)}
+              className="w-full flex items-center justify-center gap-2 py-3 mb-4 text-sm text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors"
+            >
+              <FaChevronDown className="text-xs" />
+              查看更多分析
+            </button>
           )}
 
           {/* 底部信息 */}
