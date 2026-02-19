@@ -20,19 +20,25 @@ api.interceptors.response.use(
 );
 
 // 获取最新简报
-export const getLatestBriefs = async (category = null, limit = 20) => {
+export const getLatestBriefs = async (category = null, limit = 20, hours = null) => {
   const params = { limit };
   if (category) {
     params.category = category;
+  }
+  if (hours) {
+    params.hours = hours;
   }
   return api.get('/briefs/latest', { params });
 };
 
 // 获取历史简报
-export const getHistoryBriefs = async (category = null, page = 1, limit = 20) => {
+export const getHistoryBriefs = async (category = null, page = 1, limit = 20, hours = null) => {
   const params = { page, limit };
   if (category) {
     params.category = category;
+  }
+  if (hours) {
+    params.hours = hours;
   }
   return api.get('/briefs/history', { params });
 };

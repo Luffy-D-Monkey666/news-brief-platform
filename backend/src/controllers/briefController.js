@@ -3,11 +3,17 @@ const Brief = require('../models/Brief');
 // 获取最新简报
 exports.getLatestBriefs = async (req, res) => {
   try {
-    const { category, limit = 20 } = req.query;
+    const { category, limit = 20, hours } = req.query;
 
     const query = {};
     if (category) {
       query.category = category;
+    }
+    
+    // 时间筛选
+    if (hours) {
+      const cutoff = new Date(Date.now() - parseInt(hours, 10) * 60 * 60 * 1000);
+      query.created_at = { $gte: cutoff };
     }
 
     const briefs = await Brief.find(query)
@@ -31,12 +37,18 @@ exports.getLatestBriefs = async (req, res) => {
 // 获取历史简报（分页）
 exports.getHistoryBriefs = async (req, res) => {
   try {
-    const { category, page = 1, limit = 20 } = req.query;
+    const { category, page = 1, limit = 20, hours } = req.query;
     const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
     const query = {};
     if (category) {
       query.category = category;
+    }
+    
+    // 时间筛选
+    if (hours) {
+      const cutoff = new Date(Date.now() - parseInt(hours, 10) * 60 * 60 * 1000);
+      query.created_at = { $gte: cutoff };
     }
 
     const briefs = await Brief.find(query)

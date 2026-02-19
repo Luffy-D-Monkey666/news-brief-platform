@@ -19,7 +19,6 @@ const TIME_FILTERS = [
 
 const HomePage = () => {
   const [briefs, setBriefs] = useState([]);
-  const [filteredBriefs, setFilteredBriefs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
@@ -33,6 +32,12 @@ const HomePage = () => {
   const [topicsLoading, setTopicsLoading] = useState(false);
 
   const { latestBrief } = useWebSocket();
+  
+  // 获取当前时间筛选的小时数
+  const getHoursFromFilter = () => {
+    const filter = TIME_FILTERS.find(f => f.key === selectedTimeFilter);
+    return filter?.hours || null;
+  };
 
   // 加载初始数据
   useEffect(() => {
@@ -40,7 +45,7 @@ const HomePage = () => {
     if (viewMode === 'topics') {
       loadTopics();
     }
-  }, [selectedCategory, viewMode]);
+  }, [selectedCategory, selectedTimeFilter, viewMode]);
   
   // 加载热门话题
   const loadTopics = async () => {
@@ -57,28 +62,10 @@ const HomePage = () => {
     }
   };
 
-  // 时间筛选
+  // 同步更新播放列表
   useEffect(() => {
-    let filtered;
-    if (selectedTimeFilter === 'all') {
-      filtered = briefs;
-    } else {
-      const filter = TIME_FILTERS.find(f => f.key === selectedTimeFilter);
-      if (filter && filter.hours) {
-        const cutoff = new Date(Date.now() - filter.hours * 60 * 60 * 1000);
-        filtered = briefs.filter(brief => {
-          const briefDate = new Date(brief.created_at || brief.published);
-          return briefDate >= cutoff;
-        });
-      } else {
-        filtered = briefs;
-      }
-    }
-    setFilteredBriefs(filtered);
-    
-    // 同步更新播放列表
-    setPlaylistFromBriefs(filtered);
-  }, [briefs, selectedTimeFilter, setPlaylistFromBriefs]);
+    setPlaylistFromBriefs(briefs);
+  }, [briefs, setPlaylistFromBriefs]);
 
   // 监听新简报
   useEffect(() => {
@@ -101,7 +88,8 @@ const HomePage = () => {
     try {
       setLoading(true);
       setCurrentPage(1);
-      const response = await getLatestBriefs(selectedCategory, 50);
+      const hours = getHoursFromFilter();
+      const response = await getLatestBriefs(selectedCategory, 50, hours);
       const sortedData = (response.data || []).sort((a, b) => {
         const dateA = new Date(a.created_at || a.published);
         const dateB = new Date(b.created_at || b.published);
@@ -129,7 +117,8 @@ const HomePage = () => {
     try {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
-      const response = await getHistoryBriefs(selectedCategory, nextPage, 20);
+      const hours = getHoursFromFilter();
+      const response = await getHistoryBriefs(selectedCategory, nextPage, 20, hours);
 
       if (response.data && response.data.length > 0) {
         setBriefs((prev) => [...prev, ...response.data]);
@@ -304,7 +293,7 @@ const HomePage = () => {
         {/* 筛选结果统计 */}
         {selectedTimeFilter !== 'all' && (
           <div className="mb-4 text-sm text-gray-500">
-            找到 <span className="font-medium text-gray-900">{filteredBriefs.length}</span> 条
+            找到 <span className="font-medium text-gray-900">{briefs.length}</span> 条
             {TIME_FILTERS.find(f => f.key === selectedTimeFilter)?.label}的新闻
           </div>
         )}
@@ -335,7 +324,7 @@ const HomePage = () => {
             <FaSpinner className="animate-spin text-5xl text-black" />
             <span className="ml-4 text-gray-600 text-lg">加载中...</span>
           </div>
-        ) : filteredBriefs.length === 0 ? (
+        ) : briefs.length === 0 ? (
           <div className="text-center py-32 bg-white rounded-2xl">
             <p className="text-gray-500 text-xl">暂无简报</p>
             <p className="text-gray-400 text-sm mt-2">
@@ -358,7 +347,7 @@ const HomePage = () => {
             className="masonry-grid"
             columnClassName="masonry-grid_column"
           >
-            {filteredBriefs.map((brief) => (
+            {briefs.map((brief) => (
               <BriefCard
                 key={brief._id}
                 brief={brief}
@@ -380,7 +369,7 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            {filteredBriefs.map((brief, index) => (
+            {briefs.map((brief, index) => (
               <AudioViewCard
                 key={brief._id}
                 brief={brief}
@@ -392,7 +381,7 @@ const HomePage = () => {
         ) : (
           // 列表视图
           <div className="space-y-0">
-            {filteredBriefs.map((brief) => (
+            {briefs.map((brief) => (
               <ListViewCard
                 key={brief._id}
                 brief={brief}
@@ -403,7 +392,7 @@ const HomePage = () => {
         )}
 
         {/* 加载更多按钮 */}
-        {!loading && filteredBriefs.length > 0 && selectedTimeFilter === 'all' && (
+        {!loading && briefs.length > 0 && viewMode !== 'topics' && (
           <div className="mt-8 flex justify-center">
             {hasMore ? (
               <button
@@ -422,9 +411,9 @@ const HomePage = () => {
               </button>
             ) : (
               <div className="text-center py-4">
-                <p className="text-gray-400 text-sm">已经到底了</p>
+                <p className="text-gray-400 text-sm">没有更多了</p>
                 <p className="text-gray-300 text-xs mt-1">
-                  共 {filteredBriefs.length} 条新闻简报
+                  共 {briefs.length} 条新闻简报
                 </p>
               </div>
             )}
