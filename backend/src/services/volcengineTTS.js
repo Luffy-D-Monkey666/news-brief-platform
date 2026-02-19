@@ -11,32 +11,30 @@ const https = require('https');
 const config = {
   appId: process.env.VOLC_APP_ID || '6922135515',
   accessToken: process.env.VOLC_ACCESS_TOKEN,
-  // 语音合成大模型-字符版使用 volcano_tts_v2 集群
-  cluster: process.env.VOLC_CLUSTER || 'volcano_tts_v2',
+  // 语音合成服务使用 volcano_tts 集群
+  cluster: process.env.VOLC_CLUSTER || 'volcano_tts',
   // API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
 };
 
-// 音色配置 - 语音合成大模型音色（从控制台截图获取）
+// 音色配置 - 从控制台音色列表获取
 const voiceTypes = {
-  // 趣味方言
-  'zh_female_wanqudashu_moon_bigtts': { name: '湾区大叔', description: '趣味方言' },
-  'zh_female_daimengchuanmei_moon_bigtts': { name: '呆萌川妹', description: '趣味方言' },
-  'zh_male_guozhoudege_moon_bigtts': { name: '广州德哥', description: '趣味方言' },
-  'zh_male_beijingxiaoye_moon_bigtts': { name: '北京小爷', description: '趣味方言' },
   // 通用场景
-  'zh_male_shaonianzixin_moon_bigtts': { name: '少年梓昕/Brayan', description: '通用场景，中/英' },
-  // 角色扮演
-  'zh_female_meilinvyou_moon_bigtts': { name: '魅力女友', description: '角色扮演' },
-  'zh_male_shenyeboke_moon_bigtts': { name: '深夜播客', description: '角色扮演' },
-  'zh_female_sajiaonvyou_moon_bigtts': { name: '柔美女友', description: '角色扮演' },
-  'zh_female_yuanqinvyou_moon_bigtts': { name: '撒娇学妹', description: '角色扮演' },
-  'zh_male_haoyuxiaoge_moon_bigtts': { name: '浩宇小哥', description: '趣味方言' },
+  'BV001_streaming': { name: '通用女声', description: '通用场景' },
+  'BV002_streaming': { name: '通用男声', description: '通用场景' },
+  // 特色音色
+  'BV051_streaming': { name: '奶气萌娃', description: '特色音色' },
+  'BV115_streaming': { name: '古风少御', description: '有声阅读' },
+  'BV102_streaming': { name: '儒雅青年', description: '有声阅读' },
+  'BV056_streaming': { name: '阳光男声', description: '视频配音' },
+  // 多语种
+  'BV504_streaming': { name: '活力男声-Jackson', description: '美式发音' },
+  'BV503_streaming': { name: '活力女声-Ariana', description: '美式发音' },
 };
 
-// 默认音色 - 使用通用场景的少年梓昕
-const DEFAULT_VOICE = 'zh_male_shaonianzixin_moon_bigtts';
+// 默认音色 - 使用通用女声
+const DEFAULT_VOICE = 'BV001_streaming';
 
 /**
  * 调用火山引擎 TTS API（HTTP 一次性合成）

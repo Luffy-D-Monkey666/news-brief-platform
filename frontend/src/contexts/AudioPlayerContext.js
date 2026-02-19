@@ -34,15 +34,15 @@ const playEndSound = (audioContext) => {
   setTimeout(() => createBeep(audioContext, 523.25, 0.2), 150); // C5
 };
 
-// 语音预设配置（火山引擎豆包语音合成大模型音色）
+// 语音预设配置（火山引擎豆包音色）
 // 注意：voice_type 需要与后端 volcengineTTS.js 中的配置一致
 const voicePresets = {
-  'zh_male_shaonianzixin_moon_bigtts': { name: '少年梓昕', description: '通用场景' },
-  'zh_female_meilinvyou_moon_bigtts': { name: '魅力女友', description: '角色扮演' },
-  'zh_female_sajiaonvyou_moon_bigtts': { name: '柔美女友', description: '角色扮演' },
-  'zh_male_shenyeboke_moon_bigtts': { name: '深夜播客', description: '角色扮演' },
-  'zh_female_wanqudashu_moon_bigtts': { name: '湾区大叔', description: '趣味方言' },
-  'zh_male_beijingxiaoye_moon_bigtts': { name: '北京小爷', description: '趣味方言' },
+  'BV001_streaming': { name: '通用女声', description: '通用场景' },
+  'BV002_streaming': { name: '通用男声', description: '通用场景' },
+  'BV051_streaming': { name: '奶气萌娃', description: '特色音色' },
+  'BV115_streaming': { name: '古风少御', description: '有声阅读' },
+  'BV102_streaming': { name: '儒雅青年', description: '有声阅读' },
+  'BV056_streaming': { name: '阳光男声', description: '视频配音' },
 };
 
 // 是否使用云端 TTS（火山引擎）
@@ -55,7 +55,7 @@ export const AudioPlayerProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState('zh_male_shaonianzixin_moon_bigtts');
+  const [selectedVoice, setSelectedVoice] = useState('BV001_streaming');
   
   // 播放模式
   const [playMode, setPlayMode] = useState('single'); // 'single' | 'continuous'
