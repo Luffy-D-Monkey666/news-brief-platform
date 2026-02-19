@@ -93,7 +93,7 @@ async function synthesize(text, voiceType = DEFAULT_VOICE, options = {}) {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(postData),
-        'Authorization': `Bearer;${config.accessToken}`,
+        'Authorization': `Bearer ${config.accessToken}`,
       },
     };
 
