@@ -226,9 +226,9 @@ NEWS_SOURCES = {
         'https://www.reddit.com/r/DigimonCardGame2020/.rss', # Reddit 数码宝贝TCG（新增）
         'https://www.reddit.com/r/WeissSchwarz/.rss',      # Reddit WS（新增）
 
-        # ==================== 综合新闻（4个核心源）====================
+        # ==================== 综合新闻（3个核心源）====================
         'https://feeds.feedburner.com/TechCrunch/',        # TechCrunch综合
-        'https://news.ycombinator.com/rss',                # Hacker News
+        # 'https://news.ycombinator.com/rss',              # Hacker News（已移除：链接聚合站，内容多为外部网站转发）
         'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', # NYT首页
         'https://www.reuters.com/rssFeed/technologyNews',  # Reuters Tech
     ]
