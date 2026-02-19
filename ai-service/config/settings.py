@@ -214,8 +214,8 @@ NEWS_SOURCES = {
         # ==================== OP海贼王（4个核心源）====================
         'https://www.reddit.com/r/OnePiece/.rss',          # Reddit OnePiece
         'https://onepiece.fandom.com/wiki/Special:NewPages?feed=rss', # OP Wiki
-        'https://www.reddit.com/r/MemePiece/.rss',         # Reddit MemePiece（新增）
-        'https://comicbook.com/anime/feed/',               # ComicBook Anime（新增）
+        # 'https://www.reddit.com/r/MemePiece/.rss',       # 已移除：meme内容不适合新闻聚合
+        'https://comicbook.com/anime/feed/',               # ComicBook Anime
 
         # ==================== TCG集换式卡牌（7个核心源）====================
         'https://www.reddit.com/r/OnePieceTCG/.rss',       # Reddit OPCG
