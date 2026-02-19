@@ -249,8 +249,81 @@ export const AudioPlayerProvider = ({ children }) => {
     if (index >= 0) {
       setPlayMode('single');
       playAt(index);
+    } else {
+      // 如果 brief 不在 playlist 中（可能视图刚切换），直接播放
+      console.log('[AudioPlayer] brief 不在 playlist 中，直接播放');
+      setPlayMode('single');
+      // 临时设置 index 并播放
+      setCurrentIndex(0);
+      playBriefDirectly(brief);
     }
   }, [playlist, playAt]);
+  
+  // 直接播放指定的 brief（不依赖 playlist）
+  const playBriefDirectly = useCallback(async (brief, voice = null) => {
+    const voiceToUse = voice || currentVoiceRef.current;
+    
+    // 先停止当前播放
+    stopCurrentPlayback();
+    setIsLoading(true);
+    
+    // 播放开始音效
+    try {
+      const audioContext = getAudioContext();
+      playStartSound(audioContext);
+    } catch (e) {
+      console.log('音效播放失败:', e);
+    }
+    
+    // 等待音效播完
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    if (brief._id) {
+      try {
+        const audioUrl = getBriefAudioUrl(brief._id, voiceToUse);
+        console.log(`[AudioPlayer] 直接播放: ${brief.title}, voice=${voiceToUse}`);
+        
+        audioRef.current.src = audioUrl;
+        
+        audioRef.current.oncanplaythrough = () => {
+          setIsLoading(false);
+          setIsPlaying(true);
+          setIsPaused(false);
+          audioRef.current.play().catch(e => {
+            console.error('播放失败:', e);
+            setIsPlaying(false);
+          });
+        };
+        
+        audioRef.current.onended = () => {
+          // 播放结束音效
+          try {
+            const audioContext = getAudioContext();
+            playEndSound(audioContext);
+          } catch (e) {
+            console.log('音效播放失败:', e);
+          }
+          setIsPlaying(false);
+          setIsPaused(false);
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error('音频加载失败:', e);
+          setIsLoading(false);
+          setIsPlaying(false);
+        };
+        
+        audioRef.current.load();
+        
+      } catch (error) {
+        console.error('TTS 错误:', error);
+        setIsLoading(false);
+        setIsPlaying(false);
+      }
+    } else {
+      setIsLoading(false);
+    }
+  }, [getAudioContext, stopCurrentPlayback]);
   
   // 上一条
   const playPrevious = useCallback(() => {
