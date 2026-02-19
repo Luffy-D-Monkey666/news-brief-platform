@@ -120,25 +120,27 @@ NEWS_SOURCES = {
         'https://www.deepmind.com/blog/rss.xml',           # DeepMind
         'https://machinelearning.apple.com/rss.xml',       # Apple ML
 
-        # ==================== 机器人（8个核心源）====================
+        # ==================== 机器人（5个核心源）====================
         'https://www.therobotreport.com/feed/',            # The Robot Report
         'https://robohub.org/feed/',                       # Robohub（学术机器人）
         'https://spectrum.ieee.org/feeds/topic/robotics.rss', # IEEE Spectrum机器人
         'https://www.automate.org/rss/news',               # Automate（工业机器人）
-        'https://www.reddit.com/r/robotics/.rss',          # Reddit 机器人（新增）
-        'https://www.reddit.com/r/teslabot/.rss',          # Reddit Tesla Bot（新增）
-        'https://www.reddit.com/r/singularity/.rss',       # Reddit Singularity（新增）
-        'https://bdtechtalks.com/feed/',                   # BD Tech Talks 机器人（新增）
+        'https://bdtechtalks.com/feed/',                   # BD Tech Talks 机器人
+        # 已移除：Reddit 论坛类源（讨论帖多，新闻价值低，消耗token）
+        # 'https://www.reddit.com/r/robotics/.rss',
+        # 'https://www.reddit.com/r/teslabot/.rss',
+        # 'https://www.reddit.com/r/singularity/.rss',
 
-        # ==================== AI编程/Agent（8个核心源）====================
+        # ==================== AI编程/Agent（7个核心源）====================
         'https://github.blog/feed/',                       # GitHub官方博客
         'https://code.visualstudio.com/feed.xml',          # VSCode官方
         'https://blog.stackblitz.com/rss/',                # StackBlitz
         'https://www.cursor.com/blog/rss.xml',             # Cursor官方
-        'https://www.latent.space/feed',                   # Latent Space（新增）
-        'https://lilianweng.github.io/index.xml',          # Lil'Log AI博客（新增）
-        'https://www.reddit.com/r/LocalLLaMA/.rss',        # Reddit LocalLLaMA（新增）
-        'https://simonwillison.net/atom/everything/',      # Simon Willison（新增）
+        'https://www.latent.space/feed',                   # Latent Space
+        'https://lilianweng.github.io/index.xml',          # Lil'Log AI博客
+        'https://simonwillison.net/atom/everything/',      # Simon Willison
+        # 已移除：Reddit LocalLLaMA（技术讨论为主，非新闻）
+        # 'https://www.reddit.com/r/LocalLLaMA/.rss',
 
         # ==================== 芯片半导体（4个核心源）====================
         'https://www.anandtech.com/rss/',                  # AnandTech
@@ -211,20 +213,21 @@ NEWS_SOURCES = {
         'https://www.crunchyroll.com/feed',                # Crunchyroll
         'https://myanimelist.net/rss/news.xml',            # MyAnimeList
 
-        # ==================== OP海贼王（4个核心源）====================
-        'https://www.reddit.com/r/OnePiece/.rss',          # Reddit OnePiece
+        # ==================== OP海贼王（2个核心源）====================
         'https://onepiece.fandom.com/wiki/Special:NewPages?feed=rss', # OP Wiki
-        # 'https://www.reddit.com/r/MemePiece/.rss',       # 已移除：meme内容不适合新闻聚合
         'https://comicbook.com/anime/feed/',               # ComicBook Anime
+        # 已移除：Reddit OnePiece（漫画讨论、剧透帖为主）
+        # 'https://www.reddit.com/r/OnePiece/.rss',
 
-        # ==================== TCG集换式卡牌（7个核心源）====================
-        'https://www.reddit.com/r/OnePieceTCG/.rss',       # Reddit OPCG
-        'https://www.reddit.com/r/PokemonTCG/.rss',        # Reddit PTCG
-        'https://www.reddit.com/r/yugioh/.rss',            # Reddit 游戏王
-        'https://www.reddit.com/r/magicTCG/.rss',          # Reddit MTG
-        'https://www.tcgplayer.com/blog/feed/',            # TCGPlayer Blog
-        'https://www.reddit.com/r/DigimonCardGame2020/.rss', # Reddit 数码宝贝TCG（新增）
-        'https://www.reddit.com/r/WeissSchwarz/.rss',      # Reddit WS（新增）
+        # ==================== TCG集换式卡牌（1个核心源）====================
+        'https://www.tcgplayer.com/blog/feed/',            # TCGPlayer Blog（官方新闻）
+        # 已移除：所有 Reddit TCG 论坛（卡组讨论、交易帖为主，非新闻）
+        # 'https://www.reddit.com/r/OnePieceTCG/.rss',
+        # 'https://www.reddit.com/r/PokemonTCG/.rss',
+        # 'https://www.reddit.com/r/yugioh/.rss',
+        # 'https://www.reddit.com/r/magicTCG/.rss',
+        # 'https://www.reddit.com/r/DigimonCardGame2020/.rss',
+        # 'https://www.reddit.com/r/WeissSchwarz/.rss',
 
         # ==================== 综合新闻（3个核心源）====================
         'https://feeds.feedburner.com/TechCrunch/',        # TechCrunch综合
