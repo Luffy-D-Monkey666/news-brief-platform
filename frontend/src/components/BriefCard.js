@@ -622,14 +622,14 @@ const BriefCard = ({ brief, isNew = false }) => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {brief.key_metrics.slice(0, 4).map((metric, i) => (
-                  <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50">
-                    <div className="text-xs text-gray-500 mb-1">{metric.name}</div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-lg font-bold text-gray-900">{metric.value}</span>
+                  <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50 overflow-hidden">
+                    <div className="text-xs text-gray-500 mb-1 truncate">{metric.name}</div>
+                    <div className="flex items-baseline gap-1 flex-wrap">
+                      <span className="text-lg font-bold text-gray-900 break-all">{metric.value}</span>
                       <span className="text-xs text-gray-500">{metric.unit}</span>
                     </div>
                     {metric.entity && (
-                      <div className="text-xs text-blue-600 mt-1">{metric.entity}</div>
+                      <div className="text-xs text-blue-600 mt-1 truncate">{metric.entity}</div>
                     )}
                   </div>
                 ))}
