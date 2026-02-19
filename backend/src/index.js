@@ -45,8 +45,13 @@ if (!REDIS_URL) {
 }
 
 // 中间件
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },  // 允许跨域加载音频
+}));
+app.use(cors({
+  origin: true,  // 允许所有来源
+  credentials: true,
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
