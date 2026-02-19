@@ -116,11 +116,11 @@ const TopicCard = ({ topic }) => {
                         {index + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-xs ${tier.color}`}>
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className={`text-xs whitespace-nowrap flex-shrink-0 ${tier.color}`}>
                             {tier.icon} {tier.label}
                           </span>
-                          <span className="text-xs text-gray-400 truncate max-w-[150px]">
+                          <span className="text-xs text-gray-400 truncate">
                             {brief.source && brief.source.length > 30 
                               ? brief.source.split(' ').slice(0, 3).join(' ') 
                               : brief.source}

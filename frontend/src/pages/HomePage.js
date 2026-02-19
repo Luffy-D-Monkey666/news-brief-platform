@@ -150,6 +150,29 @@ const HomePage = () => {
     }
   };
 
+  // 分类中文名称映射
+  const categoryNames = {
+    ai_technology: 'AI技术',
+    robotics: '机器人',
+    ai_programming: 'AI编程',
+    semiconductors: '芯片',
+    opcg: 'OPCG',
+    automotive: '汽车',
+    consumer_electronics: '消费电子',
+    one_piece: 'OP',
+    anime: '动漫',
+    tcg: 'TCG',
+    podcasts: '播客推荐',
+    finance_investment: '投资财经',
+    business_tech: '商业科技',
+    politics_world: '政治国际',
+    economy_policy: '经济政策',
+    health_medical: '健康医疗',
+    energy_environment: '能源环境',
+    entertainment_sports: '娱乐体育',
+    general: '综合'
+  };
+
   // 列表视图的简报卡片
   const ListViewCard = ({ brief, isNew }) => (
     <div className={`bg-white rounded-xl p-4 mb-3 border border-gray-200 hover:shadow-md transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}>
@@ -165,7 +188,7 @@ const HomePage = () => {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-              {brief.category}
+              {categoryNames[brief.category] || brief.category}
             </span>
             <span className="text-xs text-gray-400 flex items-center">
               <FaClock className="mr-1" />
