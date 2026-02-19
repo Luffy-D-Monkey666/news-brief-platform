@@ -28,6 +28,7 @@ const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
   const [hotTopics, setHotTopics] = useState([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
 
@@ -89,14 +90,22 @@ const HomePage = () => {
       setLoading(true);
       setCurrentPage(1);
       const hours = getHoursFromFilter();
-      const response = await getLatestBriefs(selectedCategory, 50, hours);
+      // 使用 getHistoryBriefs 获取第一页，这样能拿到总数
+      const response = await getHistoryBriefs(selectedCategory, 1, 50, hours);
       const sortedData = (response.data || []).sort((a, b) => {
         const dateA = new Date(a.created_at || a.published);
         const dateB = new Date(b.created_at || b.published);
         return dateB - dateA; // 最新的在前
       });
       setBriefs(sortedData);
-      setHasMore(response.data && response.data.length === 50);
+      // 设置真实总数
+      if (response.pagination) {
+        setTotalCount(response.pagination.total);
+        setHasMore(1 < response.pagination.pages);
+      } else {
+        setTotalCount(sortedData.length);
+        setHasMore(response.data && response.data.length === 50);
+      }
     } catch (error) {
       console.error('加载简报失败:', error);
       if (error.code === 'ECONNABORTED' && retryCount < 3) {
@@ -291,12 +300,14 @@ const HomePage = () => {
         </div>
 
         {/* 筛选结果统计 */}
-        {selectedTimeFilter !== 'all' && (
-          <div className="mb-4 text-sm text-gray-500">
-            找到 <span className="font-medium text-gray-900">{briefs.length}</span> 条
-            {TIME_FILTERS.find(f => f.key === selectedTimeFilter)?.label}的新闻
-          </div>
-        )}
+        <div className="mb-4 text-sm text-gray-500">
+          找到 <span className="font-medium text-gray-900">{totalCount}</span> 条
+          {selectedTimeFilter !== 'all' && TIME_FILTERS.find(f => f.key === selectedTimeFilter)?.label}
+          新闻
+          {briefs.length < totalCount && (
+            <span className="text-gray-400">（已加载 {briefs.length} 条）</span>
+          )}
+        </div>
 
         {viewMode === 'topics' ? (
           // 话题视图
