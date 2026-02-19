@@ -26,12 +26,21 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const REDIS_URL = process.env.REDIS_URL;
 
-// 调试信息：打印环境变量
+// 环境变量检查（脱敏输出）
+const maskUri = (uri) => {
+  if (!uri) return 'undefined';
+  try {
+    const url = new URL(uri);
+    if (url.password) url.password = '***';
+    if (url.username) url.username = url.username.substring(0, 3) + '***';
+    return url.toString();
+  } catch {
+    return uri.substring(0, 20) + '...';
+  }
+};
 console.log('=== 环境变量检查 ===');
-console.log('MONGODB_URI:', MONGODB_URI);
-console.log('MONGODB_URI type:', typeof MONGODB_URI);
-console.log('MONGODB_URI length:', MONGODB_URI ? MONGODB_URI.length : 0);
-console.log('REDIS_URL:', REDIS_URL);
+console.log('MONGODB_URI:', maskUri(MONGODB_URI));
+console.log('REDIS_URL:', maskUri(REDIS_URL));
 console.log('==================');
 
 // 检查必需的环境变量
@@ -97,8 +106,7 @@ const wsService = new WebSocketService(io);
 
 // 连接MongoDB
 console.log('=== 准备连接MongoDB ===');
-console.log('连接字符串:', MONGODB_URI);
-console.log('连接字符串开头:', MONGODB_URI.substring(0, 20));
+console.log('连接字符串:', maskUri(MONGODB_URI));
 console.log('=====================');
 
 mongoose.connect(MONGODB_URI, {
@@ -110,8 +118,7 @@ mongoose.connect(MONGODB_URI, {
     console.log('✅ MongoDB连接成功');
   })
   .catch((err) => {
-    console.error('❌ MongoDB连接失败:', err);
-    console.error('尝试连接的URI:', MONGODB_URI);
+    console.error('❌ MongoDB连接失败:', err.message);
     process.exit(1);
   });
 

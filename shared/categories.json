@@ -1,0 +1,28 @@
+{
+  "categories": [
+    { "id": "ai_technology", "name": "AI技术", "icon": "FaBrain", "color": "purple-600", "group": "tech" },
+    { "id": "robotics", "name": "机器人", "icon": "FaRobot", "color": "indigo-600", "group": "tech" },
+    { "id": "ai_programming", "name": "AI编程", "icon": "FaCode", "color": "blue-600", "group": "tech" },
+    { "id": "semiconductors", "name": "芯片", "icon": "FaMicrochip", "color": "gray-700", "group": "tech" },
+    { "id": "automotive", "name": "汽车", "icon": "FaCar", "color": "green-600", "group": "tech" },
+    { "id": "consumer_electronics", "name": "消费电子", "icon": "FaMobileAlt", "color": "cyan-600", "group": "tech" },
+    { "id": "podcasts", "name": "播客推荐", "icon": "FaPodcast", "color": "pink-600", "group": "tech" },
+    { "id": "finance_investment", "name": "投资财经", "icon": "FaChartLine", "color": "red-600", "group": "business" },
+    { "id": "business_tech", "name": "商业科技", "icon": "FaBolt", "color": "blue-600", "group": "business" },
+    { "id": "politics_world", "name": "政治国际", "icon": "FaLandmark", "color": "indigo-600", "group": "news" },
+    { "id": "economy_policy", "name": "经济政策", "icon": "FaDollarSign", "color": "yellow-600", "group": "news" },
+    { "id": "health_medical", "name": "健康医疗", "icon": "FaHeartbeat", "color": "pink-600", "group": "news" },
+    { "id": "energy_environment", "name": "能源环境", "icon": "FaLeaf", "color": "teal-600", "group": "news" },
+    { "id": "entertainment_sports", "name": "娱乐体育", "icon": "FaFilm", "color": "orange-600", "group": "news" },
+    { "id": "anime", "name": "动漫二次元", "icon": "FaPlay", "color": "purple-500", "group": "hobby" },
+    { "id": "one_piece", "name": "OP", "icon": "FaShip", "color": "red-600", "group": "hobby" },
+    { "id": "tcg", "name": "TCG", "icon": "FaLayerGroup", "color": "orange-500", "group": "hobby" },
+    { "id": "general", "name": "综合", "icon": "FaGlobe", "color": "gray-600", "group": "other" }
+  ],
+  "displayOrder": [
+    "podcasts", "finance_investment", "business_tech", "politics_world",
+    "economy_policy", "health_medical", "energy_environment", "entertainment_sports",
+    "anime", "one_piece", "tcg", "general"
+  ],
+  "deprecated": ["opcg"]
+}

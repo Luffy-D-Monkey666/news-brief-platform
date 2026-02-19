@@ -79,8 +79,11 @@ export const getTTSVoices = async () => {
   return api.get('/tts/voices');
 };
 
+// 默认音色（与后端保持一致）
+const DEFAULT_VOICE = 'BV700_V2_streaming';
+
 // 合成语音（返回音频 URL）
-export const synthesizeSpeech = async (text, voice = 'zh_female_news', options = {}) => {
+export const synthesizeSpeech = async (text, voice = DEFAULT_VOICE, options = {}) => {
   const response = await fetch(`${API_URL}/api/tts/synthesize`, {
     method: 'POST',
     headers: {
@@ -103,7 +106,7 @@ export const synthesizeSpeech = async (text, voice = 'zh_female_news', options =
 };
 
 // 获取简报语音 URL
-export const getBriefAudioUrl = (briefId, voice = 'zh_female_news') => {
+export const getBriefAudioUrl = (briefId, voice = DEFAULT_VOICE) => {
   return `${API_URL}/api/tts/brief/${briefId}?voice=${voice}`;
 };
 
