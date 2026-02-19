@@ -120,7 +120,8 @@ const BriefCard = ({ brief, isNew = false }) => {
 
   // 判断当前卡片是否正在播放
   const cardIndex = playlist.findIndex(b => b._id === brief._id);
-  const isCurrentCard = cardIndex === currentIndex && currentIndex >= 0;
+  // cardIndex >= 0 确保 brief 在 playlist 中，currentIndex >= 0 确保有正在播放的内容
+  const isCurrentCard = cardIndex >= 0 && cardIndex === currentIndex && currentIndex >= 0;
   const isPlaying = isCurrentCard && globalIsPlaying;
   const isPaused = isCurrentCard && globalIsPaused;
   const isCardLoading = isCurrentCard && isLoading;
