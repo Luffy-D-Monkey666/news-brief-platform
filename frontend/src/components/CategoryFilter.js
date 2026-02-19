@@ -15,7 +15,6 @@ import {
   FaCode,
   FaMobileAlt,
   FaShip,
-  FaPodcast,
   FaLayerGroup,  // TCG卡牌图标
   FaPlay         // 动漫图标
 } from 'react-icons/fa';
@@ -29,7 +28,7 @@ const categoryIcons = {
   semiconductors: { icon: FaMicrochip, color: 'text-gray-700' },
   automotive: { icon: FaCar, color: 'text-green-600' },
   consumer_electronics: { icon: FaMobileAlt, color: 'text-cyan-600' },
-  podcasts: { icon: FaPodcast, color: 'text-pink-600' },
+  // podcasts 已移除
   finance_investment: { icon: FaChartLine, color: 'text-red-600' },
   
   // 主流新闻分类
@@ -57,7 +56,7 @@ const categoryNames = {
   semiconductors: '芯片',
   automotive: '汽车',
   consumer_electronics: '消费电子',
-  podcasts: '播客推荐',
+  // podcasts 已移除
   finance_investment: '投资财经',
   business_tech: '商业科技',
   politics_world: '政治国际',
@@ -71,7 +70,7 @@ const categoryNames = {
   general: '综合'
 };
 
-// 分类顺序（动漫/OP/TCG放在综合前面）
+// 分类顺序（podcasts 已移除）
 const categoryOrder = [
   'ai_technology',
   'robotics', 
@@ -79,7 +78,7 @@ const categoryOrder = [
   'semiconductors',
   'automotive',
   'consumer_electronics',
-  'podcasts',
+  // 'podcasts' 已移除
   'finance_investment',
   'business_tech',
   'politics_world',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getLatestBriefs, getHistoryBriefs, getHotTopics } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
@@ -35,19 +35,16 @@ const HomePage = () => {
   const { latestBrief } = useWebSocket();
   
   // 获取当前时间筛选的小时数
-  const getHoursFromFilter = () => {
+  const getHoursFromFilter = useCallback(() => {
     const filter = TIME_FILTERS.find(f => f.key === selectedTimeFilter);
     return filter?.hours || null;
-  };
+  }, [selectedTimeFilter]);
 
-  // 加载初始数据
-  useEffect(() => {
-    loadBriefs();
-    if (viewMode === 'topics') {
-      loadTopics();
-    }
-  }, [selectedCategory, selectedTimeFilter, viewMode]);
-  
+  // 根据视图模式决定初始加载数量
+  const getInitialLimit = useCallback(() => {
+    return viewMode === 'audio' ? 10 : 50;
+  }, [viewMode]);
+
   // 加载热门话题
   const loadTopics = async () => {
     try {
@@ -63,34 +60,7 @@ const HomePage = () => {
     }
   };
 
-  // 同步更新播放列表
-  useEffect(() => {
-    setPlaylistFromBriefs(briefs);
-  }, [briefs, setPlaylistFromBriefs]);
-
-  // 监听新简报
-  useEffect(() => {
-    if (latestBrief) {
-      if (!selectedCategory || latestBrief.category === selectedCategory) {
-        setBriefs((prev) => {
-          const exists = prev.some((b) => b._id === latestBrief._id);
-          if (!exists) {
-            setNewBriefId(latestBrief._id);
-            setTimeout(() => setNewBriefId(null), 5000);
-            return [latestBrief, ...prev];
-          }
-          return prev;
-        });
-      }
-    }
-  }, [latestBrief, selectedCategory]);
-
-  // 根据视图模式决定初始加载数量
-  const getInitialLimit = () => {
-    return viewMode === 'audio' ? 10 : 50;
-  };
-
-  const loadBriefs = async (retryCount = 0) => {
+  const loadBriefs = useCallback(async (retryCount = 0) => {
     try {
       setLoading(true);
       setCurrentPage(1);
@@ -124,7 +94,37 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory, getInitialLimit, getHoursFromFilter]);
+
+  // 加载初始数据
+  useEffect(() => {
+    loadBriefs();
+    if (viewMode === 'topics') {
+      loadTopics();
+    }
+  }, [loadBriefs, viewMode]);
+
+  // 同步更新播放列表
+  useEffect(() => {
+    setPlaylistFromBriefs(briefs);
+  }, [briefs, setPlaylistFromBriefs]);
+
+  // 监听新简报
+  useEffect(() => {
+    if (latestBrief) {
+      if (!selectedCategory || latestBrief.category === selectedCategory) {
+        setBriefs((prev) => {
+          const exists = prev.some((b) => b._id === latestBrief._id);
+          if (!exists) {
+            setNewBriefId(latestBrief._id);
+            setTimeout(() => setNewBriefId(null), 5000);
+            return [latestBrief, ...prev];
+          }
+          return prev;
+        });
+      }
+    }
+  }, [latestBrief, selectedCategory]);
 
   const loadMoreBriefs = async () => {
     if (loadingMore || !hasMore) return;
@@ -170,7 +170,7 @@ const HomePage = () => {
     one_piece: 'OP',
     anime: '动漫',
     tcg: 'TCG',
-    podcasts: '播客推荐',
+    // podcasts 已移除
     finance_investment: '投资财经',
     business_tech: '商业科技',
     politics_world: '政治国际',
