@@ -155,25 +155,24 @@ NEWS_SOURCES = {
         'https://www.caranddriver.com/rss/all.xml',        # Car and Driver
         'https://cleantechnica.com/feed/',                 # CleanTechnica
 
-        # ==================== 消费电子（5个核心源）====================
+        # ==================== 消费电子（3个核心源）====================
         'https://www.theverge.com/rss/index.xml',          # The Verge
-        'https://www.engadget.com/rss.xml',                # Engadget
         'https://9to5mac.com/feed/',                       # 9to5Mac
         'https://9to5google.com/feed/',                    # 9to5Google
-        'https://www.gsmarena.com/rss-news-reviews.php3',  # GSMArena
+        # 已移除：Engadget（与 Verge 重复）、GSMArena（手机评测为主）
 
-        # ==================== 播客推荐（4个核心源）====================
-        'https://lexfridman.com/feed/podcast/',            # Lex Fridman Podcast
-        'https://feeds.megaphone.fm/hubaborhood',          # a16z Podcast
-        'https://feeds.simplecast.com/54nAGcIl',           # The Vergecast
-        'https://twimlai.com/feed/',                       # TWIML AI Podcast
+        # ==================== 播客推荐 ====================
+        # 已移除整个分类：播客内容不适合新闻聚合
+        # 'https://lexfridman.com/feed/podcast/',
+        # 'https://feeds.megaphone.fm/hubaborhood',
+        # 'https://feeds.simplecast.com/54nAGcIl',
+        # 'https://twimlai.com/feed/',
 
-        # ==================== 投资财经（5个核心源）====================
+        # ==================== 投资财经（3个核心源）====================
         'https://feeds.bloomberg.com/markets/news.rss',    # Bloomberg Markets
         'https://www.ft.com/rss/home',                     # Financial Times
-        'https://seekingalpha.com/feed.xml',               # Seeking Alpha
-        'https://www.coindesk.com/arc/outboundfeeds/rss/', # CoinDesk（加密）
         'https://www.economist.com/finance-and-economics/rss.xml', # Economist
+        # 已移除：Seeking Alpha（UGC质量参差）、CoinDesk（加密货币）
 
         # ==================== 商业科技（5个核心源）====================
         'https://techcrunch.com/feed/',                    # TechCrunch
