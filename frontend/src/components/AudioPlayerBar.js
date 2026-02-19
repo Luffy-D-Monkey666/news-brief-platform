@@ -73,7 +73,7 @@ const AudioPlayerBar = () => {
                       
                       return Object.entries(categories).map(([category, voices]) => (
                         <div key={category}>
-                          <div className="px-3 py-1 text-xs text-gray-400 font-medium sticky top-0 bg-white">
+                          <div className="px-3 py-1.5 text-xs text-blue-600 font-semibold sticky top-0 bg-blue-50 border-b border-blue-100 shadow-sm">
                             {category}
                           </div>
                           {voices.map(({ key, name }) => (
@@ -209,7 +209,7 @@ const AudioPlayerBar = () => {
                     
                     return Object.entries(categories).map(([category, voices]) => (
                       <div key={category}>
-                        <div className="px-3 py-1 text-xs text-gray-400 font-medium sticky top-0 bg-white">
+                        <div className="px-3 py-1.5 text-xs text-blue-600 font-semibold sticky top-0 bg-blue-50 border-b border-blue-100 shadow-sm">
                           {category}
                         </div>
                         {voices.map(({ key, name }) => (
