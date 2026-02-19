@@ -85,13 +85,19 @@ const HomePage = () => {
     }
   }, [latestBrief, selectedCategory]);
 
+  // 根据视图模式决定初始加载数量
+  const getInitialLimit = () => {
+    return viewMode === 'audio' ? 10 : 50;
+  };
+
   const loadBriefs = async (retryCount = 0) => {
     try {
       setLoading(true);
       setCurrentPage(1);
       const hours = getHoursFromFilter();
+      const initialLimit = getInitialLimit();
       // 使用 getHistoryBriefs 获取第一页，这样能拿到总数
-      const response = await getHistoryBriefs(selectedCategory, 1, 50, hours);
+      const response = await getHistoryBriefs(selectedCategory, 1, initialLimit, hours);
       const sortedData = (response.data || []).sort((a, b) => {
         const dateA = new Date(a.created_at || a.published);
         const dateB = new Date(b.created_at || b.published);
@@ -104,7 +110,7 @@ const HomePage = () => {
         setHasMore(1 < response.pagination.pages);
       } else {
         setTotalCount(sortedData.length);
-        setHasMore(response.data && response.data.length === 50);
+        setHasMore(response.data && response.data.length === initialLimit);
       }
     } catch (error) {
       console.error('加载简报失败:', error);
@@ -127,13 +133,15 @@ const HomePage = () => {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
       const hours = getHoursFromFilter();
-      const response = await getHistoryBriefs(selectedCategory, nextPage, 20, hours);
+      // 音频视图每次加载 10 条，其他视图加载 20 条
+      const loadLimit = viewMode === 'audio' ? 10 : 20;
+      const response = await getHistoryBriefs(selectedCategory, nextPage, loadLimit, hours);
 
       if (response.data && response.data.length > 0) {
         setBriefs((prev) => [...prev, ...response.data]);
         setCurrentPage(nextPage);
 
-        if (response.data.length < 20) {
+        if (response.data.length < loadLimit) {
           setHasMore(false);
         }
 
