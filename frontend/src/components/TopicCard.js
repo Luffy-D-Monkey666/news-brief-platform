@@ -120,8 +120,10 @@ const TopicCard = ({ topic }) => {
                           <span className={`text-xs ${tier.color}`}>
                             {tier.icon} {tier.label}
                           </span>
-                          <span className="text-xs text-gray-400">
-                            {brief.source}
+                          <span className="text-xs text-gray-400 truncate max-w-[150px]">
+                            {brief.source && brief.source.length > 30 
+                              ? brief.source.split(' ').slice(0, 3).join(' ') 
+                              : brief.source}
                           </span>
                         </div>
                         <h4 className="text-sm font-medium text-gray-800 line-clamp-2 mb-1">
