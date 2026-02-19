@@ -34,41 +34,23 @@ const playEndSound = (audioContext) => {
   setTimeout(() => createBeep(audioContext, 523.25, 0.2), 150); // C5
 };
 
-// 语音预设配置（火山引擎豆包音色 - 与官方控制台名称完全一致）
-// 根据用户提供的音色表更新
+// 语音预设配置（火山引擎豆包音色 - 使用已开通的 BV 系列）
 const voicePresets = {
-  // === 通用场景 ===
-  'zh_female_vv_uranus_bigtts': { name: 'vivi 2.0', description: '通用场景', lang: 'cn' },
-  'zh_female_xiaohe_uranus_bigtts': { name: '小何', description: '通用场景', lang: 'cn' },
-  'zh_male_m191_uranus_bigtts': { name: '云舟', description: '通用场景', lang: 'cn' },
-  'zh_male_taocheng_uranus_bigtts': { name: '小天', description: '通用场景', lang: 'cn' },
-  
-  // === 视频配音 ===
-  'zh_male_dayi_saturn_bigtts': { name: '大壹', description: '视频配音', lang: 'cn' },
-  'zh_female_mizai_saturn_bigtts': { name: '黑猫侦探社咪仔', description: '视频配音', lang: 'cn' },
-  'zh_female_jitangnv_saturn_bigtts': { name: '鸡汤女', description: '视频配音', lang: 'cn' },
-  'zh_female_meilinvyou_saturn_bigtts': { name: '魅力女友', description: '视频配音', lang: 'cn' },
-  'zh_female_santongyongns_saturn_bigtts': { name: '流畅女声', description: '视频配音', lang: 'cn' },
-  'zh_male_ruyayichen_saturn_bigtts': { name: '儒雅逸辰', description: '视频配音', lang: 'cn' },
-  
-  // === 角色扮演 ===
-  'saturn_zh_female_cancan_tob': { name: '知性灿灿', description: '角色扮演', lang: 'cn' },
-  'saturn_zh_female_keainvsheng_tob': { name: '可爱女生', description: '角色扮演', lang: 'cn' },
-  'saturn_zh_female_tiaopigongzhu_tob': { name: '调皮公主', description: '角色扮演', lang: 'cn' },
-  'saturn_zh_male_shuanglangshaonian_tob': { name: '爽朗少年', description: '角色扮演', lang: 'cn' },
-  'saturn_zh_male_tiancaitongzhuo_tob': { name: '天才同桌', description: '角色扮演', lang: 'cn' },
-  
-  // === 有声阅读 ===
-  'zh_female_xueayi_saturn_bigtts': { name: '儿童绘本', description: '有声阅读', lang: 'cn' },
-  
-  // === 英文音色 ===
-  'en_male_tim_uranus_bigtts': { name: 'Tim', description: '英文', lang: 'en' },
-  'en_female_dacey_uranus_bigtts': { name: 'Dacey', description: '英文', lang: 'en' },
-  'en_female_stokie_uranus_bigtts': { name: 'Stokie', description: '英文', lang: 'en' },
+  // 通用场景
+  'BV001_streaming': { name: '通用女声', description: '通用场景', lang: 'cn' },
+  'BV002_streaming': { name: '通用男声', description: '通用场景', lang: 'cn' },
+  // 特色音色
+  'BV051_streaming': { name: '奶气萌娃', description: '特色音色', lang: 'cn' },
+  'BV115_streaming': { name: '古风少御', description: '有声阅读', lang: 'cn' },
+  'BV102_streaming': { name: '儒雅青年', description: '有声阅读', lang: 'cn' },
+  'BV056_streaming': { name: '阳光男声', description: '视频配音', lang: 'cn' },
+  // 多语种
+  'BV504_streaming': { name: '活力男声-Jackson', description: '美式发音', lang: 'en' },
+  'BV503_streaming': { name: '活力女声-Ariana', description: '美式发音', lang: 'en' },
 };
 
-// 默认音色 - 使用知性灿灿（角色扮演类）
-const DEFAULT_VOICE = 'saturn_zh_female_cancan_tob';
+// 默认音色 - 使用通用女声
+const DEFAULT_VOICE = 'BV001_streaming';
 
 export const AudioPlayerProvider = ({ children }) => {
   // 播放列表状态
