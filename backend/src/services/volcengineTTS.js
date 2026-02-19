@@ -11,8 +11,8 @@ const https = require('https');
 const config = {
   appId: process.env.VOLC_APP_ID || '6922135515',
   accessToken: process.env.VOLC_ACCESS_TOKEN,
-  // 语音合成大模型-字符版使用 volcano_icl 集群
-  cluster: process.env.VOLC_CLUSTER || 'volcano_icl',
+  // 语音合成大模型-字符版使用 volcano_tts_v2 集群
+  cluster: process.env.VOLC_CLUSTER || 'volcano_tts_v2',
   // API 地址
   host: 'openspeech.bytedance.com',
   apiPath: '/api/v1/tts',
