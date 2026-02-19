@@ -113,6 +113,11 @@ export const AudioPlayerProvider = ({ children }) => {
   // 停止当前播放
   const stopCurrentPlayback = useCallback(() => {
     if (audioRef.current) {
+      // 清理事件监听器，避免重复触发
+      audioRef.current.oncanplaythrough = null;
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+      audioRef.current.onloadstart = null;
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.src = '';
@@ -151,9 +156,14 @@ export const AudioPlayerProvider = ({ children }) => {
         const audioUrl = getBriefAudioUrl(brief._id, voiceToUse);
         console.log(`[AudioPlayer] 播放: ${brief.title}, voice=${voiceToUse}`);
         
-        audioRef.current.src = audioUrl;
+        // 先清理旧的事件监听器
+        audioRef.current.oncanplaythrough = null;
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
         
+        // 设置新的事件监听器
         audioRef.current.oncanplaythrough = () => {
+          console.log('[AudioPlayer] 音频可以播放了');
           setIsLoading(false);
           setIsPlaying(true);
           setIsPaused(false);
@@ -164,6 +174,7 @@ export const AudioPlayerProvider = ({ children }) => {
         };
         
         audioRef.current.onended = () => {
+          console.log('[AudioPlayer] 播放结束');
           // 播放结束音效
           try {
             const audioContext = getAudioContext();
@@ -189,6 +200,8 @@ export const AudioPlayerProvider = ({ children }) => {
           setIsPlaying(false);
         };
         
+        // 设置 src 并加载
+        audioRef.current.src = audioUrl;
         audioRef.current.load();
         
       } catch (error) {
@@ -265,9 +278,14 @@ export const AudioPlayerProvider = ({ children }) => {
         const audioUrl = getBriefAudioUrl(brief._id, voiceToUse);
         console.log(`[AudioPlayer] 直接播放: ${brief.title}, voice=${voiceToUse}`);
         
-        audioRef.current.src = audioUrl;
+        // 先清理旧的事件监听器
+        audioRef.current.oncanplaythrough = null;
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
         
+        // 设置新的事件监听器
         audioRef.current.oncanplaythrough = () => {
+          console.log('[AudioPlayer] 音频可以播放了（直接播放）');
           setIsLoading(false);
           setIsPlaying(true);
           setIsPaused(false);
@@ -278,6 +296,7 @@ export const AudioPlayerProvider = ({ children }) => {
         };
         
         audioRef.current.onended = () => {
+          console.log('[AudioPlayer] 播放结束（直接播放）');
           // 播放结束音效
           try {
             const audioContext = getAudioContext();
@@ -294,6 +313,9 @@ export const AudioPlayerProvider = ({ children }) => {
           setIsLoading(false);
           setIsPlaying(false);
         };
+        
+        // 设置 src 并加载
+        audioRef.current.src = audioUrl;
         
         audioRef.current.load();
         
