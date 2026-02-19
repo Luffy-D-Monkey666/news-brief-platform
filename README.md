@@ -42,7 +42,7 @@
 - ✅ **连续播放** - 自动播放下一条新闻
 - ✅ **播放控制** - 播放/暂停、上一条/下一条
 - ✅ **音频视图** - 简化卡片模式，专注听新闻
-- ⏳ **云端TTS** - 火山引擎豆包语音合成（开发中）
+- ✅ **火山引擎 TTS** - 豆包语音合成，30+ 高质量音色
 
 ### 新闻分类（18个）
 
@@ -84,7 +84,7 @@
 | 前端 | React 18, Tailwind CSS, Socket.io-client, react-masonry-css |
 | 后端 | Node.js 18+, Express, MongoDB, Redis, Socket.io |
 | AI服务 | Python 3.9+, DeepSeek API, Feedparser, BeautifulSoup4 |
-| TTS | 火山引擎豆包语音合成（开发中） |
+| TTS | 火山引擎豆包语音合成 (30+ 音色) |
 | 部署 | Docker, Render |
 
 ---
@@ -151,7 +151,6 @@
 
 | 功能 | 说明 | 状态 |
 |------|------|------|
-| **火山引擎TTS** | 接入豆包语音合成，替代浏览器原生TTS | 🔧 调试中 |
 | **Yahoo Finance** | 实时股票数据接入 | ⏳ 待开发 |
 
 ### 📋 待规划
@@ -259,10 +258,99 @@ Render 免费版会在无流量时休眠。使用 [UptimeRobot](https://uptimero
 | 项目 | 月费用 | 说明 |
 |------|--------|------|
 | DeepSeek API | ~¥10 | 新闻处理，约 2300 tokens/条 |
+| 火山引擎 TTS | ~¥5-20 | 按字符计费，约 0.2元/万字符 |
 | Render | $0 | 免费版 + UptimeRobot 保活 |
 | MongoDB Atlas | $0 | 免费版 512MB |
 | UptimeRobot | $0 | 免费版 50 monitors |
-| **合计** | **~¥10/月** | |
+| **合计** | **~¥15-30/月** | |
+
+---
+
+## 🎤 火山引擎 TTS 部署指南
+
+本项目使用**火山引擎豆包语音合成**提供高质量中文 TTS 服务，支持 30+ 音色。
+
+### 前置条件
+
+1. **火山引擎账号** - 注册 [火山引擎](https://www.volcengine.com/)
+2. **开通语音技术服务** - 进入控制台开通「语音技术」
+3. **创建应用获取凭证** - 获取 App ID 和 Access Token
+
+### 获取凭证步骤
+
+1. 登录 [火山引擎控制台](https://console.volcengine.com/)
+2. 进入 **语音技术** → **语音合成**
+3. 点击 **创建应用**，填写应用名称
+4. 创建后获取：
+   - **App ID**: 如 `6922135515`
+   - **Access Token**: 在应用详情页生成
+
+### 配置环境变量
+
+在 Backend 服务的环境变量中添加：
+
+```bash
+# 火山引擎 TTS 配置
+VOLC_APP_ID=你的AppID
+VOLC_ACCESS_TOKEN=你的AccessToken
+VOLC_CLUSTER=volcano_tts
+```
+
+**Render 部署时**：在 Backend Service → Environment → Environment Variables 中添加以上变量。
+
+### 可用音色（30+）
+
+| 分类 | 音色 | Voice ID |
+|------|------|----------|
+| **通用场景** | 灿灿 2.0 ⭐ | `BV700_V2_streaming` |
+| | 炀炀 | `BV705_streaming` |
+| | 擎苍 2.0 | `BV701_V2_streaming` |
+| | 通用女声 | `BV001_streaming` |
+| | 通用男声 | `BV002_streaming` |
+| **超自然音色** | 梓梓 2.0 | `BV406_V2_streaming` |
+| | 燃燃 2.0 | `BV407_V2_streaming` |
+| **有声阅读** | 擎苍 | `BV701_streaming` |
+| | 阳光青年 | `BV123_streaming` |
+| | 古风少御 | `BV115_streaming` |
+| | 儒雅青年 | `BV102_streaming` |
+| | 温柔淑女 | `BV104_streaming` |
+| **智能助手** | 甜美小源 | `BV405_streaming` |
+| | 亲切女声 | `BV007_streaming` |
+| | 知性女声 | `BV009_streaming` |
+| **新闻播报** | 新闻女声 | `BV011_streaming` |
+| | 新闻男声 | `BV012_streaming` |
+| **视频配音** | 影视解说小帅 | `BV411_streaming` |
+| | 影视解说小美 | `BV412_streaming` |
+| **特色音色** | 奶气萌娃 | `BV051_streaming` |
+| | 天才童声 | `BV061_streaming` |
+| **英文** | Jackson (美式男) | `BV504_streaming` |
+| | Ariana (美式女) | `BV503_streaming` |
+
+### API 接口
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/tts/voices` | GET | 获取可用音色列表 |
+| `/api/tts/synthesize` | POST | 合成语音 (body: `{text, voice?}`) |
+| `/api/tts/brief/:id` | GET | 获取指定新闻的语音 (query: `?voice=xxx`) |
+
+### 计费说明
+
+- **计费单位**: 按字符数计费
+- **价格**: 约 0.2 元 / 万字符（具体以官网为准）
+- **免费额度**: 新用户有一定免费额度
+- **缓存机制**: 系统内置 30 分钟音频缓存，减少重复调用
+
+### 常见问题
+
+**Q: 提示 "未配置 Access Token"？**
+A: 检查环境变量 `VOLC_ACCESS_TOKEN` 是否正确设置。
+
+**Q: 提示 "错误码 xxxx"？**
+A: 参考[火山引擎错误码文档](https://www.volcengine.com/docs/6561/79820)排查。
+
+**Q: 音频播放卡顿？**
+A: 首次合成需要 1-2 秒，后续会命中缓存。检查网络状况。
 
 ---
 
