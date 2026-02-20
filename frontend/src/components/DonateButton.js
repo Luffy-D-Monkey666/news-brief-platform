@@ -42,7 +42,7 @@ const DonateButton = () => {
               <img
                 src="/donate/wechat-pay.jpg"
                 alt="微信支付"
-                className="w-36 h-36 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-48 cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/wechat-pay.jpg')}
               />
             </div>
@@ -53,7 +53,7 @@ const DonateButton = () => {
               <img
                 src="/donate/alipay.jpg"
                 alt="支付宝"
-                className="w-36 h-36 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-48 cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/alipay.jpg')}
               />
             </div>
