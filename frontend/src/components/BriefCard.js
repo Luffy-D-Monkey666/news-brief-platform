@@ -401,7 +401,7 @@ const BriefCard = ({ brief, isNew = false }) => {
         )}
 
         {/* 内容区域 */}
-        <div className="p-5">
+        <div className="p-4">
           {/* 没有视频和图片时的分类标签 + 来源可信度 */}
           {!brief.video && !brief.image && (
             <div className="flex items-center justify-between mb-3">
@@ -531,7 +531,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 摘要 - 结构化显示 */}
           {summary.hasStructure ? (
-            <div className="space-y-5 mb-5">
+            <div className="space-y-4 mb-4">
               {/* 事件概述 - 始终显示 */}
               {summary.overview && (
                 <div>
@@ -616,7 +616,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           ) : (
             // 非结构化摘要
-            <div className="mb-5 p-4 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed whitespace-pre-line">
+            <div className="mb-4 p-4 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed whitespace-pre-line">
               {isMobile && !isExpanded ? (
                 <>
                   {brief.summary.length > 150 ? `${brief.summary.slice(0, 150)}...` : brief.summary}
@@ -650,7 +650,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <>
           {/* 股票信息（仅财经/商业类显示） */}
           {brief.stock_info && brief.stock_info.ticker && (
-            <div className="mb-5 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <span className="text-green-600 text-sm">📈</span>
@@ -702,7 +702,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 关键指标（如果有数字数据） */}
           {brief.key_metrics && brief.key_metrics.length > 0 && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-blue-600">📊</span>
                 <span className="text-base font-semibold text-blue-800">关键数据</span>
@@ -744,7 +744,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 背景知识（仅重要新闻显示） */}
           {brief.background && brief.background.context && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-slate-600">📚</span>
                 <span className="text-base font-semibold text-slate-700">背景知识</span>
@@ -776,7 +776,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 技术解读（仅AI/机器人/芯片类显示） */}
           {brief.tech_insight && brief.tech_insight.principle && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-violet-600">🔬</span>
                 <span className="text-base font-semibold text-violet-800">技术解读</span>
@@ -786,7 +786,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                   </span>
                 )}
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {brief.tech_insight.principle && (
                   <div>
                     <div className="text-xs text-violet-600 font-medium mb-1">技术原理</div>
@@ -805,7 +805,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 融资历史（仅融资新闻显示） */}
           {brief.funding_history && brief.funding_history.company && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-emerald-600">💰</span>
                 <span className="text-base font-semibold text-emerald-800">融资历史 · {brief.funding_history.company}</span>
@@ -813,7 +813,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               
               {/* 融资轮次时间线 */}
               {brief.funding_history.rounds && brief.funding_history.rounds.length > 0 && (
-                <div className="space-y-3 mb-3">
+                <div className="space-y-2 mb-3">
                   {brief.funding_history.rounds.map((round, i) => {
                     // 格式化金额：如果是纯数字，补上单位
                     const formatAmount = (amt) => {
@@ -871,7 +871,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 供应链视角（仅消费电子/汽车类显示） */}
           {brief.supply_chain_insight && brief.supply_chain_insight.impact && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-orange-600">🔗</span>
                 <span className="text-base font-semibold text-orange-800">供应链视角</span>
@@ -917,7 +917,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 行动建议（仅财经/商业类显示） */}
           {brief.action_advice && (
-            <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
               {(() => {
                 const text = brief.action_advice;
                 // 尝试分离风险提示和行动建议
@@ -926,7 +926,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                 
                 if (riskMatch || actionMatch) {
                   return (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {riskMatch && riskMatch[1]?.trim() && (
                         <div>
                           <div className="flex items-center gap-1.5 mb-1.5">
@@ -964,7 +964,7 @@ const BriefCard = ({ brief, isNew = false }) => {
 
           {/* 关键实体背景（entities） */}
           {brief.entities && brief.entities.length > 0 && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-xl">
+            <div className="mb-4 p-4 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-cyan-600">📌</span>
                 <span className="text-base font-semibold text-cyan-800">关键实体</span>
