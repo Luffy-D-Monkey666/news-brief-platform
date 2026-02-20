@@ -92,12 +92,6 @@ const HomePage = () => {
     }
   };
 
-  // 清除搜索
-  const clearSearch = () => {
-    setSearchQuery('');
-    setSearchResults(null);
-  };
-
   const loadBriefs = useCallback(async (retryCount = 0) => {
     try {
       setLoading(true);
@@ -133,6 +127,14 @@ const HomePage = () => {
       setLoading(false);
     }
   }, [selectedCategory, getInitialLimit, getHoursFromFilter]);
+
+  // 清除搜索 - 恢复当前筛选条件下的全量新闻
+  const clearSearch = useCallback(() => {
+    setSearchQuery('');
+    setSearchResults(null);
+    // 重新加载当前筛选条件的新闻
+    loadBriefs();
+  }, [loadBriefs]);
 
   // 加载初始数据
   useEffect(() => {
