@@ -1,11 +1,13 @@
 # 实体知识库关联服务
 # 复用 AI 输出的 entities 字段，自动关联到知识库
+# 同时支持预置实体的自动匹配（基于标题/摘要文本）
 
 import logging
 import requests
 import json
 import os
-from typing import Dict, List, Optional
+import re
+from typing import Dict, List, Optional, Set
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,10 @@ ENTITY_ACTIVATION_THRESHOLD = int(os.getenv('ENTITY_ACTIVATION_THRESHOLD', '3'))
 
 # 跳过实体关联的分类（节省 token）
 SKIP_ENTITY_CATEGORIES = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
+
+# 预置实体缓存（启动时加载）
+_preset_entities_cache: List[Dict] = []
+_preset_cache_loaded = False
 
 
 class EntityService:
@@ -33,17 +39,97 @@ class EntityService:
         self.api_base = f"{BACKEND_URL}/api/entities"
         self.ai_processor = ai_processor
         logger.info(f"实体服务初始化，API: {self.api_base}, 激活阈值: {ENTITY_ACTIVATION_THRESHOLD}")
+        
+        # 加载预置实体缓存
+        self._load_preset_entities()
+    
+    def _load_preset_entities(self):
+        """加载所有预置实体到缓存（用于文本匹配）"""
+        global _preset_entities_cache, _preset_cache_loaded
+        
+        if _preset_cache_loaded:
+            return
+        
+        try:
+            # 获取所有预置实体（is_preset=true 或 news_count>0）
+            resp = requests.get(
+                f"{self.api_base}",
+                params={'limit': 500},  # 获取足够多的实体
+                timeout=10
+            )
+            
+            if resp.status_code == 200:
+                data = resp.json()
+                if data.get('success') and data.get('data'):
+                    entities = data['data']
+                    # 只缓存已激活的实体（is_preset=true 或有新闻关联的）
+                    for entity in entities:
+                        if entity.get('is_preset') or entity.get('news_count', 0) > 0:
+                            _preset_entities_cache.append({
+                                'id': str(entity['_id']),
+                                'name': entity['name'],
+                                'aliases': entity.get('aliases', []),
+                                'type': entity.get('type', 'concept')
+                            })
+                    
+                    _preset_cache_loaded = True
+                    logger.info(f"预置实体缓存已加载: {len(_preset_entities_cache)} 个实体")
+        except Exception as e:
+            logger.warning(f"加载预置实体缓存失败: {e}")
+    
+    def refresh_preset_cache(self):
+        """强制刷新预置实体缓存"""
+        global _preset_entities_cache, _preset_cache_loaded
+        _preset_entities_cache = []
+        _preset_cache_loaded = False
+        self._load_preset_entities()
+        logger.info("预置实体缓存已刷新")
+    
+    def _match_preset_entities(self, text: str) -> List[Dict]:
+        """
+        在文本中匹配预置实体
+        
+        Args:
+            text: 要匹配的文本（标题+摘要）
+            
+        Returns:
+            匹配到的实体列表 [{'id': ..., 'name': ..., 'type': ...}]
+        """
+        if not _preset_entities_cache:
+            self._load_preset_entities()
+        
+        matched = []
+        matched_ids: Set[str] = set()
+        
+        for entity in _preset_entities_cache:
+            entity_id = entity['id']
+            if entity_id in matched_ids:
+                continue
+            
+            # 检查主名称
+            name = entity['name']
+            if name and len(name) >= 2 and name in text:
+                matched.append(entity)
+                matched_ids.add(entity_id)
+                continue
+            
+            # 检查别名
+            for alias in entity.get('aliases', []):
+                if alias and len(alias) >= 2 and alias in text:
+                    matched.append(entity)
+                    matched_ids.add(entity_id)
+                    break
+        
+        return matched
     
     def process_brief_entities(self, brief: Dict, brief_id: str) -> int:
         """
         处理简报中的实体，关联到知识库
         
         流程：
-        1. 查找实体是否存在
-        2. 如果存在且 news_count > 0（已激活），直接关联新闻
-        3. 如果存在但未激活，增加提及计数，检查是否达到阈值
-        4. 如果不存在，创建并记录提及
-        5. 达到阈值时激活实体（可选：AI生成时间轴）
+        1. 先基于标题/摘要匹配预置实体（知名实体）
+        2. 再处理 AI 识别的 entities 字段（非知名实体）
+        3. 关联新闻到所有匹配的实体
         
         Args:
             brief: 简报数据（含 entities 字段）
@@ -58,13 +144,41 @@ class EntityService:
             logger.debug(f"跳过实体识别: 分类 {category} 在排除列表中")
             return 0
         
-        entities = brief.get('entities', [])
-        if not entities:
-            return 0
-        
         linked_count = 0
         date_str = datetime.now().strftime('%Y-%m-%d')
         category = brief.get('category', 'general')
+        linked_entity_ids: Set[str] = set()
+        
+        # === 第一步：匹配预置实体（基于标题+摘要文本） ===
+        title = brief.get('title', '') or brief.get('title_zh', '')
+        summary = brief.get('summary', '')
+        search_text = f"{title} {summary}"
+        
+        preset_matches = self._match_preset_entities(search_text)
+        
+        for entity in preset_matches:
+            entity_id = entity['id']
+            if entity_id in linked_entity_ids:
+                continue
+            
+            try:
+                success = self._link_news_to_entity(
+                    entity_id=entity_id,
+                    brief_id=brief_id,
+                    date=date_str,
+                    category=category,
+                    relevance=f"文本匹配: {entity['name']}"
+                )
+                
+                if success:
+                    linked_count += 1
+                    linked_entity_ids.add(entity_id)
+                    logger.debug(f"预置实体关联成功: {entity['name']} -> {brief_id}")
+            except Exception as e:
+                logger.warning(f"预置实体关联失败 [{entity['name']}]: {e}")
+        
+        # === 第二步：处理 AI 识别的实体（非知名实体） ===
+        entities = brief.get('entities', [])
         
         for entity_data in entities:
             try:
@@ -75,6 +189,10 @@ class EntityService:
                 # 1. 查找或记录提及
                 entity_id, is_active = self._find_or_mention_entity(entity_data)
                 if not entity_id:
+                    continue
+                
+                # 跳过已经关联过的（避免和预置实体重复）
+                if entity_id in linked_entity_ids:
                     continue
                 
                 # 2. 只有已激活的实体才关联新闻
@@ -89,6 +207,7 @@ class EntityService:
                     
                     if success:
                         linked_count += 1
+                        linked_entity_ids.add(entity_id)
                         logger.debug(f"实体关联成功: {name} -> {brief_id}")
                 else:
                     logger.debug(f"实体未激活，跳过关联: {name}")
@@ -96,6 +215,9 @@ class EntityService:
             except Exception as e:
                 logger.warning(f"处理实体失败 [{entity_data.get('name')}]: {e}")
                 continue
+        
+        if linked_count > 0:
+            logger.info(f"简报 {brief_id} 关联了 {linked_count} 个实体")
         
         return linked_count
     
