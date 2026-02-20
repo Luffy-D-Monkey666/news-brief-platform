@@ -33,18 +33,17 @@ const FloatingToolbar = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 滚动到功能区（搜索栏上方）
+  // 滚动到功能区（搜索栏上方，即 main 区域顶部）
   const scrollToToolbar = () => {
-    const searchForm = document.querySelector('form[class*="flex gap-2"]');
-    if (searchForm) {
-      const offset = searchForm.offsetTop - 20;
-      window.scrollTo({ top: offset, behavior: 'smooth' });
+    const main = document.querySelector('main');
+    if (main) {
+      // 获取 sticky header 的高度，滚动到 main 顶部减去 header 高度
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 0;
+      const targetPosition = main.offsetTop - headerHeight - 10;
+      window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
     } else {
-      // 备用：滚动到 main 区域顶部
-      const main = document.querySelector('main');
-      if (main) {
-        window.scrollTo({ top: main.offsetTop - 20, behavior: 'smooth' });
-      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
