@@ -303,10 +303,14 @@ router.post('/:id/activate', async (req, res) => {
     if (description) {
       entity.description = description;
     }
+    
+    // 标记为已激活（设置 is_active 字段）
+    entity.is_active = true;
     entity.is_preset = false;  // 标记为非预置（AI生成）
+    
     await entity.save();
 
-    res.json({ success: true, data: entity });
+    res.json({ success: true, data: entity, activated: true });
   } catch (error) {
     console.error('激活实体失败:', error);
     res.status(500).json({ success: false, error: error.message });

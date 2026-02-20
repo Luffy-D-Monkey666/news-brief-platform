@@ -62,9 +62,9 @@ class EntityService:
                 data = resp.json()
                 if data.get('success') and data.get('data'):
                     entities = data['data']
-                    # 只缓存已激活的实体（is_preset=true 或有新闻关联的）
+                    # 只缓存已激活的实体（is_preset=true 或 is_active=true 或有新闻关联的）
                     for entity in entities:
-                        if entity.get('is_preset') or entity.get('news_count', 0) > 0:
+                        if entity.get('is_preset') or entity.get('is_active') or entity.get('news_count', 0) > 0:
                             _preset_entities_cache.append({
                                 'id': str(entity['_id']),
                                 'name': entity['name'],
@@ -255,8 +255,8 @@ class EntityService:
                     entity = data['data']
                     entity_id = str(entity['_id'])
                     
-                    # 已激活（news_count > 0 或 is_preset）
-                    if entity.get('news_count', 0) > 0 or entity.get('is_preset'):
+                    # 已激活（news_count > 0 或 is_preset 或 is_active）
+                    if entity.get('news_count', 0) > 0 or entity.get('is_preset') or entity.get('is_active'):
                         return (entity_id, True)
                     
                     # 未激活，增加提及计数
