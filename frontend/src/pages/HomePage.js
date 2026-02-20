@@ -66,17 +66,21 @@ const HomePage = () => {
     }
   };
 
-  // 搜索新闻
-  const handleSearch = async (e) => {
-    e?.preventDefault();
-    if (!searchQuery.trim() || searchQuery.trim().length < 2) return;
+  // 搜索新闻 - 支持传入搜索词或使用当前 searchQuery
+  const handleSearch = async (queryOrEvent) => {
+    // 判断是事件还是直接传入的搜索词
+    const isEvent = queryOrEvent?.preventDefault;
+    if (isEvent) queryOrEvent.preventDefault();
+    
+    const query = typeof queryOrEvent === 'string' ? queryOrEvent : searchQuery;
+    if (!query?.trim() || query.trim().length < 2) return;
     
     try {
       setIsSearching(true);
-      const result = await searchBriefs(searchQuery.trim(), selectedCategory);
+      const result = await searchBriefs(query.trim(), selectedCategory);
       if (result.success) {
         setSearchResults({
-          query: searchQuery.trim(),
+          query: query.trim(),
           data: result.data || [],
           total: result.pagination?.total || 0
         });
@@ -456,7 +460,7 @@ const HomePage = () => {
             </div>
           )
         ) : searchResults ? (
-          // 搜索结果视图
+          // 搜索结果视图 - 根据当前视图模式渲染
           searchResults.data.length === 0 ? (
             <div className="text-center py-32 bg-white rounded-2xl">
               <p className="text-gray-500 text-xl">未找到相关新闻</p>
@@ -464,7 +468,7 @@ const HomePage = () => {
                 试试其他关键词
               </p>
             </div>
-          ) : (
+          ) : viewMode === 'card' ? (
             <Masonry
               breakpointCols={{ default: 4, 1536: 4, 1280: 3, 1024: 3, 768: 2, 640: 1 }}
               className="masonry-grid"
@@ -474,6 +478,18 @@ const HomePage = () => {
                 <BriefCard key={brief._id} brief={brief} />
               ))}
             </Masonry>
+          ) : viewMode === 'audio' ? (
+            <div className="space-y-3 max-w-3xl mx-auto">
+              {searchResults.data.map((brief, index) => (
+                <AudioViewCard key={brief._id} brief={brief} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-0">
+              {searchResults.data.map((brief) => (
+                <ListViewCard key={brief._id} brief={brief} />
+              ))}
+            </div>
           )
         ) : loading ? (
           <div className="flex items-center justify-center py-32">
@@ -595,6 +611,7 @@ const HomePage = () => {
         viewMode={viewMode}
         setViewMode={setViewMode}
         onRefresh={loadBriefs}
+        clearSearch={clearSearch}
       />
     </div>
   );

@@ -8,7 +8,8 @@ const FloatingToolbar = ({
   isSearching,
   viewMode,
   setViewMode,
-  onRefresh 
+  onRefresh,
+  clearSearch
 }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
@@ -41,12 +42,14 @@ const FloatingToolbar = ({
     }
   };
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = async (e) => {
     e.preventDefault();
     if (localSearchQuery.trim().length < 2) return;
+    // 先更新搜索词，再执行搜索
     setSearchQuery(localSearchQuery);
-    onSearch(e);
     setShowToolbar(false);
+    // 直接调用搜索，传入搜索词
+    await onSearch(localSearchQuery.trim());
     // 搜索后滚动到新闻列表
     setTimeout(scrollToNews, 300);
   };
@@ -61,6 +64,8 @@ const FloatingToolbar = ({
   const handleViewChange = (mode) => {
     setViewMode(mode);
     setShowToolbar(false);
+    // 视图切换后滚动到新闻列表
+    setTimeout(scrollToNews, 100);
   };
 
   return (
