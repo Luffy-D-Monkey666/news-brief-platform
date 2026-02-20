@@ -68,6 +68,28 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/entities/search/:name - 按名称精确查找实体（必须在 /:id 前）
+router.get('/search/:name', async (req, res) => {
+  try {
+    const name = decodeURIComponent(req.params.name);
+    
+    // 先精确匹配，再匹配别名
+    let entity = await Entity.findOne({ name });
+    if (!entity) {
+      entity = await Entity.findOne({ aliases: name });
+    }
+
+    if (!entity) {
+      return res.json({ success: true, data: null });
+    }
+
+    res.json({ success: true, data: entity });
+  } catch (error) {
+    console.error('搜索实体失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // GET /api/entities/:id - 获取实体详情
 router.get('/:id', async (req, res) => {
   try {
@@ -176,28 +198,6 @@ router.get('/:id/timeline', async (req, res) => {
   }
 });
 
-// GET /api/entities/search/:name - 按名称精确查找实体
-router.get('/search/:name', async (req, res) => {
-  try {
-    const name = req.params.name;
-    
-    // 先精确匹配，再匹配别名
-    let entity = await Entity.findOne({ name });
-    if (!entity) {
-      entity = await Entity.findOne({ aliases: name });
-    }
-
-    if (!entity) {
-      return res.json({ success: true, data: null });
-    }
-
-    res.json({ success: true, data: entity });
-  } catch (error) {
-    console.error('搜索实体失败:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
 // POST /api/entities - 创建新实体（内部使用）
 router.post('/', async (req, res) => {
   try {
@@ -230,6 +230,84 @@ router.post('/', async (req, res) => {
     res.status(201).json({ success: true, data: entity });
   } catch (error) {
     console.error('创建实体失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/entities/mention - 增加实体提及计数（用于阈值判断）
+router.post('/mention', async (req, res) => {
+  try {
+    const { name, type, context } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ success: false, error: '缺少实体名称' });
+    }
+
+    // 查找或创建"待激活"实体记录
+    let entity = await Entity.findOne({
+      $or: [{ name }, { aliases: name }]
+    });
+
+    if (entity) {
+      // 已存在，增加提及计数
+      entity.mention_count = (entity.mention_count || 0) + 1;
+      await entity.save();
+      
+      return res.json({
+        success: true,
+        data: entity,
+        action: 'incremented',
+        mention_count: entity.mention_count
+      });
+    }
+
+    // 不存在，创建新的（未激活状态，news_count=0）
+    entity = new Entity({
+      name,
+      type: type || 'concept',
+      description: context || '',
+      aliases: [],
+      base_timeline: [],
+      mention_count: 1,
+      news_count: 0  // 未激活时不关联新闻
+    });
+    await entity.save();
+
+    res.status(201).json({
+      success: true,
+      data: entity,
+      action: 'created',
+      mention_count: 1
+    });
+  } catch (error) {
+    console.error('记录实体提及失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/entities/:id/activate - 激活实体（达到阈值后调用）
+router.post('/:id/activate', async (req, res) => {
+  try {
+    const { base_timeline, description } = req.body;
+
+    const entity = await Entity.findById(req.params.id);
+    if (!entity) {
+      return res.status(404).json({ success: false, error: '实体不存在' });
+    }
+
+    // 更新基础时间轴和描述
+    if (base_timeline && base_timeline.length > 0) {
+      entity.base_timeline = base_timeline;
+    }
+    if (description) {
+      entity.description = description;
+    }
+    entity.is_preset = false;  // 标记为非预置（AI生成）
+    await entity.save();
+
+    res.json({ success: true, data: entity });
+  } catch (error) {
+    console.error('激活实体失败:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

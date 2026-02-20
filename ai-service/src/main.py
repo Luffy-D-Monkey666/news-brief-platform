@@ -48,11 +48,11 @@ class NewsService:
         self.topic_service = TopicService(self.db.db)
         logger.info("话题聚合服务已启用")
         
-        # 实体知识库服务
+        # 实体知识库服务（传入 AI 处理器用于生成时间轴）
         try:
-            self.entity_service = EntityService()
+            self.entity_service = EntityService(ai_processor=self.processor.ai)
             self.entity_enabled = True
-            logger.info("实体知识库服务已启用")
+            logger.info("实体知识库服务已启用（含 AI 时间轴生成）")
         except Exception as e:
             logger.warning(f"实体知识库服务初始化失败: {e}")
             self.entity_service = None
