@@ -10,6 +10,7 @@ import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
 import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook, FaSearch, FaTimes } from 'react-icons/fa';
 import DonateButton from '../components/DonateButton';
+import FloatingToolbar from '../components/FloatingToolbar';
 
 // 时间筛选选项
 const TIME_FILTERS = [
@@ -582,6 +583,18 @@ const HomePage = () => {
           </p>
         </div>
       </footer>
+
+      {/* 浮动工具栏 */}
+      <FloatingToolbar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+        isSearching={isSearching}
+        selectedTimeFilter={selectedTimeFilter}
+        setSelectedTimeFilter={setSelectedTimeFilter}
+        timeFilters={TIME_FILTERS}
+        onRefresh={loadBriefs}
+      />
     </div>
   );
 };
