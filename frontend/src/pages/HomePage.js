@@ -9,6 +9,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
 import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook } from 'react-icons/fa';
+import DonateButton from '../components/DonateButton';
 
 // 时间筛选选项
 const TIME_FILTERS = [
@@ -234,13 +235,16 @@ const HomePage = () => {
               <h1 className="text-3xl font-bold text-white">NewsHub</h1>
               <p className="text-gray-400 text-sm mt-1">AI驱动的全球新闻聚合平台</p>
             </div>
-            <Link
-              to="/knowledge"
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
-            >
-              <FaBook />
-              知识库
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/knowledge"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
+              >
+                <FaBook />
+                知识库
+              </Link>
+              <DonateButton />
+            </div>
           </div>
         </div>
       </header>
