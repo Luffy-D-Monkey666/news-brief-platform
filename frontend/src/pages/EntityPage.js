@@ -177,11 +177,106 @@ const NewsItemCard = ({ news, config, categoryNames }) => {
         </div>
       </div>
       
-      {/* 展开的完整内容 */}
+      {/* 展开的完整内容 - 结构化样式 */}
       {isExpanded && news.summary && (
         <div className="px-4 pb-4 pt-0 border-t border-gray-100">
-          <div className="mt-3 text-sm text-gray-700 whitespace-pre-line leading-relaxed bg-gray-50 rounded-lg p-3">
-            {news.summary}
+          <div className="mt-3 space-y-4">
+            {(() => {
+              const summary = news.summary;
+              // 解析结构化摘要
+              const sections = [];
+              
+              // 事件概述
+              const overviewMatch = summary.match(/事件概述[:：]\s*([^\n]+)/);
+              if (overviewMatch) {
+                sections.push({ type: 'overview', content: overviewMatch[1].trim() });
+              }
+              
+              // 原文引用
+              const quoteMatch = summary.match(/原文引用[:：]\s*([^\n]+)/);
+              if (quoteMatch) {
+                sections.push({ type: 'quote', content: quoteMatch[1].trim() });
+              }
+              
+              // 重要细节
+              const detailsMatch = summary.match(/重要细节[:：]?\s*([\s\S]*?)(?=后续影响|$)/);
+              if (detailsMatch) {
+                const details = detailsMatch[1].split(/[•·]/).filter(d => d.trim()).map(d => d.trim());
+                if (details.length > 0) {
+                  sections.push({ type: 'details', content: details });
+                }
+              }
+              
+              // 后续影响
+              const impactMatch = summary.match(/后续影响[:：]\s*([^\n]+)/);
+              if (impactMatch) {
+                sections.push({ type: 'impact', content: impactMatch[1].trim() });
+              }
+              
+              // 如果没有解析到结构，直接显示原文
+              if (sections.length === 0) {
+                return (
+                  <div className="text-sm text-gray-700 whitespace-pre-line leading-relaxed bg-gray-50 rounded-lg p-3">
+                    {summary}
+                  </div>
+                );
+              }
+              
+              return sections.map((section, idx) => {
+                if (section.type === 'overview') {
+                  return (
+                    <div key={idx} className="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-blue-600">📋</span>
+                        <span className="text-sm font-semibold text-blue-800">事件概述</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{section.content}</p>
+                    </div>
+                  );
+                }
+                if (section.type === 'quote') {
+                  return (
+                    <div key={idx} className="bg-gray-50 rounded-lg p-3 border-l-4 border-gray-400">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-gray-500">💬</span>
+                        <span className="text-sm font-semibold text-gray-700">原文引用</span>
+                      </div>
+                      <p className="text-sm text-gray-600 italic leading-relaxed">{section.content}</p>
+                    </div>
+                  );
+                }
+                if (section.type === 'details') {
+                  return (
+                    <div key={idx} className="bg-orange-50 rounded-lg p-3 border-l-4 border-orange-400">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-orange-600">📌</span>
+                        <span className="text-sm font-semibold text-orange-800">重要细节</span>
+                      </div>
+                      <ul className="space-y-1.5">
+                        {section.content.map((detail, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                            <span className="text-orange-400 mt-1">•</span>
+                            <span>{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                }
+                if (section.type === 'impact') {
+                  return (
+                    <div key={idx} className="bg-green-50 rounded-lg p-3 border-l-4 border-green-400">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-green-600">📈</span>
+                        <span className="text-sm font-semibold text-green-800">后续影响</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{section.content}</p>
+                    </div>
+                  );
+                }
+                return null;
+              });
+            })()}
           </div>
         </div>
       )}
