@@ -14,19 +14,14 @@ class ContentQualityFilter:
     """内容质量过滤器"""
 
     def __init__(self):
-        # 高质量来源白名单 - 跳过质量过滤
+        # 高质量来源白名单 - 跳过质量过滤（仅限低频高质量源）
         self.trusted_sources = {
-            'nature.com',           # Nature
-            'science.org',          # Science
-            'reuters.com',          # 路透社
-            'bbc.co.uk',            # BBC
-            'nytimes.com',          # 纽约时报
-            'theguardian.com',      # 卫报
-            'economist.com',        # 经济学人
-            'wsj.com',              # 华尔街日报
-            'technologyreview.com', # MIT Technology Review
-            'arxiv.org',            # arXiv 论文
+            'nature.com',           # Nature（日更 5-15）
+            'science.org',          # Science（日更 3-10）
+            'technologyreview.com', # MIT Technology Review（日更 3-8）
+            'economist.com',        # 经济学人（周刊，日更 5-10）
         }
+        # 注：Reuters/BBC/NYT/Guardian/WSJ 等高频源仍走质量过滤，避免 token 暴增
         
         # 低价值关键词（通用）- 出现在标题中会降低评分
         # 注意：已移除可能误杀重要新闻的关键词（如"评测""体验""如何"等）
