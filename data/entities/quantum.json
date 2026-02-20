@@ -1,0 +1,17 @@
+{
+  "name": "量子计算",
+  "aliases": ["Quantum Computing", "量子计算机"],
+  "type": "concept",
+  "description": "利用量子力学原理的新型计算范式，有望解决传统计算机无法处理的问题。",
+  "metadata": {
+    "industry": "计算技术"
+  },
+  "base_timeline": [
+    {"date": "1982.01", "event": "费曼提出量子计算概念", "importance": "milestone"},
+    {"date": "1994.01", "event": "Shor 算法提出，威胁传统加密", "importance": "major"},
+    {"date": "2019.10", "event": "谷歌宣布量子优越性", "importance": "milestone"},
+    {"date": "2020.12", "event": "中国九章实现量子优越性", "importance": "major"},
+    {"date": "2023.12", "event": "IBM 发布1000+量子比特处理器", "importance": "major"},
+    {"date": "2024.12", "event": "谷歌发布 Willow 芯片，纠错能力突破", "importance": "milestone"}
+  ]
+}

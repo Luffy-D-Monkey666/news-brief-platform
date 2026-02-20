@@ -1,0 +1,21 @@
+{
+  "name": "俄乌冲突",
+  "aliases": ["俄乌战争", "乌克兰战争", "Russia-Ukraine War"],
+  "type": "event",
+  "description": "2022年爆发的俄罗斯入侵乌克兰战争，改变了全球地缘政治格局。",
+  "metadata": {
+    "start_date": "2022.02.24",
+    "location": "乌克兰"
+  },
+  "base_timeline": [
+    {"date": "2022.02", "event": "俄罗斯全面入侵乌克兰", "importance": "milestone"},
+    {"date": "2022.03", "event": "西方对俄实施大规模制裁", "importance": "major"},
+    {"date": "2022.04", "event": "俄军撤离基辅地区", "importance": "major"},
+    {"date": "2022.09", "event": "乌克兰哈尔科夫反攻成功", "importance": "major"},
+    {"date": "2022.11", "event": "俄军撤离赫尔松", "importance": "major"},
+    {"date": "2023.06", "event": "乌克兰夏季反攻", "importance": "major"},
+    {"date": "2024.02", "event": "战争两周年，陷入僵局", "importance": "major"},
+    {"date": "2024.08", "event": "乌克兰突袭俄罗斯库尔斯克", "importance": "major"},
+    {"date": "2025.01", "event": "特朗普推动和谈", "importance": "major"}
+  ]
+}

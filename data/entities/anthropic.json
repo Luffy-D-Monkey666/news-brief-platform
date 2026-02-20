@@ -1,0 +1,25 @@
+{
+  "name": "Anthropic",
+  "aliases": ["安思博", "Claude公司"],
+  "type": "company",
+  "description": "AI 安全研究公司，开发了 Claude 系列大语言模型。",
+  "metadata": {
+    "founded": "2021",
+    "founder": "Dario Amodei、Daniela Amodei 等前 OpenAI 成员",
+    "headquarters": "美国旧金山",
+    "industry": "人工智能",
+    "website": "anthropic.com"
+  },
+  "base_timeline": [
+    {"date": "2021.01", "event": "公司成立，由前 OpenAI 成员创办", "importance": "milestone"},
+    {"date": "2022.04", "event": "发布 Constitutional AI 论文", "importance": "major"},
+    {"date": "2023.03", "event": "发布 Claude 1.0", "importance": "milestone"},
+    {"date": "2023.07", "event": "发布 Claude 2", "importance": "major"},
+    {"date": "2023.09", "event": "获得亚马逊40亿美元投资", "importance": "milestone"},
+    {"date": "2024.03", "event": "发布 Claude 3 系列（Opus/Sonnet/Haiku）", "importance": "milestone"},
+    {"date": "2024.06", "event": "发布 Claude 3.5 Sonnet", "importance": "major"},
+    {"date": "2024.10", "event": "发布 Computer Use 能力", "importance": "major"},
+    {"date": "2025.01", "event": "发布 Claude 3.5 Opus", "importance": "major"},
+    {"date": "2025.02", "event": "发布 Claude 3.6 Sonnet", "importance": "major"}
+  ]
+}

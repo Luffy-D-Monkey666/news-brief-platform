@@ -1,0 +1,27 @@
+{
+  "name": "Meta",
+  "aliases": ["Facebook", "META", "脸书"],
+  "type": "company",
+  "description": "全球最大社交媒体公司，旗下有 Facebook、Instagram、WhatsApp，大力押注元宇宙和 AI。",
+  "metadata": {
+    "founded": "2004",
+    "founder": "马克·扎克伯格",
+    "headquarters": "美国加州门洛帕克",
+    "industry": "社交媒体、AI、VR/AR",
+    "ticker": "META"
+  },
+  "base_timeline": [
+    {"date": "2004.02", "event": "Facebook 在哈佛创立", "importance": "milestone"},
+    {"date": "2012.05", "event": "IPO 上市，估值1040亿美元", "importance": "milestone"},
+    {"date": "2012.04", "event": "10亿美元收购 Instagram", "importance": "major"},
+    {"date": "2014.02", "event": "190亿美元收购 WhatsApp", "importance": "milestone"},
+    {"date": "2014.03", "event": "20亿美元收购 Oculus VR", "importance": "major"},
+    {"date": "2021.10", "event": "更名为 Meta，全力押注元宇宙", "importance": "milestone"},
+    {"date": "2022.11", "event": "裁员1.1万人，元宇宙受挫", "importance": "major"},
+    {"date": "2023.02", "event": "发布 LLaMA 开源大模型", "importance": "major"},
+    {"date": "2023.07", "event": "发布 LLaMA 2", "importance": "major"},
+    {"date": "2023.09", "event": "发布 Quest 3 头显", "importance": "major"},
+    {"date": "2024.04", "event": "发布 LLaMA 3", "importance": "major"},
+    {"date": "2024.09", "event": "发布 Orion AR 眼镜原型", "importance": "major"}
+  ]
+}

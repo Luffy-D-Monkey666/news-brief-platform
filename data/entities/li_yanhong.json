@@ -1,0 +1,21 @@
+{
+  "name": "李彦宏",
+  "aliases": ["Robin Li"],
+  "type": "person",
+  "description": "百度创始人兼 CEO，中国 AI 领域的先驱者。",
+  "metadata": {
+    "birth_date": "1968.11.17",
+    "nationality": "中国",
+    "title": "百度CEO"
+  },
+  "base_timeline": [
+    {"date": "1968.11", "event": "出生于山西阳泉", "importance": "milestone"},
+    {"date": "1991.01", "event": "获得布法罗大学计算机硕士", "importance": "major"},
+    {"date": "2000.01", "event": "回国创办百度", "importance": "milestone"},
+    {"date": "2005.08", "event": "百度纳斯达克上市", "importance": "milestone"},
+    {"date": "2013.01", "event": "成立百度深度学习实验室", "importance": "major"},
+    {"date": "2017.04", "event": "提出「All in AI」战略", "importance": "major"},
+    {"date": "2023.03", "event": "发布文心一言", "importance": "milestone"},
+    {"date": "2024.04", "event": "萝卜快跑无人出租车运营", "importance": "major"}
+  ]
+}

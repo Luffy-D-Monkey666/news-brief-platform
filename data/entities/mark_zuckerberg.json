@@ -1,0 +1,23 @@
+{
+  "name": "马克·扎克伯格",
+  "aliases": ["Mark Zuckerberg", "扎克伯格", "小扎"],
+  "type": "person",
+  "description": "Meta 创始人兼 CEO，Facebook/Instagram/WhatsApp 的掌门人。",
+  "metadata": {
+    "birth_date": "1984.05.14",
+    "nationality": "美国",
+    "title": "Meta CEO"
+  },
+  "base_timeline": [
+    {"date": "1984.05", "event": "出生于美国纽约", "importance": "milestone"},
+    {"date": "2004.02", "event": "在哈佛创办 Facebook", "importance": "milestone"},
+    {"date": "2012.05", "event": "Facebook IPO 上市", "importance": "milestone"},
+    {"date": "2012.04", "event": "10亿美元收购 Instagram", "importance": "major"},
+    {"date": "2014.02", "event": "190亿美元收购 WhatsApp", "importance": "major"},
+    {"date": "2021.10", "event": "Facebook 更名为 Meta，押注元宇宙", "importance": "milestone"},
+    {"date": "2022.11", "event": "裁员1.1万人，元宇宙受挫", "importance": "major"},
+    {"date": "2023.02", "event": "宣布「效率年」，转向 AI", "importance": "major"},
+    {"date": "2024.04", "event": "发布 LLaMA 3 开源模型", "importance": "major"},
+    {"date": "2024.09", "event": "发布 Orion AR 眼镜", "importance": "major"}
+  ]
+}

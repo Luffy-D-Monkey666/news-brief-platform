@@ -1,0 +1,20 @@
+{
+  "name": "MiniMax",
+  "aliases": ["稀宇科技", "海螺AI"],
+  "type": "company",
+  "description": "中国 AI 初创公司，开发了海螺AI和多款 AI 产品。",
+  "metadata": {
+    "founded": "2021",
+    "founder": "闫俊杰（前商汤）",
+    "headquarters": "中国上海",
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2021.12", "event": "公司成立", "importance": "milestone"},
+    {"date": "2023.04", "event": "发布 Glow 虚拟社交应用", "importance": "major"},
+    {"date": "2023.07", "event": "发布海螺AI", "importance": "major"},
+    {"date": "2024.01", "event": "推出 Talkie 海外版，下载量破千万", "importance": "major"},
+    {"date": "2024.09", "event": "发布 MiniMax-01 系列模型", "importance": "major"},
+    {"date": "2024.11", "event": "估值超过50亿美元", "importance": "major"}
+  ]
+}

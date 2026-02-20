@@ -1,0 +1,21 @@
+{
+  "name": "中美贸易",
+  "aliases": ["中美贸易战", "中美关系", "US-China Trade"],
+  "type": "event",
+  "description": "中美之间的贸易摩擦和科技竞争，深刻影响全球科技产业格局。",
+  "metadata": {
+    "start_date": "2018",
+    "location": "全球"
+  },
+  "base_timeline": [
+    {"date": "2018.03", "event": "特朗普签署对华关税备忘录", "importance": "milestone"},
+    {"date": "2018.07", "event": "首轮340亿美元商品加征关税", "importance": "major"},
+    {"date": "2019.05", "event": "华为被列入实体清单", "importance": "milestone"},
+    {"date": "2020.01", "event": "中美签署第一阶段贸易协议", "importance": "major"},
+    {"date": "2020.09", "event": "TikTok 禁令风波", "importance": "major"},
+    {"date": "2022.10", "event": "美国对华芯片出口管制升级", "importance": "milestone"},
+    {"date": "2023.08", "event": "美国限制对华 AI 芯片出口", "importance": "major"},
+    {"date": "2024.05", "event": "拜登政府对华电动车加征100%关税", "importance": "major"},
+    {"date": "2025.01", "event": "特朗普回归，关税政策待定", "importance": "major"}
+  ]
+}

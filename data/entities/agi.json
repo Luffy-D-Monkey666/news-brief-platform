@@ -1,0 +1,19 @@
+{
+  "name": "AGI",
+  "aliases": ["通用人工智能", "Artificial General Intelligence", "强人工智能"],
+  "type": "concept",
+  "description": "能像人类一样完成任何智力任务的 AI 系统，是 AI 研究的终极目标。",
+  "metadata": {
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "1956.01", "event": "达特茅斯会议，AI 概念诞生", "importance": "milestone"},
+    {"date": "1997.05", "event": "深蓝击败卡斯帕罗夫，窄AI里程碑", "importance": "major"},
+    {"date": "2016.03", "event": "AlphaGo 击败李世石，AGI 讨论升温", "importance": "major"},
+    {"date": "2020.06", "event": "GPT-3 展示通用性，AGI 前景看好", "importance": "major"},
+    {"date": "2022.11", "event": "ChatGPT 引发 AGI 时间表讨论", "importance": "major"},
+    {"date": "2023.11", "event": "OpenAI 宫斗涉及 AGI 突破传闻", "importance": "major"},
+    {"date": "2024.09", "event": "多家公司预测5年内实现 AGI", "importance": "major"},
+    {"date": "2025.01", "event": "Altman 称 AGI 可能2025年实现", "importance": "major"}
+  ]
+}

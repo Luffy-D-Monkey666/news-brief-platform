@@ -1,0 +1,25 @@
+{
+  "name": "英特尔",
+  "aliases": ["Intel", "INTC"],
+  "type": "company",
+  "description": "全球最大的 CPU 制造商，正面临 AMD 和 ARM 的竞争压力。",
+  "metadata": {
+    "founded": "1968",
+    "founder": "罗伯特·诺伊斯、戈登·摩尔",
+    "headquarters": "美国加州圣克拉拉",
+    "industry": "半导体、CPU",
+    "ticker": "INTC"
+  },
+  "base_timeline": [
+    {"date": "1968.07", "event": "公司成立", "importance": "milestone"},
+    {"date": "1971.11", "event": "发布全球首款商用微处理器 4004", "importance": "milestone"},
+    {"date": "1978.06", "event": "发布 8086，x86 架构诞生", "importance": "milestone"},
+    {"date": "1993.03", "event": "发布 Pentium 处理器", "importance": "major"},
+    {"date": "2006.01", "event": "发布 Core 系列处理器", "importance": "major"},
+    {"date": "2021.02", "event": "Pat Gelsinger 回归任 CEO", "importance": "major"},
+    {"date": "2021.03", "event": "宣布 IDM 2.0 战略，重金投资晶圆厂", "importance": "major"},
+    {"date": "2024.08", "event": "宣布裁员1.5万人", "importance": "major"},
+    {"date": "2024.09", "event": "考虑分拆芯片制造业务", "importance": "major"},
+    {"date": "2024.12", "event": "CEO Pat Gelsinger 退休", "importance": "major"}
+  ]
+}

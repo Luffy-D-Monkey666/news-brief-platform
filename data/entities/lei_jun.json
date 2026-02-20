@@ -1,0 +1,23 @@
+{
+  "name": "雷军",
+  "aliases": ["Lei Jun"],
+  "type": "person",
+  "description": "小米创始人兼 CEO，从手机跨界到电动汽车的企业家。",
+  "metadata": {
+    "birth_date": "1969.12.16",
+    "nationality": "中国",
+    "title": "小米CEO"
+  },
+  "base_timeline": [
+    {"date": "1969.12", "event": "出生于湖北仙桃", "importance": "milestone"},
+    {"date": "1992.01", "event": "加入金山软件", "importance": "major"},
+    {"date": "2007.12", "event": "辞任金山 CEO，成为天使投资人", "importance": "major"},
+    {"date": "2010.04", "event": "创办小米", "importance": "milestone"},
+    {"date": "2011.08", "event": "发布小米1，开启互联网手机时代", "importance": "milestone"},
+    {"date": "2018.07", "event": "小米香港上市", "importance": "major"},
+    {"date": "2021.03", "event": "宣布造车，押上全部声誉", "importance": "milestone"},
+    {"date": "2023.12", "event": "发布小米 SU7", "importance": "milestone"},
+    {"date": "2024.03", "event": "SU7 开始交付，大获成功", "importance": "major"},
+    {"date": "2024.07", "event": "亲自赛道试驾纽北", "importance": "major"}
+  ]
+}

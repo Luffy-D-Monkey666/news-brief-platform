@@ -1,0 +1,27 @@
+{
+  "name": "微软",
+  "aliases": ["Microsoft", "MSFT"],
+  "type": "company",
+  "description": "全球最大的软件公司，通过投资 OpenAI 成为 AI 竞赛主要玩家。",
+  "metadata": {
+    "founded": "1975",
+    "founder": "比尔·盖茨、保罗·艾伦",
+    "headquarters": "美国华盛顿州雷德蒙德",
+    "industry": "软件、云计算、AI",
+    "ticker": "MSFT"
+  },
+  "base_timeline": [
+    {"date": "1975.04", "event": "公司成立", "importance": "milestone"},
+    {"date": "1985.11", "event": "发布 Windows 1.0", "importance": "milestone"},
+    {"date": "1995.08", "event": "发布 Windows 95，IE 浏览器", "importance": "major"},
+    {"date": "2001.10", "event": "发布 Xbox 进入游戏市场", "importance": "major"},
+    {"date": "2014.02", "event": "萨蒂亚·纳德拉成为 CEO", "importance": "milestone"},
+    {"date": "2016.06", "event": "262亿美元收购 LinkedIn", "importance": "major"},
+    {"date": "2018.06", "event": "75亿美元收购 GitHub", "importance": "major"},
+    {"date": "2019.07", "event": "向 OpenAI 投资10亿美元", "importance": "milestone"},
+    {"date": "2023.01", "event": "追加投资 OpenAI 100亿美元", "importance": "milestone"},
+    {"date": "2023.02", "event": "将 ChatGPT 集成到 Bing", "importance": "major"},
+    {"date": "2023.03", "event": "发布 Microsoft 365 Copilot", "importance": "major"},
+    {"date": "2024.01", "event": "市值超越苹果成为全球第一", "importance": "milestone"}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "英伟达",
+  "aliases": ["NVIDIA", "NVDA", "老黄"],
+  "type": "company",
+  "description": "全球领先的 GPU 和 AI 芯片公司，AI 时代最大受益者之一。",
+  "metadata": {
+    "founded": "1993",
+    "founder": "黄仁勋、Chris Malachowsky、Curtis Priem",
+    "headquarters": "美国加州圣克拉拉",
+    "industry": "半导体、GPU、AI芯片",
+    "ticker": "NVDA"
+  },
+  "base_timeline": [
+    {"date": "1993.01", "event": "公司成立", "importance": "milestone"},
+    {"date": "1999.01", "event": "发布 GeForce 256，发明 GPU 概念", "importance": "milestone"},
+    {"date": "2006.11", "event": "发布 CUDA，GPU 通用计算平台", "importance": "milestone"},
+    {"date": "2012.10", "event": "AlexNet 使用 GPU 赢得 ImageNet，开启深度学习时代", "importance": "milestone"},
+    {"date": "2016.04", "event": "发布 Tesla P100，首款深度学习专用 GPU", "importance": "major"},
+    {"date": "2018.09", "event": "发布 RTX 系列，引入光线追踪", "importance": "major"},
+    {"date": "2020.09", "event": "400亿美元收购 ARM 失败（后取消）", "importance": "major"},
+    {"date": "2022.03", "event": "发布 H100 GPU，AI 训练性能飞跃", "importance": "milestone"},
+    {"date": "2023.05", "event": "市值突破万亿美元", "importance": "milestone"},
+    {"date": "2024.03", "event": "发布 Blackwell 架构和 B200 GPU", "importance": "major"},
+    {"date": "2024.06", "event": "短暂超越苹果成为全球市值最高公司", "importance": "milestone"}
+  ]
+}

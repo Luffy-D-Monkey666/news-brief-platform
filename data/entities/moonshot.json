@@ -1,0 +1,22 @@
+{
+  "name": "月之暗面",
+  "aliases": ["Moonshot AI", "Kimi", "月暗"],
+  "type": "company",
+  "description": "中国 AI 初创公司，以长上下文能力著称，开发了 Kimi。",
+  "metadata": {
+    "founded": "2023",
+    "founder": "杨植麟",
+    "headquarters": "中国北京",
+    "industry": "人工智能",
+    "website": "moonshot.cn"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "公司成立", "importance": "milestone"},
+    {"date": "2023.10", "event": "发布 Kimi，支持20万字上下文", "importance": "milestone"},
+    {"date": "2024.02", "event": "完成超10亿美元融资", "importance": "major"},
+    {"date": "2024.03", "event": "Kimi 支持200万字上下文", "importance": "major"},
+    {"date": "2024.05", "event": "Kimi 爆火，服务器多次扩容", "importance": "major"},
+    {"date": "2024.07", "event": "发布 Kimi 探索版", "importance": "major"},
+    {"date": "2024.10", "event": "发布 Kimi k1.5 数学推理模型", "importance": "major"}
+  ]
+}

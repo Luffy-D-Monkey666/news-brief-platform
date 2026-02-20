@@ -1,0 +1,24 @@
+{
+  "name": "ARM",
+  "aliases": ["Arm Holdings", "安谋"],
+  "type": "company",
+  "description": "全球最大的芯片 IP 设计公司，几乎所有智能手机都使用 ARM 架构。",
+  "metadata": {
+    "founded": "1990",
+    "founder": "从 Acorn Computers 分拆",
+    "headquarters": "英国剑桥",
+    "industry": "芯片IP设计",
+    "ticker": "ARM"
+  },
+  "base_timeline": [
+    {"date": "1990.11", "event": "ARM 从 Acorn 分拆成立", "importance": "milestone"},
+    {"date": "1998.04", "event": "伦敦和纳斯达克上市", "importance": "major"},
+    {"date": "2016.07", "event": "软银320亿美元收购 ARM", "importance": "milestone"},
+    {"date": "2020.09", "event": "英伟达宣布400亿美元收购 ARM（后失败）", "importance": "major"},
+    {"date": "2022.02", "event": "英伟达收购案失败", "importance": "major"},
+    {"date": "2023.05", "event": "发布 ARMv9 架构", "importance": "major"},
+    {"date": "2023.09", "event": "纳斯达克重新上市，估值545亿美元", "importance": "milestone"},
+    {"date": "2024.02", "event": "市值突破1500亿美元", "importance": "major"},
+    {"date": "2024.09", "event": "发布 ARMv9.2 架构", "importance": "major"}
+  ]
+}

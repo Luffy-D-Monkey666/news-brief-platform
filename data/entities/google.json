@@ -1,0 +1,27 @@
+{
+  "name": "谷歌",
+  "aliases": ["Google", "Alphabet", "GOOG", "GOOGL"],
+  "type": "company",
+  "description": "全球最大的搜索引擎和互联网公司，在 AI 领域深耕多年。",
+  "metadata": {
+    "founded": "1998",
+    "founder": "拉里·佩奇、谢尔盖·布林",
+    "headquarters": "美国加州山景城",
+    "industry": "搜索引擎、广告、云计算、AI",
+    "ticker": "GOOGL"
+  },
+  "base_timeline": [
+    {"date": "1998.09", "event": "Google 成立", "importance": "milestone"},
+    {"date": "2004.08", "event": "IPO 上市", "importance": "milestone"},
+    {"date": "2006.10", "event": "16.5亿美元收购 YouTube", "importance": "major"},
+    {"date": "2008.09", "event": "发布 Chrome 浏览器", "importance": "major"},
+    {"date": "2014.01", "event": "收购 DeepMind", "importance": "milestone"},
+    {"date": "2015.08", "event": "重组为 Alphabet 控股公司", "importance": "major"},
+    {"date": "2016.03", "event": "AlphaGo 击败李世石", "importance": "milestone"},
+    {"date": "2017.06", "event": "发布 Transformer 论文，奠定大模型基础", "importance": "milestone"},
+    {"date": "2023.02", "event": "发布 Bard（后更名 Gemini）", "importance": "major"},
+    {"date": "2023.12", "event": "发布 Gemini 1.0 多模态模型", "importance": "major"},
+    {"date": "2024.02", "event": "Gemini 1.5 支持百万 token 上下文", "importance": "major"},
+    {"date": "2024.12", "event": "发布 Gemini 2.0", "importance": "major"}
+  ]
+}

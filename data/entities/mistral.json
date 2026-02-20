@@ -1,0 +1,21 @@
+{
+  "name": "Mistral AI",
+  "aliases": ["Mistral", "米斯特拉尔"],
+  "type": "company",
+  "description": "法国 AI 初创公司，以高效开源大模型著称。",
+  "metadata": {
+    "founded": "2023",
+    "founder": "Arthur Mensch、Timothée Lacroix、Guillaume Lample",
+    "headquarters": "法国巴黎",
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2023.04", "event": "公司成立，创始人来自 Meta 和 DeepMind", "importance": "milestone"},
+    {"date": "2023.06", "event": "种子轮融资1.05亿欧元", "importance": "major"},
+    {"date": "2023.09", "event": "发布 Mistral 7B 开源模型", "importance": "milestone"},
+    {"date": "2023.12", "event": "发布 Mixtral 8x7B MoE 模型", "importance": "major"},
+    {"date": "2024.02", "event": "发布 Mistral Large", "importance": "major"},
+    {"date": "2024.07", "event": "发布 Mistral Large 2", "importance": "major"},
+    {"date": "2024.09", "event": "发布 Pixtral 多模态模型", "importance": "major"}
+  ]
+}

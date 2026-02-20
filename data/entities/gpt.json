@@ -1,0 +1,19 @@
+{
+  "name": "GPT",
+  "aliases": ["Generative Pre-trained Transformer", "生成式预训练变换器"],
+  "type": "concept",
+  "description": "OpenAI 开发的大语言模型系列，引发了全球 AI 革命。",
+  "metadata": {
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2018.06", "event": "GPT-1 发布，1.17亿参数", "importance": "milestone"},
+    {"date": "2019.02", "event": "GPT-2 发布，15亿参数", "importance": "major"},
+    {"date": "2020.06", "event": "GPT-3 发布，1750亿参数", "importance": "milestone"},
+    {"date": "2022.03", "event": "GPT-3.5 发布，支撑 ChatGPT", "importance": "major"},
+    {"date": "2022.11", "event": "ChatGPT 发布，两个月用户破亿", "importance": "milestone"},
+    {"date": "2023.03", "event": "GPT-4 发布，多模态能力", "importance": "milestone"},
+    {"date": "2024.05", "event": "GPT-4o 发布，全模态实时交互", "importance": "major"},
+    {"date": "2024.09", "event": "o1 推理模型发布", "importance": "major"}
+  ]
+}

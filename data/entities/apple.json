@@ -1,0 +1,27 @@
+{
+  "name": "苹果",
+  "aliases": ["Apple", "AAPL", "苹果公司"],
+  "type": "company",
+  "description": "全球市值最高的科技公司，以 iPhone、Mac 等消费电子产品闻名。",
+  "metadata": {
+    "founded": "1976",
+    "founder": "史蒂夫·乔布斯、史蒂夫·沃兹尼亚克、罗恩·韦恩",
+    "headquarters": "美国加州库比蒂诺",
+    "industry": "消费电子、软件、服务",
+    "ticker": "AAPL"
+  },
+  "base_timeline": [
+    {"date": "1976.04", "event": "公司成立", "importance": "milestone"},
+    {"date": "1984.01", "event": "发布 Macintosh，开创图形界面 PC", "importance": "milestone"},
+    {"date": "1997.09", "event": "乔布斯回归，公司濒临破产", "importance": "milestone"},
+    {"date": "2001.10", "event": "发布初代 iPod", "importance": "major"},
+    {"date": "2007.01", "event": "发布初代 iPhone，重新定义手机", "importance": "milestone"},
+    {"date": "2010.01", "event": "发布 iPad，开创平板市场", "importance": "major"},
+    {"date": "2011.10", "event": "乔布斯去世，库克接任 CEO", "importance": "milestone"},
+    {"date": "2015.04", "event": "发布 Apple Watch", "importance": "major"},
+    {"date": "2018.08", "event": "成为首家市值破万亿美元公司", "importance": "milestone"},
+    {"date": "2020.11", "event": "发布 M1 芯片，告别英特尔", "importance": "milestone"},
+    {"date": "2023.06", "event": "发布 Vision Pro 头显", "importance": "major"},
+    {"date": "2024.06", "event": "发布 Apple Intelligence AI 功能", "importance": "major"}
+  ]
+}

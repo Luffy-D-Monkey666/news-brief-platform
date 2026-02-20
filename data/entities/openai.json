@@ -1,0 +1,27 @@
+{
+  "name": "OpenAI",
+  "aliases": ["Open AI", "GPT公司"],
+  "type": "company",
+  "description": "美国人工智能研究公司，开发了 GPT 系列大语言模型和 ChatGPT。",
+  "metadata": {
+    "founded": "2015",
+    "founder": "Sam Altman、Elon Musk、Greg Brockman 等",
+    "headquarters": "美国旧金山",
+    "industry": "人工智能",
+    "website": "openai.com"
+  },
+  "base_timeline": [
+    {"date": "2015.12", "event": "OpenAI 成立，获10亿美元承诺捐款", "importance": "milestone"},
+    {"date": "2018.06", "event": "发布 GPT-1", "importance": "major"},
+    {"date": "2019.02", "event": "发布 GPT-2，因担忧滥用延迟公开", "importance": "major"},
+    {"date": "2019.03", "event": "从非营利转型为有限盈利公司", "importance": "milestone"},
+    {"date": "2020.06", "event": "发布 GPT-3，参数量达1750亿", "importance": "milestone"},
+    {"date": "2021.01", "event": "发布 DALL-E 图像生成模型", "importance": "major"},
+    {"date": "2022.11", "event": "发布 ChatGPT，两个月用户破亿", "importance": "milestone"},
+    {"date": "2023.03", "event": "发布 GPT-4 多模态模型", "importance": "milestone"},
+    {"date": "2023.11", "event": "Sam Altman 被解雇又复职风波", "importance": "major"},
+    {"date": "2024.02", "event": "发布 Sora 视频生成模型", "importance": "major"},
+    {"date": "2024.05", "event": "发布 GPT-4o 全模态模型", "importance": "major"},
+    {"date": "2024.09", "event": "发布 o1 推理模型", "importance": "major"}
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "台积电",
+  "aliases": ["TSMC", "TSM", "台湾积体电路"],
+  "type": "company",
+  "description": "全球最大的芯片代工厂，生产全球90%以上的先进制程芯片。",
+  "metadata": {
+    "founded": "1987",
+    "founder": "张忠谋",
+    "headquarters": "中国台湾新竹",
+    "industry": "半导体代工",
+    "ticker": "TSM"
+  },
+  "base_timeline": [
+    {"date": "1987.02", "event": "公司成立，开创专业代工模式", "importance": "milestone"},
+    {"date": "1997.10", "event": "纽交所上市", "importance": "major"},
+    {"date": "2017.04", "event": "量产10nm制程", "importance": "major"},
+    {"date": "2018.04", "event": "量产7nm制程", "importance": "major"},
+    {"date": "2020.07", "event": "量产5nm制程", "importance": "major"},
+    {"date": "2021.04", "event": "宣布投资1000亿美元扩产", "importance": "major"},
+    {"date": "2022.12", "event": "美国亚利桑那工厂动工", "importance": "major"},
+    {"date": "2022.12", "event": "量产3nm制程", "importance": "milestone"},
+    {"date": "2024.04", "event": "获美国66亿美元芯片补贴", "importance": "major"},
+    {"date": "2025.01", "event": "量产2nm制程", "importance": "milestone"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "王传福",
+  "aliases": ["Wang Chuanfu"],
+  "type": "person",
+  "description": "比亚迪创始人兼董事长，中国新能源汽车之王。",
+  "metadata": {
+    "birth_date": "1966.02.15",
+    "nationality": "中国",
+    "title": "比亚迪董事长"
+  },
+  "base_timeline": [
+    {"date": "1966.02", "event": "出生于安徽芜湖", "importance": "milestone"},
+    {"date": "1995.02", "event": "创办比亚迪，做电池起家", "importance": "milestone"},
+    {"date": "2003.01", "event": "收购秦川汽车，进入汽车行业", "importance": "milestone"},
+    {"date": "2008.09", "event": "巴菲特投资比亚迪", "importance": "major"},
+    {"date": "2008.12", "event": "推出全球首款插电混动车", "importance": "major"},
+    {"date": "2021.05", "event": "发布 DM-i 超级混动技术", "importance": "major"},
+    {"date": "2022.03", "event": "宣布停产燃油车", "importance": "milestone"},
+    {"date": "2023.01", "event": "比亚迪成为全球新能源销量第一", "importance": "milestone"},
+    {"date": "2024.11", "event": "第1000万辆新能源车下线", "importance": "major"}
+  ]
+}

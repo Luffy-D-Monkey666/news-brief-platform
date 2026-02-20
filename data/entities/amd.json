@@ -1,0 +1,24 @@
+{
+  "name": "AMD",
+  "aliases": ["超威半导体", "Advanced Micro Devices"],
+  "type": "company",
+  "description": "美国半导体公司，是英伟达在 GPU 市场的主要竞争对手。",
+  "metadata": {
+    "founded": "1969",
+    "founder": "Jerry Sanders",
+    "headquarters": "美国加州圣克拉拉",
+    "industry": "半导体、CPU、GPU",
+    "ticker": "AMD"
+  },
+  "base_timeline": [
+    {"date": "1969.05", "event": "公司成立", "importance": "milestone"},
+    {"date": "2006.07", "event": "54亿美元收购 ATI，进入 GPU 市场", "importance": "milestone"},
+    {"date": "2014.10", "event": "苏姿丰成为 CEO", "importance": "milestone"},
+    {"date": "2017.03", "event": "发布 Ryzen 系列，重返高端 CPU 市场", "importance": "milestone"},
+    {"date": "2019.07", "event": "发布 7nm Zen 2，性能超越英特尔", "importance": "major"},
+    {"date": "2022.02", "event": "完成收购赛灵思", "importance": "major"},
+    {"date": "2023.06", "event": "发布 MI300X AI GPU，对标 H100", "importance": "major"},
+    {"date": "2024.10", "event": "发布 MI325X", "importance": "major"},
+    {"date": "2024.12", "event": "预告 MI350 系列", "importance": "major"}
+  ]
+}

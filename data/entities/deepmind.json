@@ -1,0 +1,23 @@
+{
+  "name": "DeepMind",
+  "aliases": ["Google DeepMind", "谷歌DeepMind"],
+  "type": "company",
+  "description": "谷歌旗下 AI 研究实验室，开发了 AlphaGo、AlphaFold 等突破性 AI 系统。",
+  "metadata": {
+    "founded": "2010",
+    "founder": "Demis Hassabis、Shane Legg、Mustafa Suleyman",
+    "headquarters": "英国伦敦",
+    "industry": "人工智能研究"
+  },
+  "base_timeline": [
+    {"date": "2010.01", "event": "公司成立", "importance": "milestone"},
+    {"date": "2014.01", "event": "被谷歌以5亿美元收购", "importance": "milestone"},
+    {"date": "2015.02", "event": "DQN 登上 Nature 封面，玩转 Atari 游戏", "importance": "major"},
+    {"date": "2016.03", "event": "AlphaGo 击败李世石", "importance": "milestone"},
+    {"date": "2017.10", "event": "AlphaGo Zero 零基础自学超越人类", "importance": "major"},
+    {"date": "2020.11", "event": "AlphaFold 2 解决蛋白质折叠问题", "importance": "milestone"},
+    {"date": "2023.04", "event": "与 Google Brain 合并为 Google DeepMind", "importance": "major"},
+    {"date": "2024.05", "event": "AlphaFold 3 发布", "importance": "major"},
+    {"date": "2024.10", "event": "Demis Hassabis 获诺贝尔化学奖", "importance": "milestone"}
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "特斯拉",
+  "aliases": ["Tesla", "TSLA"],
+  "type": "company",
+  "description": "美国电动汽车和清洁能源公司，由马斯克领导，引领全球电动汽车革命。",
+  "metadata": {
+    "founded": "2003",
+    "founder": "马丁·艾伯哈德、马克·塔彭宁、伊隆·马斯克等",
+    "headquarters": "美国德克萨斯州奥斯汀",
+    "industry": "电动汽车、能源存储、太阳能",
+    "ticker": "TSLA"
+  },
+  "base_timeline": [
+    {"date": "2003.07", "event": "公司成立", "importance": "milestone"},
+    {"date": "2008.02", "event": "首款电动跑车 Roadster 发布", "importance": "milestone"},
+    {"date": "2010.06", "event": "IPO 上市，股价 $17", "importance": "milestone"},
+    {"date": "2012.06", "event": "Model S 发布，开创豪华电动轿车市场", "importance": "major"},
+    {"date": "2015.09", "event": "Model X SUV 发布", "importance": "major"},
+    {"date": "2017.07", "event": "Model 3 量产，进入大众市场", "importance": "milestone"},
+    {"date": "2019.03", "event": "Model Y 发布", "importance": "major"},
+    {"date": "2020.01", "event": "上海超级工厂开始交付", "importance": "major"},
+    {"date": "2020.07", "event": "市值超越丰田，成为全球最大车企", "importance": "milestone"},
+    {"date": "2021.10", "event": "市值突破1万亿美元", "importance": "milestone"},
+    {"date": "2023.12", "event": "Cybertruck 开始交付", "importance": "major"},
+    {"date": "2024.10", "event": "发布 Robotaxi 和 Optimus 机器人", "importance": "major"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "蒂姆·库克",
+  "aliases": ["Tim Cook", "库克"],
+  "type": "person",
+  "description": "苹果公司 CEO，乔布斯的继任者，带领苹果成为首家市值破3万亿的公司。",
+  "metadata": {
+    "birth_date": "1960.11.01",
+    "nationality": "美国",
+    "title": "苹果CEO"
+  },
+  "base_timeline": [
+    {"date": "1960.11", "event": "出生于美国阿拉巴马州", "importance": "milestone"},
+    {"date": "1998.03", "event": "加入苹果，负责运营", "importance": "major"},
+    {"date": "2011.08", "event": "接任苹果 CEO", "importance": "milestone"},
+    {"date": "2014.10", "event": "公开出柜，成为财富500强首位出柜CEO", "importance": "major"},
+    {"date": "2018.08", "event": "苹果成为首家市值破万亿公司", "importance": "milestone"},
+    {"date": "2020.11", "event": "发布 M1 芯片，苹果自研芯片时代开启", "importance": "major"},
+    {"date": "2023.01", "event": "苹果市值破3万亿美元", "importance": "milestone"},
+    {"date": "2023.06", "event": "发布 Vision Pro", "importance": "major"},
+    {"date": "2024.06", "event": "发布 Apple Intelligence", "importance": "major"}
+  ]
+}

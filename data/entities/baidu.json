@@ -1,0 +1,24 @@
+{
+  "name": "百度",
+  "aliases": ["Baidu", "BIDU"],
+  "type": "company",
+  "description": "中国最大的搜索引擎公司，AI 技术领先，推出文心一言。",
+  "metadata": {
+    "founded": "2000",
+    "founder": "李彦宏、徐勇",
+    "headquarters": "中国北京",
+    "industry": "搜索引擎、AI、自动驾驶",
+    "ticker": "BIDU"
+  },
+  "base_timeline": [
+    {"date": "2000.01", "event": "公司成立", "importance": "milestone"},
+    {"date": "2005.08", "event": "纳斯达克上市", "importance": "milestone"},
+    {"date": "2013.01", "event": "成立深度学习实验室", "importance": "major"},
+    {"date": "2017.04", "event": "推出 Apollo 自动驾驶平台", "importance": "major"},
+    {"date": "2019.07", "event": "首批获得北京自动驾驶路测牌照", "importance": "major"},
+    {"date": "2023.03", "event": "发布文心一言大模型", "importance": "milestone"},
+    {"date": "2023.08", "event": "文心一言向公众开放", "importance": "major"},
+    {"date": "2024.04", "event": "萝卜快跑无人出租车武汉运营", "importance": "major"},
+    {"date": "2024.10", "event": "发布文心一言4.0 Turbo", "importance": "major"}
+  ]
+}

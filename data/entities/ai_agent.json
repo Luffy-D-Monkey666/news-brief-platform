@@ -1,0 +1,18 @@
+{
+  "name": "智能体",
+  "aliases": ["AI Agent", "AI智能体", "代理"],
+  "type": "concept",
+  "description": "能自主规划和执行任务的 AI 系统，被认为是大模型应用的下一阶段。",
+  "metadata": {
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "AutoGPT 发布，Agent 概念爆发", "importance": "milestone"},
+    {"date": "2023.05", "event": "BabyAGI、AgentGPT 等项目涌现", "importance": "major"},
+    {"date": "2023.10", "event": "OpenAI 发布 GPTs，Agent 平民化", "importance": "major"},
+    {"date": "2024.03", "event": "Devin AI 软件工程师发布", "importance": "major"},
+    {"date": "2024.05", "event": "各大模型厂商推出 Agent 平台", "importance": "major"},
+    {"date": "2024.10", "event": "Anthropic 发布 Computer Use", "importance": "milestone"},
+    {"date": "2025.01", "event": "OpenAI 发布 Operator", "importance": "major"}
+  ]
+}

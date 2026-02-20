@@ -1,0 +1,17 @@
+{
+  "name": "Transformer",
+  "aliases": ["变换器", "注意力机制"],
+  "type": "concept",
+  "description": "2017年谷歌提出的神经网络架构，是 GPT、BERT 等大模型的基础。",
+  "metadata": {
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2017.06", "event": "谷歌发布「Attention Is All You Need」论文", "importance": "milestone"},
+    {"date": "2018.06", "event": "GPT-1 使用 Transformer Decoder", "importance": "major"},
+    {"date": "2018.10", "event": "BERT 使用 Transformer Encoder", "importance": "major"},
+    {"date": "2020.10", "event": "Vision Transformer (ViT) 将架构扩展到视觉", "importance": "major"},
+    {"date": "2022.01", "event": "Transformer 成为 AI 主流架构", "importance": "milestone"},
+    {"date": "2024.01", "event": "Mamba 等状态空间模型挑战 Transformer", "importance": "major"}
+  ]
+}

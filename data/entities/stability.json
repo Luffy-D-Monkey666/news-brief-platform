@@ -1,0 +1,22 @@
+{
+  "name": "Stability AI",
+  "aliases": ["Stable Diffusion"],
+  "type": "company",
+  "description": "英国 AI 公司，开发了 Stable Diffusion 图像生成模型。",
+  "metadata": {
+    "founded": "2020",
+    "founder": "Emad Mostaque",
+    "headquarters": "英国伦敦",
+    "industry": "人工智能、图像生成"
+  },
+  "base_timeline": [
+    {"date": "2020.01", "event": "公司成立", "importance": "milestone"},
+    {"date": "2022.08", "event": "发布 Stable Diffusion 1.0，开源图像生成", "importance": "milestone"},
+    {"date": "2022.11", "event": "发布 Stable Diffusion 2.0", "importance": "major"},
+    {"date": "2023.02", "event": "估值达10亿美元", "importance": "major"},
+    {"date": "2023.07", "event": "发布 SDXL 1.0", "importance": "major"},
+    {"date": "2024.02", "event": "发布 Stable Diffusion 3.0", "importance": "major"},
+    {"date": "2024.03", "event": "创始人 Emad Mostaque 离职", "importance": "major"},
+    {"date": "2024.06", "event": "发布 SD3 Medium 开源版", "importance": "major"}
+  ]
+}

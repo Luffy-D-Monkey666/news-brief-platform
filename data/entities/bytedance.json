@@ -1,0 +1,22 @@
+{
+  "name": "字节跳动",
+  "aliases": ["ByteDance", "今日头条", "抖音母公司"],
+  "type": "company",
+  "description": "中国最大的互联网公司之一，旗下有抖音、TikTok、今日头条。",
+  "metadata": {
+    "founded": "2012",
+    "founder": "张一鸣",
+    "headquarters": "中国北京",
+    "industry": "短视频、内容平台、AI"
+  },
+  "base_timeline": [
+    {"date": "2012.03", "event": "公司成立", "importance": "milestone"},
+    {"date": "2012.08", "event": "推出今日头条", "importance": "major"},
+    {"date": "2016.09", "event": "推出抖音", "importance": "milestone"},
+    {"date": "2017.11", "event": "10亿美元收购 Musical.ly，并入 TikTok", "importance": "major"},
+    {"date": "2020.08", "event": "TikTok 面临美国禁令", "importance": "major"},
+    {"date": "2021.05", "event": "张一鸣卸任 CEO", "importance": "major"},
+    {"date": "2023.08", "event": "推出豆包 AI 助手", "importance": "major"},
+    {"date": "2024.05", "event": "豆包成为国内头部 AI 应用", "importance": "major"}
+  ]
+}

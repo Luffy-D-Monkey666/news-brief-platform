@@ -1,0 +1,22 @@
+{
+  "name": "Sam Altman",
+  "aliases": ["萨姆·奥特曼", "奥尔特曼"],
+  "type": "person",
+  "description": "OpenAI CEO，ChatGPT 背后的推动者，AI 时代最具影响力的人物之一。",
+  "metadata": {
+    "birth_date": "1985.04.22",
+    "nationality": "美国",
+    "title": "OpenAI CEO"
+  },
+  "base_timeline": [
+    {"date": "1985.04", "event": "出生于美国芝加哥", "importance": "milestone"},
+    {"date": "2005.01", "event": "创办 Loopt（位置社交应用）", "importance": "major"},
+    {"date": "2014.02", "event": "成为 Y Combinator 总裁", "importance": "major"},
+    {"date": "2015.12", "event": "联合创办 OpenAI", "importance": "milestone"},
+    {"date": "2019.03", "event": "成为 OpenAI CEO", "importance": "milestone"},
+    {"date": "2022.11", "event": "发布 ChatGPT，引爆 AI 革命", "importance": "milestone"},
+    {"date": "2023.11", "event": "被董事会解雇", "importance": "major"},
+    {"date": "2023.11", "event": "员工威胁离职后复职", "importance": "major"},
+    {"date": "2024.09", "event": "推动 OpenAI 转型为营利公司", "importance": "major"}
+  ]
+}

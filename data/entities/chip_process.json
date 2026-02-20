@@ -1,0 +1,19 @@
+{
+  "name": "芯片制程",
+  "aliases": ["半导体工艺", "制程节点", "nm工艺"],
+  "type": "concept",
+  "description": "衡量芯片制造技术先进程度的指标，数字越小越先进。",
+  "metadata": {
+    "industry": "半导体"
+  },
+  "base_timeline": [
+    {"date": "2014.01", "event": "14nm 量产（英特尔/三星/台积电）", "importance": "major"},
+    {"date": "2017.01", "event": "10nm 量产", "importance": "major"},
+    {"date": "2018.04", "event": "7nm 量产（台积电）", "importance": "milestone"},
+    {"date": "2020.07", "event": "5nm 量产（台积电、三星）", "importance": "major"},
+    {"date": "2022.06", "event": "3nm 量产（三星）", "importance": "major"},
+    {"date": "2022.12", "event": "台积电 3nm 量产", "importance": "milestone"},
+    {"date": "2024.01", "event": "2nm 进入试产阶段", "importance": "major"},
+    {"date": "2025.01", "event": "台积电 2nm 量产", "importance": "milestone"}
+  ]
+}

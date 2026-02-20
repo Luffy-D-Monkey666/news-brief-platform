@@ -1,0 +1,20 @@
+{
+  "name": "巴以冲突",
+  "aliases": ["以色列-哈马斯战争", "加沙战争", "Israel-Hamas War"],
+  "type": "event",
+  "description": "2023年10月爆发的以色列与哈马斯战争，引发中东地区紧张局势。",
+  "metadata": {
+    "start_date": "2023.10.07",
+    "location": "以色列、加沙地带"
+  },
+  "base_timeline": [
+    {"date": "2023.10", "event": "哈马斯突袭以色列，约1200人死亡", "importance": "milestone"},
+    {"date": "2023.10", "event": "以色列对加沙发动大规模军事行动", "importance": "milestone"},
+    {"date": "2023.11", "event": "短暂停火，交换人质和囚犯", "importance": "major"},
+    {"date": "2024.01", "event": "国际法院审理种族灭绝指控", "importance": "major"},
+    {"date": "2024.04", "event": "伊朗首次直接攻击以色列", "importance": "major"},
+    {"date": "2024.07", "event": "哈马斯领导人哈尼亚在德黑兰被杀", "importance": "major"},
+    {"date": "2024.09", "event": "以色列对黎巴嫩真主党发动攻势", "importance": "major"},
+    {"date": "2025.01", "event": "加沙停火协议达成", "importance": "milestone"}
+  ]
+}

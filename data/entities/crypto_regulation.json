@@ -1,0 +1,20 @@
+{
+  "name": "加密货币监管",
+  "aliases": ["Crypto Regulation", "数字货币监管", "比特币监管"],
+  "type": "event",
+  "description": "全球对加密货币的监管趋势，从野蛮生长到逐步规范。",
+  "metadata": {
+    "start_date": "2017",
+    "location": "全球"
+  },
+  "base_timeline": [
+    {"date": "2017.09", "event": "中国禁止 ICO 和加密货币交易所", "importance": "milestone"},
+    {"date": "2021.05", "event": "中国全面禁止加密货币挖矿", "importance": "major"},
+    {"date": "2022.11", "event": "FTX 暴雷，加密行业信任危机", "importance": "milestone"},
+    {"date": "2023.06", "event": "SEC 起诉 Binance 和 Coinbase", "importance": "major"},
+    {"date": "2024.01", "event": "美国批准比特币现货 ETF", "importance": "milestone"},
+    {"date": "2024.05", "event": "美国批准以太坊现货 ETF", "importance": "major"},
+    {"date": "2024.11", "event": "特朗普当选，承诺支持加密货币", "importance": "major"},
+    {"date": "2024.12", "event": "比特币突破10万美元", "importance": "milestone"}
+  ]
+}

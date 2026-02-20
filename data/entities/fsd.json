@@ -1,0 +1,19 @@
+{
+  "name": "FSD",
+  "aliases": ["Full Self-Driving", "完全自动驾驶", "特斯拉自动驾驶"],
+  "type": "concept",
+  "description": "特斯拉的自动驾驶系统，目标是实现无人驾驶。",
+  "metadata": {
+    "industry": "自动驾驶"
+  },
+  "base_timeline": [
+    {"date": "2014.10", "event": "特斯拉推出 Autopilot 1.0", "importance": "major"},
+    {"date": "2016.10", "event": "宣布所有新车配备 FSD 硬件", "importance": "major"},
+    {"date": "2019.04", "event": "Autopilot Day，展示端到端神经网络", "importance": "major"},
+    {"date": "2020.10", "event": "FSD Beta 开始小范围测试", "importance": "milestone"},
+    {"date": "2023.05", "event": "FSD Beta V12 全面采用端到端 AI", "importance": "major"},
+    {"date": "2024.03", "event": "FSD V12 正式版推送", "importance": "major"},
+    {"date": "2024.10", "event": "Robotaxi「We, Robot」发布会", "importance": "milestone"},
+    {"date": "2025.01", "event": "FSD 进入中国测试", "importance": "major"}
+  ]
+}

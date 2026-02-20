@@ -1,0 +1,24 @@
+{
+  "name": "高通",
+  "aliases": ["Qualcomm", "QCOM", "骁龙"],
+  "type": "company",
+  "description": "全球最大的移动芯片公司，骁龙处理器和基带芯片占主导地位。",
+  "metadata": {
+    "founded": "1985",
+    "founder": "Irwin Jacobs",
+    "headquarters": "美国加州圣迭戈",
+    "industry": "半导体、移动通信",
+    "ticker": "QCOM"
+  },
+  "base_timeline": [
+    {"date": "1985.07", "event": "公司成立", "importance": "milestone"},
+    {"date": "1995.01", "event": "CDMA 技术商用", "importance": "milestone"},
+    {"date": "2007.11", "event": "首款骁龙处理器发布", "importance": "major"},
+    {"date": "2013.01", "event": "骁龙800发布，统治安卓高端市场", "importance": "major"},
+    {"date": "2018.09", "event": "与苹果专利战和解", "importance": "major"},
+    {"date": "2020.12", "event": "发布骁龙888", "importance": "major"},
+    {"date": "2023.10", "event": "发布骁龙X Elite PC芯片，进军PC市场", "importance": "major"},
+    {"date": "2023.11", "event": "发布骁龙8 Gen 3", "importance": "major"},
+    {"date": "2024.10", "event": "发布骁龙8 Elite", "importance": "major"}
+  ]
+}

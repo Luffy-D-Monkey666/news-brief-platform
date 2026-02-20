@@ -1,0 +1,25 @@
+{
+  "name": "比亚迪",
+  "aliases": ["BYD", "002594.SZ", "1211.HK"],
+  "type": "company",
+  "description": "中国最大的电动汽车公司，全球新能源汽车销量冠军。",
+  "metadata": {
+    "founded": "1995",
+    "founder": "王传福",
+    "headquarters": "中国深圳",
+    "industry": "电动汽车、电池、半导体",
+    "ticker": "002594.SZ"
+  },
+  "base_timeline": [
+    {"date": "1995.02", "event": "公司成立，最初做电池", "importance": "milestone"},
+    {"date": "2003.01", "event": "收购秦川汽车，进入汽车行业", "importance": "milestone"},
+    {"date": "2008.09", "event": "巴菲特投资2.3亿美元", "importance": "major"},
+    {"date": "2008.12", "event": "推出全球首款插电混动车 F3DM", "importance": "major"},
+    {"date": "2021.05", "event": "推出 DM-i 超级混动技术", "importance": "milestone"},
+    {"date": "2022.03", "event": "停止燃油车生产，全面转向新能源", "importance": "milestone"},
+    {"date": "2022.06", "event": "市值突破万亿元", "importance": "major"},
+    {"date": "2023.01", "event": "2022年销量186万辆，全球新能源第一", "importance": "milestone"},
+    {"date": "2024.01", "event": "2023年销量302万辆", "importance": "major"},
+    {"date": "2024.11", "event": "第1000万辆新能源车下线", "importance": "milestone"}
+  ]
+}

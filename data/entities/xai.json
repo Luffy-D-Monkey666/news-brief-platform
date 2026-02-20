@@ -1,0 +1,21 @@
+{
+  "name": "xAI",
+  "aliases": ["X.AI", "马斯克AI公司"],
+  "type": "company",
+  "description": "马斯克创办的 AI 公司，开发了 Grok 大语言模型。",
+  "metadata": {
+    "founded": "2023",
+    "founder": "埃隆·马斯克",
+    "headquarters": "美国",
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "马斯克注册 X.AI 公司", "importance": "major"},
+    {"date": "2023.07", "event": "正式宣布成立 xAI", "importance": "milestone"},
+    {"date": "2023.11", "event": "发布 Grok 1.0，集成到 X 平台", "importance": "milestone"},
+    {"date": "2024.03", "event": "开源 Grok-1（3140亿参数）", "importance": "major"},
+    {"date": "2024.08", "event": "发布 Grok 2", "importance": "major"},
+    {"date": "2024.12", "event": "发布 Grok 2.5", "importance": "major"},
+    {"date": "2025.02", "event": "发布 Grok 3", "importance": "major"}
+  ]
+}

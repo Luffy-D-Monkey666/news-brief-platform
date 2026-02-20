@@ -1,0 +1,24 @@
+{
+  "name": "小米",
+  "aliases": ["Xiaomi", "MI", "1810.HK"],
+  "type": "company",
+  "description": "中国智能手机和 IoT 公司，进军电动汽车市场。",
+  "metadata": {
+    "founded": "2010",
+    "founder": "雷军",
+    "headquarters": "中国北京",
+    "industry": "智能手机、IoT、电动汽车",
+    "ticker": "1810.HK"
+  },
+  "base_timeline": [
+    {"date": "2010.04", "event": "公司成立", "importance": "milestone"},
+    {"date": "2011.08", "event": "发布首款手机小米1", "importance": "milestone"},
+    {"date": "2014.12", "event": "估值450亿美元，成最高估值初创公司", "importance": "major"},
+    {"date": "2018.07", "event": "香港上市", "importance": "milestone"},
+    {"date": "2021.03", "event": "宣布进军电动汽车", "importance": "milestone"},
+    {"date": "2023.12", "event": "发布小米汽车 SU7", "importance": "milestone"},
+    {"date": "2024.03", "event": "小米 SU7 开始交付", "importance": "major"},
+    {"date": "2024.07", "event": "SU7 交付量突破10万台", "importance": "major"},
+    {"date": "2024.10", "event": "发布小米15系列", "importance": "major"}
+  ]
+}

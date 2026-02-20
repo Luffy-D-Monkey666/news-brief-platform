@@ -1,0 +1,21 @@
+{
+  "name": "AI监管",
+  "aliases": ["AI Regulation", "人工智能监管", "AI法规"],
+  "type": "event",
+  "description": "全球对人工智能的监管立法进程，平衡创新与风险。",
+  "metadata": {
+    "start_date": "2023",
+    "location": "全球"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "意大利短暂禁止 ChatGPT", "importance": "major"},
+    {"date": "2023.05", "event": "AI 教父 Hinton 警告 AI 风险", "importance": "major"},
+    {"date": "2023.07", "event": "中国《生成式AI服务管理办法》生效", "importance": "major"},
+    {"date": "2023.10", "event": "拜登签署 AI 行政命令", "importance": "major"},
+    {"date": "2023.11", "event": "英国举办首届 AI 安全峰会", "importance": "major"},
+    {"date": "2024.03", "event": "欧盟 AI 法案正式通过", "importance": "milestone"},
+    {"date": "2024.05", "event": "OpenAI 等签署 AI 安全承诺", "importance": "major"},
+    {"date": "2024.08", "event": "加州 SB 1047 法案争议", "importance": "major"},
+    {"date": "2025.02", "event": "欧盟 AI 法案开始实施", "importance": "milestone"}
+  ]
+}

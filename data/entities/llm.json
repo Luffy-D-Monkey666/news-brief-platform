@@ -1,0 +1,19 @@
+{
+  "name": "大模型",
+  "aliases": ["LLM", "Large Language Model", "大语言模型"],
+  "type": "concept",
+  "description": "参数量巨大的语言模型，能理解和生成人类语言，是当前 AI 的核心技术。",
+  "metadata": {
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2017.06", "event": "Transformer 架构发布，奠定基础", "importance": "milestone"},
+    {"date": "2018.10", "event": "BERT 发布，预训练范式确立", "importance": "major"},
+    {"date": "2020.06", "event": "GPT-3 展示涌现能力", "importance": "milestone"},
+    {"date": "2022.04", "event": "PaLM 发布，5400亿参数", "importance": "major"},
+    {"date": "2022.11", "event": "ChatGPT 让大模型进入大众视野", "importance": "milestone"},
+    {"date": "2023.02", "event": "LLaMA 开源，开源大模型兴起", "importance": "major"},
+    {"date": "2024.01", "event": "Mixture of Experts 架构流行", "importance": "major"},
+    {"date": "2024.09", "event": "推理模型（o1）成为新方向", "importance": "major"}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Dario Amodei",
+  "aliases": ["达里奥·阿莫迪"],
+  "type": "person",
+  "description": "Anthropic 联合创始人兼 CEO，AI 安全研究的倡导者。",
+  "metadata": {
+    "birth_date": "1983",
+    "nationality": "美国",
+    "title": "Anthropic CEO"
+  },
+  "base_timeline": [
+    {"date": "2016.01", "event": "加入 OpenAI 担任研究副总裁", "importance": "major"},
+    {"date": "2019.01", "event": "领导 GPT-2 和 GPT-3 项目", "importance": "major"},
+    {"date": "2021.01", "event": "离开 OpenAI，创办 Anthropic", "importance": "milestone"},
+    {"date": "2022.04", "event": "发布 Constitutional AI 论文", "importance": "major"},
+    {"date": "2023.03", "event": "发布 Claude", "importance": "milestone"},
+    {"date": "2023.09", "event": "获得亚马逊40亿美元投资", "importance": "major"},
+    {"date": "2024.03", "event": "发布 Claude 3 系列", "importance": "major"},
+    {"date": "2024.10", "event": "发表「AI 带来的机器可能」长文", "importance": "major"}
+  ]
+}

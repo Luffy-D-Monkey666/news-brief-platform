@@ -1,0 +1,22 @@
+{
+  "name": "深度求索",
+  "aliases": ["DeepSeek", "深势科技", "幻方AI"],
+  "type": "company",
+  "description": "中国 AI 公司，以高性价比开源模型著称，由量化私募幻方创办。",
+  "metadata": {
+    "founded": "2023",
+    "founder": "梁文锋（幻方量化）",
+    "headquarters": "中国杭州",
+    "industry": "人工智能",
+    "website": "deepseek.com"
+  },
+  "base_timeline": [
+    {"date": "2023.05", "event": "深度求索成立", "importance": "milestone"},
+    {"date": "2023.11", "event": "发布 DeepSeek Coder", "importance": "major"},
+    {"date": "2024.01", "event": "发布 DeepSeek MoE 开源模型", "importance": "major"},
+    {"date": "2024.05", "event": "发布 DeepSeek-V2，API 价格仅为 GPT-4 的 1%", "importance": "milestone"},
+    {"date": "2024.11", "event": "发布 DeepSeek R1-Lite 推理模型", "importance": "major"},
+    {"date": "2025.01", "event": "发布 DeepSeek R1，性能比肩 o1", "importance": "milestone"},
+    {"date": "2025.01", "event": "R1 爆火，引发全球关注", "importance": "milestone"}
+  ]
+}

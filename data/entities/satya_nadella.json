@@ -1,0 +1,22 @@
+{
+  "name": "萨蒂亚·纳德拉",
+  "aliases": ["Satya Nadella", "纳德拉"],
+  "type": "person",
+  "description": "微软 CEO，带领微软从低谷重回巅峰，主导对 OpenAI 的投资。",
+  "metadata": {
+    "birth_date": "1967.08.19",
+    "nationality": "美国/印度",
+    "title": "微软CEO"
+  },
+  "base_timeline": [
+    {"date": "1967.08", "event": "出生于印度海得拉巴", "importance": "milestone"},
+    {"date": "1992.01", "event": "加入微软", "importance": "major"},
+    {"date": "2014.02", "event": "成为微软 CEO", "importance": "milestone"},
+    {"date": "2014.03", "event": "提出「移动优先、云优先」战略", "importance": "major"},
+    {"date": "2016.06", "event": "262亿美元收购 LinkedIn", "importance": "major"},
+    {"date": "2018.06", "event": "75亿美元收购 GitHub", "importance": "major"},
+    {"date": "2019.07", "event": "投资 OpenAI 10亿美元", "importance": "milestone"},
+    {"date": "2023.01", "event": "追加投资 OpenAI 100亿美元", "importance": "major"},
+    {"date": "2024.01", "event": "微软市值超越苹果成为全球第一", "importance": "milestone"}
+  ]
+}

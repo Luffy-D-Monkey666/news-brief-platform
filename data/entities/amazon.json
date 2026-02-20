@@ -1,0 +1,25 @@
+{
+  "name": "亚马逊",
+  "aliases": ["Amazon", "AMZN"],
+  "type": "company",
+  "description": "全球最大电商和云计算公司，AWS 是全球最大云服务商。",
+  "metadata": {
+    "founded": "1994",
+    "founder": "杰夫·贝索斯",
+    "headquarters": "美国华盛顿州西雅图",
+    "industry": "电商、云计算、AI",
+    "ticker": "AMZN"
+  },
+  "base_timeline": [
+    {"date": "1994.07", "event": "贝索斯在车库创立亚马逊", "importance": "milestone"},
+    {"date": "1997.05", "event": "IPO 上市", "importance": "milestone"},
+    {"date": "2006.03", "event": "推出 AWS 云服务", "importance": "milestone"},
+    {"date": "2007.11", "event": "发布 Kindle 电子书阅读器", "importance": "major"},
+    {"date": "2014.11", "event": "发布 Echo 智能音箱和 Alexa", "importance": "major"},
+    {"date": "2017.06", "event": "137亿美元收购 Whole Foods", "importance": "major"},
+    {"date": "2018.09", "event": "市值突破万亿美元", "importance": "milestone"},
+    {"date": "2021.07", "event": "贝索斯卸任 CEO，Andy Jassy 接任", "importance": "major"},
+    {"date": "2023.09", "event": "投资 Anthropic 40亿美元", "importance": "major"},
+    {"date": "2024.03", "event": "追加投资 Anthropic 27.5亿美元", "importance": "major"}
+  ]
+}

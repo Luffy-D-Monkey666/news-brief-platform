@@ -1,0 +1,22 @@
+{
+  "name": "黄仁勋",
+  "aliases": ["Jensen Huang", "老黄", "皮衣刀客"],
+  "type": "person",
+  "description": "英伟达创始人兼 CEO，AI 芯片帝国的缔造者。",
+  "metadata": {
+    "birth_date": "1963.02.17",
+    "nationality": "美国/台湾",
+    "title": "英伟达CEO"
+  },
+  "base_timeline": [
+    {"date": "1963.02", "event": "出生于台湾台南", "importance": "milestone"},
+    {"date": "1993.01", "event": "联合创办英伟达", "importance": "milestone"},
+    {"date": "1999.01", "event": "发布 GeForce 256，发明 GPU", "importance": "milestone"},
+    {"date": "2006.11", "event": "发布 CUDA，开启 GPU 通用计算时代", "importance": "major"},
+    {"date": "2016.04", "event": "亲自向 Altman 交付首台 DGX-1", "importance": "major"},
+    {"date": "2023.05", "event": "英伟达市值破万亿美元", "importance": "milestone"},
+    {"date": "2024.02", "event": "净资产超过700亿美元", "importance": "major"},
+    {"date": "2024.06", "event": "英伟达短暂成为全球市值最高公司", "importance": "milestone"},
+    {"date": "2024.12", "event": "被《时代》评为年度人物候选", "importance": "major"}
+  ]
+}

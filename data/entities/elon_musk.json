@@ -1,0 +1,24 @@
+{
+  "name": "马斯克",
+  "aliases": ["Elon Musk", "埃隆·马斯克", "钢铁侠"],
+  "type": "person",
+  "description": "特斯拉、SpaceX、xAI 创始人，全球最具影响力的科技企业家。",
+  "metadata": {
+    "birth_date": "1971.06.28",
+    "nationality": "美国/南非",
+    "title": "特斯拉CEO、SpaceX CEO、xAI CEO"
+  },
+  "base_timeline": [
+    {"date": "1971.06", "event": "出生于南非比勒陀利亚", "importance": "milestone"},
+    {"date": "1999.03", "event": "联合创办 X.com（后成为 PayPal）", "importance": "major"},
+    {"date": "2002.06", "event": "创办 SpaceX", "importance": "milestone"},
+    {"date": "2004.02", "event": "投资特斯拉，成为董事长", "importance": "milestone"},
+    {"date": "2008.10", "event": "成为特斯拉 CEO", "importance": "major"},
+    {"date": "2012.05", "event": "SpaceX 龙飞船首次对接国际空间站", "importance": "major"},
+    {"date": "2021.01", "event": "成为全球首富", "importance": "milestone"},
+    {"date": "2022.04", "event": "宣布收购 Twitter", "importance": "major"},
+    {"date": "2022.10", "event": "440亿美元完成收购 Twitter", "importance": "milestone"},
+    {"date": "2023.07", "event": "Twitter 更名为 X，创办 xAI", "importance": "major"},
+    {"date": "2024.11", "event": "支持特朗普当选，任政府效率部顾问", "importance": "major"}
+  ]
+}

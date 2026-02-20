@@ -1,0 +1,24 @@
+{
+  "name": "华为",
+  "aliases": ["Huawei", "HUAWEI"],
+  "type": "company",
+  "description": "中国最大的通信设备和消费电子公司，自研芯片突破封锁。",
+  "metadata": {
+    "founded": "1987",
+    "founder": "任正非",
+    "headquarters": "中国深圳",
+    "industry": "通信设备、智能手机、芯片"
+  },
+  "base_timeline": [
+    {"date": "1987.09", "event": "公司成立", "importance": "milestone"},
+    {"date": "2004.01", "event": "成立海思半导体", "importance": "major"},
+    {"date": "2009.01", "event": "首次进入全球手机出货量前十", "importance": "major"},
+    {"date": "2018.02", "event": "手机出货量首次超越苹果", "importance": "major"},
+    {"date": "2019.05", "event": "被美国列入实体清单", "importance": "milestone"},
+    {"date": "2020.09", "event": "芯片断供，高端手机业务受重创", "importance": "milestone"},
+    {"date": "2021.12", "event": "出售荣耀手机业务", "importance": "major"},
+    {"date": "2023.08", "event": "Mate 60 Pro 搭载麒麟9000s回归", "importance": "milestone"},
+    {"date": "2024.04", "event": "发布 Pura 70 系列", "importance": "major"},
+    {"date": "2024.09", "event": "发布三折叠屏 Mate XT", "importance": "major"}
+  ]
+}

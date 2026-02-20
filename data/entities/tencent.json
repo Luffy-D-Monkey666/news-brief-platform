@@ -1,0 +1,24 @@
+{
+  "name": "腾讯",
+  "aliases": ["Tencent", "企鹅", "0700.HK"],
+  "type": "company",
+  "description": "中国最大的互联网公司，旗下有微信、QQ、游戏业务。",
+  "metadata": {
+    "founded": "1998",
+    "founder": "马化腾",
+    "headquarters": "中国深圳",
+    "industry": "社交、游戏、金融科技",
+    "ticker": "0700.HK"
+  },
+  "base_timeline": [
+    {"date": "1998.11", "event": "公司成立", "importance": "milestone"},
+    {"date": "1999.02", "event": "推出 QQ（原名 OICQ）", "importance": "milestone"},
+    {"date": "2004.06", "event": "香港上市", "importance": "milestone"},
+    {"date": "2011.01", "event": "推出微信", "importance": "milestone"},
+    {"date": "2017.11", "event": "市值突破5000亿美元", "importance": "major"},
+    {"date": "2018.03", "event": "成为全球第五大市值公司", "importance": "major"},
+    {"date": "2021.07", "event": "游戏版号收紧，股价下跌", "importance": "major"},
+    {"date": "2023.09", "event": "推出混元大模型", "importance": "major"},
+    {"date": "2024.06", "event": "微信接入 AI 搜索功能", "importance": "major"}
+  ]
+}

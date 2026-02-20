@@ -1,0 +1,20 @@
+{
+  "name": "零一万物",
+  "aliases": ["01.AI", "Yi"],
+  "type": "company",
+  "description": "李开复创办的 AI 公司，开发了 Yi 系列大模型。",
+  "metadata": {
+    "founded": "2023",
+    "founder": "李开复",
+    "headquarters": "中国北京",
+    "industry": "人工智能"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "公司成立", "importance": "milestone"},
+    {"date": "2023.11", "event": "发布 Yi-34B 开源模型", "importance": "milestone"},
+    {"date": "2024.01", "event": "发布 Yi-VL 多模态模型", "importance": "major"},
+    {"date": "2024.03", "event": "发布万知 AI 搜索应用", "importance": "major"},
+    {"date": "2024.05", "event": "发布 Yi-Large", "importance": "major"},
+    {"date": "2024.09", "event": "发布 Yi-Lightning 高性价比模型", "importance": "major"}
+  ]
+}
