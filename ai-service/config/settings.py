@@ -35,8 +35,11 @@ SOURCE_TIERS = {
         'statnews.com', 'fiercebiotech.com', 'variety.com', 'hollywoodreporter.com',
         '9to5mac.com', '9to5google.com', 'gsmarena.com', 'therobotreport.com',
         'cleantechnica.com', 'greentechmedia.com', 'carbonbrief.org',
-        'technologyreview.com', 'cnet.com', 'theregister.com',  # 新增
-        'techinasia.com', 'tech.eu'  # 区域科技
+        'technologyreview.com', 'cnet.com', 'theregister.com',  # 商业科技
+        'techinasia.com', 'tech.eu',  # 区域科技
+        'krebsonsecurity.com', 'spacenews.com',  # 安全+航天
+        'news.crunchbase.com', 'spectrum.ieee.org',  # 创投+工程
+        'nature.com', 'science.org'  # 学术科学
     ],
     # 💬 社区来源：Reddit、论坛、个人博客
     'community': [
@@ -122,10 +125,11 @@ NEWS_SOURCES = {
         'https://www.deepmind.com/blog/rss.xml',           # DeepMind
         'https://machinelearning.apple.com/rss.xml',       # Apple ML
 
-        # ==================== 机器人（5个核心源）====================
+        # ==================== 机器人（6个核心源）====================
         'https://www.therobotreport.com/feed/',            # The Robot Report
         'https://robohub.org/feed/',                       # Robohub（学术机器人）
         'https://spectrum.ieee.org/feeds/topic/robotics.rss', # IEEE Spectrum机器人
+        'https://spectrum.ieee.org/feeds/feed.rss',        # IEEE Spectrum综合（工程技术全领域）
         'https://www.automate.org/rss/news',               # Automate（工业机器人）
         'https://bdtechtalks.com/feed/',                   # BD Tech Talks 机器人
         # 已移除：Reddit 论坛类源（讨论帖多，新闻价值低，消耗token）
@@ -170,13 +174,14 @@ NEWS_SOURCES = {
         # 'https://feeds.simplecast.com/54nAGcIl',
         # 'https://twimlai.com/feed/',
 
-        # ==================== 投资财经（3个核心源）====================
+        # ==================== 投资财经（4个核心源）====================
         'https://feeds.bloomberg.com/markets/news.rss',    # Bloomberg Markets
         'https://www.ft.com/rss/home',                     # Financial Times
         'https://www.economist.com/finance-and-economics/rss.xml', # Economist
+        'https://news.crunchbase.com/feed/',               # Crunchbase News（创投数据新闻）
         # 已移除：Seeking Alpha（UGC质量参差）、CoinDesk（加密货币）
 
-        # ==================== 商业科技（8个核心源）====================
+        # ==================== 商业科技（9个核心源）====================
         'https://techcrunch.com/feed/',                    # TechCrunch
         'https://www.wired.com/feed/rss',                  # Wired
         'https://arstechnica.com/feed/',                   # Ars Technica
@@ -185,6 +190,7 @@ NEWS_SOURCES = {
         'https://www.technologyreview.com/feed/',          # MIT Technology Review（深度科技分析）
         'https://www.cnet.com/rss/news/',                  # CNET（消费科技全覆盖）
         'https://www.theregister.com/headlines.atom',      # The Register（英国IT深度报道）
+        'https://krebsonsecurity.com/feed/',               # Krebs on Security（网络安全权威）
 
         # ==================== 政治国际（4个核心源）====================
         'https://www.theguardian.com/world/rss',           # Guardian World
@@ -197,15 +203,19 @@ NEWS_SOURCES = {
         'https://www.worldbank.org/en/news/rss.xml',       # World Bank
         'https://www.oecd.org/economy/rss.xml',            # OECD Economy
 
-        # ==================== 健康医疗（3个核心源）====================
+        # ==================== 健康医疗/科学（5个核心源）====================
         'https://www.statnews.com/feed/',                  # STAT News
         'https://www.fiercebiotech.com/rss/xml',           # Fierce Biotech
         'https://medicalxpress.com/rss-feed/',             # Medical Xpress
+        'https://www.nature.com/nature.rss',               # Nature News（顶级科学期刊）
+        'https://www.science.org/rss/news_current.xml',    # Science News（AAAS科学新闻）
 
-        # ==================== 能源环境（3个核心源）====================
+        # ==================== 能源环境/航天（5个核心源）====================
         'https://www.greentechmedia.com/feed/',            # Greentech Media
         'https://www.renewableenergyworld.com/feed/',      # Renewable Energy World
         'https://www.carbonbrief.org/feed/',               # Carbon Brief
+        'https://spacenews.com/feed/',                     # SpaceNews（航天产业）
+        'https://arstechnica.com/space/feed/',             # Ars Technica Space
 
         # ==================== 娱乐体育（3个核心源）====================
         'https://variety.com/feed/',                       # Variety
