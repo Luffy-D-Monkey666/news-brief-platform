@@ -531,7 +531,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                 <div>
                   <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                     <div className="w-2 h-5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600" />
-                    <span className="text-sm font-bold text-gray-700 tracking-wide">事件概述</span>
+                    <span className="text-base font-semibold text-gray-800">事件概述</span>
                   </div>
                   <p className="text-sm text-gray-800 leading-relaxed pl-5">
                     {summary.overview}
@@ -560,7 +560,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                     <div>
                       <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                         <div className="w-2 h-5 rounded-full bg-gradient-to-b from-purple-400 to-purple-600" />
-                        <span className="text-sm font-bold text-gray-700 tracking-wide">重要细节</span>
+                        <span className="text-base font-semibold text-gray-800">重要细节</span>
                       </div>
                       <ul className="space-y-2 pl-5">
                         {summary.details.map((detail, i) => (
@@ -578,7 +578,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                     <div>
                       <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-dashed border-gray-200">
                         <div className="w-2 h-5 rounded-full bg-gradient-to-b from-green-400 to-green-600" />
-                        <span className="text-sm font-bold text-gray-700 tracking-wide">后续影响</span>
+                        <span className="text-base font-semibold text-gray-800">后续影响</span>
                       </div>
                       <p className="text-sm text-gray-800 leading-relaxed pl-5">
                         {summary.impact}
@@ -648,7 +648,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <span className="text-green-600 text-sm">📈</span>
-                  <span className="text-xs font-bold text-green-800">实时股票数据</span>
+                  <span className="text-base font-semibold text-green-800">实时股票数据</span>
                 </div>
                 <span className="text-[10px] text-gray-400">数据延迟约15分钟</span>
               </div>
@@ -699,7 +699,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-blue-600">📊</span>
-                <span className="text-xs font-bold text-blue-800">关键数据</span>
+                <span className="text-base font-semibold text-blue-800">关键数据</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {brief.key_metrics.slice(0, 4).map((metric, i) => {
@@ -741,7 +741,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-slate-600">📚</span>
-                <span className="text-xs font-bold text-slate-700">背景知识</span>
+                <span className="text-base font-semibold text-slate-700">背景知识</span>
               </div>
               <p className="text-sm text-slate-700 leading-relaxed mb-3">
                 {brief.background.context}
@@ -773,7 +773,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-violet-600">🔬</span>
-                <span className="text-xs font-bold text-violet-800">技术解读</span>
+                <span className="text-base font-semibold text-violet-800">技术解读</span>
                 {brief.tech_insight.maturity && (
                   <span className="ml-auto px-2 py-0.5 bg-violet-100 text-violet-700 rounded text-xs">
                     {brief.tech_insight.maturity}
@@ -802,7 +802,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-emerald-600">💰</span>
-                <span className="text-xs font-bold text-emerald-800">融资历史 · {brief.funding_history.company}</span>
+                <span className="text-base font-semibold text-emerald-800">融资历史 · {brief.funding_history.company}</span>
               </div>
               
               {/* 融资轮次时间线 */}
@@ -848,13 +848,13 @@ const BriefCard = ({ brief, isNew = false }) => {
                 <div className="grid grid-cols-2 gap-3 pt-3 border-t border-emerald-200">
                   <div>
                     <div className="text-xs text-gray-500 mb-0.5">累计融资</div>
-                    <div className="text-sm font-bold text-emerald-700">
+                    <div className="text-sm font-semibold text-emerald-700">
                       {brief.funding_history.total_funding || '未披露'}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 mb-0.5">最新估值</div>
-                    <div className="text-sm font-bold text-emerald-700">
+                    <div className="text-sm font-semibold text-emerald-700">
                       {brief.funding_history.valuation || '未披露'}
                     </div>
                   </div>
@@ -868,7 +868,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-orange-600">🔗</span>
-                <span className="text-xs font-bold text-orange-800">供应链视角</span>
+                <span className="text-base font-semibold text-orange-800">供应链视角</span>
               </div>
               
               <p className="text-sm text-gray-700 leading-relaxed mb-3">{brief.supply_chain_insight.impact}</p>
@@ -927,7 +927,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                         <div>
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span>⚠️</span>
-                            <span className="text-xs font-bold text-amber-800">风险提示</span>
+                            <span className="text-base font-semibold text-amber-800">风险提示</span>
                           </div>
                           <p className="text-sm text-amber-900 leading-relaxed pl-5">
                             {riskMatch[1].trim()}
@@ -938,7 +938,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                         <div>
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span>💡</span>
-                            <span className="text-xs font-bold text-amber-800">行动建议</span>
+                            <span className="text-base font-semibold text-amber-800">行动建议</span>
                           </div>
                           <p className="text-sm text-amber-900 leading-relaxed pl-5">
                             {actionMatch[1].trim()}
@@ -963,7 +963,7 @@ const BriefCard = ({ brief, isNew = false }) => {
             <div className="mb-5 p-4 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-cyan-600">📌</span>
-                <span className="text-xs font-bold text-cyan-800">关键实体</span>
+                <span className="text-base font-semibold text-cyan-800">关键实体</span>
               </div>
               <div className="space-y-4">
                 {brief.entities.map((entity, i) => {
