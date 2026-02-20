@@ -26,6 +26,11 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
 8. tech_insight: 仅ai_technology/robotics/ai_programming/semiconductors需要{{principle,comparison,maturity}}，其他null
 9. funding_history: 仅融资新闻需要{{company,rounds:[{{round,amount(必须带单位如"$6.2M"或"620万美元"),date,investors}}],total_funding(带单位),valuation(带单位)}}，其他null
 10. supply_chain_insight: 仅consumer_electronics/automotive需要{{impact,related_companies:[{{name,role,effect}}],capacity_info}}，其他null
+11. entities: 需要背景解释的关键实体(0-3个)，仅当读者可能不熟悉时提取：
+    格式: [{{name,type(company/person/tech/concept/event),context(一句话事实背景20-50字),relevance(与本新闻关联),timeline(可选,最多2条[{{date,event}}])}}]
+    ✅ 提取: 新兴公司(Figure AI/Mistral)、专业术语(MoE/RLHF/BEV)、非知名人物、重要历史事件
+    ❌ 不提取: 苹果/谷歌/微软/特斯拉/英伟达/马斯克/OpenAI等公众熟知实体
+    无需解释时返回[]
 
 示例（重要AI新闻）：
 {{
@@ -38,10 +43,11 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
   "background": {{"context":"OpenAI成立于2015年，2022年发布ChatGPT。","timeline":[{{"date":"2023.03","event":"GPT-4发布"}}]}},
   "tech_insight": {{"principle":"MoE架构，万亿参数。","comparison":"支持100万token上下文。","maturity":"商用落地"}},
   "funding_history": null,
-  "supply_chain_insight": null
+  "supply_chain_insight": null,
+  "entities": [{{"name":"MoE","type":"tech","context":"Mixture of Experts，混合专家架构，通过多个专家网络分工提升效率","relevance":"GPT-5采用此架构实现性能突破","timeline":[]}}]
 }}
 
 普通新闻示例：
-{{"title_zh":"某公司发布产品","category":"general","importance":"normal","summary":"事件概述:...","action_advice":null,"key_metrics":[],"background":null,"tech_insight":null,"funding_history":null,"supply_chain_insight":null}}
+{{"title_zh":"某公司发布产品","category":"general","importance":"normal","summary":"事件概述:...","action_advice":null,"key_metrics":[],"background":null,"tech_insight":null,"funding_history":null,"supply_chain_insight":null,"entities":[]}}
 
 严格输出JSON："""

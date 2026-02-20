@@ -232,6 +232,36 @@ class CloudAIProcessor:
                     data['supply_chain_insight'] = valid_sci if valid_sci['impact'] else None
                 else:
                     data['supply_chain_insight'] = None
+                
+                # 处理关键实体字段（entities）
+                if 'entities' not in data or not isinstance(data['entities'], list):
+                    data['entities'] = []
+                else:
+                    valid_entities = []
+                    valid_types = ['company', 'person', 'tech', 'concept', 'event']
+                    for entity in data['entities'][:3]:  # 最多3个实体
+                        if isinstance(entity, dict) and 'name' in entity and 'context' in entity:
+                            entity_type = entity.get('type', 'concept')
+                            if entity_type not in valid_types:
+                                entity_type = 'concept'
+                            
+                            valid_entity = {
+                                'name': entity.get('name', ''),
+                                'type': entity_type,
+                                'context': entity.get('context', ''),
+                                'relevance': entity.get('relevance', ''),
+                                'timeline': []
+                            }
+                            # 处理实体时间线
+                            if 'timeline' in entity and isinstance(entity['timeline'], list):
+                                for item in entity['timeline'][:2]:  # 最多2条
+                                    if isinstance(item, dict) and 'date' in item and 'event' in item:
+                                        valid_entity['timeline'].append({
+                                            'date': item.get('date', ''),
+                                            'event': item.get('event', '')
+                                        })
+                            valid_entities.append(valid_entity)
+                    data['entities'] = valid_entities
                     
                 return data
             else:
@@ -283,6 +313,7 @@ class NewsProcessor:
                 'tech_insight': result.get('tech_insight'),  # 技术解读
                 'funding_history': result.get('funding_history'),  # 融资历史
                 'supply_chain_insight': result.get('supply_chain_insight'),  # 供应链视角
+                'entities': result.get('entities', []),  # 关键实体背景
                 'stock_info': None,  # 股票信息（将在下方填充）
                 'source': news_item['source'],
                 'source_url': news_item['source_url'],

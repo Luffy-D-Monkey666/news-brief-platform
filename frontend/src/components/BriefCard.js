@@ -819,6 +819,72 @@ const BriefCard = ({ brief, isNew = false }) => {
               </div>
             </div>
           )}
+
+          {/* 关键实体背景（entities） */}
+          {brief.entities && brief.entities.length > 0 && (
+            <div className="mb-5 p-4 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-cyan-600">📌</span>
+                <span className="text-xs font-bold text-cyan-800">关键实体</span>
+              </div>
+              <div className="space-y-4">
+                {brief.entities.map((entity, i) => {
+                  // 实体类型图标和标签
+                  const typeConfig = {
+                    company: { icon: '🏢', label: '公司' },
+                    person: { icon: '👤', label: '人物' },
+                    tech: { icon: '⚙️', label: '技术' },
+                    concept: { icon: '💡', label: '概念' },
+                    event: { icon: '📅', label: '事件' }
+                  };
+                  const config = typeConfig[entity.type] || typeConfig.concept;
+                  
+                  return (
+                    <div key={i} className="bg-white/60 rounded-lg p-3 border border-cyan-100">
+                      {/* 实体名称和类型 */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-base">{config.icon}</span>
+                        <span className="font-semibold text-gray-800">{entity.name}</span>
+                        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs">
+                          {config.label}
+                        </span>
+                      </div>
+                      
+                      {/* 背景说明 */}
+                      {entity.context && (
+                        <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                          {entity.context}
+                        </p>
+                      )}
+                      
+                      {/* 与本新闻关联 */}
+                      {entity.relevance && (
+                        <div className="text-xs text-cyan-600 mb-2">
+                          <span className="font-medium">📎 关联：</span>
+                          <span className="text-gray-600">{entity.relevance}</span>
+                        </div>
+                      )}
+                      
+                      {/* 实体时间线 */}
+                      {entity.timeline && entity.timeline.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-cyan-100">
+                          <div className="space-y-1">
+                            {entity.timeline.map((item, j) => (
+                              <div key={j} className="flex items-start gap-2 text-xs">
+                                <span className="text-cyan-500 font-mono whitespace-nowrap">{item.date}</span>
+                                <span className="text-gray-400">→</span>
+                                <span className="text-gray-600">{item.event}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
             </>
           )}
 
@@ -830,7 +896,8 @@ const BriefCard = ({ brief, isNew = false }) => {
             brief.tech_insight?.principle ||
             brief.funding_history?.company ||
             brief.supply_chain_insight?.impact ||
-            brief.action_advice
+            brief.action_advice ||
+            (brief.entities && brief.entities.length > 0)
           ) && (
             <button
               onClick={() => setIsExpanded(true)}

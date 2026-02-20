@@ -72,6 +72,25 @@ const supplyChainInsightSchema = new mongoose.Schema({
   capacity_info: String
 }, { _id: false });
 
+// 实体时间线事件 Schema
+const entityTimelineSchema = new mongoose.Schema({
+  date: String,
+  event: String
+}, { _id: false });
+
+// 关键实体 Schema
+const entitySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  type: {
+    type: String,
+    enum: ['company', 'person', 'tech', 'concept', 'event'],
+    default: 'concept'
+  },
+  context: String,
+  relevance: String,
+  timeline: [entityTimelineSchema]
+}, { _id: false });
+
 // 股票信息 Schema
 const stockInfoSchema = new mongoose.Schema({
   ticker: String,
@@ -160,6 +179,10 @@ const briefSchema = new mongoose.Schema({
   supply_chain_insight: {
     type: supplyChainInsightSchema,
     default: null
+  },
+  entities: {
+    type: [entitySchema],
+    default: []
   },
   stock_info: {
     type: stockInfoSchema,
