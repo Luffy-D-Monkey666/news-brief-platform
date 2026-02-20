@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import {
@@ -14,6 +15,7 @@ import {
   FaChevronUp
 } from 'react-icons/fa';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
+import { searchEntityByName } from '../services/api';
 
 // Apple风格配色（更简洁清爽）
 const categoryColors = {
@@ -76,6 +78,82 @@ const importanceConfig = {
 };
 
 // 声音预设配置现在从 AudioPlayerContext 获取
+
+// 实体卡片组件（支持点击跳转知识库）
+const EntityCard = ({ entity, config }) => {
+  const [entityId, setEntityId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  // 点击实体名称时查找知识库 ID
+  const handleClick = async (e) => {
+    e.preventDefault();
+    if (entityId) {
+      window.location.href = `/entity/${entityId}`;
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await searchEntityByName(entity.name);
+      if (response.success && response.data) {
+        window.location.href = `/entity/${response.data._id}`;
+      }
+    } catch (err) {
+      console.log('实体未找到:', entity.name);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <div className="bg-white/60 rounded-lg p-3 border border-cyan-100">
+      {/* 实体名称和类型 */}
+      <div className="flex items-center flex-wrap gap-2 mb-2">
+        <span className="text-base flex-shrink-0">{config.icon}</span>
+        <button
+          onClick={handleClick}
+          disabled={loading}
+          className="font-semibold text-gray-800 hover:text-cyan-600 hover:underline transition-colors cursor-pointer disabled:opacity-50"
+        >
+          {loading ? '...' : entity.name}
+        </button>
+        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs whitespace-nowrap flex-shrink-0">
+          {config.label}
+        </span>
+      </div>
+      
+      {/* 背景说明 */}
+      {entity.context && (
+        <p className="text-sm text-gray-700 leading-relaxed mb-2">
+          {entity.context}
+        </p>
+      )}
+      
+      {/* 与本新闻关联 */}
+      {entity.relevance && (
+        <div className="text-xs text-cyan-600 mb-2">
+          <span className="font-medium">📎 关联：</span>
+          <span className="text-gray-600">{entity.relevance}</span>
+        </div>
+      )}
+      
+      {/* 实体时间线 */}
+      {entity.timeline && entity.timeline.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-cyan-100">
+          <div className="space-y-1">
+            {entity.timeline.map((item, j) => (
+              <div key={j} className="flex items-start gap-2 text-xs">
+                <span className="text-cyan-500 font-mono whitespace-nowrap">{item.date}</span>
+                <span className="text-gray-400">→</span>
+                <span className="text-gray-600">{item.event}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // 图片放大Modal
 const ImageModal = ({ src, alt, onClose }) => {
@@ -840,46 +918,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                   const config = typeConfig[entity.type] || typeConfig.concept;
                   
                   return (
-                    <div key={i} className="bg-white/60 rounded-lg p-3 border border-cyan-100">
-                      {/* 实体名称和类型 */}
-                      <div className="flex items-center flex-wrap gap-2 mb-2">
-                        <span className="text-base flex-shrink-0">{config.icon}</span>
-                        <span className="font-semibold text-gray-800">{entity.name}</span>
-                        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs whitespace-nowrap flex-shrink-0">
-                          {config.label}
-                        </span>
-                      </div>
-                      
-                      {/* 背景说明 */}
-                      {entity.context && (
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">
-                          {entity.context}
-                        </p>
-                      )}
-                      
-                      {/* 与本新闻关联 */}
-                      {entity.relevance && (
-                        <div className="text-xs text-cyan-600 mb-2">
-                          <span className="font-medium">📎 关联：</span>
-                          <span className="text-gray-600">{entity.relevance}</span>
-                        </div>
-                      )}
-                      
-                      {/* 实体时间线 */}
-                      {entity.timeline && entity.timeline.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-cyan-100">
-                          <div className="space-y-1">
-                            {entity.timeline.map((item, j) => (
-                              <div key={j} className="flex items-start gap-2 text-xs">
-                                <span className="text-cyan-500 font-mono whitespace-nowrap">{item.date}</span>
-                                <span className="text-gray-400">→</span>
-                                <span className="text-gray-600">{item.event}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <EntityCard key={i} entity={entity} config={config} />
                   );
                 })}
               </div>

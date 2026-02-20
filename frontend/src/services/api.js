@@ -110,4 +110,28 @@ export const getBriefAudioUrl = (briefId, voice = DEFAULT_VOICE) => {
   return `${API_URL}/api/tts/brief/${briefId}?voice=${voice}`;
 };
 
+// ==================== 实体知识库 API ====================
+
+// 获取实体列表
+export const getEntities = async (params = {}) => {
+  return api.get('/entities', { params });
+};
+
+// 获取实体详情
+export const getEntityById = async (id) => {
+  return api.get(`/entities/${id}`);
+};
+
+// 获取实体时间轴（含关联新闻）
+export const getEntityTimeline = async (id, limit = 50, before = null) => {
+  const params = { limit };
+  if (before) params.before = before;
+  return api.get(`/entities/${id}/timeline`, { params });
+};
+
+// 按名称搜索实体
+export const searchEntityByName = async (name) => {
+  return api.get(`/entities/search/${encodeURIComponent(name)}`);
+};
+
 export default api;

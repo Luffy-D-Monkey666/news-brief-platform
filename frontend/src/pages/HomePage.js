@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { getLatestBriefs, getHistoryBriefs, getHotTopics } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
@@ -7,7 +8,7 @@ import TopicCard from '../components/TopicCard';
 import CategoryFilter from '../components/CategoryFilter';
 import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook } from 'react-icons/fa';
 
 // 时间筛选选项
 const TIME_FILTERS = [
@@ -233,6 +234,13 @@ const HomePage = () => {
               <h1 className="text-3xl font-bold text-white">NewsHub</h1>
               <p className="text-gray-400 text-sm mt-1">AI驱动的全球新闻聚合平台</p>
             </div>
+            <Link
+              to="/knowledge"
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
+            >
+              <FaBook />
+              知识库
+            </Link>
           </div>
         </div>
       </header>
