@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getEntityTimeline } from '../services/api';
-import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp } from 'react-icons/fa';
+import { getEntityTimeline, synthesizeSpeech } from '../services/api';
+import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop } from 'react-icons/fa';
 
 // 实体类型配置
 const TYPE_CONFIG = {
@@ -143,6 +143,113 @@ const EntityPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // 语音播放状态
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isSpeechLoading, setIsSpeechLoading] = useState(false);
+  const audioRef = useRef(null);
+  const audioUrlRef = useRef(null);
+
+  // 生成朗读文本
+  const generateSpeechText = (entity, timeline) => {
+    const typeLabel = TYPE_CONFIG[entity.type]?.label || '实体';
+    let text = `${entity.name}，${typeLabel}。`;
+    
+    if (entity.description) {
+      text += `${entity.description} `;
+    }
+    
+    // 添加时间轴里程碑
+    const milestones = timeline.filter(t => t.type === 'milestone');
+    if (milestones.length > 0) {
+      text += `主要里程碑包括：`;
+      milestones.slice(0, 5).forEach((m, i) => {
+        text += `${m.date}，${m.event}。`;
+      });
+    }
+    
+    // 添加近期新闻概要
+    const newsItems = timeline.filter(t => t.type === 'news');
+    if (newsItems.length > 0) {
+      text += `近期动态：`;
+      newsItems.slice(0, 3).forEach(news => {
+        if (news.items && news.items.length > 0) {
+          text += `${news.date}，${news.items[0].title}。`;
+        }
+      });
+    }
+    
+    return text;
+  };
+
+  // 播放语音
+  const handlePlaySpeech = async () => {
+    if (!data) return;
+    
+    if (isPlaying) {
+      // 暂停
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setIsPlaying(false);
+      return;
+    }
+    
+    // 如果已有音频URL，继续播放
+    if (audioUrlRef.current && audioRef.current) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+    
+    // 生成新音频
+    try {
+      setIsSpeechLoading(true);
+      const text = generateSpeechText(data.entity, data.timeline);
+      const audioUrl = await synthesizeSpeech(text);
+      audioUrlRef.current = audioUrl;
+      
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      audio.onended = () => {
+        setIsPlaying(false);
+      };
+      
+      audio.onerror = () => {
+        setIsPlaying(false);
+        setIsSpeechLoading(false);
+      };
+      
+      await audio.play();
+      setIsPlaying(true);
+    } catch (err) {
+      console.error('语音合成失败:', err);
+    } finally {
+      setIsSpeechLoading(false);
+    }
+  };
+
+  // 停止播放
+  const handleStopSpeech = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
+  };
+
+  // 清理音频资源
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const loadEntity = async () => {
@@ -252,12 +359,49 @@ const EntityPage = () => {
                 </div>
               )}
               
-              {/* 统计 */}
-              <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-100">
+              {/* 统计 + 语音按钮 */}
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2 text-sm">
                   <FaNewspaper className="text-gray-400" />
                   <span className="font-medium text-gray-900">{entity.news_count || 0}</span>
                   <span className="text-gray-500">条相关新闻</span>
+                </div>
+                
+                {/* 语音朗读按钮 */}
+                <div className="flex items-center gap-2">
+                  {isSpeechLoading ? (
+                    <button
+                      disabled
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm cursor-not-allowed"
+                    >
+                      <FaSpinner className="animate-spin" />
+                      生成中...
+                    </button>
+                  ) : isPlaying ? (
+                    <>
+                      <button
+                        onClick={handlePlaySpeech}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                      >
+                        <FaPause />
+                        暂停
+                      </button>
+                      <button
+                        onClick={handleStopSpeech}
+                        className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <FaStop />
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handlePlaySpeech}
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                    >
+                      <FaVolumeUp />
+                      语音介绍
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
