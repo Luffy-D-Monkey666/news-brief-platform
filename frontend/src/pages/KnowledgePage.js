@@ -64,22 +64,32 @@ const KnowledgePage = () => {
   const navigate = useNavigate();
   const [entities, setEntities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState(null);
   const [sortBy, setSortBy] = useState('news'); // news | recent | name
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 30;
 
+  // 加载实体（首次或刷新）
   const loadEntities = useCallback(async () => {
     try {
       setLoading(true);
       const params = {
         sort: sortBy,
-        limit: 50
+        limit: PAGE_SIZE,
+        offset: 0
       };
       if (selectedType) params.type = selectedType;
       if (searchQuery) params.search = searchQuery;
       
       const response = await getEntities(params);
-      setEntities(response.data || []);
+      const newData = response.data || [];
+      
+      setEntities(newData);
+      setPage(1);
+      setHasMore(newData.length === PAGE_SIZE);
     } catch (error) {
       console.error('加载实体失败:', error);
       setEntities([]);
@@ -88,6 +98,35 @@ const KnowledgePage = () => {
     }
   }, [selectedType, sortBy, searchQuery]);
 
+  // 加载更多
+  const handleLoadMore = async () => {
+    if (loadingMore || !hasMore) return;
+    
+    try {
+      setLoadingMore(true);
+      const nextPage = page + 1;
+      const params = {
+        sort: sortBy,
+        limit: PAGE_SIZE,
+        offset: (nextPage - 1) * PAGE_SIZE
+      };
+      if (selectedType) params.type = selectedType;
+      if (searchQuery) params.search = searchQuery;
+      
+      const response = await getEntities(params);
+      const newData = response.data || [];
+      
+      setEntities(prev => [...prev, ...newData]);
+      setPage(nextPage);
+      setHasMore(newData.length === PAGE_SIZE);
+    } catch (error) {
+      console.error('加载更多失败:', error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  // 筛选/排序变化时重新加载
   useEffect(() => {
     loadEntities();
   }, [loadEntities]);
@@ -98,7 +137,7 @@ const KnowledgePage = () => {
       loadEntities();
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchQuery, loadEntities]);
+  }, [searchQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -192,15 +231,42 @@ const KnowledgePage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {entities.map((entity) => (
-              <EntityCard
-                key={entity._id}
-                entity={entity}
-                onClick={() => navigate(`/entity/${entity._id}`)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {entities.map((entity) => (
+                <EntityCard
+                  key={entity._id}
+                  entity={entity}
+                  onClick={() => navigate(`/entity/${entity._id}`)}
+                />
+              ))}
+            </div>
+            
+            {/* 加载更多按钮 */}
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {loadingMore ? (
+                    <>
+                      <FaSpinner className="animate-spin" />
+                      加载中...
+                    </>
+                  ) : (
+                    '加载更多'
+                  )}
+                </button>
+              </div>
+            )}
+            
+            {/* 显示数量 */}
+            <div className="text-center mt-4 text-sm text-gray-500">
+              已显示 {entities.length} 个实体
+            </div>
+          </>
         )}
       </main>
 
