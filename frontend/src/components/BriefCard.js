@@ -711,12 +711,12 @@ const BriefCard = ({ brief, isNew = false }) => {
                     : metric.value;
                   
                   return (
-                    <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50 overflow-hidden">
-                      <div className="text-xs text-gray-500 mb-1 truncate">{metric.name}</div>
+                    <div key={i} className="bg-white/70 rounded-lg p-2.5 border border-blue-100/50">
+                      <div className="text-xs text-gray-500 mb-1 leading-snug">{metric.name}</div>
                       <div className="flex items-baseline gap-1 flex-wrap">
                         {isNumericValue ? (
                           <>
-                            <span className="text-lg font-bold text-gray-900 break-all">{displayValue}</span>
+                            <span className="text-lg font-bold text-gray-900">{displayValue}</span>
                             <span className="text-xs text-gray-500">{metric.unit}</span>
                           </>
                         ) : (
@@ -727,7 +727,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                         )}
                       </div>
                       {metric.entity && (
-                        <div className="text-xs text-blue-600 mt-1 truncate">{metric.entity}</div>
+                        <div className="text-xs text-blue-600 mt-1 leading-snug">{metric.entity}</div>
                       )}
                     </div>
                   );
@@ -877,18 +877,24 @@ const BriefCard = ({ brief, isNew = false }) => {
               {brief.supply_chain_insight.related_companies && brief.supply_chain_insight.related_companies.length > 0 && (
                 <div className="space-y-2 mb-3">
                   <div className="text-xs text-orange-600 font-medium">关联供应商</div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="space-y-2">
                     {brief.supply_chain_insight.related_companies.map((company, i) => (
-                      <div key={i} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white/70 rounded-lg border border-orange-100">
-                        <span className="text-sm font-medium text-gray-800">{company.name}</span>
-                        {company.role && <span className="text-xs text-gray-400">({company.role})</span>}
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${
-                          company.effect === '利好' ? 'bg-green-100 text-green-700' :
-                          company.effect === '利空' ? 'bg-red-100 text-red-700' :
-                          'bg-gray-100 text-gray-600'
-                        }`}>
-                          {company.effect}
-                        </span>
+                      <div key={i} className="p-2 bg-white/70 rounded-lg border border-orange-100">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-medium text-gray-800">{company.name}</span>
+                          {company.role && (
+                            <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+                              {company.role}
+                            </span>
+                          )}
+                          <span className={`text-xs px-1.5 py-0.5 rounded ${
+                            company.effect === '利好' ? 'bg-green-100 text-green-700' :
+                            company.effect === '利空' ? 'bg-red-100 text-red-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>
+                            {company.effect}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
