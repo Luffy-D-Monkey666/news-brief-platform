@@ -16,6 +16,9 @@ BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:3001')
 # 实体激活阈值（被提及多少次后创建知识库页面）
 ENTITY_ACTIVATION_THRESHOLD = int(os.getenv('ENTITY_ACTIVATION_THRESHOLD', '3'))
 
+# 跳过实体关联的分类（节省 token）
+SKIP_ENTITY_CATEGORIES = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
+
 
 class EntityService:
     """实体知识库关联服务"""
@@ -49,6 +52,12 @@ class EntityService:
         Returns:
             成功关联的实体数量
         """
+        # 跳过特定分类的实体识别（娱乐、动漫、OP、TCG）
+        category = brief.get('category', '')
+        if category in SKIP_ENTITY_CATEGORIES:
+            logger.debug(f"跳过实体识别: 分类 {category} 在排除列表中")
+            return 0
+        
         entities = brief.get('entities', [])
         if not entities:
             return 0
