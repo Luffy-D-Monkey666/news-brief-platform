@@ -33,17 +33,26 @@ const FloatingToolbar = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 滚动到功能区（搜索栏上方，即 main 区域顶部）
+  // 滚动到搜索栏位置（分类区域下方，搜索框紧贴 header）
   const scrollToToolbar = () => {
-    const main = document.querySelector('main');
-    if (main) {
-      // 获取 sticky header 的高度，滚动到 main 顶部减去 header 高度
-      const header = document.querySelector('header');
-      const headerHeight = header ? header.offsetHeight : 0;
-      const targetPosition = main.offsetTop - headerHeight - 10;
+    // 查找搜索框容器（包含 "搜索新闻标题或内容..." 的 div）
+    const searchContainer = document.querySelector('main > div:nth-child(2)');
+    const header = document.querySelector('header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    
+    if (searchContainer) {
+      // 滚动到搜索框位置，让它紧贴 header 下方
+      const targetPosition = searchContainer.offsetTop - headerHeight - 10;
       window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // 备用：通过 form 元素定位
+      const searchForm = document.querySelector('main form');
+      if (searchForm) {
+        const targetPosition = searchForm.offsetTop - headerHeight - 20;
+        window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
