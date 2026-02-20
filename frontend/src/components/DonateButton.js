@@ -30,31 +30,30 @@ const DonateButton = () => {
 
       {/* 二维码展示区域 */}
       {showQRCodes && (
-        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-2xl p-4 min-w-[300px] z-50 border border-gray-200">
-          <div className="text-center mb-3">
-            <p className="text-gray-700 font-medium">感谢您的支持</p>
-            <p className="text-gray-500 text-sm mt-1">请扫描二维码打赏</p>
+        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-2xl p-3 z-50 border border-gray-200">
+          <div className="text-center mb-2">
+            <p className="text-gray-700 font-medium text-sm">感谢您的支持</p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex gap-3">
             {/* 微信支付二维码 */}
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-2">微信支付</p>
+              <p className="text-xs text-gray-600 mb-1">微信支付</p>
               <img
                 src="/donate/wechat-pay.jpg"
                 alt="微信支付"
-                className="w-full cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-24 h-24 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/wechat-pay.jpg')}
               />
             </div>
 
             {/* 支付宝二维码 */}
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-2">支付宝</p>
+              <p className="text-xs text-gray-600 mb-1">支付宝</p>
               <img
                 src="/donate/alipay.jpg"
                 alt="支付宝"
-                className="w-full cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-24 h-24 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/alipay.jpg')}
               />
             </div>
