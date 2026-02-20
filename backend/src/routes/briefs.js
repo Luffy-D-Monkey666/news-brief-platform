@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const briefController = require('../controllers/briefController');
 
+// 搜索新闻
+router.get('/search', briefController.searchBriefs);
+
 // 获取最新简报
 router.get('/latest', briefController.getLatestBriefs);
 

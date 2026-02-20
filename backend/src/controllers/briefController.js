@@ -106,6 +106,57 @@ exports.getCategoryStats = async (req, res) => {
   }
 };
 
+// 搜索新闻
+exports.searchBriefs = async (req, res) => {
+  try {
+    const { q, category, limit = 50, page = 1 } = req.query;
+    
+    if (!q || q.trim().length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: '搜索关键词至少需要2个字符'
+      });
+    }
+
+    const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+    const searchQuery = {
+      $or: [
+        { title: { $regex: q, $options: 'i' } },
+        { summary: { $regex: q, $options: 'i' } }
+      ]
+    };
+    
+    if (category) {
+      searchQuery.category = category;
+    }
+
+    const briefs = await Brief.find(searchQuery)
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(parseInt(limit, 10));
+
+    const total = await Brief.countDocuments(searchQuery);
+
+    res.json({
+      success: true,
+      data: briefs,
+      query: q,
+      pagination: {
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10),
+        total,
+        pages: Math.ceil(total / parseInt(limit, 10))
+      }
+    });
+  } catch (error) {
+    console.error('搜索失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '搜索失败'
+    });
+  }
+};
+
 // 根据ID获取简报详情
 exports.getBriefById = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { getLatestBriefs, getHistoryBriefs, getHotTopics } from '../services/api';
+import { getLatestBriefs, getHistoryBriefs, getHotTopics, searchBriefs } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 import BriefCard from '../components/BriefCard';
@@ -8,7 +8,7 @@ import TopicCard from '../components/TopicCard';
 import CategoryFilter from '../components/CategoryFilter';
 import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook, FaSearch, FaTimes } from 'react-icons/fa';
 import DonateButton from '../components/DonateButton';
 
 // 时间筛选选项
@@ -33,6 +33,9 @@ const HomePage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [hotTopics, setHotTopics] = useState([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(null);
 
   const { latestBrief } = useWebSocket();
   
@@ -60,6 +63,34 @@ const HomePage = () => {
     } finally {
       setTopicsLoading(false);
     }
+  };
+
+  // 搜索新闻
+  const handleSearch = async (e) => {
+    e?.preventDefault();
+    if (!searchQuery.trim() || searchQuery.trim().length < 2) return;
+    
+    try {
+      setIsSearching(true);
+      const result = await searchBriefs(searchQuery.trim(), selectedCategory);
+      if (result.success) {
+        setSearchResults({
+          query: searchQuery.trim(),
+          data: result.data || [],
+          total: result.pagination?.total || 0
+        });
+      }
+    } catch (error) {
+      console.error('搜索失败:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 清除搜索
+  const clearSearch = () => {
+    setSearchQuery('');
+    setSearchResults(null);
   };
 
   const loadBriefs = useCallback(async (retryCount = 0) => {
@@ -238,7 +269,7 @@ const HomePage = () => {
             <div className="flex items-center gap-3">
               <Link
                 to="/knowledge"
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all font-medium"
               >
                 <FaBook />
                 知识库
@@ -256,6 +287,54 @@ const HomePage = () => {
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
         />
+
+        {/* 搜索框 */}
+        <div className="mb-6">
+          <form onSubmit={handleSearch} className="flex gap-2 max-w-xl">
+            <div className="relative flex-1">
+              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="搜索新闻标题或内容..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={isSearching || searchQuery.trim().length < 2}
+              className="px-4 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSearching ? <FaSpinner className="animate-spin" /> : '搜索'}
+            </button>
+          </form>
+          
+          {/* 搜索结果提示 */}
+          {searchResults && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-sm text-gray-600">
+                搜索 "<span className="font-medium text-black">{searchResults.query}</span>" 
+                找到 <span className="font-medium text-black">{searchResults.total}</span> 条结果
+              </span>
+              <button
+                onClick={clearSearch}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                清除搜索
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* 工具栏：时间筛选 + 视图切换 */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -372,6 +451,26 @@ const HomePage = () => {
                 <TopicCard key={topic._id} topic={topic} />
               ))}
             </div>
+          )
+        ) : searchResults ? (
+          // 搜索结果视图
+          searchResults.data.length === 0 ? (
+            <div className="text-center py-32 bg-white rounded-2xl">
+              <p className="text-gray-500 text-xl">未找到相关新闻</p>
+              <p className="text-gray-400 text-sm mt-2">
+                试试其他关键词
+              </p>
+            </div>
+          ) : (
+            <Masonry
+              breakpointCols={{ default: 4, 1536: 4, 1280: 3, 1024: 3, 768: 2, 640: 1 }}
+              className="masonry-grid"
+              columnClassName="masonry-grid_column"
+            >
+              {searchResults.data.map((brief) => (
+                <BriefCard key={brief._id} brief={brief} />
+              ))}
+            </Masonry>
           )
         ) : loading ? (
           <div className="flex items-center justify-center py-32">

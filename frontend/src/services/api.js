@@ -53,6 +53,13 @@ export const getBriefById = async (id) => {
   return api.get(`/briefs/${id}`);
 };
 
+// 搜索新闻
+export const searchBriefs = async (query, category = null, page = 1, limit = 50) => {
+  const params = { q: query, page, limit };
+  if (category) params.category = category;
+  return api.get('/briefs/search', { params });
+};
+
 // 获取热门话题
 export const getHotTopics = async (hours = 24, limit = 10) => {
   return api.get('/topics/hot', { params: { hours, limit } });

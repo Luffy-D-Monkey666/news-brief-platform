@@ -22,9 +22,9 @@ const DonateButton = () => {
       {/* 打赏按钮 */}
       <button
         onClick={toggleQRCodes}
-        className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md hover:shadow-lg"
+        className="flex items-center gap-2 px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200"
       >
-        <FaHeart className="text-lg" />
+        <FaHeart />
         <span className="font-medium">打赏开发者</span>
       </button>
 
