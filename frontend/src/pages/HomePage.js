@@ -221,6 +221,33 @@ const HomePage = () => {
     general: '综合'
   };
 
+  // 分类颜色映射 - 收敛到5个主色调
+  const categoryColors = {
+    // 科技类 - Blue
+    ai_technology: 'text-blue-600 bg-blue-50',
+    robotics: 'text-blue-600 bg-blue-50',
+    ai_programming: 'text-blue-600 bg-blue-50',
+    semiconductors: 'text-blue-600 bg-blue-50',
+    automotive: 'text-blue-600 bg-blue-50',
+    consumer_electronics: 'text-blue-600 bg-blue-50',
+    // 财经/商业类 - Green
+    finance_investment: 'text-green-600 bg-green-50',
+    business_tech: 'text-green-600 bg-green-50',
+    economy_policy: 'text-green-600 bg-green-50',
+    politics_world: 'text-green-600 bg-green-50',
+    // 生活/健康类 - Gray
+    health_medical: 'text-gray-700 bg-gray-100',
+    energy_environment: 'text-gray-700 bg-gray-100',
+    // 娱乐/兴趣类 - Orange
+    entertainment_sports: 'text-orange-600 bg-orange-50',
+    anime: 'text-orange-600 bg-orange-50',
+    one_piece: 'text-orange-600 bg-orange-50',
+    tcg: 'text-orange-600 bg-orange-50',
+    opcg: 'text-orange-600 bg-orange-50',
+    // 综合 - Gray
+    general: 'text-gray-500 bg-gray-50'
+  };
+
   // 列表视图的简报卡片
   const ListViewCard = ({ brief, isNew }) => (
     <div className={`bg-white rounded-xl p-4 mb-3 border border-gray-200 hover:shadow-md transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}>
@@ -235,7 +262,7 @@ const HomePage = () => {
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+            <span className={`text-xs font-medium px-2 py-0.5 rounded ${categoryColors[brief.category] || 'text-gray-500 bg-gray-50'}`}>
               {categoryNames[brief.category] || brief.category}
             </span>
             <span className="text-xs text-gray-400 flex items-center">

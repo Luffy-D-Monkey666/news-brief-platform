@@ -17,27 +17,33 @@ import {
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 import { searchEntityByName } from '../services/api';
 
-// Apple风格配色（更简洁清爽）
+// Apple风格配色 - 收敛到5个主色调
+// Blue: 科技类 | Green: 财经/商业类 | Orange: 娱乐/兴趣类 | Gray: 中性/综合类 | Red: 警告（仅用于重要标签）
 const categoryColors = {
-  ai_technology: 'text-purple-600',
-  robotics: 'text-indigo-600',
+  // 科技类 - Blue
+  ai_technology: 'text-blue-600',
+  robotics: 'text-blue-600',
   ai_programming: 'text-blue-600',
-  semiconductors: 'text-gray-700',
-  opcg: 'text-orange-600',
-  automotive: 'text-emerald-600',
-  consumer_electronics: 'text-cyan-600',
-  one_piece: 'text-red-600',
-  anime: 'text-pink-600',
-  tcg: 'text-orange-500',
-  podcasts: 'text-pink-600',
-  finance_investment: 'text-rose-600',
-  business_tech: 'text-blue-600',
-  politics_world: 'text-indigo-600',
-  economy_policy: 'text-yellow-600',
-  health_medical: 'text-teal-600',
-  energy_environment: 'text-cyan-600',
+  semiconductors: 'text-blue-600',
+  consumer_electronics: 'text-blue-600',
+  automotive: 'text-blue-600',
+  // 财经/商业/政经类 - Green
+  finance_investment: 'text-green-600',
+  business_tech: 'text-green-600',
+  economy_policy: 'text-green-600',
+  politics_world: 'text-green-600',
+  // 生活/健康类 - Gray (深)
+  health_medical: 'text-gray-700',
+  energy_environment: 'text-gray-700',
+  // 娱乐/兴趣类 - Orange
   entertainment_sports: 'text-orange-600',
-  general: 'text-gray-600'
+  anime: 'text-orange-600',
+  one_piece: 'text-orange-600',
+  tcg: 'text-orange-600',
+  opcg: 'text-orange-600',
+  podcasts: 'text-orange-600',
+  // 综合 - Gray
+  general: 'text-gray-500'
 };
 
 const categoryNames = {

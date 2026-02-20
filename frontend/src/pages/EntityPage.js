@@ -4,12 +4,13 @@ import { getEntityTimeline, synthesizeSpeech } from '../services/api';
 import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 // 实体类型配置
+// 实体类型配置 - 收敛配色
 const TYPE_CONFIG = {
   company: { icon: FaBuilding, label: '公司', color: 'bg-blue-100 text-blue-700', borderColor: 'border-blue-400' },
-  person: { icon: FaUser, label: '人物', color: 'bg-purple-100 text-purple-700', borderColor: 'border-purple-400' },
-  concept: { icon: FaLightbulb, label: '概念', color: 'bg-amber-100 text-amber-700', borderColor: 'border-amber-400' },
+  person: { icon: FaUser, label: '人物', color: 'bg-gray-100 text-gray-700', borderColor: 'border-gray-400' },
+  concept: { icon: FaLightbulb, label: '概念', color: 'bg-orange-100 text-orange-700', borderColor: 'border-orange-400' },
   event: { icon: FaCalendarAlt, label: '事件', color: 'bg-green-100 text-green-700', borderColor: 'border-green-400' },
-  product: { icon: FaNewspaper, label: '产品', color: 'bg-cyan-100 text-cyan-700', borderColor: 'border-cyan-400' }
+  product: { icon: FaNewspaper, label: '产品', color: 'bg-blue-100 text-blue-700', borderColor: 'border-blue-400' }
 };
 
 // 分类名称映射

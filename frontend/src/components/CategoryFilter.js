@@ -19,33 +19,35 @@ import {
   FaPlay         // 动漫图标
 } from 'react-icons/fa';
 
-// 分类图标和颜色配置
+// 分类图标和颜色配置 - 收敛到5个主色调
+// Blue: 科技类 | Green: 财经/商业类 | Orange: 娱乐/兴趣类 | Gray: 中性/综合类
 const categoryIcons = {
-  // 核心科技领域
-  ai_technology: { icon: FaBrain, color: 'text-purple-600' },
-  robotics: { icon: FaRobot, color: 'text-indigo-600' },
+  // 科技类 - Blue
+  ai_technology: { icon: FaBrain, color: 'text-blue-600' },
+  robotics: { icon: FaRobot, color: 'text-blue-600' },
   ai_programming: { icon: FaCode, color: 'text-blue-600' },
-  semiconductors: { icon: FaMicrochip, color: 'text-gray-700' },
-  automotive: { icon: FaCar, color: 'text-green-600' },
-  consumer_electronics: { icon: FaMobileAlt, color: 'text-cyan-600' },
-  // podcasts 已移除
-  finance_investment: { icon: FaChartLine, color: 'text-red-600' },
+  semiconductors: { icon: FaMicrochip, color: 'text-blue-600' },
+  automotive: { icon: FaCar, color: 'text-blue-600' },
+  consumer_electronics: { icon: FaMobileAlt, color: 'text-blue-600' },
   
-  // 主流新闻分类
-  business_tech: { icon: FaBolt, color: 'text-blue-600' },
-  politics_world: { icon: FaLandmark, color: 'text-indigo-600' },
-  economy_policy: { icon: FaDollarSign, color: 'text-yellow-600' },
-  health_medical: { icon: FaHeartbeat, color: 'text-pink-600' },
-  energy_environment: { icon: FaLeaf, color: 'text-teal-600' },
+  // 财经/商业/政经类 - Green
+  finance_investment: { icon: FaChartLine, color: 'text-green-600' },
+  business_tech: { icon: FaBolt, color: 'text-green-600' },
+  politics_world: { icon: FaLandmark, color: 'text-green-600' },
+  economy_policy: { icon: FaDollarSign, color: 'text-green-600' },
+  
+  // 生活/健康类 - Gray
+  health_medical: { icon: FaHeartbeat, color: 'text-gray-700' },
+  energy_environment: { icon: FaLeaf, color: 'text-gray-700' },
+  
+  // 娱乐/兴趣类 - Orange
   entertainment_sports: { icon: FaFilm, color: 'text-orange-600' },
+  anime: { icon: FaPlay, color: 'text-orange-600' },
+  one_piece: { icon: FaShip, color: 'text-orange-600' },
+  tcg: { icon: FaLayerGroup, color: 'text-orange-600' },
   
-  // 兴趣领域（放在综合前）
-  anime: { icon: FaPlay, color: 'text-purple-500' },
-  one_piece: { icon: FaShip, color: 'text-red-600' },
-  tcg: { icon: FaLayerGroup, color: 'text-orange-500' },
-  
-  // 综合
-  general: { icon: FaGlobe, color: 'text-gray-600' }
+  // 综合 - Gray
+  general: { icon: FaGlobe, color: 'text-gray-500' }
 };
 
 // 分类中文名称（按显示顺序）
