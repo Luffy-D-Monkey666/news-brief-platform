@@ -880,14 +880,14 @@ const BriefCard = ({ brief, isNew = false }) => {
                   <div className="space-y-2">
                     {brief.supply_chain_insight.related_companies.map((company, i) => (
                       <div key={i} className="p-2 bg-white/70 rounded-lg border border-orange-100">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-sm font-medium text-gray-800">{company.name}</span>
                           {company.role && (
-                            <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+                            <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded whitespace-nowrap">
                               {company.role}
                             </span>
                           )}
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${
+                          <span className={`text-xs px-1.5 py-0.5 rounded whitespace-nowrap ${
                             company.effect === '利好' ? 'bg-green-100 text-green-700' :
                             company.effect === '利空' ? 'bg-red-100 text-red-700' :
                             'bg-gray-100 text-gray-600'
