@@ -19,6 +19,7 @@ from processors.cloud_ai_processor import NewsProcessor
 from models.database import NewsDatabase
 from filters.quality_filter import ContentQualityFilter
 from services.topic_service import TopicService
+from services.entity_service import EntityService
 import redis
 
 # 配置日志
@@ -46,6 +47,16 @@ class NewsService:
         # 话题聚合服务
         self.topic_service = TopicService(self.db.db)
         logger.info("话题聚合服务已启用")
+        
+        # 实体知识库服务
+        try:
+            self.entity_service = EntityService()
+            self.entity_enabled = True
+            logger.info("实体知识库服务已启用")
+        except Exception as e:
+            logger.warning(f"实体知识库服务初始化失败: {e}")
+            self.entity_service = None
+            self.entity_enabled = False
 
         # 添加锁，防止并发执行
         self._lock = Lock()
@@ -166,10 +177,11 @@ class NewsService:
             )
             logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
 
-            # 5. 保存简报 + 话题聚合
-            logger.info("步骤 5/5: 保存简报并进行话题聚合...")
+            # 5. 保存简报 + 话题聚合 + 实体关联
+            logger.info("步骤 5/5: 保存简报并进行话题聚合、实体关联...")
             saved_count = 0
             topic_assigned = 0
+            entity_linked = 0
             for brief in processed_news:
                 # 话题聚合：为新闻找到或创建话题
                 topic_id = self.topic_service.find_or_create_topic(brief)
@@ -182,8 +194,18 @@ class NewsService:
                     saved_count += 1
                     # 发布到Redis，通知后端服务
                     self.publish_brief(brief)
+                    
+                    # 实体知识库关联
+                    if self.entity_enabled and self.entity_service:
+                        try:
+                            linked = self.entity_service.process_brief_entities(brief, brief_id)
+                            entity_linked += linked
+                        except Exception as e:
+                            logger.warning(f"实体关联失败: {e}")
             
             logger.info(f"话题聚合: {topic_assigned}/{len(processed_news)} 条新闻已分配话题")
+            if self.entity_enabled:
+                logger.info(f"实体关联: {entity_linked} 个实体已关联到知识库")
 
             logger.info(f"步骤 5/5 完成: 成功保存 {saved_count}/{len(processed_news)} 条简报")
 
