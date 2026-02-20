@@ -892,9 +892,47 @@ const BriefCard = ({ brief, isNew = false }) => {
           {/* 行动建议（仅财经/商业类显示） */}
           {brief.action_advice && (
             <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <div className="text-sm text-amber-900 leading-relaxed whitespace-pre-line">
-                {brief.action_advice}
-              </div>
+              {(() => {
+                const text = brief.action_advice;
+                // 尝试分离风险提示和行动建议
+                const riskMatch = text.match(/风险提示[：:]\s*([\s\S]*?)(?=行动建议|$)/);
+                const actionMatch = text.match(/行动建议[：:]\s*([\s\S]*?)$/);
+                
+                if (riskMatch || actionMatch) {
+                  return (
+                    <div className="space-y-3">
+                      {riskMatch && riskMatch[1]?.trim() && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span>⚠️</span>
+                            <span className="text-xs font-bold text-amber-800">风险提示</span>
+                          </div>
+                          <p className="text-sm text-amber-900 leading-relaxed pl-5">
+                            {riskMatch[1].trim()}
+                          </p>
+                        </div>
+                      )}
+                      {actionMatch && actionMatch[1]?.trim() && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span>💡</span>
+                            <span className="text-xs font-bold text-amber-800">行动建议</span>
+                          </div>
+                          <p className="text-sm text-amber-900 leading-relaxed pl-5">
+                            {actionMatch[1].trim()}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                // 如果没有匹配到格式，原样显示
+                return (
+                  <div className="text-sm text-amber-900 leading-relaxed whitespace-pre-line">
+                    {text}
+                  </div>
+                );
+              })()}
             </div>
           )}
 
