@@ -449,13 +449,13 @@ const EntityPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 头部 */}
-      <header className="bg-black shadow-lg sticky top-0 z-50">
+      <header className="bg-gradient-to-b from-black to-gray-900 shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/knowledge')}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white hover:scale-110 transition-all"
                 title="返回知识库"
               >
                 <FaArrowLeft className="text-xl" />
@@ -467,7 +467,7 @@ const EntityPage = () => {
             </div>
             <Link
               to="/"
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 hover:scale-[1.02] text-white rounded-lg transition-all text-sm font-medium"
             >
               <span>🏠</span>
               <span>主页</span>

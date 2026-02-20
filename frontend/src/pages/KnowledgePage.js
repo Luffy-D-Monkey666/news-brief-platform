@@ -142,13 +142,13 @@ const KnowledgePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 头部 */}
-      <header className="bg-black shadow-lg sticky top-0 z-50">
+      <header className="bg-gradient-to-b from-black to-gray-900 shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/')}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white hover:scale-110 transition-all"
               >
                 <FaArrowLeft className="text-xl" />
               </button>

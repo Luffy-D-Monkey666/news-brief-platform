@@ -334,7 +334,7 @@ const BriefCard = ({ brief, isNew = false }) => {
   return (
     <>
       <div
-        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-gray-300 ${
+        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 hover:border-gray-300 ${
           isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
         } ${importance.border}`}
       >
@@ -436,7 +436,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               ) : !isPlaying && !isPaused ? (
                 <button
                   onClick={handleRead}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-[1.02] transition-all text-sm font-medium"
                 >
                   <FaVolumeUp />
                   朗读
@@ -444,7 +444,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               ) : isPaused ? (
                 <button
                   onClick={handleRead}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-[1.02] transition-all text-sm font-medium"
                 >
                   <FaPlay />
                   继续
@@ -1031,7 +1031,7 @@ const BriefCard = ({ brief, isNew = false }) => {
               href={brief.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 w-full flex items-center justify-center bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm font-medium"
+              className="mt-4 w-full flex items-center justify-center bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 hover:scale-[1.01] transition-all text-sm font-medium"
             >
               查看原文
               <FaExternalLinkAlt className="ml-2 text-xs" />
