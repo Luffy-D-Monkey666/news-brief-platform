@@ -14,6 +14,20 @@ class ContentQualityFilter:
     """内容质量过滤器"""
 
     def __init__(self):
+        # 高质量来源白名单 - 跳过质量过滤
+        self.trusted_sources = {
+            'nature.com',           # Nature
+            'science.org',          # Science
+            'reuters.com',          # 路透社
+            'bbc.co.uk',            # BBC
+            'nytimes.com',          # 纽约时报
+            'theguardian.com',      # 卫报
+            'economist.com',        # 经济学人
+            'wsj.com',              # 华尔街日报
+            'technologyreview.com', # MIT Technology Review
+            'arxiv.org',            # arXiv 论文
+        }
+        
         # 低价值关键词（通用）- 出现在标题中会降低评分
         # 注意：已移除可能误杀重要新闻的关键词（如"评测""体验""如何"等）
         self.low_value_keywords = [
@@ -115,7 +129,7 @@ class ContentQualityFilter:
 
         return score
 
-    def should_process(self, title: str, category: str, threshold: int = 3) -> bool:
+    def should_process(self, title: str, category: str, threshold: int = 3, source_url: str = None) -> bool:
         """
         判断是否应该处理这条新闻
 
@@ -123,10 +137,18 @@ class ContentQualityFilter:
             title: 新闻标题
             category: 新闻分类
             threshold: 最低评分阈值（低于此分数不处理）
+            source_url: 来源 URL（用于白名单检查）
 
         Returns:
             True表示应该处理，False表示跳过
         """
+        # 检查是否为可信来源（白名单）
+        if source_url:
+            for trusted in self.trusted_sources:
+                if trusted in source_url.lower():
+                    logger.debug(f"✅ 可信来源跳过过滤: {trusted} - {title[:40]}...")
+                    return True
+        
         score = self.evaluate_importance(title, '', category)
 
         if score < threshold:
@@ -148,20 +170,28 @@ class ContentQualityFilter:
         """
         filtered = []
         skipped_count = 0
+        trusted_count = 0
 
         for news in news_list:
             title = news.get('title', '')
             category = news.get(category_key, 'general')
+            source_url = news.get('source_url', '') or news.get('link', '')
 
-            if self.should_process(title, category):
+            if self.should_process(title, category, source_url=source_url):
                 # 添加质量评分到新闻数据
                 news['quality_score'] = self.evaluate_importance(title, '', category)
                 filtered.append(news)
+                
+                # 统计可信来源
+                for trusted in self.trusted_sources:
+                    if trusted in source_url.lower():
+                        trusted_count += 1
+                        break
             else:
                 skipped_count += 1
 
-        if skipped_count > 0:
-            logger.info(f"📊 质量过滤: 保留 {len(filtered)} 条，跳过 {skipped_count} 条低质量新闻")
+        if skipped_count > 0 or trusted_count > 0:
+            logger.info(f"📊 质量过滤: 保留 {len(filtered)} 条（含 {trusted_count} 条可信来源），跳过 {skipped_count} 条")
 
         return filtered
 
