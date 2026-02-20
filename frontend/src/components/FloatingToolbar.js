@@ -33,12 +33,18 @@ const FloatingToolbar = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 滚动到新闻列表
-  const scrollToNews = () => {
-    const newsSection = document.querySelector('.masonry-grid, .space-y-3, .space-y-0');
-    if (newsSection) {
-      const offset = newsSection.offsetTop - 100;
+  // 滚动到功能区（搜索栏上方）
+  const scrollToToolbar = () => {
+    const searchForm = document.querySelector('form[class*="flex gap-2"]');
+    if (searchForm) {
+      const offset = searchForm.offsetTop - 20;
       window.scrollTo({ top: offset, behavior: 'smooth' });
+    } else {
+      // 备用：滚动到 main 区域顶部
+      const main = document.querySelector('main');
+      if (main) {
+        window.scrollTo({ top: main.offsetTop - 20, behavior: 'smooth' });
+      }
     }
   };
 
@@ -51,21 +57,21 @@ const FloatingToolbar = ({
     // 直接调用搜索，传入搜索词
     await onSearch(localSearchQuery.trim());
     // 搜索后滚动到新闻列表
-    setTimeout(scrollToNews, 300);
+    setTimeout(scrollToToolbar, 300);
   };
 
   const handleRefresh = () => {
     onRefresh();
     setShowToolbar(false);
     // 刷新后滚动到新闻列表
-    setTimeout(scrollToNews, 300);
+    setTimeout(scrollToToolbar, 300);
   };
 
   const handleViewChange = (mode) => {
     setViewMode(mode);
     setShowToolbar(false);
     // 视图切换后滚动到新闻列表
-    setTimeout(scrollToNews, 100);
+    setTimeout(scrollToToolbar, 100);
   };
 
   return (
