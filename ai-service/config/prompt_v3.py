@@ -24,7 +24,7 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
 6. key_metrics: 关键数字数组[{{name,value,unit,entity}}]，无则[]
 7. background: 仅breaking/high需要{{context,timeline:[{{date,event}}]}}，其他null
 8. tech_insight: 仅ai_technology/robotics/ai_programming/semiconductors需要{{principle,comparison,maturity}}，其他null
-9. funding_history: 仅融资新闻需要{{company,rounds:[{{round,amount,date,investors}}],total_funding,valuation}}，其他null
+9. funding_history: 仅融资新闻需要{{company,rounds:[{{round,amount(必须带单位如"$6.2M"或"620万美元"),date,investors}}],total_funding(带单位),valuation(带单位)}}，其他null
 10. supply_chain_insight: 仅consumer_electronics/automotive需要{{impact,related_companies:[{{name,role,effect}}],capacity_info}}，其他null
 
 示例（重要AI新闻）：

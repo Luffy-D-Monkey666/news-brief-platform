@@ -714,13 +714,27 @@ const BriefCard = ({ brief, isNew = false }) => {
               {/* 融资轮次时间线 */}
               {brief.funding_history.rounds && brief.funding_history.rounds.length > 0 && (
                 <div className="space-y-3 mb-3">
-                  {brief.funding_history.rounds.map((round, i) => (
+                  {brief.funding_history.rounds.map((round, i) => {
+                    // 格式化金额：如果是纯数字，补上单位
+                    const formatAmount = (amt) => {
+                      if (!amt) return '未披露';
+                      const str = String(amt);
+                      // 如果已经有单位（包含$、¥、€、万、亿、M、B、K等），直接返回
+                      if (/[$¥€万亿MBK]/.test(str)) return str;
+                      // 纯数字，根据大小添加单位
+                      const num = parseFloat(str);
+                      if (isNaN(num)) return str;
+                      if (num >= 1000) return `$${(num/1000).toFixed(1)}B`;
+                      if (num >= 1) return `$${num}M`;
+                      return `$${(num*1000).toFixed(0)}K`;
+                    };
+                    return (
                     <div key={i} className="text-sm">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium whitespace-nowrap shrink-0">
                           {round.round}
                         </span>
-                        <span className="font-semibold text-gray-800 whitespace-nowrap">{round.amount}</span>
+                        <span className="font-semibold text-gray-800 whitespace-nowrap">{formatAmount(round.amount)}</span>
                       </div>
                       <div className="mt-1 ml-0.5 text-xs text-gray-500">
                         {round.date && <span>{round.date}</span>}
@@ -730,7 +744,8 @@ const BriefCard = ({ brief, isNew = false }) => {
                         )}
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               
