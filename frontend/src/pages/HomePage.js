@@ -422,15 +422,17 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* 筛选结果统计 */}
-        <div className="mb-4 text-sm text-gray-500">
-          找到 <span className="font-medium text-gray-900">{totalCount}</span> 条
-          {selectedTimeFilter !== 'all' && TIME_FILTERS.find(f => f.key === selectedTimeFilter)?.label}
-          新闻
-          {briefs.length < totalCount && (
-            <span className="text-gray-400">（已加载 {briefs.length} 条）</span>
-          )}
-        </div>
+        {/* 筛选结果统计 - 搜索时隐藏 */}
+        {!searchResults && (
+          <div className="mb-4 text-sm text-gray-500">
+            找到 <span className="font-medium text-gray-900">{totalCount}</span> 条
+            {selectedTimeFilter !== 'all' && TIME_FILTERS.find(f => f.key === selectedTimeFilter)?.label}
+            新闻
+            {briefs.length < totalCount && (
+              <span className="text-gray-400">（已加载 {briefs.length} 条）</span>
+            )}
+          </div>
+        )}
 
         {viewMode === 'topics' ? (
           // 话题视图
