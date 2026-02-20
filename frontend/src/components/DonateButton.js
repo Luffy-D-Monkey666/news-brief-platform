@@ -35,14 +35,14 @@ const DonateButton = () => {
             <p className="text-gray-700 font-medium text-sm">感谢您的支持</p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             {/* 微信支付二维码 */}
             <div className="text-center">
               <p className="text-xs text-gray-600 mb-1">微信支付</p>
               <img
                 src="/donate/wechat-pay.jpg"
                 alt="微信支付"
-                className="w-24 h-24 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-36 h-36 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/wechat-pay.jpg')}
               />
             </div>
@@ -53,7 +53,7 @@ const DonateButton = () => {
               <img
                 src="/donate/alipay.jpg"
                 alt="支付宝"
-                className="w-24 h-24 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                className="w-36 h-36 object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 onClick={() => openModal('/donate/alipay.jpg')}
               />
             </div>
