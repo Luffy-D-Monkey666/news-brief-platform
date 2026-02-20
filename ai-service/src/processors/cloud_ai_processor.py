@@ -325,6 +325,11 @@ class NewsProcessor:
                 'created_at': news_item.get('created_at')
             }
             
+            # 娱乐/动漫/OP/TCG 分类不需要实体信息（节省展示空间）
+            skip_entity_categories = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
+            if result['category'] in skip_entity_categories:
+                processed_news['entities'] = []
+            
             # 获取股票数据（仅针对财经/商业/汽车/消费电子类新闻）
             stock_categories = ['finance_investment', 'business_tech', 'automotive', 'consumer_electronics', 'economy_policy']
             if result['category'] in stock_categories:
