@@ -713,20 +713,20 @@ const BriefCard = ({ brief, isNew = false }) => {
               
               {/* 融资轮次时间线 */}
               {brief.funding_history.rounds && brief.funding_history.rounds.length > 0 && (
-                <div className="space-y-2 mb-3">
+                <div className="space-y-3 mb-3">
                   {brief.funding_history.rounds.map((round, i) => (
-                    <div key={i} className="flex items-start gap-3 text-sm">
-                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium whitespace-nowrap">
-                        {round.round}
-                      </span>
-                      <div className="flex-1">
-                        <span className="font-medium text-gray-800">{round.amount}</span>
-                        {round.date && <span className="text-gray-400 mx-2">·</span>}
-                        {round.date && <span className="text-gray-500 text-xs">{round.date}</span>}
+                    <div key={i} className="text-sm">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium whitespace-nowrap shrink-0">
+                          {round.round}
+                        </span>
+                        <span className="font-semibold text-gray-800 whitespace-nowrap">{round.amount}</span>
+                      </div>
+                      <div className="mt-1 ml-0.5 text-xs text-gray-500">
+                        {round.date && <span>{round.date}</span>}
+                        {round.date && round.investors && round.investors.length > 0 && <span className="mx-1">·</span>}
                         {round.investors && round.investors.length > 0 && (
-                          <div className="text-xs text-gray-500 mt-0.5">
-                            投资方: {round.investors.join('、')}
-                          </div>
+                          <span>投资方: {round.investors.join('、')}</span>
                         )}
                       </div>
                     </div>
@@ -735,20 +735,22 @@ const BriefCard = ({ brief, isNew = false }) => {
               )}
               
               {/* 累计融资和估值 */}
-              <div className="flex gap-4 pt-2 border-t border-emerald-200">
-                {brief.funding_history.total_funding && (
+              {(brief.funding_history.total_funding || brief.funding_history.valuation) && (
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-emerald-200">
                   <div>
-                    <span className="text-xs text-gray-500">累计融资</span>
-                    <div className="text-sm font-bold text-emerald-700">{brief.funding_history.total_funding}</div>
+                    <div className="text-xs text-gray-500 mb-0.5">累计融资</div>
+                    <div className="text-sm font-bold text-emerald-700">
+                      {brief.funding_history.total_funding || '未披露'}
+                    </div>
                   </div>
-                )}
-                {brief.funding_history.valuation && (
                   <div>
-                    <span className="text-xs text-gray-500">最新估值</span>
-                    <div className="text-sm font-bold text-emerald-700">{brief.funding_history.valuation}</div>
+                    <div className="text-xs text-gray-500 mb-0.5">最新估值</div>
+                    <div className="text-sm font-bold text-emerald-700">
+                      {brief.funding_history.valuation || '未披露'}
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
 
