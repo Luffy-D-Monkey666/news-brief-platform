@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaArrowUp, FaSearch, FaFilter, FaTimes } from 'react-icons/fa';
+import { FaArrowUp, FaSearch, FaFilter, FaTimes, FaTh, FaList, FaFolder, FaHeadphones } from 'react-icons/fa';
 
 const FloatingToolbar = ({ 
   searchQuery, 
   setSearchQuery, 
   onSearch, 
   isSearching,
-  selectedTimeFilter,
-  setSelectedTimeFilter,
-  timeFilters,
+  viewMode,
+  setViewMode,
   onRefresh 
 }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -33,10 +32,34 @@ const FloatingToolbar = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // 滚动到新闻列表
+  const scrollToNews = () => {
+    const newsSection = document.querySelector('.masonry-grid, .space-y-3, .space-y-0');
+    if (newsSection) {
+      const offset = newsSection.offsetTop - 100;
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    if (localSearchQuery.trim().length < 2) return;
     setSearchQuery(localSearchQuery);
     onSearch(e);
+    setShowToolbar(false);
+    // 搜索后滚动到新闻列表
+    setTimeout(scrollToNews, 300);
+  };
+
+  const handleRefresh = () => {
+    onRefresh();
+    setShowToolbar(false);
+    // 刷新后滚动到新闻列表
+    setTimeout(scrollToNews, 300);
+  };
+
+  const handleViewChange = (mode) => {
+    setViewMode(mode);
     setShowToolbar(false);
   };
 
@@ -103,35 +126,52 @@ const FloatingToolbar = ({
             </button>
           </form>
 
-          {/* 时间筛选 */}
+          {/* 视图切换 */}
           <div>
-            <p className="text-xs text-gray-500 mb-2">时间筛选</p>
-            <div className="flex flex-wrap gap-1">
-              {timeFilters.map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => {
-                    setSelectedTimeFilter(filter.key);
-                    setShowToolbar(false);
-                  }}
-                  className={`px-3 py-1.5 text-xs rounded-md transition-all ${
-                    selectedTimeFilter === filter.key
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
+            <p className="text-xs text-gray-500 mb-2">视图切换</p>
+            <div className="grid grid-cols-4 gap-1">
+              <button
+                onClick={() => handleViewChange('card')}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
+                  viewMode === 'card' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FaTh className="text-sm" />
+                <span className="text-[10px]">卡片</span>
+              </button>
+              <button
+                onClick={() => handleViewChange('list')}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
+                  viewMode === 'list' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FaList className="text-sm" />
+                <span className="text-[10px]">列表</span>
+              </button>
+              <button
+                onClick={() => handleViewChange('topics')}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
+                  viewMode === 'topics' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FaFolder className="text-sm" />
+                <span className="text-[10px]">话题</span>
+              </button>
+              <button
+                onClick={() => handleViewChange('audio')}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
+                  viewMode === 'audio' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FaHeadphones className="text-sm" />
+                <span className="text-[10px]">音频</span>
+              </button>
             </div>
           </div>
 
           {/* 刷新按钮 */}
           <button
-            onClick={() => {
-              onRefresh();
-              setShowToolbar(false);
-            }}
+            onClick={handleRefresh}
             className="w-full mt-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition-colors"
           >
             刷新新闻

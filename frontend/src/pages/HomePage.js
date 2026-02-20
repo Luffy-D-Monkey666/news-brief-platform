@@ -590,9 +590,8 @@ const HomePage = () => {
         setSearchQuery={setSearchQuery}
         onSearch={handleSearch}
         isSearching={isSearching}
-        selectedTimeFilter={selectedTimeFilter}
-        setSelectedTimeFilter={setSelectedTimeFilter}
-        timeFilters={TIME_FILTERS}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
         onRefresh={loadBriefs}
       />
     </div>
