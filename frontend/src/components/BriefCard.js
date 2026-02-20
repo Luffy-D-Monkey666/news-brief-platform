@@ -628,30 +628,30 @@ const BriefCard = ({ brief, isNew = false }) => {
             <>
           {/* 股票信息（仅财经/商业类显示） */}
           {brief.stock_info && brief.stock_info.ticker && (
-            <div className="mb-5 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-green-600">📈</span>
+            <div className="mb-5 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-green-600 text-sm">📈</span>
                   <span className="text-xs font-bold text-green-800">实时股票数据</span>
                 </div>
-                <span className="text-xs text-gray-400">数据延迟约15分钟</span>
+                <span className="text-[10px] text-gray-400">数据延迟约15分钟</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-lg font-bold text-gray-900">{brief.stock_info.ticker}</span>
-                    <span className="text-sm text-gray-500">{brief.stock_info.name}</span>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <span className="text-base font-bold text-gray-900">{brief.stock_info.ticker}</span>
+                    <span className="text-xs text-gray-500 truncate">{brief.stock_info.name}</span>
                   </div>
                   {brief.stock_info.price && (
-                    <div className="flex items-baseline gap-2 mt-1">
-                      <span className="text-2xl font-bold text-gray-900">
+                    <div className="flex items-baseline gap-1.5 mt-0.5">
+                      <span className="text-xl font-bold text-gray-900">
                         {brief.stock_info.currency === 'USD' ? '$' : 
                          brief.stock_info.currency === 'HKD' ? 'HK$' : 
                          brief.stock_info.currency === 'CNY' ? '¥' : ''}
                         {brief.stock_info.price?.toFixed(2)}
                       </span>
                       {brief.stock_info.change_formatted && (
-                        <span className={`text-sm font-medium ${
+                        <span className={`text-xs font-medium ${
                           brief.stock_info.change_percent >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {brief.stock_info.change_formatted}
@@ -660,17 +660,17 @@ const BriefCard = ({ brief, isNew = false }) => {
                     </div>
                   )}
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   {brief.stock_info.market_cap_formatted && (
                     <div>
-                      <span className="text-xs text-gray-500">市值</span>
-                      <div className="text-sm font-bold text-gray-800">{brief.stock_info.market_cap_formatted}</div>
+                      <span className="text-[10px] text-gray-500">市值</span>
+                      <div className="text-xs font-bold text-gray-800">{brief.stock_info.market_cap_formatted}</div>
                     </div>
                   )}
                   {brief.stock_info.pe_ratio && (
-                    <div className="mt-1">
-                      <span className="text-xs text-gray-500">PE(TTM)</span>
-                      <div className="text-sm font-bold text-gray-800">{brief.stock_info.pe_ratio?.toFixed(1)}</div>
+                    <div className="mt-0.5">
+                      <span className="text-[10px] text-gray-500">PE(TTM)</span>
+                      <div className="text-xs font-bold text-gray-800">{brief.stock_info.pe_ratio?.toFixed(1)}</div>
                     </div>
                   )}
                 </div>
