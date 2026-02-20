@@ -5,8 +5,19 @@
 import logging
 from typing import Dict, Optional
 import re
+import time
+from threading import Lock
+from functools import lru_cache
 
 logger = logging.getLogger(__name__)
+
+# 限流配置
+RATE_LIMIT_CALLS = 5  # 每个时间窗口最多请求数
+RATE_LIMIT_WINDOW = 60  # 时间窗口（秒）
+REQUEST_INTERVAL = 1.5  # 每次请求最小间隔（秒）
+
+# 缓存配置
+CACHE_TTL = 300  # 股票数据缓存时间（秒）
 
 # 尝试导入 yfinance
 try:
@@ -104,11 +115,79 @@ COMPANY_TICKER_MAP = {
 
 
 class StockService:
-    """股票数据服务 - 使用 yfinance"""
+    """股票数据服务 - 使用 yfinance，带限流和缓存"""
     
     def __init__(self):
         if not YFINANCE_AVAILABLE:
             logger.error("yfinance 不可用，股票服务初始化失败")
+        
+        # 限流控制
+        self._last_request_time = 0
+        self._request_lock = Lock()
+        self._request_count = 0
+        self._window_start = time.time()
+        
+        # 内存缓存 {ticker: (data, timestamp)}
+        self._cache: Dict[str, tuple] = {}
+        
+        # 失败标记（避免重复请求失败的股票）
+        self._failed_tickers: Dict[str, float] = {}
+        self._fail_cooldown = 300  # 失败后冷却时间（秒）
+    
+    def _wait_for_rate_limit(self):
+        """等待限流"""
+        with self._request_lock:
+            now = time.time()
+            
+            # 重置时间窗口
+            if now - self._window_start > RATE_LIMIT_WINDOW:
+                self._window_start = now
+                self._request_count = 0
+            
+            # 检查是否超过限制
+            if self._request_count >= RATE_LIMIT_CALLS:
+                wait_time = RATE_LIMIT_WINDOW - (now - self._window_start)
+                if wait_time > 0:
+                    logger.info(f"股票API限流，等待 {wait_time:.1f}s...")
+                    time.sleep(wait_time)
+                    self._window_start = time.time()
+                    self._request_count = 0
+            
+            # 确保最小请求间隔
+            elapsed = now - self._last_request_time
+            if elapsed < REQUEST_INTERVAL:
+                time.sleep(REQUEST_INTERVAL - elapsed)
+            
+            self._last_request_time = time.time()
+            self._request_count += 1
+    
+    def _get_from_cache(self, ticker: str) -> Optional[Dict]:
+        """从缓存获取"""
+        if ticker in self._cache:
+            data, ts = self._cache[ticker]
+            if time.time() - ts < CACHE_TTL:
+                logger.debug(f"股票缓存命中: {ticker}")
+                return data
+            else:
+                del self._cache[ticker]
+        return None
+    
+    def _put_to_cache(self, ticker: str, data: Dict):
+        """写入缓存"""
+        self._cache[ticker] = (data, time.time())
+    
+    def _is_in_cooldown(self, ticker: str) -> bool:
+        """检查是否在失败冷却期"""
+        if ticker in self._failed_tickers:
+            if time.time() - self._failed_tickers[ticker] < self._fail_cooldown:
+                return True
+            else:
+                del self._failed_tickers[ticker]
+        return False
+    
+    def _mark_failed(self, ticker: str):
+        """标记失败"""
+        self._failed_tickers[ticker] = time.time()
     
     def _extract_ticker_from_text(self, text: str) -> Optional[str]:
         """从文本中提取股票代码"""
@@ -132,10 +211,23 @@ class StockService:
         return None
     
     def get_stock_info(self, ticker: str) -> Optional[Dict]:
-        """获取单个股票的详细信息"""
+        """获取单个股票的详细信息（带缓存和限流）"""
         if not YFINANCE_AVAILABLE:
             logger.warning("yfinance 不可用")
             return None
+        
+        # 检查缓存
+        cached = self._get_from_cache(ticker)
+        if cached:
+            return cached
+        
+        # 检查失败冷却期
+        if self._is_in_cooldown(ticker):
+            logger.debug(f"股票 {ticker} 在冷却期，跳过")
+            return None
+        
+        # 等待限流
+        self._wait_for_rate_limit()
             
         try:
             stock = yf.Ticker(ticker)
@@ -161,11 +253,13 @@ class StockService:
                             stock_info['change_percent'] *= 100
                             stock_info['change_formatted'] = f"{'+' if stock_info['change_percent'] >= 0 else ''}{stock_info['change_percent']:.2f}%"
                         self._format_market_cap(stock_info)
+                        self._put_to_cache(ticker, stock_info)
                         logger.info(f"获取股票数据成功 (fast_info): {ticker}")
                         return stock_info
                 except:
                     pass
                 logger.warning(f"无法获取 {ticker} 的股票数据")
+                self._mark_failed(ticker)
                 return None
             
             # 提取关键数据
@@ -189,11 +283,19 @@ class StockService:
                 change_pct = stock_info['change_percent']
                 stock_info['change_formatted'] = f"{'+' if change_pct >= 0 else ''}{change_pct:.2f}%"
             
+            # 写入缓存
+            self._put_to_cache(ticker, stock_info)
             logger.info(f"获取股票数据成功: {ticker} - {stock_info['name']}")
             return stock_info
             
         except Exception as e:
-            logger.error(f"获取 {ticker} 股票数据失败: {str(e)}")
+            error_msg = str(e)
+            if 'Too Many Requests' in error_msg or 'Rate limit' in error_msg.lower():
+                logger.error(f"获取 {ticker} 股票数据失败: Too Many Requests. Rate limited. Try after a while.")
+                self._mark_failed(ticker)
+            else:
+                logger.error(f"获取 {ticker} 股票数据失败: {error_msg}")
+                self._mark_failed(ticker)
             return None
     
     def _format_market_cap(self, stock_info: Dict):
