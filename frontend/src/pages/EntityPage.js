@@ -304,17 +304,27 @@ const EntityPage = () => {
       {/* 头部 */}
       <header className="bg-black shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/knowledge')}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <FaArrowLeft className="text-xl" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold text-white">{entity.name}</h1>
-              <p className="text-gray-400 text-sm mt-0.5">知识库 · 时间轴</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/knowledge')}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="返回知识库"
+              >
+                <FaArrowLeft className="text-xl" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-white">{entity.name}</h1>
+                <p className="text-gray-400 text-sm mt-0.5">知识库 · 时间轴</p>
+              </div>
             </div>
+            <Link
+              to="/"
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm font-medium"
+            >
+              <span>🏠</span>
+              <span>主页</span>
+            </Link>
           </div>
         </div>
       </header>
