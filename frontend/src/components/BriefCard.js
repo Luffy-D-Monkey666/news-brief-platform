@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import {
@@ -80,26 +80,35 @@ const importanceConfig = {
 // 声音预设配置现在从 AudioPlayerContext 获取
 
 // 实体卡片组件（支持点击跳转知识库）
-const EntityCard = ({ entity, config }) => {
+const EntityCard = ({ entity, config, navigate }) => {
   const [entityId, setEntityId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   
   // 点击实体名称时查找知识库 ID
   const handleClick = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     if (entityId) {
-      window.location.href = `/entity/${entityId}`;
+      navigate(`/entity/${entityId}`);
       return;
     }
     
     try {
       setLoading(true);
+      setNotFound(false);
       const response = await searchEntityByName(entity.name);
-      if (response.success && response.data) {
-        window.location.href = `/entity/${response.data._id}`;
+      if (response.success && response.data && response.data._id) {
+        setEntityId(response.data._id);
+        navigate(`/entity/${response.data._id}`);
+      } else {
+        setNotFound(true);
+        console.log('实体未找到:', entity.name);
       }
     } catch (err) {
-      console.log('实体未找到:', entity.name);
+      setNotFound(true);
+      console.log('实体查询失败:', entity.name, err);
     } finally {
       setLoading(false);
     }
@@ -113,9 +122,15 @@ const EntityCard = ({ entity, config }) => {
         <button
           onClick={handleClick}
           disabled={loading}
-          className="font-semibold text-gray-800 hover:text-cyan-600 hover:underline transition-colors cursor-pointer disabled:opacity-50"
+          className={`font-semibold transition-colors cursor-pointer disabled:opacity-50 ${
+            notFound 
+              ? 'text-gray-400 cursor-default' 
+              : 'text-gray-800 hover:text-cyan-600 hover:underline'
+          }`}
+          title={notFound ? '该实体尚未收录到知识库' : '点击查看知识库详情'}
         >
           {loading ? '...' : entity.name}
+          {notFound && <span className="text-xs text-gray-400 ml-1">(未收录)</span>}
         </button>
         <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs whitespace-nowrap flex-shrink-0">
           {config.label}
@@ -179,6 +194,7 @@ const ImageModal = ({ src, alt, onClose }) => {
 };
 
 const BriefCard = ({ brief, isNew = false }) => {
+  const navigate = useNavigate();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
   const [videoError, setVideoError] = useState(false);
@@ -956,7 +972,7 @@ const BriefCard = ({ brief, isNew = false }) => {
                   const config = typeConfig[entity.type] || typeConfig.concept;
                   
                   return (
-                    <EntityCard key={i} entity={entity} config={config} />
+                    <EntityCard key={i} entity={entity} config={config} navigate={navigate} />
                   );
                 })}
               </div>
