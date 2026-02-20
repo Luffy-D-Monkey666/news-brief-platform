@@ -34,7 +34,9 @@ SOURCE_TIERS = {
         'electrek.co', 'insideevs.com', 'semiengineering.com', 'eetimes.com',
         'statnews.com', 'fiercebiotech.com', 'variety.com', 'hollywoodreporter.com',
         '9to5mac.com', '9to5google.com', 'gsmarena.com', 'therobotreport.com',
-        'cleantechnica.com', 'greentechmedia.com', 'carbonbrief.org'
+        'cleantechnica.com', 'greentechmedia.com', 'carbonbrief.org',
+        'technologyreview.com', 'cnet.com', 'theregister.com',  # 新增
+        'techinasia.com', 'tech.eu'  # 区域科技
     ],
     # 💬 社区来源：Reddit、论坛、个人博客
     'community': [
@@ -108,7 +110,7 @@ CATEGORY_NAMES = {
 }
 
 # ============================================================
-# 新闻源配置（精选优质源，共约70个）
+# 新闻源配置（精选优质源，共约55个）
 # ============================================================
 NEWS_SOURCES = {
     'rss_feeds': [
@@ -174,12 +176,15 @@ NEWS_SOURCES = {
         'https://www.economist.com/finance-and-economics/rss.xml', # Economist
         # 已移除：Seeking Alpha（UGC质量参差）、CoinDesk（加密货币）
 
-        # ==================== 商业科技（5个核心源）====================
+        # ==================== 商业科技（8个核心源）====================
         'https://techcrunch.com/feed/',                    # TechCrunch
         'https://www.wired.com/feed/rss',                  # Wired
         'https://arstechnica.com/feed/',                   # Ars Technica
         'https://venturebeat.com/feed/',                   # VentureBeat
         'https://www.fastcompany.com/technology/rss',      # Fast Company Tech
+        'https://www.technologyreview.com/feed/',          # MIT Technology Review（深度科技分析）
+        'https://www.cnet.com/rss/news/',                  # CNET（消费科技全覆盖）
+        'https://www.theregister.com/headlines.atom',      # The Register（英国IT深度报道）
 
         # ==================== 政治国际（4个核心源）====================
         'https://www.theguardian.com/world/rss',           # Guardian World
@@ -227,6 +232,10 @@ NEWS_SOURCES = {
         # 'https://www.reddit.com/r/magicTCG/.rss',
         # 'https://www.reddit.com/r/DigimonCardGame2020/.rss',
         # 'https://www.reddit.com/r/WeissSchwarz/.rss',
+
+        # ==================== 区域科技（亚洲+欧洲视角）====================
+        'https://www.techinasia.com/feed',                 # Tech in Asia（亚洲科技创投）
+        'https://tech.eu/feed/',                           # Tech.eu（欧洲科技生态）
 
         # ==================== 综合新闻（3个核心源）====================
         'https://feeds.feedburner.com/TechCrunch/',        # TechCrunch综合
