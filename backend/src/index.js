@@ -10,6 +10,7 @@ const { Server } = require('socket.io');
 const briefRoutes = require('./routes/briefs');
 const topicRoutes = require('./routes/topics');
 const ttsRoutes = require('./routes/tts');
+const entityRoutes = require('./routes/entities');
 const WebSocketService = require('./services/websocketService');
 
 const app = express();
@@ -83,6 +84,7 @@ mongoose.connection.once('open', () => {
 app.use('/api/briefs', briefRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/tts', ttsRoutes);
+app.use('/api/entities', entityRoutes);
 
 // 404处理
 app.use((req, res) => {

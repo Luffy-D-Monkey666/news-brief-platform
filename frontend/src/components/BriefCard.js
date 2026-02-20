@@ -842,10 +842,10 @@ const BriefCard = ({ brief, isNew = false }) => {
                   return (
                     <div key={i} className="bg-white/60 rounded-lg p-3 border border-cyan-100">
                       {/* 实体名称和类型 */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-base">{config.icon}</span>
+                      <div className="flex items-center flex-wrap gap-2 mb-2">
+                        <span className="text-base flex-shrink-0">{config.icon}</span>
                         <span className="font-semibold text-gray-800">{entity.name}</span>
-                        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs">
+                        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs whitespace-nowrap flex-shrink-0">
                           {config.label}
                         </span>
                       </div>
