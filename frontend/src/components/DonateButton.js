@@ -30,30 +30,33 @@ const DonateButton = () => {
 
       {/* 二维码展示区域 */}
       {showQRCodes && (
-        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-2xl p-3 z-50 border border-gray-200">
-          <div className="text-center mb-2">
-            <p className="text-gray-700 font-medium text-sm">感谢您的支持</p>
+        <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-2xl p-5 z-50 border border-gray-200">
+          <div className="text-center mb-4">
+            <p className="text-gray-700 font-semibold">感谢您的支持</p>
+            <p className="text-gray-500 text-xs mt-1">扫码打赏，您的支持是我前进的动力</p>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             {/* 微信支付二维码 */}
             <div className="text-center">
-              <p className="text-xs text-gray-600 mb-1">微信支付</p>
+              <p className="text-sm text-gray-600 mb-2 font-medium">微信支付</p>
               <img
                 src="/donate/wechat-pay.jpg"
                 alt="微信支付"
-                className="w-48 cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                style={{ width: '280px' }}
+                className="cursor-pointer hover:opacity-90 transition-opacity rounded-lg shadow-sm"
                 onClick={() => openModal('/donate/wechat-pay.jpg')}
               />
             </div>
 
             {/* 支付宝二维码 */}
             <div className="text-center">
-              <p className="text-xs text-gray-600 mb-1">支付宝</p>
+              <p className="text-sm text-gray-600 mb-2 font-medium">支付宝</p>
               <img
                 src="/donate/alipay.jpg"
                 alt="支付宝"
-                className="w-48 cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                style={{ width: '280px' }}
+                className="cursor-pointer hover:opacity-90 transition-opacity rounded-lg shadow-sm"
                 onClick={() => openModal('/donate/alipay.jpg')}
               />
             </div>
