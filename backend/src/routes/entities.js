@@ -125,7 +125,7 @@ router.get('/:id/timeline', async (req, res) => {
     const entityNews = await EntityNews.find(newsQuery)
       .sort({ date: -1 })
       .limit(parseInt(limit))
-      .populate('brief_id', 'title category link image created_at importance');
+      .populate('brief_id', 'title category link image created_at importance summary');
 
     // 按日期分组新闻
     const newsGrouped = {};
@@ -142,7 +142,8 @@ router.get('/:id/timeline', async (req, res) => {
           image: en.brief_id.image,
           importance: en.brief_id.importance,
           relevance: en.relevance,
-          created_at: en.brief_id.created_at
+          created_at: en.brief_id.created_at,
+          summary: en.brief_id.summary
         });
       }
     });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getEntityTimeline, synthesizeSpeech } from '../services/api';
-import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop } from 'react-icons/fa';
+import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 // 实体类型配置
 const TYPE_CONFIG = {
@@ -80,59 +80,110 @@ const TimelineNode = ({ item, config }) => {
         
         <div className="space-y-2">
           {item.items.map((news, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all group"
-            >
-              <div className="flex items-start gap-3">
-                {news.image && (
-                  <img
-                    src={news.image}
-                    alt={news.title}
-                    className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                    onError={(e) => e.target.style.display = 'none'}
-                  />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${config.color}`}>
-                      {categoryNames[news.category] || news.category}
-                    </span>
-                    {news.importance === 'high' && (
-                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">
-                        重要
-                      </span>
-                    )}
-                    {news.importance === 'breaking' && (
-                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
-                        突发
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {news.title}
-                  </h4>
-                  {news.relevance && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      📎 {news.relevance}
-                    </p>
-                  )}
-                  {news.link && (
-                    <a
-                      href={news.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline mt-2"
-                    >
-                      查看原文 <FaExternalLinkAlt className="text-xs" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
+            <NewsItemCard key={idx} news={news} config={config} categoryNames={categoryNames} />
           ))}
         </div>
       </div>
+    </div>
+  );
+};
+
+// 新闻条目卡片（支持展开/收起）
+const NewsItemCard = ({ news, config, categoryNames }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // 从 summary 中提取事件概述（第一段）
+  const getEventOverview = (summary) => {
+    if (!summary) return null;
+    // summary 格式通常是 "事件概述: xxx\n\n原文引用: ..."
+    const lines = summary.split('\n');
+    for (const line of lines) {
+      if (line.startsWith('事件概述:') || line.startsWith('事件概述：')) {
+        return line.replace(/^事件概述[:：]\s*/, '').trim();
+      }
+    }
+    // 如果没有明确的事件概述标记，取第一行非空内容
+    return lines[0]?.trim() || null;
+  };
+  
+  const eventOverview = getEventOverview(news.summary);
+  
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all group">
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          {news.image && (
+            <img
+              src={news.image}
+              alt={news.title}
+              className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+              onError={(e) => e.target.style.display = 'none'}
+            />
+          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className={`px-2 py-0.5 rounded text-xs font-medium ${config.color}`}>
+                {categoryNames[news.category] || news.category}
+              </span>
+              {news.importance === 'high' && (
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">
+                  重要
+                </span>
+              )}
+              {news.importance === 'breaking' && (
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                  突发
+                </span>
+              )}
+            </div>
+            <h4 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+              {news.title}
+            </h4>
+            {/* 事件概述 */}
+            {eventOverview && (
+              <p className="text-xs text-gray-600 mt-1.5 line-clamp-2">
+                {eventOverview}
+              </p>
+            )}
+            {news.relevance && (
+              <p className="text-xs text-gray-500 mt-1">
+                📎 {news.relevance}
+              </p>
+            )}
+            <div className="flex items-center gap-3 mt-2">
+              {news.link && (
+                <a
+                  href={news.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline"
+                >
+                  查看原文 <FaExternalLinkAlt className="text-xs" />
+                </a>
+              )}
+            </div>
+          </div>
+          {/* 展开/收起按钮 */}
+          {news.summary && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              title={isExpanded ? '收起详情' : '展开详情'}
+            >
+              {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
+          )}
+        </div>
+      </div>
+      
+      {/* 展开的完整内容 */}
+      {isExpanded && news.summary && (
+        <div className="px-4 pb-4 pt-0 border-t border-gray-100">
+          <div className="mt-3 text-sm text-gray-700 whitespace-pre-line leading-relaxed bg-gray-50 rounded-lg p-3">
+            {news.summary}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
