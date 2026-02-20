@@ -31,8 +31,8 @@ const EntityCard = ({ entity, onClick }) => {
         {/* 内容 */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-gray-900 truncate">{entity.name}</h3>
-            <span className={`px-2 py-0.5 rounded text-xs font-medium ${config.color}`}>
+            <h3 className="font-semibold text-gray-900 truncate flex-1 min-w-0">{entity.name}</h3>
+            <span className={`px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap flex-shrink-0 ${config.color}`}>
               {config.label}
             </span>
           </div>
