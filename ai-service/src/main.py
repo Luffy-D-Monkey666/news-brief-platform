@@ -16,7 +16,7 @@ from config.settings import (
 )
 from config.prompt_v3 import QUICK_PROCESS_PROMPT, DETAILED_PROCESS_PROMPT
 from crawlers.news_crawler import NewsCrawler
-from processors.cloud_ai_processor import NewsProcessor
+from processors.cloud_ai_processor import NewsProcessor, get_token_stats, reset_token_stats
 from models.database import NewsDatabase
 from filters.quality_filter import ContentQualityFilter
 from services.topic_service import TopicService
@@ -268,13 +268,39 @@ def start_health_server():
     """启动健康检查HTTP服务器（用于Render Web Service）"""
     from http.server import HTTPServer, BaseHTTPRequestHandler
     import threading
+    import json as json_module
 
     class HealthHandler(BaseHTTPRequestHandler):
         def do_GET(self):
-            self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(b'AI Service Running')
+            # P2 优化：/stats 端点返回 token 统计
+            if self.path == '/stats':
+                stats = get_token_stats()
+                response = {
+                    'total_requests': stats.total_requests,
+                    'stage1_requests': stats.stage1_requests,
+                    'stage2_requests': stats.stage2_requests,
+                    'failed_requests': stats.failed_requests,
+                    'total_input_tokens': stats.total_input_tokens,
+                    'total_output_tokens': stats.total_output_tokens,
+                    'total_tokens': stats.total_tokens,
+                    'estimated_cost_cny': round(stats.estimated_cost_cny, 4),
+                    'last_reset': stats.last_reset.isoformat()
+                }
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json_module.dumps(response).encode())
+            elif self.path == '/stats/reset':
+                reset_token_stats()
+                self.send_response(200)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b'Token stats reset')
+            else:
+                self.send_response(200)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b'AI Service Running')
 
         def log_message(self, format, *args):
             pass  # 禁用请求日志
@@ -310,6 +336,15 @@ def main():
 
     # 定时任务
     schedule.every(CRAWL_INTERVAL).seconds.do(service.run_cycle)
+    
+    # P2 优化：每天凌晨 0 点重置 token 统计
+    def daily_token_stats_reset():
+        stats = get_token_stats()
+        logger.info(f"📊 每日 Token 统计汇总:\n{stats.summary()}")
+        reset_token_stats()
+        logger.info("Token 统计已重置")
+    
+    schedule.every().day.at("00:00").do(daily_token_stats_reset)
 
     logger.info("进入定时循环...")
     while True:

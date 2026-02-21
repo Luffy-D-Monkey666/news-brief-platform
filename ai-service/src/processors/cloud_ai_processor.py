@@ -1,13 +1,90 @@
 import requests
 import json
 import time
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Tuple
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
+from threading import Lock
+from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
+
+# ============================================================
+# P2 优化：Token 使用统计
+# ============================================================
+@dataclass
+class TokenStats:
+    """Token 使用统计"""
+    total_input_tokens: int = 0
+    total_output_tokens: int = 0
+    total_requests: int = 0
+    stage1_requests: int = 0  # 第一阶段请求数
+    stage2_requests: int = 0  # 第二阶段请求数
+    failed_requests: int = 0
+    last_reset: datetime = field(default_factory=datetime.now)
+    
+    def add(self, input_tokens: int, output_tokens: int, stage: int = 1):
+        self.total_input_tokens += input_tokens
+        self.total_output_tokens += output_tokens
+        self.total_requests += 1
+        if stage == 1:
+            self.stage1_requests += 1
+        else:
+            self.stage2_requests += 1
+    
+    def add_failure(self):
+        self.failed_requests += 1
+    
+    @property
+    def total_tokens(self) -> int:
+        return self.total_input_tokens + self.total_output_tokens
+    
+    @property
+    def estimated_cost_cny(self) -> float:
+        """估算成本（DeepSeek 价格：输入 ¥1/1M，输出 ¥2/1M）"""
+        input_cost = self.total_input_tokens / 1_000_000 * 1
+        output_cost = self.total_output_tokens / 1_000_000 * 2
+        return input_cost + output_cost
+    
+    def reset(self):
+        self.total_input_tokens = 0
+        self.total_output_tokens = 0
+        self.total_requests = 0
+        self.stage1_requests = 0
+        self.stage2_requests = 0
+        self.failed_requests = 0
+        self.last_reset = datetime.now()
+    
+    def summary(self) -> str:
+        elapsed = (datetime.now() - self.last_reset).total_seconds() / 3600
+        return (
+            f"📊 Token 统计 (最近 {elapsed:.1f}h):\n"
+            f"   总请求: {self.total_requests} (S1: {self.stage1_requests}, S2: {self.stage2_requests}, 失败: {self.failed_requests})\n"
+            f"   输入: {self.total_input_tokens:,} tokens\n"
+            f"   输出: {self.total_output_tokens:,} tokens\n"
+            f"   总计: {self.total_tokens:,} tokens\n"
+            f"   估算成本: ¥{self.estimated_cost_cny:.4f}"
+        )
+
+
+# 全局 token 统计（线程安全）
+_token_stats = TokenStats()
+_token_stats_lock = Lock()
+
+
+def get_token_stats() -> TokenStats:
+    """获取全局 token 统计"""
+    return _token_stats
+
+
+def reset_token_stats():
+    """重置 token 统计"""
+    global _token_stats
+    with _token_stats_lock:
+        _token_stats.reset()
+
 
 # 股票服务（延迟导入以避免循环依赖）
 _stock_service = None
@@ -51,13 +128,17 @@ class CloudAIProcessor:
         if not self.api_key:
             raise ValueError(f"API key not found for {provider}")
 
-    def _call_api(self, prompt: str, max_tokens: int = 500, retries: int = 3) -> Optional[str]:
+    def _call_api(self, prompt: str, max_tokens: int = 500, retries: int = 3, 
+                  stage: int = 1) -> Tuple[Optional[str], int, int]:
         """
         调用API（支持OpenAI格式）
         
         增加指数退避重试策略：
         - 429 (Too Many Requests) 自动重试
         - 500/502/503 服务器错误重试
+        
+        Returns:
+            (content, input_tokens, output_tokens)
         """
         last_error = None
         
@@ -85,7 +166,16 @@ class CloudAIProcessor:
                 if response.status_code == 200:
                     result = response.json()
                     content = result['choices'][0]['message']['content'].strip()
-                    return content
+                    
+                    # P2 优化：记录 token 使用
+                    usage = result.get('usage', {})
+                    input_tokens = usage.get('prompt_tokens', 0)
+                    output_tokens = usage.get('completion_tokens', 0)
+                    
+                    with _token_stats_lock:
+                        _token_stats.add(input_tokens, output_tokens, stage)
+                    
+                    return content, input_tokens, output_tokens
                 elif response.status_code == 429:
                     # 速率限制，指数退避
                     wait_time = (2 ** attempt) * 2  # 2s, 4s, 8s
@@ -102,7 +192,9 @@ class CloudAIProcessor:
                     continue
                 else:
                     logger.error(f"API错误: {response.status_code} - {response.text[:200]}")
-                    return None
+                    with _token_stats_lock:
+                        _token_stats.add_failure()
+                    return None, 0, 0
 
             except requests.exceptions.Timeout:
                 wait_time = (2 ** attempt) * 1
@@ -112,10 +204,14 @@ class CloudAIProcessor:
                 continue
             except Exception as e:
                 logger.error(f"API调用失败: {str(e)}")
-                return None
+                with _token_stats_lock:
+                    _token_stats.add_failure()
+                return None, 0, 0
         
         logger.error(f"API调用失败，已重试 {retries} 次: {last_error}")
-        return None
+        with _token_stats_lock:
+            _token_stats.add_failure()
+        return None, 0, 0
 
     def process_news_two_stage(self, title: str, content: str, 
                                  quick_prompt: str, detailed_prompt: str) -> Optional[Dict]:
@@ -127,11 +223,11 @@ class CloudAIProcessor:
         预计节省 50-60% token（大多数 normal 新闻只需一阶段）
         """
         # 第一阶段：快速分类（所有新闻）
-        # normal 新闻用 400 字内容，重要新闻后续会用更多
+        # P2 优化：normal 新闻用 400 字内容，减少 token
         content_truncated = content[:400] if content else ""
         prompt = quick_prompt.format(title=title, content=content_truncated)
         
-        result = self._call_api(prompt, max_tokens=300)
+        result, _, _ = self._call_api(prompt, max_tokens=300, stage=1)
         
         if not result:
             return None
@@ -191,7 +287,7 @@ class CloudAIProcessor:
                     content=content_detailed
                 )
                 
-                detailed_result = self._call_api(detailed_prompt_filled, max_tokens=500)
+                detailed_result, _, _ = self._call_api(detailed_prompt_filled, max_tokens=500, stage=2)
                 
                 if detailed_result:
                     try:
@@ -241,7 +337,7 @@ class CloudAIProcessor:
         content_truncated = content[:800] if content else ""
         prompt = prompt_template.format(title=title, content=content_truncated)
         
-        result = self._call_api(prompt, max_tokens=800)
+        result, _, _ = self._call_api(prompt, max_tokens=800, stage=1)
         
         if not result:
             return None
@@ -627,5 +723,8 @@ class NewsProcessor:
         logger.info(f"📊 两阶段处理: {stage2_count} 条 ({stage2_rate:.1f}%) 需要第二阶段")
         logger.info(f"💰 预计节省 token: {100 - stage2_rate:.1f}% 新闻仅用第一阶段")
         logger.info(f"⏱️ 耗时: {elapsed:.1f}秒, 平均: {elapsed/len(news_list):.2f}秒/条" if news_list else "无新闻")
+        
+        # P2 优化：输出 token 使用统计
+        logger.info(_token_stats.summary())
 
         return processed
