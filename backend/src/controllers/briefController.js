@@ -37,7 +37,7 @@ exports.getLatestBriefs = async (req, res) => {
 // 获取历史简报（分页）
 exports.getHistoryBriefs = async (req, res) => {
   try {
-    const { category, page = 1, limit = 20, hours } = req.query;
+    const { category, page = 1, limit = 20, hours, importance } = req.query;
     const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
     const query = {};
@@ -49,6 +49,11 @@ exports.getHistoryBriefs = async (req, res) => {
     if (hours) {
       const cutoff = new Date(Date.now() - parseInt(hours, 10) * 60 * 60 * 1000);
       query.created_at = { $gte: cutoff };
+    }
+    
+    // 重要性筛选
+    if (importance && ['breaking', 'high', 'normal'].includes(importance)) {
+      query.importance = importance;
     }
 
     const briefs = await Brief.find(query)

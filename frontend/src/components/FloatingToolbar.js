@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowUp, FaSearch, FaFilter, FaTimes, FaTh, FaList, FaFolder, FaHeadphones } from 'react-icons/fa';
 
+// 重要性筛选选项
+const IMPORTANCE_FILTERS = [
+  { key: 'all', label: '全部', value: null },
+  { key: 'breaking', label: '突发', value: 'breaking' },
+  { key: 'high', label: '重要', value: 'high' },
+  { key: 'normal', label: '普通', value: 'normal' },
+];
+
 const FloatingToolbar = ({ 
   searchQuery, 
   setSearchQuery, 
@@ -9,7 +17,9 @@ const FloatingToolbar = ({
   viewMode,
   setViewMode,
   onRefresh,
-  clearSearch
+  clearSearch,
+  selectedImportance,
+  setSelectedImportance
 }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
@@ -144,6 +154,38 @@ const FloatingToolbar = ({
               搜索
             </button>
           </form>
+
+          {/* 重要性筛选 */}
+          <div className="mb-4">
+            <p className="text-xs text-gray-500 mb-2">重要性筛选</p>
+            <div className="grid grid-cols-4 gap-1">
+              {IMPORTANCE_FILTERS.map(filter => (
+                <button
+                  key={filter.key}
+                  onClick={() => {
+                    setSelectedImportance(filter.key);
+                    setShowToolbar(false);
+                    setTimeout(scrollToToolbar, 100);
+                  }}
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all text-[10px] ${
+                    selectedImportance === filter.key 
+                      ? filter.key === 'breaking'
+                        ? 'bg-red-600 text-white'
+                        : filter.key === 'high'
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {filter.key === 'breaking' && '🔴'}
+                  {filter.key === 'high' && '🟡'}
+                  {filter.key === 'all' && '📰'}
+                  {filter.key === 'normal' && '⚪'}
+                  <span>{filter.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* 视图切换 */}
           <div>

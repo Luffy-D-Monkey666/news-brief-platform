@@ -32,13 +32,16 @@ export const getLatestBriefs = async (category = null, limit = 20, hours = null)
 };
 
 // 获取历史简报
-export const getHistoryBriefs = async (category = null, page = 1, limit = 20, hours = null) => {
+export const getHistoryBriefs = async (category = null, page = 1, limit = 20, hours = null, importance = null) => {
   const params = { page, limit };
   if (category) {
     params.category = category;
   }
   if (hours) {
     params.hours = hours;
+  }
+  if (importance) {
+    params.importance = importance;
   }
   return api.get('/briefs/history', { params });
 };

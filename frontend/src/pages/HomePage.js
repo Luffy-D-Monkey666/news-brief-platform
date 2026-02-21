@@ -20,11 +20,20 @@ const TIME_FILTERS = [
   { key: '7d', label: '本周', hours: 168 },
 ];
 
+// 重要性筛选选项
+const IMPORTANCE_FILTERS = [
+  { key: 'all', label: '全部', value: null },
+  { key: 'breaking', label: '突发', value: 'breaking' },
+  { key: 'high', label: '重要', value: 'high' },
+  { key: 'normal', label: '普通', value: 'normal' },
+];
+
 const HomePage = () => {
   const [briefs, setBriefs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
+  const [selectedImportance, setSelectedImportance] = useState('all');
   const [viewMode, setViewMode] = useState('card'); // 'card' | 'list' | 'topics' | 'audio'
   const { setPlaylistFromBriefs } = useAudioPlayer();
   const [newBriefId, setNewBriefId] = useState(null);
@@ -45,6 +54,12 @@ const HomePage = () => {
     const filter = TIME_FILTERS.find(f => f.key === selectedTimeFilter);
     return filter?.hours || null;
   }, [selectedTimeFilter]);
+
+  // 获取当前重要性筛选值
+  const getImportanceFromFilter = useCallback(() => {
+    const filter = IMPORTANCE_FILTERS.find(f => f.key === selectedImportance);
+    return filter?.value || null;
+  }, [selectedImportance]);
 
   // 根据视图模式决定初始加载数量
   const getInitialLimit = useCallback(() => {
@@ -97,9 +112,10 @@ const HomePage = () => {
       setLoading(true);
       setCurrentPage(1);
       const hours = getHoursFromFilter();
+      const importance = getImportanceFromFilter();
       const initialLimit = getInitialLimit();
       // 使用 getHistoryBriefs 获取第一页，这样能拿到总数
-      const response = await getHistoryBriefs(selectedCategory, 1, initialLimit, hours);
+      const response = await getHistoryBriefs(selectedCategory, 1, initialLimit, hours, importance);
       const sortedData = (response.data || []).sort((a, b) => {
         const dateA = new Date(a.created_at || a.published);
         const dateB = new Date(b.created_at || b.published);
@@ -126,7 +142,7 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, getInitialLimit, getHoursFromFilter]);
+  }, [selectedCategory, getInitialLimit, getHoursFromFilter, getImportanceFromFilter]);
 
   // 清除搜索 - 恢复当前筛选条件下的全量新闻
   const clearSearch = useCallback(() => {
@@ -173,9 +189,10 @@ const HomePage = () => {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
       const hours = getHoursFromFilter();
+      const importance = getImportanceFromFilter();
       // 音频视图每次加载 10 条，其他视图加载 20 条
       const loadLimit = viewMode === 'audio' ? 10 : 20;
-      const response = await getHistoryBriefs(selectedCategory, nextPage, loadLimit, hours);
+      const response = await getHistoryBriefs(selectedCategory, nextPage, loadLimit, hours, importance);
 
       if (response.data && response.data.length > 0) {
         setBriefs((prev) => [...prev, ...response.data]);
@@ -389,6 +406,29 @@ const HomePage = () => {
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+
+            {/* 重要性筛选器 */}
+            <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm border border-gray-200">
+              {IMPORTANCE_FILTERS.map(filter => (
+                <button
+                  key={filter.key}
+                  onClick={() => setSelectedImportance(filter.key)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                    selectedImportance === filter.key
+                      ? filter.key === 'breaking' 
+                        ? 'bg-red-600 text-white'
+                        : filter.key === 'high'
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-gray-900 text-white'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {filter.key === 'breaking' && '🔴 '}
+                  {filter.key === 'high' && '🟡 '}
                   {filter.label}
                 </button>
               ))}
@@ -641,6 +681,8 @@ const HomePage = () => {
         setViewMode={setViewMode}
         onRefresh={loadBriefs}
         clearSearch={clearSearch}
+        selectedImportance={selectedImportance}
+        setSelectedImportance={setSelectedImportance}
       />
     </div>
   );
