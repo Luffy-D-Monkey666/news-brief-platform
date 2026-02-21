@@ -6,7 +6,7 @@
 
 # ============================================================
 # 第一阶段：快速分类 + 摘要（所有新闻都用这个）
-# 约 400 tokens input，200 tokens output
+# 约 400 tokens input，300 tokens output
 # ============================================================
 QUICK_PROCESS_PROMPT = """新闻编辑，分析并输出JSON。
 
@@ -16,12 +16,20 @@ QUICK_PROCESS_PROMPT = """新闻编辑，分析并输出JSON。
 内容: {content}
 
 输出：
-{{"title_zh":"中文标题≤25字","category":"分类","importance":"breaking/high/normal","summary":"事件概述(1句)+要点(2-3个bullet)"}}
+{{"title_zh":"中文标题≤25字","category":"分类","importance":"breaking/high/normal","summary":"结构化摘要"}}
 
 importance判断：
 - breaking: 重大发布/突发事件/行业变革
 - high: 知名公司动态/重要数据/政策变化
 - normal: 日常新闻/评论/分析
+
+summary格式（必须包含）：
+事件概述: 一句话总结核心事件
+重要细节:
+• 细节1
+• 细节2
+• 细节3
+事件影响: 一句话说明影响或意义
 
 严格输出JSON："""
 
@@ -77,7 +85,7 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
 1. title_zh: 中文标题≤25字
 2. category: 分类
 3. importance: breaking(重大)/high(较重要)/normal(普通)
-4. summary: 事件概述(1-2句)+要点(2-3个bullet)
+4. summary: 结构化摘要（格式见下方）
 5. key_metrics: 关键数字[{{name,value,unit}}]，无则[]
 6. action_advice: 仅finance/business/economy需要，其他null
 7. background: 仅breaking需要{{context,timeline}}，其他null
@@ -86,7 +94,15 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
 10. supply_chain_insight: 仅electronics/automotive需要，其他null
 11. entities: 非知名实体(0-2个)[{{name,type,context}}]，无则[]
 
-示例（普通新闻）：
-{{"title_zh":"某公司发布新产品","category":"business_tech","importance":"normal","summary":"事件概述：XX公司发布新品。\\n• 要点1\\n• 要点2","key_metrics":[],"action_advice":null,"background":null,"tech_insight":null,"funding_history":null,"supply_chain_insight":null,"entities":[]}}
+summary格式（必须包含）：
+事件概述: 一句话总结核心事件
+重要细节:
+• 细节1
+• 细节2
+• 细节3
+事件影响: 一句话说明影响或意义
+
+示例：
+{{"title_zh":"某公司发布新产品","category":"business_tech","importance":"normal","summary":"事件概述: XX公司发布新品。\\n重要细节:\\n• 产品定价XXX\\n• 主打XX功能\\n• 计划X月上市\\n事件影响: 将加剧行业竞争。","key_metrics":[],"action_advice":null,"background":null,"tech_insight":null,"funding_history":null,"supply_chain_insight":null,"entities":[]}}
 
 严格输出JSON："""
