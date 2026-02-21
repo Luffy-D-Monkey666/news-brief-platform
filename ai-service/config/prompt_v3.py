@@ -23,13 +23,15 @@ importance判断：
 - high: 知名公司动态/重要数据/政策变化
 - normal: 日常新闻/评论/分析
 
-summary格式（必须包含）：
+summary格式（三段必须都有）：
 事件概述: 一句话总结核心事件
 重要细节:
 • 细节1
 • 细节2
 • 细节3
-事件影响: 一句话说明影响或意义
+事件影响: 一句话说明对行业/市场/社会的影响
+
+注意：summary必须包含"事件概述:"、"重要细节:"、"事件影响:"三个标签，缺一不可！
 
 严格输出JSON："""
 
@@ -94,13 +96,15 @@ PROCESS_PROMPT_V3 = """你是资深新闻编辑，分析新闻并输出JSON。
 10. supply_chain_insight: 仅electronics/automotive需要，其他null
 11. entities: 非知名实体(0-2个)[{{name,type,context}}]，无则[]
 
-summary格式（必须包含）：
+summary格式（三段必须都有）：
 事件概述: 一句话总结核心事件
 重要细节:
 • 细节1
 • 细节2
 • 细节3
-事件影响: 一句话说明影响或意义
+事件影响: 一句话说明对行业/市场/社会的影响
+
+注意：summary必须包含"事件概述:"、"重要细节:"、"事件影响:"三个标签，缺一不可！
 
 示例：
 {{"title_zh":"某公司发布新产品","category":"business_tech","importance":"normal","summary":"事件概述: XX公司发布新品。\\n重要细节:\\n• 产品定价XXX\\n• 主打XX功能\\n• 计划X月上市\\n事件影响: 将加剧行业竞争。","key_metrics":[],"action_advice":null,"background":null,"tech_insight":null,"funding_history":null,"supply_chain_insight":null,"entities":[]}}
