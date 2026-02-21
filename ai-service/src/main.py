@@ -14,7 +14,7 @@ from config.settings import (
     NEWS_SOURCES, MONGODB_URI, CRAWL_INTERVAL,
     SUMMARIZE_PROMPT, CLASSIFY_PROMPT, REDIS_URL
 )
-from config.prompt_v3 import QUICK_PROCESS_PROMPT, DETAILED_PROCESS_PROMPT
+from config.prompt_v3 import PROCESS_PROMPT_V3
 from crawlers.news_crawler import NewsCrawler
 from processors.cloud_ai_processor import NewsProcessor, get_token_stats, reset_token_stats
 from models.database import NewsDatabase
@@ -49,21 +49,15 @@ class NewsService:
         self.topic_service = TopicService(self.db.db)
         logger.info("话题聚合服务已启用")
         
-        # 实体知识库服务（P0 优化：禁用 AI 时间轴生成，节省 token）
+        # 实体知识库服务（传入 AI 处理器用于生成时间轴）
         try:
-            # 不再传入 ai_processor，禁用 AI 时间轴生成
-            self.entity_service = EntityService(ai_processor=None)
+            self.entity_service = EntityService(ai_processor=self.processor.ai)
             self.entity_enabled = True
-            logger.info("实体知识库服务已启用（AI 时间轴生成已禁用，使用预置数据）")
+            logger.info("实体知识库服务已启用（含 AI 时间轴生成）")
         except Exception as e:
             logger.warning(f"实体知识库服务初始化失败: {e}")
             self.entity_service = None
             self.entity_enabled = False
-        
-        # 是否使用两阶段分级处理（P0 优化）
-        self.use_two_stage = os.getenv('USE_TWO_STAGE_PROCESSING', 'true').lower() == 'true'
-        if self.use_two_stage:
-            logger.info("✅ 两阶段分级处理已启用（预计节省 50-60% token）")
 
         # 添加锁，防止并发执行
         self._lock = Lock()
@@ -177,21 +171,12 @@ class NewsService:
             logger.info(f"步骤 4/5: 开始 AI 处理 ({len(new_news)} 条新闻)...")
             logger.info(f"当前 AI Provider: {os.getenv('AI_PROVIDER', 'openai')}")
 
-            if self.use_two_stage:
-                # P0 优化：两阶段分级处理
-                logger.info("🚀 使用两阶段分级处理模式")
-                processed_news = self.processor.batch_process_optimized(
-                    new_news,
-                    QUICK_PROCESS_PROMPT,
-                    DETAILED_PROCESS_PROMPT
-                )
-            else:
-                # 旧模式：单次完整 prompt
-                processed_news = self.processor.batch_process(
-                    new_news,
-                    SUMMARIZE_PROMPT,
-                    CLASSIFY_PROMPT
-                )
+            # 使用完整 prompt 单次处理（恢复原文引用+后续影响格式）
+            processed_news = self.processor.batch_process(
+                new_news,
+                PROCESS_PROMPT_V3,
+                CLASSIFY_PROMPT
+            )
             logger.info(f"步骤 4/5 完成: AI 处理完成，生成 {len(processed_news)} 条简报")
 
             # 5. 保存简报 + 话题聚合 + 实体关联
