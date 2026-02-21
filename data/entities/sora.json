@@ -1,0 +1,21 @@
+{
+  "name": "Sora",
+  "aliases": ["OpenAI Sora", "Sora AI"],
+  "type": "concept",
+  "description": "OpenAI 开发的文生视频AI模型，能生成最长1分钟的高质量视频。",
+  "metadata": {
+    "developer": "OpenAI",
+    "type": "文生视频模型",
+    "announced": "2024年2月"
+  },
+  "base_timeline": [
+    {"date": "2024.02.15", "event": "OpenAI 发布 Sora 技术预览，震惊业界", "importance": "milestone"},
+    {"date": "2024.02", "event": "展示1分钟连贯视频生成能力", "importance": "major"},
+    {"date": "2024.03", "event": "OpenAI 宣布与好莱坞工作室合作测试", "importance": "major"},
+    {"date": "2024.04", "event": "Sora 向部分艺术家开放红队测试", "importance": "major"},
+    {"date": "2024.05", "event": "竞品 Runway Gen-3、Luma Dream Machine 发布", "importance": "major"},
+    {"date": "2024.10", "event": "Sora 在好莱坞完成首批合作作品", "importance": "major"},
+    {"date": "2024.11", "event": "泄露版本被部分用户获取", "importance": "major"},
+    {"date": "2024.12", "event": "Sora 正式向公众开放（ChatGPT Plus用户）", "importance": "milestone"}
+  ]
+}

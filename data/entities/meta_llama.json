@@ -1,0 +1,23 @@
+{
+  "name": "LLaMA",
+  "aliases": ["Llama", "Meta Llama", "Llama 3"],
+  "type": "concept",
+  "description": "Meta开源的大语言模型系列，Llama 3是目前最强开源模型之一。",
+  "metadata": {
+    "developer": "Meta AI",
+    "type": "开源大语言模型",
+    "latest_version": "Llama 3.3"
+  },
+  "base_timeline": [
+    {"date": "2023.02", "event": "LLaMA 1发布，7B-65B参数，限制性开源", "importance": "milestone"},
+    {"date": "2023.03", "event": "模型权重泄露，引发开源社区热潮", "importance": "major"},
+    {"date": "2023.07", "event": "Llama 2发布，完全开源商用", "importance": "milestone"},
+    {"date": "2023.08", "event": "Llama 2成为开源LLM首选基座", "importance": "major"},
+    {"date": "2023.11", "event": "Code Llama代码模型发布", "importance": "major"},
+    {"date": "2024.04", "event": "Llama 3发布，8B和70B版本", "importance": "milestone"},
+    {"date": "2024.04", "event": "Llama 3 70B在多项评测超越GPT-4", "importance": "major"},
+    {"date": "2024.07", "event": "Llama 3.1发布，405B开源最大模型", "importance": "milestone"},
+    {"date": "2024.09", "event": "Llama 3.2发布，支持多模态", "importance": "major"},
+    {"date": "2024.12", "event": "Llama 3.3 70B发布，性能接近405B", "importance": "major"}
+  ]
+}

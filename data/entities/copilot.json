@@ -1,0 +1,23 @@
+{
+  "name": "GitHub Copilot",
+  "aliases": ["Copilot", "Microsoft Copilot", "代码副驾驶"],
+  "type": "concept",
+  "description": "微软和 GitHub 推出的 AI 编程助手，基于 OpenAI Codex/GPT 模型。",
+  "metadata": {
+    "developer": "GitHub / Microsoft / OpenAI",
+    "type": "AI编程助手",
+    "pricing": "个人版$10/月，企业版$19/月"
+  },
+  "base_timeline": [
+    {"date": "2021.06", "event": "GitHub Copilot 技术预览版发布", "importance": "milestone"},
+    {"date": "2022.06", "event": "GitHub Copilot 正式商用，定价$10/月", "importance": "milestone"},
+    {"date": "2023.02", "event": "Copilot for Business 企业版发布", "importance": "major"},
+    {"date": "2023.03", "event": "GitHub Copilot X 发布，集成 GPT-4", "importance": "milestone"},
+    {"date": "2023.03", "event": "Microsoft 365 Copilot 发布", "importance": "milestone"},
+    {"date": "2023.09", "event": "GitHub Copilot Chat 正式上线", "importance": "major"},
+    {"date": "2023.11", "event": "Microsoft Copilot 统一品牌整合", "importance": "major"},
+    {"date": "2024.02", "event": "GitHub Copilot Enterprise 发布，支持代码库定制", "importance": "major"},
+    {"date": "2024.05", "event": "Copilot Workspace 发布，支持全流程开发", "importance": "major"},
+    {"date": "2024.10", "event": "GitHub Copilot 付费用户超过180万", "importance": "major"}
+  ]
+}

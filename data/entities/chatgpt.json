@@ -1,0 +1,26 @@
+{
+  "name": "ChatGPT",
+  "aliases": ["GPT聊天", "Chat GPT"],
+  "type": "concept",
+  "description": "OpenAI开发的AI对话产品，基于GPT系列模型，2022年11月发布后迅速成为现象级应用。",
+  "metadata": {
+    "developer": "OpenAI",
+    "type": "AI对话产品",
+    "launch": "2022年11月",
+    "pricing": "免费/Plus$20/月/Team$25/月"
+  },
+  "base_timeline": [
+    {"date": "2022.11.30", "event": "ChatGPT发布，基于GPT-3.5", "importance": "milestone"},
+    {"date": "2022.12", "event": "5天内用户破100万", "importance": "major"},
+    {"date": "2023.01", "event": "月活用户破1亿，史上最快", "importance": "milestone"},
+    {"date": "2023.02", "event": "ChatGPT Plus订阅服务上线，$20/月", "importance": "major"},
+    {"date": "2023.03", "event": "ChatGPT接入GPT-4", "importance": "milestone"},
+    {"date": "2023.03", "event": "发布插件系统和代码解释器", "importance": "major"},
+    {"date": "2023.05", "event": "iOS官方App上线", "importance": "major"},
+    {"date": "2023.07", "event": "Code Interpreter正式开放", "importance": "major"},
+    {"date": "2023.11", "event": "GPTs自定义机器人功能发布", "importance": "milestone"},
+    {"date": "2024.05", "event": "ChatGPT接入GPT-4o，支持语音对话", "importance": "milestone"},
+    {"date": "2024.09", "event": "接入o1推理模型", "importance": "major"},
+    {"date": "2024.12", "event": "周活用户突破3亿", "importance": "major"}
+  ]
+}

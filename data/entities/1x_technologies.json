@@ -1,0 +1,22 @@
+{
+  "name": "1X Technologies",
+  "aliases": ["1X", "Halodi Robotics"],
+  "type": "company",
+  "description": "挪威人形机器人公司，由 OpenAI 投资，开发 EVE 和 NEO 系列机器人。",
+  "metadata": {
+    "founded": "2014",
+    "founder": "Bernt Øivind Børnich",
+    "headquarters": "挪威 Moss",
+    "industry": "机器人"
+  },
+  "base_timeline": [
+    {"date": "2014", "event": "以 Halodi Robotics 名称成立", "importance": "milestone"},
+    {"date": "2022.03", "event": "更名为 1X Technologies", "importance": "major"},
+    {"date": "2023.03", "event": "获 OpenAI 领投的2350万美元A2轮融资", "importance": "milestone"},
+    {"date": "2023.08", "event": "EVE 机器人开始在ADT安保公司部署", "importance": "major"},
+    {"date": "2024.01", "event": "完成1亿美元B轮融资", "importance": "milestone"},
+    {"date": "2024.04", "event": "发布双足人形机器人 NEO", "importance": "milestone"},
+    {"date": "2024.06", "event": "NEO Beta 开始向测试用户发货", "importance": "major"},
+    {"date": "2024.09", "event": "EVE 机器人部署数量超过30台", "importance": "major"}
+  ]
+}

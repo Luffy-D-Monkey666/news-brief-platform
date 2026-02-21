@@ -1,0 +1,26 @@
+{
+  "name": "Boston Dynamics",
+  "aliases": ["波士顿动力", "BD"],
+  "type": "company",
+  "description": "美国机器人研发公司，以 Spot 四足机器人和 Atlas 人形机器人闻名。",
+  "metadata": {
+    "founded": "1992",
+    "founder": "Marc Raibert",
+    "headquarters": "美国马萨诸塞州",
+    "industry": "机器人",
+    "parent": "现代汽车集团"
+  },
+  "base_timeline": [
+    {"date": "1992", "event": "由 MIT 教授 Marc Raibert 创立", "importance": "milestone"},
+    {"date": "2005", "event": "为美军研发 BigDog 四足机器人", "importance": "major"},
+    {"date": "2013.12", "event": "被 Google X 收购", "importance": "milestone"},
+    {"date": "2016.06", "event": "被 Google 出售给软银", "importance": "major"},
+    {"date": "2017.02", "event": "发布 Handle 轮腿混合机器人", "importance": "major"},
+    {"date": "2019.06", "event": "Spot 机器狗开始商用销售", "importance": "milestone"},
+    {"date": "2020.12", "event": "现代汽车集团以9.21亿美元收购", "importance": "milestone"},
+    {"date": "2021.08", "event": "发布 Stretch 物流机器人", "importance": "major"},
+    {"date": "2023.01", "event": "Atlas 展示仓库作业能力", "importance": "major"},
+    {"date": "2024.04", "event": "发布全新电动版 Atlas 人形机器人", "importance": "milestone"},
+    {"date": "2024.10", "event": "Atlas 开始在现代工厂试点部署", "importance": "major"}
+  ]
+}

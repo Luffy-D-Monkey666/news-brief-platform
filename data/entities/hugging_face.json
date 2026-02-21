@@ -1,0 +1,26 @@
+{
+  "name": "Hugging Face",
+  "aliases": ["HuggingFace", "HF", "抱脸"],
+  "type": "company",
+  "description": "AI模型托管和开源社区平台，被称为'AI界的GitHub'，托管数十万模型和数据集。",
+  "metadata": {
+    "founded": "2016",
+    "founder": "Clément Delangue, Julien Chaumond, Thomas Wolf",
+    "headquarters": "美国纽约",
+    "industry": "AI平台/开源",
+    "valuation": "45亿美元（2023年）"
+  },
+  "base_timeline": [
+    {"date": "2016", "event": "三位法国创业者在纽约创立", "importance": "milestone"},
+    {"date": "2018", "event": "开源Transformers库", "importance": "milestone"},
+    {"date": "2019", "event": "Transformers库成为NLP标准工具", "importance": "major"},
+    {"date": "2020.03", "event": "完成1500万美元A轮融资", "importance": "major"},
+    {"date": "2021.03", "event": "完成4000万美元B轮融资", "importance": "major"},
+    {"date": "2022.05", "event": "完成1亿美元C轮融资，估值20亿", "importance": "milestone"},
+    {"date": "2023.08", "event": "完成2.35亿美元D轮，估值45亿", "importance": "milestone"},
+    {"date": "2023.12", "event": "平台托管模型超50万个", "importance": "major"},
+    {"date": "2024.02", "event": "发布开源文生图模型排行榜", "importance": "major"},
+    {"date": "2024.05", "event": "与AWS、Google、NVIDIA深化合作", "importance": "major"},
+    {"date": "2024.08", "event": "托管模型突破100万个", "importance": "milestone"}
+  ]
+}

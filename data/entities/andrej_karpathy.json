@@ -1,0 +1,25 @@
+{
+  "name": "Andrej Karpathy",
+  "aliases": ["卡帕西", "安德烈·卡帕西"],
+  "type": "person",
+  "description": "斯坦福博士，前特斯拉AI总监，前OpenAI研究科学家，著名AI教育者。",
+  "metadata": {
+    "born": "1986",
+    "nationality": "斯洛伐克/加拿大",
+    "education": "斯坦福大学博士",
+    "known_for": "CS231n课程、Tesla Autopilot、nanoGPT"
+  },
+  "base_timeline": [
+    {"date": "1986", "event": "出生于斯洛伐克布拉迪斯拉发", "importance": "milestone"},
+    {"date": "2011", "event": "在斯坦福攻读博士，师从李飞飞", "importance": "major"},
+    {"date": "2015", "event": "开设 CS231n 深度学习课程，影响深远", "importance": "milestone"},
+    {"date": "2015", "event": "加入 OpenAI 担任研究科学家", "importance": "major"},
+    {"date": "2017.06", "event": "加入特斯拉，担任 AI 总监", "importance": "milestone"},
+    {"date": "2017", "event": "主导 Tesla Autopilot 视觉系统开发", "importance": "major"},
+    {"date": "2022.07", "event": "离开特斯拉，称要回归技术工作", "importance": "major"},
+    {"date": "2023.02", "event": "重新加入 OpenAI", "importance": "milestone"},
+    {"date": "2023", "event": "发布 nanoGPT/minGPT 教学项目", "importance": "major"},
+    {"date": "2024.02", "event": "再次离开 OpenAI", "importance": "major"},
+    {"date": "2024.07", "event": "创立 AI+教育公司 Eureka Labs", "importance": "milestone"}
+  ]
+}

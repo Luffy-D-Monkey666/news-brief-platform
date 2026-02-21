@@ -1,0 +1,24 @@
+{
+  "name": "Groq",
+  "aliases": ["Groq AI"],
+  "type": "company",
+  "description": "美国AI芯片公司，开发LPU（语言处理单元），以超快推理速度著称。",
+  "metadata": {
+    "founded": "2016",
+    "founder": "Jonathan Ross",
+    "headquarters": "美国加州Mountain View",
+    "industry": "AI芯片",
+    "valuation": "28亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2016", "event": "前Google TPU架构师 Jonathan Ross 创立", "importance": "milestone"},
+    {"date": "2020", "event": "首款LPU芯片完成设计", "importance": "major"},
+    {"date": "2022.04", "event": "完成3亿美元C轮融资", "importance": "major"},
+    {"date": "2023.09", "event": "LPU推理速度打破世界纪录", "importance": "major"},
+    {"date": "2024.02", "event": "发布 GroqCloud，Llama 推理速度震惊业界", "importance": "milestone"},
+    {"date": "2024.02", "event": "Mixtral 8x7B 达到每秒500+ tokens", "importance": "major"},
+    {"date": "2024.04", "event": "Llama 3 在 Groq 实现每秒800+ tokens", "importance": "major"},
+    {"date": "2024.08", "event": "完成6.4亿美元融资，估值28亿", "importance": "milestone"},
+    {"date": "2024.10", "event": "开始建设大规模LPU数据中心", "importance": "major"}
+  ]
+}

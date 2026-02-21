@@ -1,0 +1,24 @@
+{
+  "name": "Perplexity AI",
+  "aliases": ["Perplexity", "困惑AI"],
+  "type": "company",
+  "description": "美国AI搜索引擎公司，主打'答案引擎'概念，被视为Google搜索的挑战者。",
+  "metadata": {
+    "founded": "2022",
+    "founder": "Aravind Srinivas、Denis Yarats、Johnny Ho、Andy Konwinski",
+    "headquarters": "美国旧金山",
+    "industry": "AI搜索",
+    "valuation": "90亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2022.08", "event": "四位前Google/OpenAI研究员创立 Perplexity", "importance": "milestone"},
+    {"date": "2023.01", "event": "完成2500万美元A轮融资", "importance": "major"},
+    {"date": "2023.03", "event": "发布 Perplexity Pro，支持GPT-4", "importance": "major"},
+    {"date": "2023.08", "event": "月活用户突破1000万", "importance": "major"},
+    {"date": "2024.01", "event": "完成7360万美元B轮融资", "importance": "major"},
+    {"date": "2024.04", "event": "估值达10亿美元，进入独角兽俱乐部", "importance": "milestone"},
+    {"date": "2024.06", "event": "发布 Pages 功能，一键生成研究报告", "importance": "major"},
+    {"date": "2024.09", "event": "完成5亿美元融资，估值达90亿", "importance": "milestone"},
+    {"date": "2024.11", "event": "推出广告业务，开始商业化变现", "importance": "major"}
+  ]
+}

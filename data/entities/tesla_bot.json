@@ -1,0 +1,23 @@
+{
+  "name": "Tesla Optimus",
+  "aliases": ["Optimus", "Tesla Bot", "特斯拉机器人", "擎天柱机器人"],
+  "type": "concept",
+  "description": "特斯拉开发的人形机器人项目，旨在替代人类从事危险或重复性工作。",
+  "metadata": {
+    "announced": "2021",
+    "company": "特斯拉",
+    "height": "约1.73米",
+    "target_price": "约2万美元"
+  },
+  "base_timeline": [
+    {"date": "2021.08", "event": "马斯克在 AI Day 首次公布 Tesla Bot 计划", "importance": "milestone"},
+    {"date": "2022.09", "event": "AI Day 2022 展示 Optimus 原型机", "importance": "milestone"},
+    {"date": "2023.05", "event": "股东大会展示 Optimus 行走能力提升", "importance": "major"},
+    {"date": "2023.12", "event": "展示 Optimus Gen 2，动作更流畅", "importance": "milestone"},
+    {"date": "2024.01", "event": "展示叠衣服能力（远程操作演示）", "importance": "major"},
+    {"date": "2024.05", "event": "Optimus 在特斯拉工厂执行电池分拣任务", "importance": "major"},
+    {"date": "2024.07", "event": "两台 Optimus 在工厂正式投入使用", "importance": "milestone"},
+    {"date": "2024.10", "event": "We, Robot 活动展示新一代 Optimus", "importance": "major"},
+    {"date": "2024.12", "event": "马斯克称2025年将有数千台部署在特斯拉工厂", "importance": "major"}
+  ]
+}

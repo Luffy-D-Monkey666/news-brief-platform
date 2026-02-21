@@ -1,0 +1,26 @@
+{
+  "name": "理想汽车",
+  "aliases": ["Li Auto", "理想", "LI"],
+  "type": "company",
+  "description": "中国新能源汽车公司，专注于增程式电动和大型家庭用车市场。",
+  "metadata": {
+    "founded": "2015",
+    "founder": "李想",
+    "headquarters": "中国北京",
+    "industry": "电动汽车",
+    "exchange": "NASDAQ: LI"
+  },
+  "base_timeline": [
+    {"date": "2015.07", "event": "李想创立车和家（理想汽车前身）", "importance": "milestone"},
+    {"date": "2019.04", "event": "发布理想 ONE 增程式SUV", "importance": "milestone"},
+    {"date": "2020.07", "event": "在纳斯达克上市", "importance": "milestone"},
+    {"date": "2021.05", "event": "理想 ONE 累计交付5万台", "importance": "major"},
+    {"date": "2022.06", "event": "发布 L9 大型SUV，定位家庭旗舰", "importance": "milestone"},
+    {"date": "2022.09", "event": "发布 L8、L7，形成 L 系列产品矩阵", "importance": "major"},
+    {"date": "2023.02", "event": "月交付量首次突破2万台", "importance": "major"},
+    {"date": "2023.12", "event": "发布 MEGA 纯电MPV", "importance": "milestone"},
+    {"date": "2024.03", "event": "2024款 L6 发布，下探30万以内", "importance": "major"},
+    {"date": "2024.04", "event": "月交付量首次突破5万台", "importance": "milestone"},
+    {"date": "2024.07", "event": "累计交付突破100万台", "importance": "milestone"}
+  ]
+}

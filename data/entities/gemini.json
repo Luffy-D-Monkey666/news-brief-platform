@@ -1,0 +1,22 @@
+{
+  "name": "Gemini",
+  "aliases": ["Google Gemini", "Gemini AI", "Bard"],
+  "type": "concept",
+  "description": "Google DeepMind 开发的多模态大语言模型，是 Google 对标 GPT-4 的旗舰产品。",
+  "metadata": {
+    "developer": "Google DeepMind",
+    "type": "多模态大语言模型",
+    "latest_version": "Gemini 2.0"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "Google 发布 Bard（基于 LaMDA/PaLM）", "importance": "major"},
+    {"date": "2023.12", "event": "Gemini 1.0 发布（Ultra/Pro/Nano三版本）", "importance": "milestone"},
+    {"date": "2024.02", "event": "Bard 更名为 Gemini，发布 Gemini Advanced", "importance": "milestone"},
+    {"date": "2024.02", "event": "Gemini 1.5 Pro 发布，支持100万token上下文", "importance": "milestone"},
+    {"date": "2024.05", "event": "Gemini 1.5 Pro 上下文扩展至200万token", "importance": "major"},
+    {"date": "2024.05", "event": "Google I/O 发布 Gemini Live 语音对话功能", "importance": "major"},
+    {"date": "2024.08", "event": "Gemini 1.5 Flash 发布，优化速度和成本", "importance": "major"},
+    {"date": "2024.09", "event": "Gemini 深度整合入 Google Workspace", "importance": "major"},
+    {"date": "2024.12", "event": "Gemini 2.0 发布，强化多模态和Agent能力", "importance": "milestone"}
+  ]
+}

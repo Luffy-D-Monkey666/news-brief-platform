@@ -1,0 +1,25 @@
+{
+  "name": "Cursor",
+  "aliases": ["Cursor AI", "Cursor Editor"],
+  "type": "company",
+  "description": "美国AI代码编辑器公司，基于VSCode开发，被誉为'AI原生IDE'。",
+  "metadata": {
+    "founded": "2022",
+    "founder": "Michael Truell, Sualeh Asif, Arvid Lunnemark, Aman Sanger",
+    "headquarters": "美国旧金山",
+    "industry": "AI开发工具",
+    "valuation": "约4亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2022", "event": "四位MIT学生创立 Anysphere（Cursor母公司）", "importance": "milestone"},
+    {"date": "2023.03", "event": "Cursor 编辑器首次公开发布", "importance": "milestone"},
+    {"date": "2023.06", "event": "获 OpenAI Startup Fund 投资", "importance": "major"},
+    {"date": "2023.10", "event": "完成2000万美元A轮融资", "importance": "major"},
+    {"date": "2024.01", "event": "用户量突破10万", "importance": "major"},
+    {"date": "2024.05", "event": "发布 Cursor 0.30，支持GPT-4o", "importance": "major"},
+    {"date": "2024.08", "event": "完成6000万美元A轮融资，A16Z领投", "importance": "milestone"},
+    {"date": "2024.09", "event": "发布 Cursor Composer 多文件编辑", "importance": "major"},
+    {"date": "2024.10", "event": "ARR突破3000万美元", "importance": "major"},
+    {"date": "2024.12", "event": "用户量突破数十万，增速超Copilot", "importance": "major"}
+  ]
+}

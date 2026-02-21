@@ -1,0 +1,27 @@
+{
+  "name": "SpaceX",
+  "aliases": ["Space X", "太空探索技术公司"],
+  "type": "company",
+  "description": "马斯克创立的航天公司，开发可重复使用火箭，运营星链卫星互联网，目标火星殖民。",
+  "metadata": {
+    "founded": "2002",
+    "founder": "Elon Musk",
+    "headquarters": "美国加州 Hawthorne",
+    "industry": "航天",
+    "valuation": "超2000亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2002.05", "event": "马斯克创立 SpaceX", "importance": "milestone"},
+    {"date": "2008.09", "event": "Falcon 1 成为首枚私人公司入轨火箭", "importance": "milestone"},
+    {"date": "2010.12", "event": "Dragon 飞船首次进入轨道并返回", "importance": "milestone"},
+    {"date": "2012.05", "event": "Dragon 首次与国际空间站对接", "importance": "milestone"},
+    {"date": "2015.12", "event": "Falcon 9 首次实现一级火箭着陆回收", "importance": "milestone"},
+    {"date": "2018.02", "event": "Falcon Heavy 首飞，送跑车入太空", "importance": "major"},
+    {"date": "2019.05", "event": "Starlink 首批60颗卫星发射", "importance": "milestone"},
+    {"date": "2020.05", "event": "Crew Dragon 首次载人航天任务成功", "importance": "milestone"},
+    {"date": "2021.09", "event": "Inspiration4 首次全平民太空任务", "importance": "major"},
+    {"date": "2023.04", "event": "Starship 首次轨道试飞（爆炸）", "importance": "major"},
+    {"date": "2024.06", "event": "Starship 第四次试飞，首次成功着陆", "importance": "milestone"},
+    {"date": "2024.10", "event": "Starship 第五次试飞，筷子回收成功", "importance": "milestone"}
+  ]
+}

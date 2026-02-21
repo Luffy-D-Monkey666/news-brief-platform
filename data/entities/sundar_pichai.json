@@ -1,0 +1,25 @@
+{
+  "name": "Sundar Pichai",
+  "aliases": ["桑达尔·皮查伊", "皮查伊"],
+  "type": "person",
+  "description": "Google CEO 兼 Alphabet CEO，印度裔美国人，领导Google在AI领域的转型。",
+  "metadata": {
+    "born": "1972",
+    "nationality": "美国（印度出生）",
+    "education": "IIT Kharagpur、斯坦福、沃顿",
+    "role": "Google & Alphabet CEO"
+  },
+  "base_timeline": [
+    {"date": "1972", "event": "出生于印度泰米尔纳德邦", "importance": "milestone"},
+    {"date": "1993", "event": "IIT Kharagpur 冶金工程学士毕业", "importance": "major"},
+    {"date": "2004", "event": "加入 Google，负责工具栏产品", "importance": "milestone"},
+    {"date": "2008", "event": "主导 Chrome 浏览器发布", "importance": "milestone"},
+    {"date": "2013", "event": "接管 Android 业务", "importance": "major"},
+    {"date": "2014", "event": "传闻曾被 Twitter 和微软挖角", "importance": "major"},
+    {"date": "2015.08", "event": "Alphabet 重组后出任 Google CEO", "importance": "milestone"},
+    {"date": "2019.12", "event": "同时担任 Alphabet CEO", "importance": "milestone"},
+    {"date": "2023.02", "event": "宣布 Bard 对标 ChatGPT", "importance": "major"},
+    {"date": "2023.12", "event": "发布 Gemini，称超越 GPT-4", "importance": "major"},
+    {"date": "2024.05", "event": "Google I/O 宣布 AI 优先战略", "importance": "major"}
+  ]
+}

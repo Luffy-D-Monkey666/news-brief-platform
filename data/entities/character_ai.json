@@ -1,0 +1,24 @@
+{
+  "name": "Character.AI",
+  "aliases": ["Character AI", "C.AI"],
+  "type": "company",
+  "description": "美国AI聊天机器人公司，用户可创建和对话各种AI角色，以超长对话和角色扮演著称。",
+  "metadata": {
+    "founded": "2021",
+    "founder": "Noam Shazeer, Daniel De Freitas",
+    "headquarters": "美国加州",
+    "industry": "AI对话",
+    "valuation": "10亿美元（2023年）"
+  },
+  "base_timeline": [
+    {"date": "2021.11", "event": "前Google LaMDA核心成员创立 Character.AI", "importance": "milestone"},
+    {"date": "2022.09", "event": "Character.AI Beta 公开测试", "importance": "milestone"},
+    {"date": "2023.03", "event": "获A16Z领投1.5亿美元A轮，估值10亿", "importance": "milestone"},
+    {"date": "2023.05", "event": "月活用户突破2000万", "importance": "major"},
+    {"date": "2023.09", "event": "发布 c1.2 模型，对话能力大幅提升", "importance": "major"},
+    {"date": "2024.03", "event": "日均对话量超过ChatGPT", "importance": "major"},
+    {"date": "2024.08", "event": "创始人 Noam Shazeer 回归 Google", "importance": "milestone"},
+    {"date": "2024.08", "event": "Google 以25亿美元获得技术授权", "importance": "milestone"},
+    {"date": "2024.09", "event": "新管理层推进产品商业化", "importance": "major"}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Midjourney",
+  "aliases": ["MJ", "Midjourney AI"],
+  "type": "company",
+  "description": "美国AI图像生成公司，以高质量艺术风格图像生成著称，主要通过Discord使用。",
+  "metadata": {
+    "founded": "2021",
+    "founder": "David Holz",
+    "headquarters": "美国旧金山",
+    "industry": "AI图像生成"
+  },
+  "base_timeline": [
+    {"date": "2021", "event": "David Holz（Leap Motion 联创）创立 Midjourney", "importance": "milestone"},
+    {"date": "2022.03", "event": "Midjourney V1 开始 Beta 测试", "importance": "major"},
+    {"date": "2022.07", "event": "Midjourney V3 发布，开放公测", "importance": "milestone"},
+    {"date": "2022.08", "event": "《太空歌剧院》获科罗拉多州艺术比赛冠军引争议", "importance": "major"},
+    {"date": "2022.11", "event": "Midjourney V4 发布，画质大幅提升", "importance": "major"},
+    {"date": "2023.03", "event": "Midjourney V5 发布，写实能力飞跃", "importance": "milestone"},
+    {"date": "2023.05", "event": "Midjourney V5.1/5.2 迭代更新", "importance": "major"},
+    {"date": "023.12", "event": "Midjourney V6 发布，支持文字渲染", "importance": "milestone"},
+    {"date": "2024.03", "event": "月营收据报道达2亿美元", "importance": "major"},
+    {"date": "2024.08", "event": "推出独立网页版，不再仅限Discord", "importance": "major"}
+  ]
+}

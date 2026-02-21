@@ -1,0 +1,24 @@
+{
+  "name": "宇树科技",
+  "aliases": ["Unitree", "Unitree Robotics", "宇树"],
+  "type": "company",
+  "description": "中国机器人公司，以四足机器人和人形机器人闻名，被称为'中国波士顿动力'。",
+  "metadata": {
+    "founded": "2016",
+    "founder": "王兴兴",
+    "headquarters": "中国杭州",
+    "industry": "机器人"
+  },
+  "base_timeline": [
+    {"date": "2016", "event": "王兴兴在浙大读博期间创立宇树科技", "importance": "milestone"},
+    {"date": "2019", "event": "发布 A1 四足机器人，性价比震动市场", "importance": "major"},
+    {"date": "2021", "event": "Aliengo 四足机器人量产销售", "importance": "major"},
+    {"date": "2022.06", "event": "发布 Go1 消费级机器狗，售价2700美元起", "importance": "milestone"},
+    {"date": "2023.08", "event": "发布 H1 人形机器人，高1.8米", "importance": "milestone"},
+    {"date": "2023.12", "event": "H1 展示跑步能力，最高时速3.3m/s", "importance": "major"},
+    {"date": "2024.01", "event": "H1 完成全尺寸后空翻", "importance": "major"},
+    {"date": "2024.05", "event": "发布 G1 人形机器人，售价9.9万元起", "importance": "milestone"},
+    {"date": "2024.08", "event": "B2 工业级四足机器人发布", "importance": "major"},
+    {"date": "2024.12", "event": "完成新一轮融资，估值超10亿美元", "importance": "major"}
+  ]
+}

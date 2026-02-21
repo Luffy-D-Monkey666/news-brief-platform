@@ -1,0 +1,24 @@
+{
+  "name": "Figure AI",
+  "aliases": ["Figure", "Figure Robotics"],
+  "type": "company",
+  "description": "美国人形机器人初创公司，致力于开发通用人形机器人 Figure 01/02。",
+  "metadata": {
+    "founded": "2022",
+    "founder": "Brett Adcock",
+    "headquarters": "美国加州 Sunnyvale",
+    "industry": "机器人",
+    "valuation": "26亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2022.03", "event": "Brett Adcock 创立 Figure AI", "importance": "milestone"},
+    {"date": "2023.03", "event": "完成7000万美元A轮融资", "importance": "major"},
+    {"date": "2023.10", "event": "Figure 01 原型机首次公开亮相", "importance": "milestone"},
+    {"date": "2024.01", "event": "与宝马签署协议，在工厂部署机器人", "importance": "major"},
+    {"date": "2024.02", "event": "获OpenAI、微软等6.75亿美元B轮融资", "importance": "milestone"},
+    {"date": "2024.03", "event": "展示与 OpenAI 模型结合的对话能力", "importance": "major"},
+    {"date": "2024.05", "event": "Figure 01 开始在宝马工厂试点", "importance": "major"},
+    {"date": "2024.08", "event": "发布 Figure 02 第二代人形机器人", "importance": "milestone"},
+    {"date": "2024.10", "event": "完成商业化部署，进入量产准备", "importance": "major"}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "极氪",
+  "aliases": ["Zeekr", "极氪汽车", "ZEEKR"],
+  "type": "company",
+  "description": "吉利旗下高端纯电动汽车品牌，主打性能和智能化。",
+  "metadata": {
+    "founded": "2021",
+    "parent": "吉利汽车集团",
+    "headquarters": "中国宁波",
+    "industry": "电动汽车",
+    "exchange": "NYSE: ZK"
+  },
+  "base_timeline": [
+    {"date": "2021.03", "event": "吉利宣布成立极氪品牌", "importance": "milestone"},
+    {"date": "2021.04", "event": "首款车型极氪001发布", "importance": "milestone"},
+    {"date": "2021.10", "event": "极氪001开始交付", "importance": "major"},
+    {"date": "2022.06", "event": "发布极氪009 MPV", "importance": "major"},
+    {"date": "2023.04", "event": "发布极氪X紧凑型SUV", "importance": "major"},
+    {"date": "2023.11", "event": "发布极氪007轿车", "importance": "major"},
+    {"date": "2024.02", "event": "发布极氪001 FR高性能版", "importance": "major"},
+    {"date": "2024.05", "event": "在纽约证券交易所上市", "importance": "milestone"},
+    {"date": "2024.06", "event": "累计交付突破20万台", "importance": "major"},
+    {"date": "2024.08", "event": "发布极氪MIX创新车型", "importance": "major"},
+    {"date": "2024.11", "event": "宣布与 Waymo 合作自动驾驶", "importance": "major"}
+  ]
+}

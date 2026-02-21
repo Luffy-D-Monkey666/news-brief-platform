@@ -1,0 +1,25 @@
+{
+  "name": "Cerebras",
+  "aliases": ["Cerebras Systems"],
+  "type": "company",
+  "description": "美国AI芯片公司，开发世界最大单芯片WSE（晶圆级引擎），用于AI训练和推理。",
+  "metadata": {
+    "founded": "2016",
+    "founder": "Andrew Feldman",
+    "headquarters": "美国加州Sunnyvale",
+    "industry": "AI芯片",
+    "valuation": "约40亿美元"
+  },
+  "base_timeline": [
+    {"date": "2016", "event": "Andrew Feldman（前SeaMicro CEO）创立Cerebras", "importance": "milestone"},
+    {"date": "2019.08", "event": "发布WSE-1，850,000核心，最大单芯片", "importance": "milestone"},
+    {"date": "2021.04", "event": "发布WSE-2，2.6万亿晶体管", "importance": "milestone"},
+    {"date": "2021.11", "event": "获超2.5亿美元融资", "importance": "major"},
+    {"date": "2022.09", "event": "Andromeda超算上线，集成16块WSE-2", "importance": "major"},
+    {"date": "2023.03", "event": "发布WSE-3，4万亿晶体管", "importance": "milestone"},
+    {"date": "2024.03", "event": "开放Inference云服务", "importance": "major"},
+    {"date": "2024.07", "event": "Llama 3.1 405B推理速度达1800 tokens/s", "importance": "major"},
+    {"date": "2024.09", "event": "提交IPO申请", "importance": "milestone"},
+    {"date": "2024.11", "event": "开源Llama 3.3 70B，推理性能领先", "importance": "major"}
+  ]
+}

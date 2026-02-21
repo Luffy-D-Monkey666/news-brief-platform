@@ -1,0 +1,21 @@
+{
+  "name": "Claude",
+  "aliases": ["Claude AI", "Claude 3"],
+  "type": "concept",
+  "description": "Anthropic 开发的大语言模型系列，以安全性和长上下文能力著称。",
+  "metadata": {
+    "developer": "Anthropic",
+    "type": "大语言模型",
+    "latest_version": "Claude 3.5 Sonnet"
+  },
+  "base_timeline": [
+    {"date": "2023.03", "event": "Claude 1.0 发布", "importance": "milestone"},
+    {"date": "2023.07", "event": "Claude 2 发布，支持100K上下文", "importance": "milestone"},
+    {"date": "2023.11", "event": "Claude 2.1 发布，支持200K上下文", "importance": "major"},
+    {"date": "2024.03", "event": "Claude 3 系列发布（Opus/Sonnet/Haiku）", "importance": "milestone"},
+    {"date": "2024.03", "event": "Claude 3 Opus 在多项基准超越 GPT-4", "importance": "major"},
+    {"date": "2024.06", "event": "Claude 3.5 Sonnet 发布，性能超越 Opus", "importance": "milestone"},
+    {"date": "2024.10", "event": "Claude 3.5 Sonnet 更新，新增 Computer Use 能力", "importance": "major"},
+    {"date": "2024.10", "event": "Claude 3.5 Haiku 发布", "importance": "major"}
+  ]
+}

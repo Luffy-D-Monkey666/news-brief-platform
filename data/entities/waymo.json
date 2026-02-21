@@ -1,0 +1,25 @@
+{
+  "name": "Waymo",
+  "aliases": ["Waymo One", "谷歌无人车"],
+  "type": "company",
+  "description": "Alphabet旗下自动驾驶公司，前身为Google自动驾驶项目，运营商业化Robotaxi服务。",
+  "metadata": {
+    "founded": "2009（项目）/2016（独立公司）",
+    "parent": "Alphabet",
+    "headquarters": "美国加州Mountain View",
+    "industry": "自动驾驶"
+  },
+  "base_timeline": [
+    {"date": "2009", "event": "作为Google X秘密项目启动", "importance": "milestone"},
+    {"date": "2012", "event": "自动驾驶测试里程突破30万英里", "importance": "major"},
+    {"date": "2016.12", "event": "从Alphabet独立为Waymo公司", "importance": "milestone"},
+    {"date": "2018.12", "event": "Waymo One商业Robotaxi服务在凤凰城上线", "importance": "milestone"},
+    {"date": "2020.10", "event": "凤凰城完全无人驾驶服务开放", "importance": "milestone"},
+    {"date": "2021.06", "event": "完成25亿美元融资", "importance": "major"},
+    {"date": "2022.03", "event": "在旧金山开展公测", "importance": "major"},
+    {"date": "2023.08", "event": "旧金山24小时无人驾驶服务获批", "importance": "milestone"},
+    {"date": "2024.03", "event": "洛杉矶Robotaxi服务启动", "importance": "major"},
+    {"date": "2024.06", "event": "周运营量突破10万次", "importance": "major"},
+    {"date": "2024.10", "event": "完成56亿美元新融资", "importance": "milestone"}
+  ]
+}

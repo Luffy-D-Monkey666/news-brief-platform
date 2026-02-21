@@ -1,0 +1,25 @@
+{
+  "name": "Demis Hassabis",
+  "aliases": ["杰米斯·哈萨比斯", "哈萨比斯"],
+  "type": "person",
+  "description": "DeepMind 联合创始人兼CEO，国际象棋神童，2024年诺贝尔化学奖得主。",
+  "metadata": {
+    "born": "1976",
+    "nationality": "英国",
+    "role": "Google DeepMind CEO",
+    "education": "剑桥大学、伦敦大学学院"
+  },
+  "base_timeline": [
+    {"date": "1976", "event": "出生于伦敦，希腊-新加坡华裔混血", "importance": "milestone"},
+    {"date": "1982", "event": "6岁学习国际象棋，13岁达到大师水平", "importance": "major"},
+    {"date": "1994", "event": "17岁开发经典游戏《主题公园》", "importance": "major"},
+    {"date": "1998", "event": "创立游戏公司 Elixir Studios", "importance": "major"},
+    {"date": "2009", "event": "获得伦敦大学学院神经科学博士学位", "importance": "major"},
+    {"date": "2010.09", "event": "与 Shane Legg 等创立 DeepMind", "importance": "milestone"},
+    {"date": "2014.01", "event": "DeepMind 被 Google 以4亿英镑收购", "importance": "milestone"},
+    {"date": "2016.03", "event": "AlphaGo 击败围棋世界冠军李世石", "importance": "milestone"},
+    {"date": "2018.12", "event": "AlphaFold 在蛋白质结构预测竞赛夺冠", "importance": "major"},
+    {"date": "2023.04", "event": "Google Brain 与 DeepMind 合并，任新 CEO", "importance": "milestone"},
+    {"date": "2024.10", "event": "因 AlphaFold 获诺贝尔化学奖", "importance": "milestone"}
+  ]
+}

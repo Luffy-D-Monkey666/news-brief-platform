@@ -1,0 +1,27 @@
+{
+  "name": "小鹏汽车",
+  "aliases": ["XPeng", "小鹏", "XPEV"],
+  "type": "company",
+  "description": "中国智能电动汽车公司，以智能驾驶技术和飞行汽车研发著称。",
+  "metadata": {
+    "founded": "2014",
+    "founder": "何小鹏",
+    "headquarters": "中国广州",
+    "industry": "电动汽车",
+    "exchange": "NYSE: XPEV"
+  },
+  "base_timeline": [
+    {"date": "2014", "event": "夏珩、何涛创立小鹏汽车", "importance": "milestone"},
+    {"date": "2017.08", "event": "何小鹏加入并出任董事长", "importance": "major"},
+    {"date": "2018.12", "event": "首款车型 G3 上市", "importance": "milestone"},
+    {"date": "2020.04", "event": "发布 P7 智能轿跑", "importance": "major"},
+    {"date": "2020.08", "event": "在纽约证券交易所上市", "importance": "milestone"},
+    {"date": "2021.10", "event": "发布飞行汽车旅航者 X2", "importance": "major"},
+    {"date": "2022.09", "event": "发布 G9 旗舰SUV", "importance": "major"},
+    {"date": "2023.06", "event": "发布 G6，XNGP 智驾全国开放", "importance": "milestone"},
+    {"date": "2023.07", "event": "与大众集团达成战略合作", "importance": "milestone"},
+    {"date": "2024.03", "event": "发布 X9 MPV", "importance": "major"},
+    {"date": "2024.08", "event": "飞行汽车 X3 亮相，计划2025年量产", "importance": "major"},
+    {"date": "2024.11", "event": "发布 P7+ 和 MONA M03", "importance": "major"}
+  ]
+}

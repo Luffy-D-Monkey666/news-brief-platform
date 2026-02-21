@@ -1,0 +1,26 @@
+{
+  "name": "蔚来",
+  "aliases": ["NIO", "蔚来汽车", "NIO Inc"],
+  "type": "company",
+  "description": "中国高端智能电动汽车品牌，以换电服务和用户社区运营著称。",
+  "metadata": {
+    "founded": "2014",
+    "founder": "李斌",
+    "headquarters": "中国上海",
+    "industry": "电动汽车",
+    "exchange": "NYSE: NIO"
+  },
+  "base_timeline": [
+    {"date": "2014.11", "event": "李斌创立蔚来汽车", "importance": "milestone"},
+    {"date": "2016.11", "event": "发布 EP9 超跑，创纽北圈速纪录", "importance": "major"},
+    {"date": "2017.12", "event": "发布首款量产车 ES8", "importance": "milestone"},
+    {"date": "2018.09", "event": "在纽约证券交易所上市", "importance": "milestone"},
+    {"date": "2019.06", "event": "发布 ES6，开始换电站建设", "importance": "major"},
+    {"date": "2020.04", "event": "获合肥政府70亿元战略投资", "importance": "milestone"},
+    {"date": "2021.01", "event": "发布 ET7 旗舰轿车，搭载 150kWh 电池", "importance": "major"},
+    {"date": "2022.06", "event": "ES7/ET5 发布，产品线扩充", "importance": "major"},
+    {"date": "2023.07", "event": "发布子品牌阿尔卑斯（后更名乐道）", "importance": "major"},
+    {"date": "2024.04", "event": "乐道 L60 发布，定价20万级", "importance": "major"},
+    {"date": "2024.09", "event": "换电站数量突破2600座", "importance": "major"}
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Neuralink",
+  "aliases": ["脑机接口"],
+  "type": "company",
+  "description": "马斯克创立的脑机接口公司，开发植入式神经芯片，目标治疗神经疾病并最终增强人类智能。",
+  "metadata": {
+    "founded": "2016",
+    "founder": "Elon Musk",
+    "headquarters": "美国加州Fremont",
+    "industry": "脑机接口/医疗科技"
+  },
+  "base_timeline": [
+    {"date": "2016.07", "event": "马斯克创立Neuralink", "importance": "milestone"},
+    {"date": "2019.07", "event": "首次公开发布会，展示细如发丝的电极线", "importance": "milestone"},
+    {"date": "2020.08", "event": "展示植入芯片的猪 Gertrude", "importance": "major"},
+    {"date": "2021.04", "event": "展示猴子用意念玩乒乓游戏", "importance": "major"},
+    {"date": "2022.12", "event": "宣布计划启动人体试验", "importance": "major"},
+    {"date": "2023.05", "event": "获FDA批准进行人体临床试验", "importance": "milestone"},
+    {"date": "2023.09", "event": "开始招募人体试验志愿者", "importance": "major"},
+    {"date": "2024.01", "event": "首例人体芯片植入手术完成", "importance": "milestone"},
+    {"date": "2024.03", "event": "首位患者Noland Arbaugh展示用意念玩游戏", "importance": "major"},
+    {"date": "2024.07", "event": "第二例人体植入手术成功", "importance": "major"},
+    {"date": "2024.09", "event": "FDA批准扩大临床试验规模", "importance": "major"}
+  ]
+}

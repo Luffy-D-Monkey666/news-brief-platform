@@ -1,0 +1,20 @@
+{
+  "name": "OpenAI o1",
+  "aliases": ["o1", "o1模型", "Strawberry", "草莓模型"],
+  "type": "concept",
+  "description": "OpenAI开发的推理模型系列，通过思维链推理提升复杂问题解决能力。",
+  "metadata": {
+    "developer": "OpenAI",
+    "type": "推理大语言模型",
+    "codename": "Strawberry"
+  },
+  "base_timeline": [
+    {"date": "2024.07", "event": "内部代号'Strawberry'项目曝光", "importance": "major"},
+    {"date": "2024.09.12", "event": "OpenAI o1-preview和o1-mini发布", "importance": "milestone"},
+    {"date": "2024.09", "event": "o1在数学奥赛题目中超越人类水平", "importance": "major"},
+    {"date": "2024.09", "event": "o1在编程竞赛中达到Codeforces 89%水平", "importance": "major"},
+    {"date": "2024.10", "event": "o1在博士级科学问题上超越人类专家", "importance": "major"},
+    {"date": "2024.12.05", "event": "o1正式版发布，支持图像输入", "importance": "milestone"},
+    {"date": "2024.12", "event": "o1 Pro模式在ChatGPT Pro推出（$200/月）", "importance": "major"}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Cohere",
+  "aliases": ["Cohere AI"],
+  "type": "company",
+  "description": "加拿大AI公司，专注于企业级大语言模型，由Transformer论文作者之一创立。",
+  "metadata": {
+    "founded": "2019",
+    "founder": "Aidan Gomez, Ivan Zhang, Nick Frosst",
+    "headquarters": "加拿大多伦多",
+    "industry": "企业AI",
+    "valuation": "55亿美元（2024年）"
+  },
+  "base_timeline": [
+    {"date": "2019", "event": "Transformer 论文共同作者 Aidan Gomez 创立", "importance": "milestone"},
+    {"date": "2021.11", "event": "完成4000万美元B轮融资", "importance": "major"},
+    {"date": "2022.02", "event": "完成1.25亿美元C轮融资", "importance": "major"},
+    {"date": "2023.06", "event": "完成2.7亿美元D轮，估值22亿", "importance": "milestone"},
+    {"date": "2023.09", "event": "发布 Command R 企业级模型", "importance": "major"},
+    {"date": "2024.03", "event": "发布 Command R+ 模型，支持RAG", "importance": "major"},
+    {"date": "2024.04", "event": "发布 Aya 多语言模型，支持101种语言", "importance": "major"},
+    {"date": "2024.06", "event": "完成5亿美元融资，估值55亿", "importance": "milestone"},
+    {"date": "2024.09", "event": "与Oracle、Salesforce建立深度合作", "importance": "major"}
+  ]
+}

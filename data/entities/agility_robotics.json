@@ -1,0 +1,23 @@
+{
+  "name": "Agility Robotics",
+  "aliases": ["Agility", "敏捷机器人"],
+  "type": "company",
+  "description": "美国双足机器人公司，开发 Digit 人形机器人，与亚马逊合作仓储物流。",
+  "metadata": {
+    "founded": "2015",
+    "founder": "Damion Shelton, Jonathan Hurst",
+    "headquarters": "美国俄勒冈州",
+    "industry": "机器人"
+  },
+  "base_timeline": [
+    {"date": "2015", "event": "由俄勒冈州立大学研究人员创立", "importance": "milestone"},
+    {"date": "2017", "event": "发布 Cassie 双足机器人", "importance": "major"},
+    {"date": "2019", "event": "发布 Digit 人形机器人初代", "importance": "milestone"},
+    {"date": "2022.04", "event": "完成1.5亿美元B轮融资", "importance": "major"},
+    {"date": "2023.03", "event": "发布 Digit 2.0，增加手臂和手部", "importance": "milestone"},
+    {"date": "2023.10", "event": "亚马逊开始在仓库测试 Digit", "importance": "milestone"},
+    {"date": "2024.01", "event": "Digit 工厂在俄勒冈州动工", "importance": "major"},
+    {"date": "2024.04", "event": "宣布年产能将达1万台", "importance": "major"},
+    {"date": "2024.09", "event": "Digit 在亚马逊仓库进入小规模部署", "importance": "major"}
+  ]
+}

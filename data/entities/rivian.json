@@ -1,0 +1,26 @@
+{
+  "name": "Rivian",
+  "aliases": ["Rivian Automotive", "里维安"],
+  "type": "company",
+  "description": "美国电动汽车制造商，主打电动皮卡和SUV，亚马逊为最大股东之一。",
+  "metadata": {
+    "founded": "2009",
+    "founder": "R.J. Scaringe",
+    "headquarters": "美国加州 Irvine",
+    "industry": "电动汽车",
+    "exchange": "NASDAQ: RIVN"
+  },
+  "base_timeline": [
+    {"date": "2009", "event": "R.J. Scaringe 创立 Mainstream Motors", "importance": "milestone"},
+    {"date": "2011", "event": "更名为 Rivian Automotive", "importance": "major"},
+    {"date": "2018.11", "event": "发布 R1T 电动皮卡和 R1S 电动SUV", "importance": "milestone"},
+    {"date": "2019.02", "event": "获亚马逊7亿美元投资", "importance": "milestone"},
+    {"date": "2019.04", "event": "获福特5亿美元投资", "importance": "major"},
+    {"date": "2021.09", "event": "R1T 开始交付，成为首款量产电动皮卡", "importance": "milestone"},
+    {"date": "2021.11", "event": "IPO 上市，估值一度超1000亿美元", "importance": "milestone"},
+    {"date": "2022.12", "event": "开始为亚马逊生产电动送货车", "importance": "major"},
+    {"date": "2023.06", "event": "与亚马逊送货车订单增至10万台", "importance": "major"},
+    {"date": "2024.03", "event": "发布第二代 R2/R3 平台", "importance": "milestone"},
+    {"date": "2024.06", "event": "获大众集团50亿美元投资", "importance": "milestone"}
+  ]
+}

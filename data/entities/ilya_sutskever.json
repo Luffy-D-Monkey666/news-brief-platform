@@ -1,0 +1,26 @@
+{
+  "name": "Ilya Sutskever",
+  "aliases": ["伊利亚·苏茨克维", "苏茨克维"],
+  "type": "person",
+  "description": "OpenAI联合创始人兼前首席科学家，深度学习先驱，2024年创立SSI追求安全超级智能。",
+  "metadata": {
+    "born": "1986",
+    "nationality": "以色列/加拿大",
+    "education": "多伦多大学博士（师从Hinton）",
+    "current": "Safe Superintelligence Inc. 联创"
+  },
+  "base_timeline": [
+    {"date": "1986", "event": "出生于俄罗斯（苏联时期）", "importance": "milestone"},
+    {"date": "2003", "event": "在多伦多大学师从 Geoffrey Hinton", "importance": "major"},
+    {"date": "2012", "event": "AlexNet 论文发表，引爆深度学习革命", "importance": "milestone"},
+    {"date": "2013", "event": "加入 Google Brain 团队", "importance": "major"},
+    {"date": "2014", "event": "与 Oriol Vinyals 发明 Sequence-to-Sequence", "importance": "major"},
+    {"date": "2015.12", "event": "联合创立 OpenAI，任首席科学家", "importance": "milestone"},
+    {"date": "2020", "event": "主导 GPT-3 研发", "importance": "major"},
+    {"date": "2023.11", "event": "参与董事会投票解雇 Sam Altman", "importance": "major"},
+    {"date": "2023.11", "event": "几天后改变立场，支持 Altman 回归", "importance": "major"},
+    {"date": "2024.05", "event": "离开 OpenAI", "importance": "milestone"},
+    {"date": "2024.06", "event": "创立 SSI（Safe Superintelligence Inc.）", "importance": "milestone"},
+    {"date": "2024.09", "event": "SSI 完成10亿美元融资", "importance": "major"}
+  ]
+}
