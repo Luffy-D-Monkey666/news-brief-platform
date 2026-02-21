@@ -76,6 +76,11 @@ const entitySchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // 是否已激活（达到提及阈值后激活，用于非预置实体）
+  is_active: {
+    type: Boolean,
+    default: false
+  },
   // 提及次数（未创建知识库前的计数）
   mention_count: {
     type: Number,
