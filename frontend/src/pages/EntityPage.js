@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getEntityTimeline, synthesizeSpeech } from '../services/api';
-import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaSpinner, FaArrowLeft, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaExternalLinkAlt, FaVolumeUp, FaPause, FaStop, FaChevronDown, FaChevronUp, FaArrowUp } from 'react-icons/fa';
 
 // 实体类型配置
 // 实体类型配置 - 收敛配色
@@ -290,12 +290,27 @@ const EntityPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   
   // 语音播放状态
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSpeechLoading, setIsSpeechLoading] = useState(false);
   const audioRef = useRef(null);
   const audioUrlRef = useRef(null);
+
+  // 监听滚动，显示/隐藏回到顶部按钮
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 回到顶部
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // 生成朗读文本
   const generateSpeechText = (entity, timeline) => {
@@ -599,6 +614,17 @@ const EntityPage = () => {
         )}
       </main>
 
+      {/* 回到顶部按钮 */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-24 right-6 w-12 h-12 bg-black text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-800 transition-all z-40 animate-fade-in"
+          title="回到顶部"
+        >
+          <FaArrowUp />
+        </button>
+      )}
+
       {/* 底部 */}
       <footer className="bg-black mt-16 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -607,6 +633,16 @@ const EntityPage = () => {
           </p>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
 };

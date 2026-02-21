@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getEntities } from '../services/api';
-import { FaSpinner, FaSearch, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaArrowLeft } from 'react-icons/fa';
+import { FaSpinner, FaSearch, FaBuilding, FaUser, FaLightbulb, FaCalendarAlt, FaNewspaper, FaArrowLeft, FaArrowUp } from 'react-icons/fa';
 
 // 实体类型配置
 const TYPE_CONFIG = {
@@ -70,7 +70,22 @@ const KnowledgePage = () => {
   const [sortBy, setSortBy] = useState('news'); // news | recent | name
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const PAGE_SIZE = 30;
+
+  // 监听滚动，显示/隐藏回到顶部按钮
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 回到顶部
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // 加载实体（首次或刷新）
   const loadEntities = useCallback(async () => {
@@ -270,6 +285,17 @@ const KnowledgePage = () => {
         )}
       </main>
 
+      {/* 回到顶部按钮 */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-24 right-6 w-12 h-12 bg-black text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-800 transition-all z-40 animate-fade-in"
+          title="回到顶部"
+        >
+          <FaArrowUp />
+        </button>
+      )}
+
       {/* 底部 */}
       <footer className="bg-black mt-16 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -278,6 +304,16 @@ const KnowledgePage = () => {
           </p>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
