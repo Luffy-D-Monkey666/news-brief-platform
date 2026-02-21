@@ -316,23 +316,35 @@ class EntityService:
         return 0
     
     def _activate_entity(self, entity_id: str, name: str, entity_type: str, context: str):
-        """激活实体，可选生成 AI 时间轴"""
+        """
+        激活实体（P0 优化：禁用 AI 生成时间轴，避免突发 token 消耗）
+        
+        原逻辑：每次激活新实体都调用 AI 生成时间轴，大量新实体会消耗巨额 token
+        新逻辑：不再 AI 生成，只用预置时间轴或让新闻逐步积累
+        """
         logger.info(f"激活实体: {name} ({entity_type})")
         
         base_timeline = []
         description = context
         
-        # 如果有 AI 处理器，生成时间轴
-        if self.ai_processor:
-            try:
-                result = self._generate_timeline(name, entity_type)
-                if result:
-                    base_timeline = result.get('timeline', [])
-                    if result.get('description'):
-                        description = result['description']
-                    logger.info(f"AI 生成时间轴: {name}, {len(base_timeline)} 个节点")
-            except Exception as e:
-                logger.warning(f"AI 生成时间轴失败 [{name}]: {e}")
+        # P0 优化：禁用 AI 生成时间轴
+        # 如果需要时间轴，应该：
+        # 1. 使用预置实体数据（data/entities/）
+        # 2. 让新闻逐步积累形成时间轴
+        # 
+        # 原代码保留但注释，以便将来恢复：
+        # if self.ai_processor:
+        #     try:
+        #         result = self._generate_timeline(name, entity_type)
+        #         if result:
+        #             base_timeline = result.get('timeline', [])
+        #             if result.get('description'):
+        #                 description = result['description']
+        #             logger.info(f"AI 生成时间轴: {name}, {len(base_timeline)} 个节点")
+        #     except Exception as e:
+        #         logger.warning(f"AI 生成时间轴失败 [{name}]: {e}")
+        
+        logger.debug(f"实体 {name} 激活（无 AI 时间轴，将从新闻累积）")
         
         # 调用激活 API
         try:

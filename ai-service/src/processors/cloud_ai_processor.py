@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 from typing import Dict, Optional, List
 import logging
 import os
@@ -50,47 +51,191 @@ class CloudAIProcessor:
         if not self.api_key:
             raise ValueError(f"API key not found for {provider}")
 
-    def _call_api(self, prompt: str, max_tokens: int = 500) -> Optional[str]:
-        """调用API（支持OpenAI格式）"""
-        try:
-            headers = {
-                'Authorization': f'Bearer {self.api_key}',
-                'Content-Type': 'application/json'
-            }
+    def _call_api(self, prompt: str, max_tokens: int = 500, retries: int = 3) -> Optional[str]:
+        """
+        调用API（支持OpenAI格式）
+        
+        增加指数退避重试策略：
+        - 429 (Too Many Requests) 自动重试
+        - 500/502/503 服务器错误重试
+        """
+        last_error = None
+        
+        for attempt in range(retries):
+            try:
+                headers = {
+                    'Authorization': f'Bearer {self.api_key}',
+                    'Content-Type': 'application/json'
+                }
 
-            data = {
-                'model': self.model,
-                'messages': [{'role': 'user', 'content': prompt}],
-                'max_tokens': max_tokens,
-                'temperature': 0.3
-            }
+                data = {
+                    'model': self.model,
+                    'messages': [{'role': 'user', 'content': prompt}],
+                    'max_tokens': max_tokens,
+                    'temperature': 0.3
+                }
 
-            response = requests.post(
-                self.api_url,
-                headers=headers,
-                json=data,
-                timeout=30
-            )
+                response = requests.post(
+                    self.api_url,
+                    headers=headers,
+                    json=data,
+                    timeout=30
+                )
 
-            if response.status_code == 200:
-                result = response.json()
-                content = result['choices'][0]['message']['content'].strip()
-                return content
-            else:
-                logger.error(f"API错误: {response.status_code} - {response.text[:200]}")
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result['choices'][0]['message']['content'].strip()
+                    return content
+                elif response.status_code == 429:
+                    # 速率限制，指数退避
+                    wait_time = (2 ** attempt) * 2  # 2s, 4s, 8s
+                    logger.warning(f"API 速率限制 (429)，等待 {wait_time}s 后重试 ({attempt + 1}/{retries})")
+                    time.sleep(wait_time)
+                    last_error = f"429 Too Many Requests"
+                    continue
+                elif response.status_code in [500, 502, 503]:
+                    # 服务器错误，重试
+                    wait_time = (2 ** attempt) * 1  # 1s, 2s, 4s
+                    logger.warning(f"API 服务器错误 ({response.status_code})，等待 {wait_time}s 后重试 ({attempt + 1}/{retries})")
+                    time.sleep(wait_time)
+                    last_error = f"{response.status_code} Server Error"
+                    continue
+                else:
+                    logger.error(f"API错误: {response.status_code} - {response.text[:200]}")
+                    return None
+
+            except requests.exceptions.Timeout:
+                wait_time = (2 ** attempt) * 1
+                logger.warning(f"API 超时，等待 {wait_time}s 后重试 ({attempt + 1}/{retries})")
+                time.sleep(wait_time)
+                last_error = "Timeout"
+                continue
+            except Exception as e:
+                logger.error(f"API调用失败: {str(e)}")
                 return None
+        
+        logger.error(f"API调用失败，已重试 {retries} 次: {last_error}")
+        return None
 
-        except requests.exceptions.Timeout:
-            logger.error("API调用超时")
+    def process_news_two_stage(self, title: str, content: str, 
+                                 quick_prompt: str, detailed_prompt: str) -> Optional[Dict]:
+        """
+        两阶段处理（P0 优化）：
+        1. 快速分类：用简化 prompt，输出 title_zh/category/importance/summary
+        2. 详细处理：仅对 breaking/high 新闻调用第二阶段补充详细字段
+        
+        预计节省 50-60% token（大多数 normal 新闻只需一阶段）
+        """
+        # 第一阶段：快速分类（所有新闻）
+        # normal 新闻用 400 字内容，重要新闻后续会用更多
+        content_truncated = content[:400] if content else ""
+        prompt = quick_prompt.format(title=title, content=content_truncated)
+        
+        result = self._call_api(prompt, max_tokens=300)
+        
+        if not result:
             return None
-        except Exception as e:
-            logger.error(f"API调用失败: {str(e)}")
+        
+        try:
+            # 解析第一阶段结果
+            if '```json' in result:
+                result = result.split('```json')[1].split('```')[0]
+            elif '```' in result:
+                result = result.split('```')[1].split('```')[0]
+            
+            data = json.loads(result.strip())
+            
+            # 验证必要字段
+            if not all(k in data for k in ['title_zh', 'category', 'summary']):
+                logger.warning(f"第一阶段缺少必要字段: {result[:100]}")
+                return None
+            
+            # 验证分类
+            valid_categories = [
+                'ai_technology', 'robotics', 'ai_programming', 'semiconductors',
+                'automotive', 'consumer_electronics', 'podcasts', 'finance_investment',
+                'business_tech', 'politics_world', 'economy_policy', 'health_medical',
+                'energy_environment', 'entertainment_sports', 'anime', 'one_piece', 
+                'tcg', 'general'
+            ]
+            if data.get('category') not in valid_categories:
+                data['category'] = 'general'
+            
+            # 验证重要性
+            importance = data.get('importance', 'normal')
+            if importance not in ['breaking', 'high', 'normal']:
+                importance = 'normal'
+            data['importance'] = importance
+            
+            # 初始化所有可选字段为默认值
+            data['key_metrics'] = []
+            data['action_advice'] = None
+            data['background'] = None
+            data['tech_insight'] = None
+            data['funding_history'] = None
+            data['supply_chain_insight'] = None
+            data['entities'] = []
+            
+            # ========================================
+            # 第二阶段：仅对 breaking/high 新闻补充详细信息
+            # ========================================
+            if importance in ['breaking', 'high']:
+                logger.debug(f"📊 {importance} 新闻，启动第二阶段处理: {data['title_zh'][:30]}")
+                
+                # 用更长的内容进行详细处理
+                content_detailed = content[:800] if content else ""
+                detailed_prompt_filled = detailed_prompt.format(
+                    title_zh=data['title_zh'],
+                    category=data['category'],
+                    summary=data['summary'],
+                    content=content_detailed
+                )
+                
+                detailed_result = self._call_api(detailed_prompt_filled, max_tokens=500)
+                
+                if detailed_result:
+                    try:
+                        if '```json' in detailed_result:
+                            detailed_result = detailed_result.split('```json')[1].split('```')[0]
+                        elif '```' in detailed_result:
+                            detailed_result = detailed_result.split('```')[1].split('```')[0]
+                        
+                        detailed_data = json.loads(detailed_result.strip())
+                        
+                        # 合并详细字段
+                        if 'key_metrics' in detailed_data and isinstance(detailed_data['key_metrics'], list):
+                            data['key_metrics'] = detailed_data['key_metrics']
+                        if 'background' in detailed_data:
+                            data['background'] = detailed_data['background']
+                        if 'action_advice' in detailed_data:
+                            data['action_advice'] = detailed_data['action_advice']
+                        if 'tech_insight' in detailed_data:
+                            data['tech_insight'] = detailed_data['tech_insight']
+                        if 'funding_history' in detailed_data:
+                            data['funding_history'] = detailed_data['funding_history']
+                        if 'supply_chain_insight' in detailed_data:
+                            data['supply_chain_insight'] = detailed_data['supply_chain_insight']
+                        if 'entities' in detailed_data and isinstance(detailed_data['entities'], list):
+                            data['entities'] = detailed_data['entities']
+                        
+                        logger.debug(f"✅ 第二阶段处理完成: {data['title_zh'][:30]}")
+                    except json.JSONDecodeError as e:
+                        logger.warning(f"第二阶段 JSON 解析失败: {e}")
+                else:
+                    logger.warning(f"第二阶段 API 调用失败: {data['title_zh'][:30]}")
+            
+            return data
+            
+        except json.JSONDecodeError as e:
+            logger.warning(f"第一阶段 JSON 解析失败: {e}, 原文: {result[:100]}")
             return None
-
+    
     def process_news_combined(self, title: str, content: str, prompt_template: str) -> Optional[Dict]:
         """
         合并处理：一次API调用完成标题翻译+分类+摘要
         返回: {"title_zh": str, "category": str, "summary": str} 或 None
+        
+        注意：此方法保留用于兼容，建议使用 process_news_two_stage() 节省 token
         """
         # 截取内容前800字符（节省token）
         content_truncated = content[:800] if content else ""
@@ -274,7 +419,7 @@ class CloudAIProcessor:
 
 
 class NewsProcessor:
-    """新闻处理器（优化版：合并API调用）"""
+    """新闻处理器（优化版：支持两阶段分级处理）"""
 
     def __init__(self, ai_provider: str = 'deepseek'):
         try:
@@ -283,9 +428,39 @@ class NewsProcessor:
         except ValueError as e:
             logger.error(f"AI初始化失败: {str(e)}")
             raise
+        
+        # 是否启用两阶段处理（P0 优化）
+        self.use_two_stage = os.getenv('USE_TWO_STAGE_PROCESSING', 'true').lower() == 'true'
+        if self.use_two_stage:
+            logger.info("✅ 两阶段分级处理已启用（预计节省 50-60% token）")
+    
+    def process_news_optimized(self, news_item: Dict, quick_prompt: str, detailed_prompt: str) -> Optional[Dict]:
+        """
+        处理单条新闻（两阶段分级处理，P0 优化版本）
+        
+        - 所有新闻用 quick_prompt 快速分类
+        - 仅 breaking/high 新闻用 detailed_prompt 补充详情
+        """
+        try:
+            result = self.ai.process_news_two_stage(
+                news_item['title'],
+                news_item.get('content', ''),
+                quick_prompt,
+                detailed_prompt
+            )
+            
+            if not result:
+                logger.warning(f"处理失败: {news_item['title'][:50]}")
+                return None
+            
+            return self._build_processed_news(result, news_item)
+            
+        except Exception as e:
+            logger.error(f"处理异常: {str(e)}")
+            return None
 
     def process_news(self, news_item: Dict, process_prompt: str) -> Optional[Dict]:
-        """处理单条新闻（合并摘要+分类为单次调用）"""
+        """处理单条新闻（合并摘要+分类为单次调用）- 兼容旧版"""
         try:
             # 单次API调用完成所有处理
             result = self.ai.process_news_combined(
@@ -298,61 +473,68 @@ class NewsProcessor:
                 logger.warning(f"处理失败: {news_item['title'][:50]}")
                 return None
 
-            # 导入来源分级函数
-            from config.settings import get_source_tier
-            
-            # 构建处理后的新闻
-            processed_news = {
-                'title': result['title_zh'],
-                'summary': result['summary'],
-                'category': result['category'],
-                'importance': result.get('importance', 'normal'),
-                'action_advice': result.get('action_advice'),
-                'key_metrics': result.get('key_metrics', []),  # 关键指标
-                'background': result.get('background'),  # 背景知识+时间线
-                'tech_insight': result.get('tech_insight'),  # 技术解读
-                'funding_history': result.get('funding_history'),  # 融资历史
-                'supply_chain_insight': result.get('supply_chain_insight'),  # 供应链视角
-                'entities': result.get('entities', []),  # 关键实体背景
-                'stock_info': None,  # 股票信息（将在下方填充）
-                'source': news_item['source'],
-                'source_url': news_item['source_url'],
-                'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度
-                'link': news_item['link'],
-                'image': news_item.get('image'),
-                'video': news_item.get('video'),
-                'published': news_item['published'],
-                'created_at': news_item.get('created_at')
-            }
-            
-            # 娱乐/动漫/OP/TCG 分类不需要实体信息（节省展示空间）
-            skip_entity_categories = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
-            if result['category'] in skip_entity_categories:
-                processed_news['entities'] = []
-            
-            # 获取股票数据（仅针对财经/商业/汽车/消费电子类新闻）
-            stock_categories = ['finance_investment', 'business_tech', 'automotive', 'consumer_electronics', 'economy_policy']
-            if result['category'] in stock_categories:
-                try:
-                    stock_service = get_stock_service()
-                    if stock_service:
-                        stock_info = stock_service.get_stock_info_from_text(
-                            result['title_zh'],
-                            news_item.get('content', '')
-                        )
-                        if stock_info:
-                            processed_news['stock_info'] = stock_info
-                            logger.info(f"📈 添加股票数据: {stock_info['ticker']} - {stock_info.get('name', '')}")
-                except Exception as e:
-                    logger.warning(f"获取股票数据失败: {e}")
-
-            importance_icon = '🔴' if result.get('importance') == 'breaking' else '🟡' if result.get('importance') == 'high' else '⚪'
-            logger.info(f"{importance_icon} [{result['category']}] {result['title_zh'][:30]}...")
-            return processed_news
+            return self._build_processed_news(result, news_item)
 
         except Exception as e:
             logger.error(f"处理异常: {str(e)}")
             return None
+    
+    def _build_processed_news(self, result: Dict, news_item: Dict) -> Dict:
+        """构建处理后的新闻对象（公共方法）"""
+        # 导入来源分级函数
+        from config.settings import get_source_tier
+        
+        # 构建处理后的新闻
+        processed_news = {
+            'title': result['title_zh'],
+            'summary': result['summary'],
+            'category': result['category'],
+            'importance': result.get('importance', 'normal'),
+            'action_advice': result.get('action_advice'),
+            'key_metrics': result.get('key_metrics', []),  # 关键指标
+            'background': result.get('background'),  # 背景知识+时间线
+            'tech_insight': result.get('tech_insight'),  # 技术解读
+            'funding_history': result.get('funding_history'),  # 融资历史
+            'supply_chain_insight': result.get('supply_chain_insight'),  # 供应链视角
+            'entities': result.get('entities', []),  # 关键实体背景
+            'stock_info': None,  # 股票信息（将在下方填充）
+            'source': news_item['source'],
+            'source_url': news_item['source_url'],
+            'source_tier': get_source_tier(news_item['source_url']),  # 来源可信度
+            'link': news_item['link'],
+            'image': news_item.get('image'),
+            'video': news_item.get('video'),
+            'published': news_item['published'],
+            'created_at': news_item.get('created_at')
+        }
+        
+        # 娱乐/动漫/OP/TCG 分类不需要实体信息（节省展示空间）
+        skip_entity_categories = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
+        if result['category'] in skip_entity_categories:
+            processed_news['entities'] = []
+        
+        # 获取股票数据（仅针对 breaking/high 财经/商业类新闻，P1 优化）
+        stock_categories = ['finance_investment', 'business_tech', 'automotive', 'consumer_electronics', 'economy_policy']
+        importance = result.get('importance', 'normal')
+        
+        # P1 优化：只有 breaking/high 新闻才查询股票数据
+        if result['category'] in stock_categories and importance in ['breaking', 'high']:
+            try:
+                stock_service = get_stock_service()
+                if stock_service:
+                    stock_info = stock_service.get_stock_info_from_text(
+                        result['title_zh'],
+                        news_item.get('content', '')
+                    )
+                    if stock_info:
+                        processed_news['stock_info'] = stock_info
+                        logger.info(f"📈 添加股票数据: {stock_info['ticker']} - {stock_info.get('name', '')}")
+            except Exception as e:
+                logger.warning(f"获取股票数据失败: {e}")
+
+        importance_icon = '🔴' if importance == 'breaking' else '🟡' if importance == 'high' else '⚪'
+        logger.info(f"{importance_icon} [{result['category']}] {result['title_zh'][:30]}...")
+        return processed_news
 
     def batch_process(self, news_list: list, process_prompt: str, classify_prompt: str = None) -> list:
         """
@@ -393,5 +575,57 @@ class NewsProcessor:
 
         logger.info(f"处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
         logger.info(f"耗时: {elapsed:.1f}秒, 平均: {elapsed/len(news_list):.2f}秒/条" if news_list else "无新闻")
+
+        return processed
+    
+    def batch_process_optimized(self, news_list: list, quick_prompt: str, detailed_prompt: str) -> list:
+        """
+        批量处理新闻（两阶段分级处理，P0 优化版本）
+        
+        Args:
+            news_list: 新闻列表
+            quick_prompt: 快速分类 prompt（所有新闻用）
+            detailed_prompt: 详细处理 prompt（仅 breaking/high 用）
+        """
+        start_time = datetime.now()
+        max_workers = int(os.getenv('AI_CONCURRENT_WORKERS', 5))
+
+        logger.info(f"🚀 开始处理 {len(news_list)} 条新闻（{max_workers}线程，两阶段分级模式）...")
+
+        processed = []
+        failed_count = 0
+        stage2_count = 0
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_news = {
+                executor.submit(self.process_news_optimized, news, quick_prompt, detailed_prompt): news
+                for news in news_list
+            }
+
+            for i, future in enumerate(as_completed(future_to_news), 1):
+                try:
+                    result = future.result(timeout=90)  # 两阶段需要更长超时
+                    if result:
+                        processed.append(result)
+                        if result.get('importance') in ['breaking', 'high']:
+                            stage2_count += 1
+                    else:
+                        failed_count += 1
+                except Exception as e:
+                    failed_count += 1
+                    logger.error(f"处理超时或异常: {str(e)}")
+
+                # 进度报告
+                if i % 10 == 0:
+                    logger.info(f"进度: {i}/{len(news_list)}")
+
+        elapsed = (datetime.now() - start_time).total_seconds()
+        success_rate = len(processed) / len(news_list) * 100 if news_list else 0
+        stage2_rate = stage2_count / len(processed) * 100 if processed else 0
+
+        logger.info(f"✅ 处理完成: {len(processed)}/{len(news_list)} ({success_rate:.1f}%)")
+        logger.info(f"📊 两阶段处理: {stage2_count} 条 ({stage2_rate:.1f}%) 需要第二阶段")
+        logger.info(f"💰 预计节省 token: {100 - stage2_rate:.1f}% 新闻仅用第一阶段")
+        logger.info(f"⏱️ 耗时: {elapsed:.1f}秒, 平均: {elapsed/len(news_list):.2f}秒/条" if news_list else "无新闻")
 
         return processed
