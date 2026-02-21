@@ -21,9 +21,13 @@ ENTITY_ACTIVATION_THRESHOLD = int(os.getenv('ENTITY_ACTIVATION_THRESHOLD', '3'))
 # 跳过实体关联的分类（节省 token）
 SKIP_ENTITY_CATEGORIES = {'entertainment_sports', 'anime', 'one_piece', 'tcg'}
 
-# 预置实体缓存（启动时加载）
+# 预置实体缓存（支持自动刷新）
 _preset_entities_cache: List[Dict] = []
 _preset_cache_loaded = False
+_preset_cache_load_time: Optional[datetime] = None
+
+# 缓存刷新间隔（秒），默认 1 小时
+PRESET_CACHE_REFRESH_INTERVAL = int(os.getenv('PRESET_CACHE_REFRESH_INTERVAL', '3600'))
 
 
 class EntityService:
@@ -43,12 +47,26 @@ class EntityService:
         # 加载预置实体缓存
         self._load_preset_entities()
     
-    def _load_preset_entities(self):
-        """加载所有预置实体到缓存（用于文本匹配）"""
-        global _preset_entities_cache, _preset_cache_loaded
+    def _load_preset_entities(self, force: bool = False):
+        """
+        加载所有预置实体到缓存（用于文本匹配）
         
-        if _preset_cache_loaded:
-            return
+        P1 优化：支持自动刷新，不再只启动时加载一次
+        
+        Args:
+            force: 强制刷新，忽略缓存状态
+        """
+        global _preset_entities_cache, _preset_cache_loaded, _preset_cache_load_time
+        
+        # 检查是否需要刷新
+        if not force and _preset_cache_loaded:
+            # 检查缓存是否过期
+            if _preset_cache_load_time:
+                elapsed = (datetime.now() - _preset_cache_load_time).total_seconds()
+                if elapsed < PRESET_CACHE_REFRESH_INTERVAL:
+                    return  # 缓存仍有效
+                else:
+                    logger.info(f"预置实体缓存已过期（{elapsed:.0f}s），开始刷新...")
         
         try:
             # 获取所有预置实体（is_preset=true 或 news_count>0）
@@ -73,17 +91,19 @@ class EntityService:
                             })
                     
                     _preset_cache_loaded = True
+                    _preset_cache_load_time = datetime.now()
                     logger.info(f"预置实体缓存已加载: {len(_preset_entities_cache)} 个实体")
         except Exception as e:
             logger.warning(f"加载预置实体缓存失败: {e}")
     
     def refresh_preset_cache(self):
         """强制刷新预置实体缓存"""
-        global _preset_entities_cache, _preset_cache_loaded
+        global _preset_entities_cache, _preset_cache_loaded, _preset_cache_load_time
         _preset_entities_cache = []
         _preset_cache_loaded = False
-        self._load_preset_entities()
-        logger.info("预置实体缓存已刷新")
+        _preset_cache_load_time = None
+        self._load_preset_entities(force=True)
+        logger.info("预置实体缓存已强制刷新")
     
     def _match_preset_entities(self, text: str) -> List[Dict]:
         """
@@ -95,8 +115,8 @@ class EntityService:
         Returns:
             匹配到的实体列表 [{'id': ..., 'name': ..., 'type': ...}]
         """
-        if not _preset_entities_cache:
-            self._load_preset_entities()
+        # P1 优化：每次匹配前检查缓存是否需要刷新
+        self._load_preset_entities()
         
         matched = []
         matched_ids: Set[str] = set()
