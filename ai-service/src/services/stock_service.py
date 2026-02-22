@@ -206,17 +206,36 @@ class StockService:
         """从文本中提取股票代码"""
         text_lower = text.lower()
         
+        # 排除误匹配的短词（这些词常出现但不是指股票）
+        # JD Power (咨询公司), GM (General Manager), F (作为评级)
+        FALSE_POSITIVE_PATTERNS = [
+            r'\bJD\s+Power\b',      # JD Power 咨询公司
+            r'\bJ\.?D\.?\s+Power\b', # J.D. Power
+            r'\bGM\b(?=\s+of\b)',    # GM of (General Manager of)
+        ]
+        
+        for pattern in FALSE_POSITIVE_PATTERNS:
+            if re.search(pattern, text, re.IGNORECASE):
+                # 如果匹配到误报模式，从文本中移除该部分再继续
+                text = re.sub(pattern, '', text, flags=re.IGNORECASE)
+                text_lower = text.lower()
+        
         # 先检查是否直接包含股票代码 (如 TSLA, AAPL)
-        ticker_pattern = r'\b([A-Z]{1,5})\b'
+        # 只匹配独立的大写字母组合，排除容易误报的短代码
+        ticker_pattern = r'\b([A-Z]{2,5})\b'  # 至少2个字母，减少误报
         matches = re.findall(ticker_pattern, text)
-        for match in matches:
-            if match in ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 
+        
+        # 安全的股票代码列表（排除容易误报的 JD, F, GM 等短代码）
+        SAFE_TICKERS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 
                         'AMD', 'INTC', 'QCOM', 'AVGO', 'NFLX', 'DIS', 'UBER', 
-                        'ABNB', 'CRM', 'ORCL', 'IBM', 'CSCO', 'NIO', 'LI', 'XPEV',
-                        'JD', 'BIDU', 'BABA', 'NTES', 'F', 'GM', 'RIVN', 'LCID']:
+                        'ABNB', 'CRM', 'ORCL', 'IBM', 'CSCO', 'NIO', 'XPEV',
+                        'BIDU', 'BABA', 'NTES', 'RIVN', 'LCID', 'STLA']
+        
+        for match in matches:
+            if match in SAFE_TICKERS:
                 return match
         
-        # 检查公司名称映射
+        # 检查公司名称映射（更可靠，基于完整公司名）
         for name, ticker in COMPANY_TICKER_MAP.items():
             if name in text_lower and ticker is not None:
                 return ticker
