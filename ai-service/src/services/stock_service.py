@@ -73,8 +73,21 @@ COMPANY_TICKER_MAP = {
     '福特': 'F',
     'gm': 'GM',
     '通用汽车': 'GM',
+    'general motors': 'GM',
+    'stellantis': 'STLA',
+    '斯特兰蒂斯': 'STLA',
     'rivian': 'RIVN',
     'lucid': 'LCID',
+    'toyota': 'TM',
+    '丰田': 'TM',
+    'honda': 'HMC',
+    '本田': 'HMC',
+    'volkswagen': 'VWAGY',
+    '大众': 'VWAGY',
+    'bmw': 'BMWYY',
+    '宝马': 'BMWYY',
+    'mercedes': 'MBGYY',
+    '奔驰': 'MBGYY',
     
     # 港股 (需要 .HK 后缀)
     '腾讯': '0700.HK',
@@ -315,15 +328,17 @@ class StockService:
         """
         从新闻标题和内容中提取公司信息，并获取股票数据
         返回格式化的股票信息
+        优先匹配标题中的公司（新闻主角），其次才是内容
         """
         if not YFINANCE_AVAILABLE:
             return None
-            
-        # 合并标题和内容进行分析
-        full_text = f"{title} {content[:500]}"
         
-        # 提取股票代码
-        ticker = self._extract_ticker_from_text(full_text)
+        # 优先从标题提取（标题中的公司通常是新闻主角）
+        ticker = self._extract_ticker_from_text(title)
+        
+        # 标题没找到，再从内容提取
+        if not ticker:
+            ticker = self._extract_ticker_from_text(content[:500])
         
         if not ticker:
             return None
