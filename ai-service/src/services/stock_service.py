@@ -203,39 +203,32 @@ class StockService:
         self._failed_tickers[ticker] = time.time()
     
     def _extract_ticker_from_text(self, text: str) -> Optional[str]:
-        """从文本中提取股票代码"""
+        """从文本中提取股票代码
+        
+        策略：
+        1. 3字母以上的股票代码可直接匹配（如 TSLA, NVDA）
+        2. 1-2字母的短代码（如 JD, F, GM）只能通过完整公司名匹配
+           避免 "JD Power"、"F-150"、"GM of" 等误报
+        """
         text_lower = text.lower()
         
-        # 排除误匹配的短词（这些词常出现但不是指股票）
-        # JD Power (咨询公司), GM (General Manager), F (作为评级)
-        FALSE_POSITIVE_PATTERNS = [
-            r'\bJD\s+Power\b',      # JD Power 咨询公司
-            r'\bJ\.?D\.?\s+Power\b', # J.D. Power
-            r'\bGM\b(?=\s+of\b)',    # GM of (General Manager of)
-        ]
-        
-        for pattern in FALSE_POSITIVE_PATTERNS:
-            if re.search(pattern, text, re.IGNORECASE):
-                # 如果匹配到误报模式，从文本中移除该部分再继续
-                text = re.sub(pattern, '', text, flags=re.IGNORECASE)
-                text_lower = text.lower()
-        
-        # 先检查是否直接包含股票代码 (如 TSLA, AAPL)
-        # 只匹配独立的大写字母组合，排除容易误报的短代码
-        ticker_pattern = r'\b([A-Z]{2,5})\b'  # 至少2个字母，减少误报
+        # 第一步：匹配 3-5 字母的股票代码（误报率低）
+        ticker_pattern = r'\b([A-Z]{3,5})\b'
         matches = re.findall(ticker_pattern, text)
         
-        # 安全的股票代码列表（排除容易误报的 JD, F, GM 等短代码）
-        SAFE_TICKERS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 
-                        'AMD', 'INTC', 'QCOM', 'AVGO', 'NFLX', 'DIS', 'UBER', 
-                        'ABNB', 'CRM', 'ORCL', 'IBM', 'CSCO', 'NIO', 'XPEV',
-                        'BIDU', 'BABA', 'NTES', 'RIVN', 'LCID', 'STLA']
+        DIRECT_MATCH_TICKERS = [
+            'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 
+            'AMD', 'INTC', 'QCOM', 'AVGO', 'NFLX', 'DIS', 'UBER', 
+            'ABNB', 'CRM', 'ORCL', 'IBM', 'CSCO', 'NIO', 'XPEV',
+            'BIDU', 'BABA', 'NTES', 'RIVN', 'LCID', 'STLA'
+        ]
         
         for match in matches:
-            if match in SAFE_TICKERS:
+            if match in DIRECT_MATCH_TICKERS:
                 return match
         
-        # 检查公司名称映射（更可靠，基于完整公司名）
+        # 第二步：通过公司名称映射匹配（包括短代码对应的公司）
+        # 这样 "京东" 能匹配到 JD，但 "JD Power" 不会
         for name, ticker in COMPANY_TICKER_MAP.items():
             if name in text_lower and ticker is not None:
                 return ticker
