@@ -753,19 +753,26 @@ const BriefCard = ({ brief, isNew = false }) => {
                 {brief.background.context}
               </p>
               
-              {/* 时间线 */}
+              {/* 时间线 - 优化排版 */}
               {brief.background.timeline && brief.background.timeline.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-slate-200">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-3">
                     <span className="text-slate-500">⏱️</span>
                     <span className="text-xs font-medium text-slate-600">事件时间线</span>
                   </div>
-                  <div className="space-y-2">
+                  <div className="relative pl-4 border-l-2 border-slate-200 space-y-3">
                     {brief.background.timeline.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs">
-                        <span className="text-slate-500 font-mono whitespace-nowrap">{item.date}</span>
-                        <span className="text-slate-400">—</span>
-                        <span className="text-slate-700">{item.event}</span>
+                      <div key={i} className="relative">
+                        {/* 时间线节点圆点 */}
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-slate-400 border-2 border-white" />
+                        {/* 日期 */}
+                        <div className="text-xs font-medium text-slate-500 mb-0.5">
+                          {item.date}
+                        </div>
+                        {/* 事件描述 */}
+                        <div className="text-sm text-slate-700 leading-relaxed">
+                          {item.event}
+                        </div>
                       </div>
                     ))}
                   </div>

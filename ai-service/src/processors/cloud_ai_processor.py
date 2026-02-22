@@ -400,7 +400,7 @@ class CloudAIProcessor:
                         'timeline': []
                     }
                     if 'timeline' in bg and isinstance(bg['timeline'], list):
-                        for item in bg['timeline'][:4]:  # 最多4条
+                        for item in bg['timeline'][:6]:  # 最多6条
                             if isinstance(item, dict) and 'date' in item and 'event' in item:
                                 valid_bg['timeline'].append({
                                     'date': item.get('date', ''),
