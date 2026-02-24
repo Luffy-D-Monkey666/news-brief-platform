@@ -270,8 +270,8 @@ const HomePage = () => {
 
   // 列表视图的简报卡片
   const ListViewCard = ({ brief, isNew, onViewBrief }) => (
-    <div className={`bg-white rounded-xl p-4 mb-3 border border-gray-200 hover:shadow-md transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}
-         style={{ boxShadow: '0 2px 12px -2px rgba(0, 0, 0, 0.06)' }}>
+    <div className={`bg-white rounded-xl p-4 border border-gray-200 hover:shadow-lg transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}
+         style={{ boxShadow: '0 2px 12px -2px rgba(0, 0, 0, 0.08)' }}>
       <div className="flex items-start gap-4">
         {brief.image && (
           <img 
@@ -589,7 +589,7 @@ const HomePage = () => {
               ))}
             </div>
           ) : (
-            <div className="space-y-0">
+            <div className="space-y-4">
               {searchResults.data.map((brief) => (
                 <ListViewCard key={brief._id} brief={brief} onViewBrief={setDrawerBrief} />
               ))}
@@ -658,7 +658,7 @@ const HomePage = () => {
           </div>
         ) : (
           // 列表视图
-          <div className="space-y-0">
+          <div className="space-y-4">
             {briefs.map((brief) => (
               <ListViewCard
                 key={brief._id}
