@@ -5,10 +5,11 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 import BriefCard from '../components/BriefCard';
 import HotEntityCard from '../components/HotEntityCard';
+import BriefDrawer from '../components/BriefDrawer';
 import CategoryFilter from '../components/CategoryFilter';
 import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFire, FaHeadphones, FaBook, FaSearch, FaTimes, FaCompressAlt, FaExpandAlt } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFire, FaHeadphones, FaBook, FaSearch, FaTimes, FaFileAlt } from 'react-icons/fa';
 import DonateButton from '../components/DonateButton';
 import FloatingToolbar from '../components/FloatingToolbar';
 
@@ -47,6 +48,7 @@ const HomePage = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
   const [globalCollapsed, setGlobalCollapsed] = useState(false); // 全局折叠状态
+  const [drawerBrief, setDrawerBrief] = useState(null); // 抽屉显示的简报
 
   const { latestBrief } = useWebSocket();
   
@@ -267,8 +269,9 @@ const HomePage = () => {
   };
 
   // 列表视图的简报卡片
-  const ListViewCard = ({ brief, isNew }) => (
-    <div className={`bg-white rounded-xl p-4 mb-3 border border-gray-200 hover:shadow-md transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}>
+  const ListViewCard = ({ brief, isNew, onViewBrief }) => (
+    <div className={`bg-white rounded-xl p-4 mb-3 border border-gray-200 hover:shadow-md transition-all ${isNew ? 'ring-2 ring-blue-500' : ''}`}
+         style={{ boxShadow: '0 2px 12px -2px rgba(0, 0, 0, 0.06)' }}>
       <div className="flex items-start gap-4">
         {brief.image && (
           <img 
@@ -292,16 +295,25 @@ const HomePage = () => {
           <p className="text-sm text-gray-600 line-clamp-2">{brief.summary?.split('\n')[0]}</p>
           <div className="mt-2 flex items-center justify-between">
             <span className="text-xs text-gray-400">{brief.source}</span>
-            {brief.link && (
-              <a 
-                href={brief.link} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 hover:underline"
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => onViewBrief(brief)}
+                className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium"
               >
-                查看原文 →
-              </a>
-            )}
+                <FaFileAlt />
+                查看简报
+              </button>
+              {brief.link && (
+                <a 
+                  href={brief.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-500 hover:text-gray-700"
+                >
+                  原文 →
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -485,16 +497,15 @@ const HomePage = () => {
               </button>
             </div>
 
-            {/* 折叠/展开按钮 */}
+            {/* 精简/完整模式切换按钮 */}
             <button
               onClick={() => setGlobalCollapsed(!globalCollapsed)}
               className={`flex items-center text-sm font-medium transition-colors bg-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md border border-gray-200 ${
                 globalCollapsed ? 'text-blue-600 hover:text-blue-800' : 'text-gray-700 hover:text-black'
               }`}
-              title={globalCollapsed ? '展开所有简报' : '折叠所有简报'}
+              title={globalCollapsed ? '切换到完整模式，显示所有详情' : '切换到精简模式，只显示概述'}
             >
-              {globalCollapsed ? <FaExpandAlt className="mr-2" /> : <FaCompressAlt className="mr-2" />}
-              {globalCollapsed ? '展开' : '折叠'}
+              {globalCollapsed ? '📋 完整模式' : '📄 精简模式'}
             </button>
 
             {/* 刷新按钮 */}
@@ -574,13 +585,13 @@ const HomePage = () => {
           ) : viewMode === 'audio' ? (
             <div className="space-y-3 max-w-3xl mx-auto">
               {searchResults.data.map((brief, index) => (
-                <AudioViewCard key={brief._id} brief={brief} index={index} />
+                <AudioViewCard key={brief._id} brief={brief} index={index} onViewBrief={setDrawerBrief} />
               ))}
             </div>
           ) : (
             <div className="space-y-0">
               {searchResults.data.map((brief) => (
-                <ListViewCard key={brief._id} brief={brief} />
+                <ListViewCard key={brief._id} brief={brief} onViewBrief={setDrawerBrief} />
               ))}
             </div>
           )
@@ -641,6 +652,7 @@ const HomePage = () => {
                 brief={brief}
                 index={index}
                 isNew={brief._id === newBriefId}
+                onViewBrief={setDrawerBrief}
               />
             ))}
           </div>
@@ -652,6 +664,7 @@ const HomePage = () => {
                 key={brief._id}
                 brief={brief}
                 isNew={brief._id === newBriefId}
+                onViewBrief={setDrawerBrief}
               />
             ))}
           </div>
@@ -708,6 +721,13 @@ const HomePage = () => {
         clearSearch={clearSearch}
         selectedImportance={selectedImportance}
         setSelectedImportance={setSelectedImportance}
+      />
+
+      {/* 简报详情抽屉 */}
+      <BriefDrawer
+        brief={drawerBrief}
+        isOpen={!!drawerBrief}
+        onClose={() => setDrawerBrief(null)}
       />
     </div>
   );

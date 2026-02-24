@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
-import { FaPlay, FaPause, FaSpinner, FaClock, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaPlay, FaPause, FaSpinner, FaClock, FaExternalLinkAlt, FaFileAlt } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 
@@ -47,7 +47,7 @@ const categoryNames = {
   general: '综合'
 };
 
-const AudioViewCard = ({ brief, index, isNew = false }) => {
+const AudioViewCard = ({ brief, index, isNew = false, onViewBrief }) => {
   const { 
     currentIndex, 
     isPlaying, 
@@ -160,20 +160,31 @@ const AudioViewCard = ({ brief, index, isNew = false }) => {
             {brief.title}
           </h3>
           
-          {/* 来源 */}
+          {/* 来源和操作 */}
           <div className="mt-1 flex items-center justify-between">
             <span className="text-xs text-gray-400">{brief.source}</span>
-            {brief.link && (
-              <a
-                href={brief.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-gray-400 hover:text-gray-600 flex items-center"
-                onClick={(e) => e.stopPropagation()}
-              >
-                原文 <FaExternalLinkAlt className="ml-1 text-[10px]" />
-              </a>
-            )}
+            <div className="flex items-center gap-3">
+              {onViewBrief && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onViewBrief(brief); }}
+                  className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium"
+                >
+                  <FaFileAlt />
+                  简报
+                </button>
+              )}
+              {brief.link && (
+                <a
+                  href={brief.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-400 hover:text-gray-600 flex items-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  原文 <FaExternalLinkAlt className="ml-1 text-[10px]" />
+                </a>
+              )}
+            </div>
           </div>
         </div>
         
