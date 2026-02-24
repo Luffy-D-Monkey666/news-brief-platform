@@ -204,6 +204,7 @@ const BriefCard = ({ brief, isNew = false, globalCollapsed = false }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   // 本地折叠状态（独立于全局，允许单卡片展开/收起）
@@ -377,7 +378,7 @@ const BriefCard = ({ brief, isNew = false, globalCollapsed = false }) => {
               )}
             </div>
           </div>
-        ) : brief.image && (
+        ) : brief.image && !imageError && (
           <div
             className="relative w-full h-52 overflow-hidden bg-gray-50 cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
@@ -386,9 +387,7 @@ const BriefCard = ({ brief, isNew = false, globalCollapsed = false }) => {
               src={brief.image}
               alt={brief.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
+              onError={() => setImageError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
               <span className="text-white text-sm font-medium">查看大图</span>
@@ -408,8 +407,8 @@ const BriefCard = ({ brief, isNew = false, globalCollapsed = false }) => {
 
         {/* 内容区域 */}
         <div className="p-4">
-          {/* 没有视频和图片时的分类标签 + 来源可信度 */}
-          {!brief.video && !brief.image && (
+          {/* 没有视频和图片时（或图片加载失败）的分类标签 + 来源可信度 */}
+          {(!brief.video || videoError) && (!brief.image || imageError) && (
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className={`text-xs font-semibold ${colorClass}`}>
