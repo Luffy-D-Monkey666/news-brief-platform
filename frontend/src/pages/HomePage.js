@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { getLatestBriefs, getHistoryBriefs, getHotTopics, searchBriefs } from '../services/api';
+import { getHistoryBriefs, getHotEntities, searchBriefs } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 import BriefCard from '../components/BriefCard';
-import TopicCard from '../components/TopicCard';
+import HotEntityCard from '../components/HotEntityCard';
 import CategoryFilter from '../components/CategoryFilter';
 import AudioViewCard from '../components/AudioViewCard';
 import Masonry from 'react-masonry-css';
-import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFolder, FaHeadphones, FaBook, FaSearch, FaTimes } from 'react-icons/fa';
+import { FaSpinner, FaTh, FaList, FaClock, FaSync, FaFire, FaHeadphones, FaBook, FaSearch, FaTimes, FaCompressAlt, FaExpandAlt } from 'react-icons/fa';
 import DonateButton from '../components/DonateButton';
 import FloatingToolbar from '../components/FloatingToolbar';
 
@@ -41,11 +41,12 @@ const HomePage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [hotTopics, setHotTopics] = useState([]);
+  const [hotEntities, setHotEntities] = useState([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
+  const [globalCollapsed, setGlobalCollapsed] = useState(false); // 全局折叠状态
 
   const { latestBrief } = useWebSocket();
   
@@ -66,16 +67,16 @@ const HomePage = () => {
     return viewMode === 'audio' ? 10 : 50;
   }, [viewMode]);
 
-  // 加载热门话题
-  const loadTopics = async () => {
+  // 加载热门实体
+  const loadHotEntities = async () => {
     try {
       setTopicsLoading(true);
-      const result = await getHotTopics(24, 20);
+      const result = await getHotEntities(24, 15);
       if (result.success) {
-        setHotTopics(result.data || []);
+        setHotEntities(result.data || []);
       }
     } catch (error) {
-      console.error('加载话题失败:', error);
+      console.error('加载热门实体失败:', error);
     } finally {
       setTopicsLoading(false);
     }
@@ -156,7 +157,7 @@ const HomePage = () => {
   useEffect(() => {
     loadBriefs();
     if (viewMode === 'topics') {
-      loadTopics();
+      loadHotEntities(); // 改为加载热门实体
     }
   }, [loadBriefs, viewMode]);
 
@@ -467,9 +468,9 @@ const HomePage = () => {
                     ? 'bg-gray-900 text-white'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
-                title="话题视图"
+                title="热门实体"
               >
-                <FaFolder />
+                <FaFire />
               </button>
               <button
                 onClick={() => setViewMode('audio')}
@@ -483,6 +484,18 @@ const HomePage = () => {
                 <FaHeadphones />
               </button>
             </div>
+
+            {/* 折叠/展开按钮 */}
+            <button
+              onClick={() => setGlobalCollapsed(!globalCollapsed)}
+              className={`flex items-center text-sm font-medium transition-colors bg-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md border border-gray-200 ${
+                globalCollapsed ? 'text-blue-600 hover:text-blue-800' : 'text-gray-700 hover:text-black'
+              }`}
+              title={globalCollapsed ? '展开所有简报' : '折叠所有简报'}
+            >
+              {globalCollapsed ? <FaExpandAlt className="mr-2" /> : <FaCompressAlt className="mr-2" />}
+              {globalCollapsed ? '展开' : '折叠'}
+            </button>
 
             {/* 刷新按钮 */}
             <button
@@ -508,23 +521,34 @@ const HomePage = () => {
         )}
 
         {viewMode === 'topics' ? (
-          // 话题视图
+          // 热门实体视图（原话题视图）
           topicsLoading ? (
             <div className="flex items-center justify-center py-32">
               <FaSpinner className="animate-spin text-5xl text-black" />
-              <span className="ml-4 text-gray-600 text-lg">加载话题中...</span>
+              <span className="ml-4 text-gray-600 text-lg">加载热门实体中...</span>
             </div>
-          ) : hotTopics.length === 0 ? (
+          ) : hotEntities.length === 0 ? (
             <div className="text-center py-32 bg-white rounded-2xl">
-              <p className="text-gray-500 text-xl">暂无热门话题</p>
+              <p className="text-gray-500 text-xl">暂无热门实体</p>
               <p className="text-gray-400 text-sm mt-2">
-                话题需要同一事件有2篇以上报道才会形成
+                今日暂无实体有新闻关联
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {hotTopics.map((topic) => (
-                <TopicCard key={topic._id} topic={topic} />
+            <div className="space-y-3 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-4 mb-6 text-white">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🔥</span>
+                  <div>
+                    <h3 className="font-semibold">今日热门实体</h3>
+                    <p className="text-sm text-orange-100">
+                      过去24小时内新闻关联最多的实体，点击查看详情
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {hotEntities.map((entity, index) => (
+                <HotEntityCard key={entity._id} entity={entity} rank={index + 1} />
               ))}
             </div>
           )
@@ -544,7 +568,7 @@ const HomePage = () => {
               columnClassName="masonry-grid_column"
             >
               {searchResults.data.map((brief) => (
-                <BriefCard key={brief._id} brief={brief} />
+                <BriefCard key={brief._id} brief={brief} globalCollapsed={globalCollapsed} />
               ))}
             </Masonry>
           ) : viewMode === 'audio' ? (
@@ -593,6 +617,7 @@ const HomePage = () => {
                 key={brief._id}
                 brief={brief}
                 isNew={brief._id === newBriefId}
+                globalCollapsed={globalCollapsed}
               />
             ))}
           </Masonry>

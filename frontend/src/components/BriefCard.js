@@ -199,13 +199,18 @@ const ImageModal = ({ src, alt, onClose }) => {
   );
 };
 
-const BriefCard = ({ brief, isNew = false }) => {
+const BriefCard = ({ brief, isNew = false, globalCollapsed = false }) => {
   const navigate = useNavigate();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [showVoiceMenu, setShowVoiceMenu] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  // 本地折叠状态（独立于全局，允许单卡片展开/收起）
+  const [localCollapsed, setLocalCollapsed] = useState(null);
+  
+  // 实际折叠状态：本地状态优先，否则使用全局状态
+  const isCollapsed = localCollapsed !== null ? localCollapsed : globalCollapsed;
 
   // 检测屏幕宽度，768px 以下为手机端
   useEffect(() => {
@@ -334,9 +339,10 @@ const BriefCard = ({ brief, isNew = false }) => {
   return (
     <>
       <div
-        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 hover:border-gray-300 ${
+        className={`group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 hover:border-gray-300 ${
           isNew ? 'ring-2 ring-blue-500 ring-offset-2' : ''
         } ${importance.border}`}
+        style={{ boxShadow: '0 4px 20px -4px rgba(0, 0, 0, 0.1), 0 2px 8px -2px rgba(0, 0, 0, 0.06)' }}
       >
         {/* Breaking News 标签 */}
         {brief.importance === 'breaking' && (
@@ -545,22 +551,22 @@ const BriefCard = ({ brief, isNew = false }) => {
                 </div>
               )}
 
-              {/* 手机端折叠内容 - 原文引用、重要细节、后续影响 */}
-              {(!isMobile || isExpanded) && (
-                <>
-                  {/* 原文引用 */}
-                  {summary.quote && (
-                    <div className="bg-gray-50 border-l-4 border-blue-400 pl-4 pr-3 py-3 rounded-r-lg">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-blue-500">💬</span>
-                        <span className="text-xs font-medium text-gray-500">原文引用</span>
-                      </div>
-                      <p className="text-sm text-gray-700 italic leading-relaxed">
-                        {summary.quote}
-                      </p>
-                    </div>
-                  )}
+              {/* 原文引用 - 折叠时也显示 */}
+              {summary.quote && (
+                <div className="bg-gray-50 border-l-4 border-blue-400 pl-4 pr-3 py-3 rounded-r-lg">
+                  <div className="flex items-center gap-1 mb-2">
+                    <span className="text-blue-500">💬</span>
+                    <span className="text-xs font-medium text-gray-500">原文引用</span>
+                  </div>
+                  <p className="text-sm text-gray-700 italic leading-relaxed">
+                    {summary.quote}
+                  </p>
+                </div>
+              )}
 
+              {/* 折叠内容 - 重要细节、后续影响（桌面端受isCollapsed控制，手机端受isExpanded控制） */}
+              {(isMobile ? isExpanded : !isCollapsed) && (
+                <>
                   {/* 重要细节 */}
                   {summary.details.length > 0 && (
                     <div>
@@ -594,13 +600,19 @@ const BriefCard = ({ brief, isNew = false }) => {
                 </>
               )}
 
-              {/* 手机端展开/收起按钮 */}
-              {isMobile && (summary.quote || summary.details.length > 0 || summary.impact) && (
+              {/* 展开/收起按钮 - 手机端或桌面端折叠时显示 */}
+              {(summary.details.length > 0 || summary.impact) && (
                 <button
-                  onClick={() => setIsExpanded(!isExpanded)}
+                  onClick={() => {
+                    if (isMobile) {
+                      setIsExpanded(!isExpanded);
+                    } else {
+                      setLocalCollapsed(isCollapsed ? false : true);
+                    }
+                  }}
                   className="w-full flex items-center justify-center gap-2 py-2 text-sm text-blue-600 hover:text-blue-800 transition-colors"
                 >
-                  {isExpanded ? (
+                  {(isMobile ? isExpanded : !isCollapsed) ? (
                     <>
                       <FaChevronUp className="text-xs" />
                       收起详情
@@ -645,8 +657,8 @@ const BriefCard = ({ brief, isNew = false }) => {
             </div>
           )}
 
-          {/* 附加信息区域 - 手机端需展开才显示 */}
-          {(!isMobile || isExpanded) && (
+          {/* 附加信息区域 - 折叠时隐藏（手机端受isExpanded控制，桌面端受isCollapsed控制） */}
+          {(isMobile ? isExpanded : !isCollapsed) && (
             <>
           {/* 股票信息（仅财经/商业类显示） */}
           {brief.stock_info && brief.stock_info.ticker && (

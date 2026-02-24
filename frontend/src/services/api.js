@@ -144,4 +144,9 @@ export const searchEntityByName = async (name) => {
   return api.get(`/entities/search/${encodeURIComponent(name)}`);
 };
 
+// 获取热门实体（今日）
+export const getHotEntities = async (hours = 24, limit = 10) => {
+  return api.get('/entities/hot', { params: { hours, limit } });
+};
+
 export default api;
