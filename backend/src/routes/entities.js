@@ -76,13 +76,13 @@ router.get('/hot', async (req, res) => {
 
     // 聚合查询：统计每个实体在指定时间内的新闻数
     const hotEntities = await EntityNews.aggregate([
-      // 筛选时间范围内的关联
-      { $match: { linked_at: { $gte: since } } },
+      // 筛选时间范围内的关联（使用 created_at 字段）
+      { $match: { created_at: { $gte: since } } },
       // 按实体分组，统计新闻数
       { $group: { 
         _id: '$entity_id', 
         recent_news_count: { $sum: 1 },
-        latest_news_at: { $max: '$linked_at' }
+        latest_news_at: { $max: '$created_at' }
       }},
       // 按新闻数排序
       { $sort: { recent_news_count: -1, latest_news_at: -1 } },
